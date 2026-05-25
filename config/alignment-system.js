@@ -9,6 +9,8 @@
 
 'use strict';
 
+const alignmentRankLimits = require('./alignment-rank-limits');
+
 /**
  * 점수에 반영할 “행동 종류” (서버가 나중에 집계할 때 쓸 이름표)
  */
@@ -55,6 +57,8 @@ function getPublicAlignmentConfig() {
     autoPartyThresholds: AUTO_PARTY_THRESHOLDS,
     neutralZone: NEUTRAL_ZONE_BEHAVIOR,
     aiTopicChannels: AI_TOPIC_CHANNELS,
+    /** 랭크별 축 상한 + 게시물당 캡 (config/alignment-rank-limits.js) */
+    rankAlignment: alignmentRankLimits.getPublicRankAlignmentLimits(),
   });
 }
 
@@ -64,4 +68,5 @@ module.exports = Object.freeze({
   NEUTRAL_ZONE_BEHAVIOR,
   AI_TOPIC_CHANNELS,
   getPublicAlignmentConfig,
+  alignmentRankLimits,
 });

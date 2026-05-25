@@ -10,6 +10,8 @@
 
 'use strict';
 
+const alignmentRankLimits = require('./alignment-rank-limits');
+
 /**
  * @param {number} earthReturnTicketKrw 지구 귀환 티켓 가격(원)
  */
@@ -47,6 +49,9 @@ function buildKantapbiya(earthReturnTicketKrw) {
         }),
       }),
     }),
+
+    /** 메인 벨트와 동일 랭크별 성향치 상한·게시물당 캡 → 좌·우 축에 적용 */
+    rankAlignment: alignmentRankLimits.getKantapbiyaRankAlignmentLimits(),
   });
 }
 
