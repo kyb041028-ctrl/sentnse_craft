@@ -18,7 +18,10 @@
  *   POST /api/auth/signout  — 로그아웃 (Authorization: Bearer <access_token>)
  *   POST /api/auth/refresh  — 세션 갱신 (body: { refresh_token })
  *   GET  /api/auth/me       — 현재 유저 (Bearer)
+ *   GET  /api/auth/oauth/:provider — 소셜 로그인 시작 (google|apple|kakao|naver) → 302
  *   GET  /api/me/profile    — public.profiles 한 줄 (Bearer, RLS)
+ *   GET  /api/chat/messages — 채팅 목록 (room=global|territory, territoryId, afterId)
+ *   POST /api/chat/messages — 채팅 전송 (인메모리·폴링용 베타)
  * =============================================================================
  */
 
@@ -34,6 +37,7 @@ const appConfig = require('./app-config');
 
 const supabaseUrl = (process.env.SUPABASE_URL || '').trim();
 const supabaseAnonKey = (process.env.SUPABASE_ANON_KEY || '').trim();
+const PORT = Number(process.env.PORT) || 3000;
 
 /** 서버 전용(세션 없이 가입/로그인 호출) — anon 키 */
 let supabaseAdmin = null;
@@ -43,6 +47,8 @@ if (supabaseUrl && supabaseAnonKey) {
       persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
+      /** 서버에서 OAuth URL만 만들고 브라우저 콜백은 hash(implicit)로 받기 */
+      flowType: 'implicit',
     },
   });
 }
@@ -61,8 +67,22 @@ function createUserClient(accessToken) {
       persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
+      flowType: 'implicit',
     },
   });
+}
+
+/** 소셜 로그인 (Supabase 대시보드에서 각 Provider 활성화 필요) */
+const OAUTH_PROVIDERS = new Set(['google', 'apple', 'kakao', 'naver']);
+
+function getPublicOrigin(req) {
+  const fixed = String(process.env.APP_PUBLIC_ORIGIN || '').trim().replace(/\/$/, '');
+  if (fixed) return fixed;
+  const xfProto = (req.get('x-forwarded-proto') || '').split(',')[0].trim();
+  const proto = xfProto || req.protocol || 'http';
+  const safeProto = proto === 'https' || proto === 'http' ? proto : 'http';
+  const host = req.get('x-forwarded-host') || req.get('host') || `localhost:${PORT}`;
+  return `${safeProto}://${host}`;
 }
 
 function getBearerToken(req) {
@@ -72,7 +92,11 @@ function getBearerToken(req) {
 }
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+
+/** 리버스 프록시 뒤에서 `x-forwarded-proto` 를 쓰려면 `.env` 에 TRUST_PROXY=1 */
+if (String(process.env.TRUST_PROXY || '').trim() === '1') {
+  app.set('trust proxy', 1);
+}
 
 /** CORS: 로컬 개발에서 브라우저가 API를 부를 수 있게 */
 app.use(
@@ -206,6 +230,49 @@ app.post('/api/auth/signin', requireSupabase, async (req, res) => {
 });
 
 /**
+ * GET /api/auth/oauth/:provider
+ * provider: google | apple | kakao | naver
+ * — Supabase가 로그인 후 redirectTo 로 돌려보냄 (fragment에 access_token 등).
+ */
+app.get('/api/auth/oauth/:provider', requireSupabase, async (req, res) => {
+  try {
+    const provider = String(req.params.provider || '').toLowerCase().trim();
+    if (!OAUTH_PROVIDERS.has(provider)) {
+      return res.status(400).json({ ok: false, error: 'UNKNOWN_OAUTH_PROVIDER' });
+    }
+
+    const origin = getPublicOrigin(req);
+    const redirectTo = `${origin}/auth/callback.html`;
+
+    const { data, error } = await supabaseAdmin.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo,
+        skipBrowserRedirect: true,
+      },
+    });
+
+    if (error) {
+      return res.status(400).json({
+        ok: false,
+        error: error.code || 'OAUTH_START_FAILED',
+        message: error.message,
+      });
+    }
+
+    const url = data?.url;
+    if (!url) {
+      return res.status(502).json({ ok: false, error: 'NO_OAUTH_URL' });
+    }
+
+    return res.redirect(302, url);
+  } catch (e) {
+    console.error('[oauth]', e);
+    return res.status(500).json({ ok: false, error: 'SERVER_ERROR' });
+  }
+});
+
+/**
  * POST /api/auth/refresh
  * body: { refresh_token }
  */
@@ -323,6 +390,153 @@ app.get('/api/me/profile', requireSupabase, async (req, res) => {
     return res.json({ ok: true, profile });
   } catch (e) {
     console.error('[profile]', e);
+    return res.status(500).json({ ok: false, error: 'SERVER_ERROR' });
+  }
+});
+
+// -----------------------------------------------------------------------------
+// 채팅 (베타: 서버 인메모리, 클라이언트 폴링 — 재시작 시 초기화)
+// -----------------------------------------------------------------------------
+
+const CHAT_MAX_PER_ROOM = 400;
+const CHAT_TERRITORY_IDS = new Set([
+  'CONSERVATIVE',
+  'CENTRIST',
+  'PROGRESSIVE',
+  'KANTAPBIYA_LEFT',
+  'KANTAPBIYA_RIGHT',
+  'UNASSIGNED',
+]);
+
+let chatSeq = 1;
+/** @type {Map<string, Array<{ id: number, ts: string, userId: string, affiliation: string, text: string }>>} */
+const chatRooms = new Map();
+
+function chatRoomKey(room, territoryId) {
+  if (room === 'global') return 'global';
+  if (room === 'territory' && territoryId) return `territory:${territoryId}`;
+  return null;
+}
+
+function chatGetOrCreateRoom(key) {
+  if (!chatRooms.has(key)) chatRooms.set(key, []);
+  return chatRooms.get(key);
+}
+
+function chatTrimRoom(arr) {
+  while (arr.length > CHAT_MAX_PER_ROOM) arr.shift();
+}
+
+function sanitizeChatText(s) {
+  const t = String(s || '').replace(/\r\n/g, '\n').trim();
+  if (!t) return '';
+  return t.length > 500 ? t.slice(0, 500) : t;
+}
+
+function sanitizeChatLabel(s, max) {
+  const t = String(s || '').trim();
+  if (!t) return '';
+  return t.length > max ? t.slice(0, max) : t;
+}
+
+async function chatResolveUserId(req) {
+  const token = getBearerToken(req);
+  if (!token || !supabaseAdmin) return null;
+  try {
+    const userClient = createUserClient(token);
+    if (!userClient) return null;
+    const { data, error } = await userClient.auth.getUser();
+    if (error || !data?.user) return null;
+    const u = data.user;
+    return String(u.email || u.id || '').trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * GET /api/chat/messages?room=global&afterId=0
+ * GET /api/chat/messages?room=territory&territoryId=CENTRIST&afterId=0
+ */
+app.get('/api/chat/messages', async (req, res) => {
+  try {
+    const room = String(req.query.room || '').trim();
+    const afterId = Math.max(0, Number(req.query.afterId ?? 0) || 0);
+    let territoryId = String(req.query.territoryId || '').trim();
+
+    if (room === 'territory') {
+      if (!CHAT_TERRITORY_IDS.has(territoryId)) {
+        return res.status(400).json({ ok: false, error: 'INVALID_TERRITORY_ID' });
+      }
+    } else if (room !== 'global') {
+      return res.status(400).json({ ok: false, error: 'INVALID_ROOM' });
+    } else {
+      territoryId = '';
+    }
+
+    const key = chatRoomKey(room, territoryId || undefined);
+    if (!key) return res.status(400).json({ ok: false, error: 'INVALID_ROOM' });
+
+    const arr = chatGetOrCreateRoom(key);
+    const list = afterId > 0 ? arr.filter((m) => m.id > afterId) : arr.slice();
+
+    return res.json({ ok: true, room, territoryId: room === 'territory' ? territoryId : null, messages: list });
+  } catch (e) {
+    console.error('[chat/messages get]', e);
+    return res.status(500).json({ ok: false, error: 'SERVER_ERROR' });
+  }
+});
+
+/**
+ * POST /api/chat/messages
+ * body: { room, text, territoryId?, affiliation?, guestUserId? }
+ * — 화면 표기: userId(affiliation) : text (affiliation 은 소속 라벨)
+ */
+app.post('/api/chat/messages', async (req, res) => {
+  try {
+    const room = String(req.body?.room || '').trim();
+    let territoryId = String(req.body?.territoryId || '').trim();
+    const text = sanitizeChatText(req.body?.text);
+    const affiliationIn = sanitizeChatLabel(req.body?.affiliation, 64) || '미정';
+    const guestUserId = sanitizeChatLabel(req.body?.guestUserId, 48);
+
+    if (!text) {
+      return res.status(400).json({ ok: false, error: 'EMPTY_TEXT' });
+    }
+
+    if (room === 'territory') {
+      if (!CHAT_TERRITORY_IDS.has(territoryId)) {
+        return res.status(400).json({ ok: false, error: 'INVALID_TERRITORY_ID' });
+      }
+    } else if (room === 'global') {
+      territoryId = '';
+    } else {
+      return res.status(400).json({ ok: false, error: 'INVALID_ROOM' });
+    }
+
+    const key = chatRoomKey(room, territoryId || undefined);
+    if (!key) return res.status(400).json({ ok: false, error: 'INVALID_ROOM' });
+
+    let userId = await chatResolveUserId(req);
+    if (!userId) {
+      userId = guestUserId || 'guest';
+    }
+
+    const msg = {
+      id: chatSeq++,
+      ts: new Date().toISOString(),
+      userId,
+      affiliation: affiliationIn,
+      text,
+    };
+
+    const arr = chatGetOrCreateRoom(key);
+    arr.push(msg);
+    chatTrimRoom(arr);
+
+    return res.json({ ok: true, message: msg });
+  } catch (e) {
+    console.error('[chat/messages post]', e);
     return res.status(500).json({ ok: false, error: 'SERVER_ERROR' });
   }
 });

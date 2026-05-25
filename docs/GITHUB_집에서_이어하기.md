@@ -123,3 +123,72 @@ git pull
 | `.env` 가 올라갈 뻔함 | `git status` 에서 제거 후 `.gitignore` 확인 |
 
 이 문서는 프로젝트 안 `docs/GITHUB_집에서_이어하기.md` 에 저장해 두었습니다.
+
+---
+
+## ★ 작업 끝날 때마다 GitHub에 저장 (여기 PC에서)
+
+**매번** 프로젝트 폴더에서 터미널을 열고, 아래만 순서대로 하면 됩니다.
+
+```bash
+cd "C:\Users\포키\OneDrive\Desktop\sentence-craft"
+git add .
+git status
+```
+
+- **`.env` 가 목록에 보이면** 커밋하지 말 것. (보통은 안 보임)
+
+```bash
+git commit -m "오늘 한 일 한 줄로 적기"
+git push
+```
+
+**한 줄 기억:** `git add .` → `git status` 확인 → `git commit` → `git push`
+
+---
+
+## ★ 집에서 처음 열 때 (다음에 다시 볼 때)
+
+1. **Git 설치** + `git --version` 확인  
+2. 폴더 만들 위치에서:
+
+```bash
+git clone https://github.com/본인아이디/저장소이름.git
+cd 저장소이름
+npm install
+```
+
+3. **`.env`** — `.env.example` 복사 → `.env` 로 이름 바꾸고 Supabase 값 입력  
+4. `npm start` → 브라우저 `http://localhost:3000`
+
+이미 집에 폴더가 있다면 **처음이 아니라** 그 폴더에서만:
+
+```bash
+git pull
+npm install
+```
+
+(`package.json` 이 바뀌었을 때만 `npm install` 다시 해도 됨.)
+
+---
+
+## ★ 명령 앞에 `git` 붙이기 (헷갈릴 때)
+
+| 잘못 친 예 | 올바른 예 |
+|------------|-----------|
+| `add .` | `git add .` |
+| `status` | `git status` |
+| `push` | `git push` |
+
+---
+
+## 처음 한 번만: 커밋할 때 이름·이메일
+
+에러 `Author identity unknown` 이 나오면 **한 번만**:
+
+```bash
+git config --global user.email "본인이메일@example.com"
+git config --global user.name "본인이름"
+```
+
+그 다음부터는 `git commit` 이 됩니다.

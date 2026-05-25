@@ -11,6 +11,9 @@
       --text: #e8eefc;
       --muted: #94a3b8;
       --accent: #38bdf8;
+      --chat-panel-width: 220px;
+      --chat-panel-height: min(42vh, 240px);
+      --chat-tab-width: 2.35rem;
     }
     * { box-sizing: border-box; }
     body {
@@ -20,8 +23,124 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 2rem 1rem 4rem;
+      padding: 2rem 1rem 2rem;
     }
+    body.sc-app-mode {
+      padding-bottom: 7.25rem;
+    }
+    .zone--clickable {
+      cursor: pointer;
+    }
+    .zone--clickable:hover {
+      filter: brightness(1.08);
+    }
+    .zone--clickable:focus {
+      outline: 2px solid rgba(56, 189, 248, 0.65);
+      outline-offset: 2px;
+    }
+
+    /* ----- 화면 전환: 로그인 / 앱(메인·게시판) ----- */
+    .view-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+    .view-login__inner {
+      width: min(28rem, 100%);
+    }
+    .view-login__inner > h1 {
+      margin: 0 0 0.35rem;
+    }
+    .view-app-main {
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+    .app-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    .app-topbar h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    #app-user-status {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+    }
+    #app-user-status button {
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+    #app-user-status button:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+    .app-screen[hidden] {
+      display: none !important;
+    }
+    .board-screen-nav {
+      margin-bottom: 0.75rem;
+    }
+    #board-back-main {
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.25);
+      color: #e0f2fe;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #board-back-main:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+    .app-unassigned-row {
+      margin-top: 0.75rem;
+    }
+    #btn-board-unassigned {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(148, 163, 184, 0.12);
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    #btn-board-unassigned:hover {
+      background: rgba(148, 163, 184, 0.2);
+    }
+    #auth-guest-btn {
+      margin-top: 0.65rem;
+      width: 100%;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px dashed rgba(255, 255, 255, 0.22);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    #auth-guest-btn:hover {
+      color: var(--text);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
     main { max-width: 42rem; margin: 0 auto; }
     h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
     .card {
@@ -36,7 +155,7 @@
     a { color: var(--accent); }
     ul { padding-left: 1.2rem; }
 
-    /* ----- 영토 맵(이미지 없음 — 경계만) ----- */
+    /* ----- 영토 맵(메인 랜드 + 하늘 행성 + 진영) ----- */
     .territory-map {
       margin-top: 1.25rem;
       padding: 1rem;
@@ -56,14 +175,38 @@
       color: var(--muted);
     }
 
-    .belt-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
+    /* 영토 맵: 하늘 행성 + 메인 랜드 + 얹힌 진영 */
+    .territory-map-canvas {
+      margin-top: 0.35rem;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(180deg, #93c5fd 0%, #bfdbfe 40%, #e2e8f0 55%, #64748b 55%);
+    }
+    .territory-sky {
+      padding: 0.65rem 0.5rem 0.2rem;
+      text-align: center;
+    }
+    .territory-sky__label {
+      margin: 0 0 0.45rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+    .territory-sky__planets {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.75rem;
+      max-width: 28rem;
+      margin: 0 auto;
     }
     @media (max-width: 520px) {
-      .belt-row { grid-template-columns: 1fr; }
+      .territory-sky__planets {
+        flex-direction: column;
+        align-items: center;
+      }
     }
 
     .zone {
@@ -99,95 +242,3579 @@
       color: #bfdbfe;
     }
 
-    .kantapbiya-shell {
-      margin-top: 0.5rem;
-      padding: 0.65rem;
-      border-radius: 10px;
-      border: 2px solid rgba(192, 132, 252, 0.75);
-      background: rgba(139, 92, 246, 0.08);
+    /* 보수·진보: 일러스트가 곧 칸(전면), 글자는 하단 오버레이 */
+    .zone--belt-visual {
+      position: relative;
+      display: block;
+      padding: 0;
+      overflow: hidden;
+      min-height: 8.5rem;
+      aspect-ratio: 1 / 1;
+      max-height: 14rem;
+      margin: 0 auto;
+      width: 100%;
+      background: #0f172a;
     }
-    .kantapbiya-shell > .label {
-      font-size: 0.78rem;
+    .zone--belt-visual.zone--conservative {
+      background: #450a0a;
+    }
+    .zone--belt-visual.zone--progressive {
+      background: #0c1929;
+    }
+    .zone__belt-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .zone__belt-overlay {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 100%;
+      padding: 0.55rem 0.65rem 0.5rem;
+      box-sizing: border-box;
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        rgba(15, 23, 42, 0.88) 0%,
+        rgba(15, 23, 42, 0.35) 42%,
+        transparent 72%
+      );
+      color: #f8fafc;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    }
+    .zone__belt-title {
+      font-size: 0.88rem;
       font-weight: 700;
-      color: #e9d5ff;
-      margin-bottom: 0.5rem;
-      text-align: center;
+      line-height: 1.25;
     }
-    .kantapbiya-row {
+    .zone__belt-id {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.65rem;
+      font-weight: 500;
+      opacity: 0.88;
+      font-family: ui-monospace, monospace;
+      color: rgba(248, 250, 252, 0.92);
+    }
+    .zone__belt-meta {
+      margin: 0.35rem 0 0;
+      font-size: 0.68rem;
+      font-weight: 500;
+      line-height: 1.35;
+      color: rgba(226, 232, 240, 0.95);
+    }
+    @media (max-width: 520px) {
+      .zone--belt-visual {
+        max-height: none;
+        aspect-ratio: 16 / 11;
+        min-height: 7.5rem;
+      }
+    }
+
+    .territory-mainland {
+      position: relative;
+      line-height: 0;
+      background: #0f172a;
+    }
+    .territory-mainland__bg {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: top;
+      object-fit: cover;
+      max-height: 22rem;
+    }
+    @media (min-width: 640px) {
+      .territory-mainland__bg {
+        max-height: 26rem;
+      }
+    }
+    .territory-mainland__overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      display: grid;
+      grid-template-columns: 1fr 1.12fr 1fr;
+      align-items: end;
+      padding: 2.5% 1.5% 4.5%;
+      gap: 0.2rem;
+      box-sizing: border-box;
+    }
+    .mainland-slot {
+      display: flex;
+      min-width: 0;
+    }
+    .mainland-slot--left {
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+    .mainland-slot--center {
+      justify-content: center;
+      align-items: center;
+      align-self: stretch;
+    }
+    .mainland-slot--right {
+      justify-content: flex-end;
+      align-items: flex-end;
+    }
+    .territory-mainland .zone--belt-visual {
+      width: min(100%, 9.25rem);
+      max-height: 9.25rem;
+      min-height: 0;
+      aspect-ratio: 1 / 1;
+      margin: 0;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+    }
+    .zone.zone--centrist-main {
+      min-height: auto;
+    }
+    .zone--centrist-main {
+      width: min(100%, 11.5rem);
+      margin: 0 auto;
+      padding: 0.5rem 0.6rem;
+      border-radius: 10px;
+      border: 2px solid rgba(148, 163, 184, 0.95);
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #f1f5f9;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+      line-height: 1.35;
+    }
+    .zone--centrist-main .id {
+      margin-top: 0.25rem;
+      font-size: 0.65rem;
+      opacity: 0.88;
+    }
+    @media (max-width: 520px) {
+      .territory-mainland__overlay {
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 2% 1% 3%;
+      }
+      .territory-mainland .zone--belt-visual {
+        width: min(100%, 5.4rem);
+        max-height: 5.4rem;
+      }
+      .zone--centrist-main {
+        width: min(100%, 6.5rem);
+        font-size: 0.68rem;
+        padding: 0.35rem 0.4rem;
+      }
+      .zone__belt-title {
+        font-size: 0.68rem;
+      }
+      .zone__belt-meta {
+        font-size: 0.55rem;
+      }
+    }
+
+    .zone--k-left {
+      border-color: rgba(244, 114, 182, 0.95);
+      background: transparent;
+      color: #fde7f3;
+    }
+    .zone--k-right {
+      border-color: rgba(251, 191, 36, 0.95);
+      background: transparent;
+      color: #fff7d6;
+    }
+    .zone--planet-visual {
+      position: relative;
+      display: block;
+      padding: 0;
+      overflow: hidden;
+      width: min(100%, 10.5rem);
+      margin: 0 auto;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border-width: 3px;
+      border-style: solid;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 12px 36px rgba(15, 23, 42, 0.55);
+    }
+    .zone__planet-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .zone__planet-overlay {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 100%;
+      padding: 0.42rem 0.48rem 0.38rem;
+      box-sizing: border-box;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.18) 52%, transparent 74%);
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+      border-radius: 50%;
+    }
+    .zone__planet-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .zone__planet-id {
+      display: block;
+      margin-top: 0.1rem;
+      font-size: 0.56rem;
+      font-weight: 500;
+      opacity: 0.9;
+      font-family: ui-monospace, monospace;
+    }
+    .zone__planet-meta {
+      margin: 0.18rem 0 0;
+      font-size: 0.56rem;
+      line-height: 1.3;
+      opacity: 0.95;
+    }
+
+    .oauth-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.5rem;
+      margin-top: 0.75rem;
     }
     @media (max-width: 520px) {
-      .kantapbiya-row { grid-template-columns: 1fr; }
+      .oauth-grid { grid-template-columns: 1fr; }
     }
-    .zone--k-left {
-      border-color: rgba(244, 114, 182, 0.85);
-      background: rgba(236, 72, 153, 0.1);
-      color: #fbcfe8;
+    .oauth-grid a {
+      display: block;
+      text-align: center;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #e0f2fe;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
     }
-    .zone--k-right {
-      border-color: rgba(251, 191, 36, 0.85);
-      background: rgba(245, 158, 11, 0.1);
-      color: #fde68a;
+    .oauth-grid a:hover {
+      background: rgba(56, 189, 248, 0.22);
+    }
+    #auth-status-login {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    /* 로그인 전·크롬 숨김: [hidden]보다 .avatar-dock/.chat-dock 의 display:flex 가 이기는 경우 방지 */
+    body:not(.sc-app-mode) #avatar-dock,
+    body:not(.sc-app-mode) #chat-rail {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    #avatar-dock[hidden],
+    #chat-rail[hidden] {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* ----- 왼쪽 하단 프로필(아바타) 도킹 ----- */
+    .avatar-dock {
+      position: fixed;
+      z-index: 50;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      align-items: flex-end;
+      max-width: min(24rem, calc(100vw - 0.75rem));
+      transition: transform 0.22s ease;
+      filter: drop-shadow(0 -4px 12px rgba(0, 0, 0, 0.35));
+    }
+    .avatar-dock.is-collapsed {
+      transform: translateX(calc(-100% + 3rem));
+    }
+    .avatar-dock.is-collapsed:hover,
+    .avatar-dock.is-collapsed.is-peeking {
+      transform: translateX(0);
+    }
+    .avatar-dock.is-collapsed:not(.is-peeking) .avatar-dock__panel {
+      pointer-events: none;
+    }
+    .avatar-dock:not(.is-collapsed) .avatar-dock__tab {
+      display: none;
+    }
+    .avatar-dock__panel {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: min(19rem, calc(100vw - 1rem));
+      min-height: 15.5rem;
+      padding: 0;
+      padding-bottom: 0.65rem;
+      background: linear-gradient(135deg, rgba(18, 26, 51, 0.97), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-left: none;
+      border-radius: 0 12px 0 0;
+      min-width: 0;
+    }
+    .avatar-dock__topbar {
+      flex-shrink: 0;
+      align-self: flex-start;
+      width: 100%;
+      padding: 0.45rem 0.55rem 0.35rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+    }
+    .avatar-dock__toolbar {
+      display: flex;
+      flex-direction: row;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+    .avatar-dock__toolbar button {
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .avatar-dock__toolbar button:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      color: var(--accent);
+    }
+    .avatar-dock__stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.75rem 0.5rem;
+      min-height: 11rem;
+    }
+    .avatar-dock__figure-wrap {
+      flex-shrink: 0;
+      width: min(10.5rem, 52vw);
+      height: min(14rem, 42vh);
+      max-width: 100%;
+      position: relative;
+    }
+    .avatar-dock__figure-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+    .avatar-dock__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 2px dashed rgba(148, 163, 184, 0.55);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .avatar-dock__placeholder svg {
+      width: min(5.5rem, 42vw);
+      height: auto;
+      max-height: 92%;
+      opacity: 0.88;
+    }
+    .avatar-dock__meta {
+      margin: 0;
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      line-height: 1.32;
+    }
+    .avatar-dock__meta-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.35rem 0.5rem;
+      align-items: start;
+      padding: 0.4rem 0.5rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .avatar-dock__meta-row--userid {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.22);
+    }
+    .avatar-dock__meta-row--tendency {
+      background: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.22);
+    }
+    .avatar-dock__meta-row--territory {
+      background: rgba(148, 163, 184, 0.12);
+      border-color: rgba(148, 163, 184, 0.22);
+    }
+    .avatar-dock__meta-row--rank {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.22);
+    }
+    .avatar-dock__k {
+      margin: 0;
+      color: #cbd5e1;
+      font-weight: 700;
+      font-size: 0.62rem;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      padding-top: 0.08rem;
+    }
+    .avatar-dock__v {
+      margin: 0;
+      font-weight: 600;
+      color: #f1f5f9;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .avatar-dock__vstack {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .avatar-tbar {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 11px;
+      border-radius: 7px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+    .avatar-tbar__split {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
+    .avatar-tbar--neutral .avatar-tbar__split {
+      display: none;
+    }
+    .avatar-tbar__none {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(71, 85, 105, 0.55), rgba(100, 116, 139, 0.75), rgba(71, 85, 105, 0.55));
+    }
+    .avatar-tbar--neutral .avatar-tbar__none {
+      display: block;
+    }
+    .avatar-tbar__seg {
+      height: 100%;
+      min-width: 0;
+      transition: width 0.25s ease;
+      flex-shrink: 0;
+    }
+    .avatar-tbar__seg--r {
+      background: linear-gradient(180deg, rgba(248, 113, 113, 0.95), rgba(185, 28, 28, 0.85));
+    }
+    .avatar-tbar__seg--c {
+      background: linear-gradient(180deg, rgba(148, 163, 184, 0.95), rgba(71, 85, 105, 0.88));
+    }
+    .avatar-tbar__seg--l {
+      background: linear-gradient(180deg, rgba(96, 165, 250, 0.95), rgba(29, 78, 216, 0.85));
+    }
+    .avatar-tbar__legend {
+      font-size: 0.58rem;
+      color: #94a3b8;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .avatar-dock__tab {
+      flex-shrink: 0;
+      width: 3rem;
+      min-height: 5.5rem;
+      padding: 0.35rem 0.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-left: none;
+      border-radius: 0 10px 0 0;
+      background: rgba(18, 26, 51, 0.95);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .avatar-dock__tab:hover,
+    .avatar-dock__tab:focus-visible {
+      color: var(--accent);
+      border-color: rgba(56, 189, 248, 0.35);
+      outline: none;
+    }
+    .avatar-dock__tab svg {
+      width: 1.35rem;
+      height: 1.9rem;
+      opacity: 0.9;
+    }
+
+    /* ----- 자유 게시판 (일반 커뮤 레이아웃, 제목 BM·효과는 비활성) ----- */
+    .board {
+      padding: 0;
+      overflow: hidden;
+    }
+    .board__head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .board__head h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .board__head .muted {
+      margin: 0.25rem 0 0;
+      font-size: 0.78rem;
+      width: 100%;
+    }
+    .board__context {
+      padding: 0.65rem 1.25rem 0.55rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.12);
+    }
+    .board__context-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.75rem;
+    }
+    .board__context-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .board__territory-select {
+      min-width: min(100%, 22rem);
+      padding: 0.4rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: 0.82rem;
+    }
+    .board__stage-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.75rem;
+      margin-top: 0.45rem;
+    }
+    .board__stage-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .board__stage-tab {
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.25);
+      color: #e2e8f0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .board__stage-tab:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .board__stage-tab.is-active {
+      border-color: rgba(56, 189, 248, 0.5);
+      background: rgba(56, 189, 248, 0.15);
+      color: #e0f2fe;
+    }
+    .board__locked {
+      padding: 1.1rem 1.25rem 1.2rem;
+      margin: 0;
+      background: rgba(0, 0, 0, 0.22);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .board__locked-title {
+      margin: 0 0 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .board__locked-text {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+    .board__comment-children {
+      margin-top: 0.2rem;
+    }
+    .board__comments {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .board__comments-title {
+      margin: 0 0 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .board__item-comment-badge {
+      font-weight: 500;
+      color: #94a3b8;
+      font-size: 0.82em;
+    }
+    .board__comments-toggle,
+    .board__comment-replies-toggle {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 0.35rem 0 0.25rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.28);
+      color: #bae6fd;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .board__comment-replies-toggle {
+      width: auto;
+      display: inline-block;
+      margin: 0.4rem 0 0.15rem;
+      font-size: 0.76rem;
+    }
+    .board__comments-toggle:hover,
+    .board__comment-replies-toggle:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .board__comments-panel {
+      margin-top: 0.35rem;
+      padding-top: 0.35rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .board__comments-panel[hidden] {
+      display: none !important;
+    }
+    .board__comment {
+      margin-bottom: 0.65rem;
+      font-size: 0.82rem;
+    }
+    .board__comment--depth {
+      margin-left: 0.75rem;
+      padding-left: 0.55rem;
+      border-left: 2px solid rgba(56, 189, 248, 0.28);
+    }
+    .board__comment-meta {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-bottom: 0.2rem;
+    }
+    .board__comment-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+    .board__comment-actions {
+      margin-top: 0.28rem;
+    }
+    .board__comment-actions button {
+      font-size: 0.72rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: transparent;
+      color: #93c5fd;
+      cursor: pointer;
+    }
+    .board__comment-actions button:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .board__reply-slot {
+      margin-top: 0.35rem;
+    }
+    .board__reply-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: flex-end;
+    }
+    .board__inline-reply,
+    .board__comment-form textarea {
+      flex: 1 1 12rem;
+      min-width: 8rem;
+      min-height: 2.4rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .board__reply-submit,
+    .board__comment-submit {
+      padding: 0.38rem 0.75rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+    }
+    .board__comment-form {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: flex-end;
+    }
+    .board__actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .board__actions button {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.14);
+      color: #e0f2fe;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .board__actions button:hover {
+      background: rgba(56, 189, 248, 0.24);
+    }
+    #board-btn-write:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .board__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .board__item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .board__item:last-child {
+      border-bottom: none;
+    }
+    .board__item-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.85rem 1.25rem;
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+    }
+    .board__item-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .board__item-title {
+      margin: 0 0 0.35rem;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1.35;
+      /* 제목 효과(BM) 비활성: 그라데이션·그림자·HTML 태그 없음 */
+      text-decoration: none;
+      text-shadow: none;
+      background: none;
+      -webkit-text-fill-color: inherit;
+    }
+    .board__item-meta {
+      margin: 0 0 0.4rem;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+    .board__item-snippet {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .board__item-thumb {
+      margin-top: 0.45rem;
+      width: 4.5rem;
+      height: 4.5rem;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .board__item-body {
+      display: none;
+      padding: 0 1.25rem 1rem;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .board__item.is-open .board__item-body {
+      display: block;
+    }
+    .board__item.is-open .board__item-snippet {
+      display: none;
+    }
+    .board__item.is-open .board__item-thumb {
+      display: none;
+    }
+    .board__body-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+    }
+    .board__body-gallery img {
+      max-width: min(100%, 18rem);
+      max-height: 14rem;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.25);
+    }
+    .board-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .board-modal.is-open {
+      display: flex;
+    }
+    .board-modal__dialog {
+      width: min(36rem, 100%);
+      max-height: min(92vh, 40rem);
+      overflow: auto;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 1rem 1.15rem 1.1rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+    .board-modal__dialog h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+    }
+    .board-field {
+      margin-bottom: 0.75rem;
+    }
+    .board-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 0.3rem;
+    }
+    .board-field input[type="text"],
+    .board-field textarea {
+      width: 100%;
+      padding: 0.5rem 0.55rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 400;
+      /* 제목: BM·리치텍스트 비활성 (평문만) */
+    }
+    .board-field textarea {
+      min-height: 9rem;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+    .board-field__hint {
+      margin: 0.25rem 0 0;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+    .board-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.35rem;
+    }
+    .board-previews figure {
+      margin: 0;
+      position: relative;
+    }
+    .board-previews img {
+      width: 4.25rem;
+      height: 4.25rem;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .board-previews button {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 1.25rem;
+      height: 1.25rem;
+      padding: 0;
+      border: none;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #fff;
+      font-size: 0.65rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .board-modal__footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .board-modal__footer button {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text);
+    }
+    .board-modal__footer .board-btn-primary {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+    }
+
+    .board__posts-heading {
+      margin: 0 0 0.5rem;
+      padding: 0 1.25rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .centrist-hub-wrap[hidden] {
+      display: none !important;
+    }
+    .centrist-main-issue__h {
+      margin: 0 0 0.5rem;
+      font-size: 1.05rem;
+    }
+    .centrist-main-issue__topic {
+      margin: 0 0 0.35rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+    .centrist-main-issue__label {
+      margin: 0.75rem 0 0.35rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .centrist-main-issue__question {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      line-height: 1.55;
+      color: #f8fafc;
+      padding: 0.65rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .centrist-issue-thread-root {
+      margin-top: 0.5rem;
+      max-height: 20rem;
+      overflow: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 0.5rem;
+    }
+    .centrist-issue-comment {
+      font-size: 0.82rem;
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .centrist-issue-comment__meta {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-bottom: 0.2rem;
+    }
+    .centrist-issue-comment__text {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+    .centrist-hot__h {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+    .centrist-hot__list {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: #e2e8f0;
+    }
+    .centrist-hot__list li {
+      margin-bottom: 0.35rem;
+    }
+    .centrist-hot__btn {
+      display: inline;
+      padding: 0;
+      border: none;
+      background: none;
+      color: #7dd3fc;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .centrist-hot__btn:hover {
+      color: #bae6fd;
+    }
+    .centrist-hot__empty {
+      margin: 0.35rem 0 0;
+    }
+
+    /* ----- 오른쪽 하단 채팅 (클릭으로만 숨김·펼침, 프로필처럼 자동 X) ----- */
+    .chat-dock {
+      position: fixed;
+      z-index: 40;
+      right: 0;
+      bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      filter: drop-shadow(-2px 2px 12px rgba(0, 0, 0, 0.45));
+    }
+    .chat-dock__sheet {
+      width: var(--chat-panel-width);
+      overflow: hidden;
+      transition: width 0.22s ease, opacity 0.18s ease;
+      flex-shrink: 0;
+    }
+    .chat-dock.is-resizing .chat-dock__sheet,
+    .chat-dock.is-resizing .chat-rail__panel {
+      transition: none;
+    }
+    .chat-dock--collapsed .chat-dock__sheet {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .chat-rail__panel {
+      position: relative;
+      width: var(--chat-panel-width);
+      height: var(--chat-panel-height);
+      background: linear-gradient(200deg, rgba(18, 26, 51, 0.98), rgba(15, 23, 42, 0.99));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: none;
+      border-radius: 12px 0 0 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .chat-rail__head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.45rem 0.4rem 0.35rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+    .chat-rail__head h2 {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      min-width: 0;
+    }
+    .chat-rail__resize-handle {
+      width: 1.4rem;
+      height: 1.55rem;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--muted);
+      cursor: nwse-resize;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      font-size: 0.65rem;
+      letter-spacing: 0;
+      font: inherit;
+      appearance: none;
+    }
+    .chat-rail__resize-handle:hover {
+      color: var(--accent);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .chat-rail__head-actions {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .chat-rail__head-actions button {
+      width: 1.75rem;
+      height: 1.75rem;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .chat-rail__head-actions button:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      color: var(--accent);
+    }
+    .chat-rail__tabs {
+      display: flex;
+      gap: 0.2rem;
+      padding: 0.28rem 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+    .chat-rail__tabs button {
+      flex: 1;
+      padding: 0.3rem 0.25rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .chat-rail__tabs button.is-active {
+      border-color: rgba(56, 189, 248, 0.45);
+      color: #e0f2fe;
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .chat-rail__hint {
+      margin: 0;
+      padding: 0.28rem 0.45rem;
+      font-size: 0.62rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+      line-height: 1.35;
+    }
+    .chat-rail__messages {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.72rem;
+    }
+    .chat-rail__line {
+      margin: 0 0 0.38rem;
+      padding: 0;
+      line-height: 1.4;
+      word-break: break-word;
+      color: #cbd5e1;
+    }
+    .chat-rail__line .u {
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+    .chat-rail__line .aff {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .chat-rail__form {
+      display: flex;
+      gap: 0.3rem;
+      padding: 0.4rem 0.45rem 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+    .chat-rail__form input[type="text"] {
+      flex: 1;
+      min-width: 0;
+      padding: 0.35rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: 0.74rem;
+    }
+    .chat-rail__form button[type="submit"] {
+      padding: 0 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.15);
+      color: #e0f2fe;
+      font-weight: 700;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .chat-rail__tab {
+      width: var(--chat-tab-width);
+      min-height: 5rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+      background: rgba(18, 26, 51, 0.96);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      line-height: 1.15;
+    }
+    .chat-rail__tab:hover,
+    .chat-rail__tab:focus-visible {
+      color: var(--accent);
+      outline: none;
+    }
+    .chat-dock:not(.chat-dock--collapsed) .chat-rail__tab {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>센텐스크래프트</h1>
-    <p class="muted">글로 싸우는 전쟁 — 정치·사회·금융 등 이슈를 게시판으로 다루는 공간 (준비 중)</p>
+  <div id="view-login" class="view-login">
+    <div class="view-login__inner">
+      <h1>센텐스크래프트</h1>
+      <p class="muted">글로 싸우는 전쟁 — 정치·사회·금융 등 이슈를 게시판으로 다루는 공간 (준비 중)</p>
 
-    <section class="card territory-map" aria-labelledby="territory-map-title">
-      <h2 id="territory-map-title">영토 구역 (경계만 · 그림은 나중에)</h2>
-      <p class="hint">가로 한 줄 = 메인 벨트(보수—중도—진보). 아래 보라 테두리 = 깐따삐아 행성 안 좌·우.</p>
+      <section class="card" aria-labelledby="login-title">
+        <h2 id="login-title" style="margin: 0 0 0.35rem; font-size: 1.05rem">로그인</h2>
+        <p class="muted" style="margin: 0 0 0.5rem">
+          Supabase에서 Google·Apple·Kakao·Naver 제공사를 켠 뒤 사용하세요. 설정은
+          <code>docs/SUPABASE_소셜로그인_한글안내.md</code> 를 참고합니다.
+        </p>
+        <div class="oauth-grid" id="oauth-buttons" role="group" aria-label="소셜 로그인">
+          <a href="/api/auth/oauth/google">Google</a>
+          <a href="/api/auth/oauth/apple">Apple</a>
+          <a href="/api/auth/oauth/kakao">Kakao</a>
+          <a href="/api/auth/oauth/naver">Naver</a>
+        </div>
+        <p id="auth-status-login" class="muted" aria-live="polite"></p>
+        <button type="button" id="auth-guest-btn">게스트로 입장 (로컬에서 메인·게시판만 둘러보기)</button>
+      </section>
+    </div>
+  </div>
 
-      <div class="belt-row" role="group" aria-label="메인 벨트 세 진영">
-        <div class="zone zone--conservative" data-territory-id="CONSERVATIVE">
-          보수 진영
-          <span class="id">CONSERVATIVE · 게시판 4단계</span>
+  <div id="view-app" hidden>
+    <main class="view-app-main">
+      <div id="screen-main" class="app-screen">
+        <div class="app-topbar">
+          <h1>센텐스크래프트</h1>
+          <div id="app-user-status" aria-live="polite"></div>
         </div>
-        <div class="zone zone--centrist" data-territory-id="CENTRIST">
-          중도(일반) 진영
-          <span class="id">CENTRIST · 정치색 연습장</span>
+        <p class="muted">영토를 선택하면 해당 영토 <strong>전용 게시판</strong>으로 이동합니다.</p>
+
+        <section class="card territory-map" aria-labelledby="territory-map-title">
+          <h2 id="territory-map-title">영토 구역</h2>
+          <p class="hint">
+            셀을 누르면 해당 영토 게시판으로 이동합니다. <strong>중도 메인 랜드</strong> 위에 보수·진보 진영이 올라가
+            있고, <strong>깐따삐아 좌·우</strong>는 하늘에 떠 있는 행성으로 표시됩니다. 보수·진보·깐따삐아(좌·우)는
+            소속 인원에 따라 1~4단계 일러스트가 바뀝니다(0~100 → 1, 101~200 → 2, 201~500 → 3, 501+ → 4). 메인
+            랜드 배경은 고정입니다. 베타 인원:
+            <code>localStorage</code> 키 <code>sc_belt_pop_v1</code>(보수·진보),
+            <code>sc_kanta_pop_v1</code>(깐따삐아). 예:
+            <code>__scTerritoryPop.set({ CONSERVATIVE: 150, KANTAPBIYA_LEFT: 220 })</code>
+          </p>
+
+          <div class="territory-map-canvas">
+            <div class="territory-sky" role="group" aria-label="깐따삐아 행성">
+              <div class="territory-sky__label">깐따삐아 · 하늘의 행성</div>
+              <div class="territory-sky__planets">
+                <div
+                  class="zone zone--k-left zone--clickable zone--planet-visual"
+                  tabindex="0"
+                  role="link"
+                  data-territory-id="KANTAPBIYA_LEFT"
+                >
+                  <img
+                    class="zone__planet-img"
+                    id="zone-art-KANTAPBIYA_LEFT"
+                    src="/territories/kantapbiya-left-stage-1.png"
+                    alt=""
+                    width="200"
+                    height="200"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="zone__planet-overlay">
+                    <span class="zone__planet-title">깐따삐아 · 좌</span>
+                    <span class="zone__planet-id">KANTAPBIYA_LEFT · 4단계</span>
+                    <p class="zone__planet-meta" id="zone-meta-KANTAPBIYA_LEFT"></p>
+                  </div>
+                </div>
+                <div
+                  class="zone zone--k-right zone--clickable zone--planet-visual"
+                  tabindex="0"
+                  role="link"
+                  data-territory-id="KANTAPBIYA_RIGHT"
+                >
+                  <img
+                    class="zone__planet-img"
+                    id="zone-art-KANTAPBIYA_RIGHT"
+                    src="/territories/kantapbiya-right-stage-1.png"
+                    alt=""
+                    width="200"
+                    height="200"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="zone__planet-overlay">
+                    <span class="zone__planet-title">깐따삐아 · 우</span>
+                    <span class="zone__planet-id">KANTAPBIYA_RIGHT · 4단계</span>
+                    <p class="zone__planet-meta" id="zone-meta-KANTAPBIYA_RIGHT"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="territory-mainland" role="group" aria-label="메인 대지와 진영">
+              <img
+                class="territory-mainland__bg"
+                src="/territories/preview/preview-centrist-mainland.png"
+                alt=""
+                width="1200"
+                height="600"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="territory-mainland__overlay">
+                <div class="mainland-slot mainland-slot--left">
+                  <div
+                    class="zone zone--conservative zone--clickable zone--belt-visual"
+                    tabindex="0"
+                    role="link"
+                    data-territory-id="CONSERVATIVE"
+                  >
+                    <img
+                      class="zone__belt-bg"
+                      id="zone-art-CONSERVATIVE"
+                      src="/territories/conservative-stage-1.png"
+                      alt=""
+                      width="400"
+                      height="400"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="zone__belt-overlay">
+                      <span class="zone__belt-title">보수 진영</span>
+                      <span class="zone__belt-id">CONSERVATIVE · 게시판 4단계</span>
+                      <p class="zone__belt-meta" id="zone-meta-CONSERVATIVE"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mainland-slot mainland-slot--center">
+                  <div
+                    class="zone zone--centrist zone--clickable zone--centrist-main"
+                    tabindex="0"
+                    role="link"
+                    data-territory-id="CENTRIST"
+                  >
+                    중도(일반) 진영
+                    <span class="id">CENTRIST · 정치색 연습장</span>
+                  </div>
+                </div>
+                <div class="mainland-slot mainland-slot--right">
+                  <div
+                    class="zone zone--progressive zone--clickable zone--belt-visual"
+                    tabindex="0"
+                    role="link"
+                    data-territory-id="PROGRESSIVE"
+                  >
+                    <img
+                      class="zone__belt-bg"
+                      id="zone-art-PROGRESSIVE"
+                      src="/territories/progressive-stage-1.png"
+                      alt=""
+                      width="400"
+                      height="400"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="zone__belt-overlay">
+                      <span class="zone__belt-title">진보 진영</span>
+                      <span class="zone__belt-id">PROGRESSIVE · 게시판 4단계</span>
+                      <p class="zone__belt-meta" id="zone-meta-PROGRESSIVE"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="hint app-unassigned-row">
+            소속이 아직 없을 때는 미편입 게시판을 이용할 수 있습니다.
+            <button type="button" id="btn-board-unassigned">미편입 게시판 열기</button>
+          </p>
+        </section>
+
+        <div class="card">
+          <p><strong>지금 이 화면이 보이면 정상입니다.</strong></p>
+          <p class="muted">
+            예전에 섞였던 “다른 실험 화면”은 빼 두었습니다. 앞으로 화면 파일은
+            <code>public</code> 폴더만 보면 됩니다.
+          </p>
+          <ul>
+            <li>서버 실행: 터미널에서 <code>npm start</code></li>
+            <li>주소창: <code>http://localhost:3000</code> (파일을 더블클릭해서 열면 안 됩니다)</li>
+            <li>기획 정리 문서: 프로젝트 안 <code>docs/PRODUCT_센텐스크래프트_기획.md</code></li>
+          </ul>
         </div>
-        <div class="zone zone--progressive" data-territory-id="PROGRESSIVE">
-          진보 진영
-          <span class="id">PROGRESSIVE · 게시판 4단계</span>
+
+        <div class="card">
+          <p class="muted">규칙 표(API로도 내려감): <code>/api/public-config</code></p>
         </div>
       </div>
 
-      <div class="kantapbiya-shell" role="group" aria-label="깐따삐아 행성">
-        <div class="label">깐따삐아 (별도 행성)</div>
-        <div class="kantapbiya-row">
-          <div class="zone zone--k-left" data-territory-id="KANTAPBIYA_LEFT">
-            깐따삐아 · 좌파 영토
-            <span class="id">KANTAPBIYA_LEFT · 4단계</span>
+      <div id="screen-board" class="app-screen" hidden>
+        <div class="board-screen-nav">
+          <button type="button" id="board-back-main">← 영토 선택으로</button>
+        </div>
+        <div id="centrist-hub-wrap" class="centrist-hub-wrap" hidden>
+          <section class="card centrist-main-issue" aria-labelledby="centrist-issue-title">
+            <h2 id="centrist-issue-title" class="centrist-main-issue__h">메인 이슈 · 오늘</h2>
+            <p id="centrist-issue-topic" class="centrist-main-issue__topic"></p>
+            <p class="centrist-main-issue__label">
+              오늘 가장 화제가 되는 주제에 대해, 함께 생각해 볼 질문입니다. (베타: 서버 AI 연동 전 — 날짜별
+              질문 풀에서 자동 선택)
+            </p>
+            <p id="centrist-issue-question" class="centrist-main-issue__question" aria-live="polite"></p>
+            <h3 class="centrist-main-issue__label" style="margin-top: 0.5rem; font-size: 0.78rem">의견·댓글</h3>
+            <p class="muted" style="margin: 0 0 0.35rem; font-size: 0.72rem">
+              아래에서 <strong>댓글 보기</strong>를 눌러야 스레드가 펼쳐집니다. 각 의견 옆 (답글 n)은 대댓글 개수입니다.
+            </p>
+            <div
+              id="centrist-issue-thread-root"
+              class="centrist-issue-thread-root"
+              aria-live="polite"
+            ></div>
+          </section>
+          <section class="card centrist-hot" aria-labelledby="centrist-hot-title">
+            <h2 id="centrist-hot-title" class="centrist-hot__h">오늘 핫한 게시물 (1~5위 · 제목만)</h2>
+            <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.75rem">
+              오늘 작성된 글 중 댓글 반응이 많은 순입니다. 제목을 누르면 아래 목록에서 해당 글로 이동합니다.
+            </p>
+            <ol id="centrist-hot-list" class="centrist-hot__list"></ol>
+            <p id="centrist-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
+          </section>
+        </div>
+        <section class="card board" id="board-section" aria-labelledby="board-title">
+          <div class="board__head">
+            <div>
+              <h2 id="board-title">자유 게시판</h2>
+              <p class="muted">
+                영토마다 게시판이 <strong>완전히 따로</strong> 저장됩니다. 제목만 BM·효과 전까지
+                <strong>평문·태그 입력 제한</strong>이 걸려 있고, 본문은 자유롭게 쓰셔도 됩니다.
+              </p>
+            </div>
+            <div class="board__actions">
+              <button type="button" id="board-btn-write">글쓰기</button>
+            </div>
           </div>
-          <div class="zone zone--k-right" data-territory-id="KANTAPBIYA_RIGHT">
-            깐따삐아 · 우파 영토
-            <span class="id">KANTAPBIYA_RIGHT · 4단계</span>
+          <div class="board__context" role="navigation" aria-label="게시판 영토·단계">
+            <div class="board__context-row">
+              <label class="board__context-label" for="board-territory-select">영토</label>
+              <select id="board-territory-select" class="board__territory-select">
+                <option value="UNASSIGNED">미편입 (UNASSIGNED)</option>
+                <option value="CONSERVATIVE">보수 — CONSERVATIVE (게시판 4단계)</option>
+                <option value="CENTRIST">중도 — CENTRIST (정치색 연습장)</option>
+                <option value="PROGRESSIVE">진보 — PROGRESSIVE (게시판 4단계)</option>
+                <option value="KANTAPBIYA_LEFT">깐따삐아 좌파 — KANTAPBIYA_LEFT (4단계)</option>
+                <option value="KANTAPBIYA_RIGHT">깐따삐아 우파 — KANTAPBIYA_RIGHT (4단계)</option>
+              </select>
+            </div>
+            <div id="board-stage-wrap" class="board__stage-wrap" hidden>
+              <span class="board__context-label">게시판 단계</span>
+              <div id="board-stage-tabs" class="board__stage-tabs" role="tablist" aria-label="게시판 단계"></div>
+            </div>
+          </div>
+          <div id="board-locked" class="board__locked" hidden>
+            <p class="board__locked-title">이 단계는 아직 이용할 수 없습니다</p>
+            <p class="board__locked-text">
+              2·3·4단계 게시판은 아직 해금되지 않았습니다. 현재는 <strong>1단계</strong>만 글 읽기·쓰기·댓글이
+              가능합니다.
+            </p>
+          </div>
+          <h3 id="board-posts-heading" class="board__posts-heading" hidden>전체 게시글 (작성 순)</h3>
+          <ul id="board-list" class="board__list" aria-label="게시글 목록"></ul>
+        </section>
+      </div>
+    </main>
+
+    <div id="board-modal" class="board-modal" aria-hidden="true">
+      <div class="board-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="board-modal-title">
+        <h3 id="board-modal-title">새 글 작성</h3>
+        <form id="board-form">
+          <div class="board-field">
+            <label for="board-title-input">제목</label>
+            <input
+              id="board-title-input"
+              name="title"
+              type="text"
+              maxlength="120"
+              autocomplete="off"
+              placeholder="제목을 입력하세요 (효과·태그 불가)"
+            />
+            <p class="board-field__hint">제목만 BM 도입 전까지 &lt; &gt; 등 태그·효과 입력이 제한됩니다.</p>
+          </div>
+          <div class="board-field">
+            <label for="board-body-input">본문</label>
+            <textarea
+              id="board-body-input"
+              name="body"
+              maxlength="8000"
+              placeholder="내용을 입력하세요"
+            ></textarea>
+          </div>
+          <div class="board-field">
+            <label for="board-images-input">사진 첨부 (선택, 최대 4장)</label>
+            <input id="board-images-input" type="file" accept="image/*" multiple />
+            <div id="board-image-previews" class="board-previews" aria-live="polite"></div>
+          </div>
+          <div class="board-modal__footer">
+            <button type="button" id="board-modal-cancel">취소</button>
+            <button type="submit" class="board-btn-primary">등록</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="avatar-dock"
+    class="avatar-dock"
+    role="region"
+    aria-label="내 프로필·아바타"
+    hidden
+  >
+    <div class="avatar-dock__panel">
+      <div class="avatar-dock__topbar">
+        <div class="avatar-dock__toolbar">
+          <button type="button" id="avatar-dock-hide" aria-label="프로필 패널 숨기기" title="숨기기">
+            ⟨
+          </button>
+        </div>
+        <div class="avatar-dock__meta" role="group" aria-label="프로필 정보">
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--userid">
+            <span class="avatar-dock__k">유저 ID</span>
+            <span class="avatar-dock__v" id="avatar-meta-userid">—</span>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--tendency">
+            <span class="avatar-dock__k">정치 성향</span>
+            <div class="avatar-dock__vstack">
+              <span class="avatar-dock__v" id="avatar-meta-tendency">—</span>
+              <div
+                id="avatar-tbar-track"
+                class="avatar-tbar"
+                role="img"
+                aria-label="정치 성향 비율 막대"
+              >
+                <div id="avatar-tbar-none" class="avatar-tbar__none"></div>
+                <div id="avatar-tbar-split" class="avatar-tbar__split">
+                  <div id="avatar-tbar-r" class="avatar-tbar__seg avatar-tbar__seg--r" style="width: 0%"></div>
+                  <div id="avatar-tbar-c" class="avatar-tbar__seg avatar-tbar__seg--c" style="width: 0%"></div>
+                  <div id="avatar-tbar-l" class="avatar-tbar__seg avatar-tbar__seg--l" style="width: 0%"></div>
+                </div>
+              </div>
+              <div id="avatar-tbar-legend" class="avatar-tbar__legend"></div>
+            </div>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--territory">
+            <span class="avatar-dock__k">소속 영토</span>
+            <span class="avatar-dock__v" id="avatar-meta-territory">—</span>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--rank">
+            <span class="avatar-dock__k">랭킹</span>
+            <span class="avatar-dock__v" id="avatar-meta-rank">—</span>
           </div>
         </div>
       </div>
-    </section>
-
-    <div class="card">
-      <p><strong>지금 이 페이지가 보이면 정상입니다.</strong></p>
-      <p class="muted">
-        예전에 섞였던 “다른 실험 화면”은 빼 두었습니다. 앞으로 화면 파일은
-        <code>public</code> 폴더만 보면 됩니다.
-      </p>
-      <ul>
-        <li>서버 실행: 터미널에서 <code>npm start</code></li>
-        <li>주소창: <code>http://localhost:3000</code> (파일을 더블클릭해서 열면 안 됩니다)</li>
-        <li>기획 정리 문서: 프로젝트 안 <code>docs/PRODUCT_센텐스크래프트_기획.md</code></li>
-      </ul>
+      <div class="avatar-dock__stage">
+        <div class="avatar-dock__figure-wrap" aria-hidden="true">
+          <img id="avatar-dock-img" alt="" width="200" height="260" hidden />
+          <div id="avatar-dock-placeholder" class="avatar-dock__placeholder" title="추후 PNG 아바타">
+            <svg viewBox="0 0 48 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path
+                d="M24 8c-5 0-9 4-9 9 0 3.5 2 6.5 5 8-6 2-11 8-11 16v6h30v-6c0-8-5-14-11-16 3-1.5 5-4.5 5-8 0-5-4-9-9-9Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
+    <button type="button" id="avatar-dock-tab" class="avatar-dock__tab" aria-label="프로필 패널 펼치기" title="펼치기 (클릭 또는 마우스를 올리면 잠시 표시)">
+      <svg viewBox="0 0 48 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path
+          d="M24 8c-5 0-9 4-9 9 0 3.5 2 6.5 5 8-6 2-11 8-11 16v6h30v-6c0-8-5-14-11-16 3-1.5 5-4.5 5-8 0-5-4-9-9-9Z"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>프로필</span>
+    </button>
+  </div>
 
-    <div class="card">
-      <p class="muted">규칙 표(API로도 내려감): <code>/api/public-config</code></p>
+  <div id="chat-rail" class="chat-dock" role="complementary" aria-label="실시간 채팅" hidden>
+    <div class="chat-dock__sheet">
+      <div class="chat-rail__panel" id="chat-rail-panel">
+        <div class="chat-rail__head">
+          <button
+            type="button"
+            id="chat-rail-resize"
+            class="chat-rail__resize-handle"
+            aria-label="채팅창 크기 조절"
+            title="끌어서 가로·세로 크기 조절"
+          >
+            ⤡
+          </button>
+          <h2>채팅</h2>
+          <div class="chat-rail__head-actions">
+            <button type="button" id="chat-rail-size-reset" aria-label="채팅창 기본 크기로 초기화" title="기본 크기">
+              ⟲
+            </button>
+            <button type="button" id="chat-rail-hide" aria-label="채팅 패널 숨기기" title="패널 접기">
+              &gt;
+            </button>
+          </div>
+        </div>
+        <div class="chat-rail__tabs" role="tablist" aria-label="채팅 방">
+          <button type="button" id="chat-tab-global" class="is-active" role="tab" aria-selected="true">
+            전체채팅
+          </button>
+          <button type="button" id="chat-tab-territory" role="tab" aria-selected="false">
+            해당소속채팅
+          </button>
+        </div>
+        <p id="chat-rail-hint" class="chat-rail__hint">왼쪽 위 ⤡ 를 끌면 크기 조절 · ⟲ 는 기본 크기. 베타: 인메모리·폴링(~2.5초).</p>
+        <div id="chat-messages" class="chat-rail__messages" aria-live="polite"></div>
+        <form id="chat-form" class="chat-rail__form" autocomplete="off">
+          <input id="chat-input" type="text" maxlength="500" placeholder="메시지…" aria-label="채팅 입력" />
+          <button type="submit">전송</button>
+        </form>
+      </div>
     </div>
-  </main>
+    <button type="button" id="chat-rail-tab" class="chat-rail__tab" aria-label="채팅 패널 펼치기" title="채팅 열기">
+      채팅
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      var AUTH_KEY = 'sc_sb_auth_session';
+      var GUEST_KEY = 'sc_sb_guest_ok';
+
+      function readAuth() {
+        try {
+          var raw = sessionStorage.getItem(AUTH_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function clearAuth() {
+        try {
+          sessionStorage.removeItem(AUTH_KEY);
+        } catch (_) {}
+      }
+
+      function clearGuest() {
+        try {
+          sessionStorage.removeItem(GUEST_KEY);
+        } catch (_) {}
+      }
+
+      function isGuestOk() {
+        try {
+          return sessionStorage.getItem(GUEST_KEY) === '1';
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function el(id) {
+        return document.getElementById(id);
+      }
+
+      function showAppChrome() {
+        var loginV = el('view-login');
+        var appV = el('view-app');
+        var avatar = el('avatar-dock');
+        var chat = el('chat-rail');
+        document.body.classList.add('sc-app-mode');
+        if (loginV) loginV.hidden = true;
+        if (appV) appV.hidden = false;
+        if (avatar) avatar.hidden = false;
+        if (chat) chat.hidden = false;
+      }
+
+      function bindAppNavigation() {
+        var main = el('screen-main');
+        var btnU = el('btn-board-unassigned');
+        var back = el('board-back-main');
+        if (main && !main.dataset.scNavBound) {
+          main.dataset.scNavBound = '1';
+          main.addEventListener('click', function (e) {
+            var z = e.target.closest('.zone[data-territory-id]');
+            if (!z) return;
+            e.preventDefault();
+            var tid = z.getAttribute('data-territory-id');
+            if (tid && window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(tid);
+          });
+          main.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            var z = e.target.closest('.zone[data-territory-id]');
+            if (!z || z !== document.activeElement) return;
+            e.preventDefault();
+            var tid = z.getAttribute('data-territory-id');
+            if (tid && window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(tid);
+          });
+        }
+        if (btnU && !btnU.dataset.scBound) {
+          btnU.dataset.scBound = '1';
+          btnU.addEventListener('click', function () {
+            if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard('UNASSIGNED');
+          });
+        }
+        if (back && !back.dataset.scBound) {
+          back.dataset.scBound = '1';
+          back.addEventListener('click', function () {
+            if (window.__scApp && window.__scApp.goMain) window.__scApp.goMain();
+          });
+        }
+      }
+
+      window.__scApp = {
+        showLoginOnly: function () {
+          var loginV = el('view-login');
+          var appV = el('view-app');
+          var avatar = el('avatar-dock');
+          var chat = el('chat-rail');
+          document.body.classList.remove('sc-app-mode');
+          if (loginV) loginV.hidden = false;
+          if (appV) appV.hidden = true;
+          if (avatar) avatar.hidden = true;
+          if (chat) chat.hidden = true;
+        },
+        enterAppMain: function () {
+          var mainS = el('screen-main');
+          var boardS = el('screen-board');
+          showAppChrome();
+          if (mainS) mainS.hidden = false;
+          if (boardS) boardS.hidden = true;
+          bindAppNavigation();
+          if (window.__scRefreshBeltTerritoryArt) window.__scRefreshBeltTerritoryArt();
+        },
+        goBoard: function (tid) {
+          var mainS = el('screen-main');
+          var boardS = el('screen-board');
+          showAppChrome();
+          if (mainS) mainS.hidden = true;
+          if (boardS) boardS.hidden = false;
+          bindAppNavigation();
+          if (window.__scBoardGoTerritory) window.__scBoardGoTerritory(tid);
+          window.scrollTo(0, 0);
+        },
+        goMain: function () {
+          this.enterAppMain();
+          window.scrollTo(0, 0);
+        },
+      };
+
+      async function signOut() {
+        var auth = readAuth();
+        var token = auth && auth.session && auth.session.access_token;
+        if (token) {
+          try {
+            await fetch('/api/auth/signout', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token },
+            });
+          } catch (_) {}
+        }
+        clearGuest();
+        clearAuth();
+        window.location.reload();
+      }
+
+      function renderAppUserBarLoggedIn(label) {
+        var bar = el('app-user-status');
+        if (!bar) return;
+        bar.textContent = '';
+        bar.appendChild(document.createTextNode('로그인: ' + label));
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '로그아웃';
+        btn.addEventListener('click', signOut);
+        bar.appendChild(btn);
+      }
+
+      function renderAppUserBarGuest() {
+        var bar = el('app-user-status');
+        if (!bar) return;
+        bar.textContent = '';
+        bar.appendChild(document.createTextNode('게스트 (소셜 로그인 없이 UI만)'));
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '나가기';
+        btn.addEventListener('click', signOut);
+        bar.appendChild(btn);
+      }
+
+      function clearAppUserBar() {
+        var bar = el('app-user-status');
+        if (bar) bar.textContent = '';
+      }
+
+      async function refreshAuthUi() {
+        var statusLogin = el('auth-status-login');
+        var oauth = el('oauth-buttons');
+        var guestBtn = el('auth-guest-btn');
+        if (!oauth) return;
+
+        if (guestBtn) guestBtn.style.display = '';
+
+        var supabaseOk = true;
+        try {
+          var hr = await fetch('/health');
+          var hj = await hr.json();
+          supabaseOk = Boolean(hj.supabaseConfigured);
+        } catch (_) {
+          supabaseOk = false;
+        }
+
+        function stayOnLogin(msg) {
+          if (statusLogin && msg) statusLogin.textContent = msg;
+          clearAppUserBar();
+          if (window.__scApp) window.__scApp.showLoginOnly();
+        }
+
+        if (!supabaseOk) {
+          oauth.querySelectorAll('a').forEach(function (a) {
+            a.setAttribute('aria-disabled', 'true');
+            a.style.pointerEvents = 'none';
+            a.style.opacity = '0.45';
+          });
+          if (statusLogin) {
+            statusLogin.textContent =
+              'Supabase가 설정되지 않았습니다. OAuth는 비활성입니다. 게스트 입장으로 메인·게시판만 둘러볼 수 있습니다.';
+          }
+          if (isGuestOk()) {
+            if (window.__scApp) window.__scApp.enterAppMain();
+            renderAppUserBarGuest();
+            return;
+          }
+          if (window.__scApp) window.__scApp.showLoginOnly();
+          return;
+        }
+
+        oauth.querySelectorAll('a').forEach(function (a) {
+          a.removeAttribute('aria-disabled');
+          a.style.pointerEvents = '';
+          a.style.opacity = '';
+        });
+
+        var auth = readAuth();
+        var token = auth && auth.session && auth.session.access_token;
+        if (statusLogin) statusLogin.textContent = '';
+        oauth.style.display = '';
+
+        if (!token) {
+          if (isGuestOk()) {
+            if (window.__scApp) window.__scApp.enterAppMain();
+            renderAppUserBarGuest();
+            return;
+          }
+          if (statusLogin) statusLogin.textContent = '로그인하지 않은 상태입니다.';
+          if (window.__scApp) window.__scApp.showLoginOnly();
+          return;
+        }
+
+        try {
+          var r = await fetch('/api/auth/me', {
+            headers: { Authorization: 'Bearer ' + token },
+          });
+          var j = await r.json();
+          if (!j.ok) {
+            clearAuth();
+            stayOnLogin('세션이 만료되었거나 유효하지 않습니다. 다시 로그인해 주세요.');
+            return;
+          }
+          oauth.style.display = 'none';
+          if (guestBtn) guestBtn.style.display = 'none';
+          var label = (j.user && j.user.email) || (j.user && j.user.id) || '로그인됨';
+          renderAppUserBarLoggedIn(label);
+          if (window.__scApp) window.__scApp.enterAppMain();
+        } catch (_) {
+          stayOnLogin('로그인 상태를 확인하지 못했습니다. 네트워크를 확인해 주세요.');
+        }
+      }
+
+      var gBtn = el('auth-guest-btn');
+      if (gBtn) {
+        gBtn.addEventListener('click', function () {
+          try {
+            sessionStorage.setItem(GUEST_KEY, '1');
+          } catch (_) {}
+          refreshAuthUi();
+        });
+      }
+
+      refreshAuthUi();
+    })();
+  </script>
+  <script>
+    (function () {
+      var dock = document.getElementById('avatar-dock');
+      var btnHide = document.getElementById('avatar-dock-hide');
+      var btnTab = document.getElementById('avatar-dock-tab');
+      var img = document.getElementById('avatar-dock-img');
+      var ph = document.getElementById('avatar-dock-placeholder');
+      if (!dock || !btnHide || !btnTab) return;
+
+      /** 처음엔 접어 두고 — 탭 클릭·접힌 채 마우스 올리면 펼침 (채팅과 같이 화면을 덜 차지) */
+      var collapsed = true;
+
+      function setDockClass() {
+        dock.classList.toggle('is-collapsed', collapsed);
+        dock.classList.remove('is-peeking');
+      }
+
+      function setPeek(on) {
+        dock.classList.toggle('is-peeking', Boolean(on));
+      }
+
+      setDockClass();
+      btnHide.addEventListener('click', function () {
+        collapsed = true;
+        setDockClass();
+        setPeek(false);
+      });
+
+      btnTab.addEventListener('click', function () {
+        if (!collapsed) return;
+        collapsed = false;
+        setDockClass();
+      });
+
+      dock.addEventListener('mouseenter', function () {
+        if (collapsed) setPeek(true);
+      });
+      dock.addEventListener('mouseleave', function () {
+        if (collapsed) setPeek(false);
+      });
+
+      /** PNG 적용: img.src = '/avatars/me.png'; img.removeAttribute('hidden'); ph.hidden = true; */
+      window.setAvatarDockImage = function (src) {
+        if (!src || !img || !ph) return;
+        img.src = src;
+        img.removeAttribute('hidden');
+        ph.hidden = true;
+      };
+
+      var elUser = document.getElementById('avatar-meta-userid');
+      var elTen = document.getElementById('avatar-meta-tendency');
+      var elTerr = document.getElementById('avatar-meta-territory');
+      var elRank = document.getElementById('avatar-meta-rank');
+      var elTbarR = document.getElementById('avatar-tbar-r');
+      var elTbarC = document.getElementById('avatar-tbar-c');
+      var elTbarL = document.getElementById('avatar-tbar-l');
+      var elTbarLegend = document.getElementById('avatar-tbar-legend');
+      var elTbarTrack = document.getElementById('avatar-tbar-track');
+
+      function normalizeTendency3(conservative, centrist, progressive) {
+        var r = Math.max(0, Number(conservative));
+        var c = Math.max(0, Number(centrist));
+        var l = Math.max(0, Number(progressive));
+        if (r !== r) r = 0;
+        if (c !== c) c = 0;
+        if (l !== l) l = 0;
+        var t = r + c + l;
+        if (t <= 0) return { r: 100 / 3, c: 100 / 3, l: 100 / 3 };
+        return { r: (100 * r) / t, c: (100 * c) / t, l: (100 * l) / t };
+      }
+
+      function setTendencyNone() {
+        if (elTbarTrack) {
+          elTbarTrack.classList.add('avatar-tbar--neutral');
+        }
+        if (elTbarR) elTbarR.style.width = '0%';
+        if (elTbarC) elTbarC.style.width = '0%';
+        if (elTbarL) elTbarL.style.width = '0%';
+        if (elTbarLegend) {
+          elTbarLegend.textContent =
+            '아직 분류 없음 · 글이나 댓글 등 활동이 쌓이면 보수·중도·진보 비율이 표시됩니다.';
+        }
+        if (elTbarTrack) {
+          elTbarTrack.setAttribute('aria-label', '정치 성향 없음 (미분류)');
+        }
+      }
+
+      function setTendencyBar(pctIn) {
+        if (elTbarTrack) elTbarTrack.classList.remove('avatar-tbar--neutral');
+        var p = pctIn || {};
+        var n = normalizeTendency3(p.conservative, p.centrist, p.progressive);
+        var ir = Math.round(n.r);
+        var ic = Math.round(n.c);
+        var il = Math.max(0, 100 - ir - ic);
+        if (elTbarR) elTbarR.style.width = ir + '%';
+        if (elTbarC) elTbarC.style.width = ic + '%';
+        if (elTbarL) elTbarL.style.width = il + '%';
+        if (elTbarLegend) {
+          elTbarLegend.textContent =
+            '보수 ' + ir + '% · 중도 ' + ic + '% · 진보(좌파) ' + il + '%';
+        }
+        if (elTbarTrack) {
+          elTbarTrack.setAttribute(
+            'aria-label',
+            '정치 성향 비율: 보수 ' + ir + '퍼센트, 중도 ' + ic + '퍼센트, 진보(좌파) ' + il + '퍼센트',
+          );
+        }
+      }
+
+      function hasMeasuredTendency(pct) {
+        if (!pct || typeof pct !== 'object' || pct.none) return false;
+        var r = pct.conservative;
+        var c = pct.centrist;
+        var p = pct.progressive;
+        return (
+          typeof r === 'number' &&
+          !isNaN(r) &&
+          typeof c === 'number' &&
+          !isNaN(c) &&
+          typeof p === 'number' &&
+          !isNaN(p)
+        );
+      }
+
+      function setMeta(userId, tendency, territory, rank, tendencyPct) {
+        if (elUser) elUser.textContent = userId;
+        if (elTen) elTen.textContent = tendency;
+        if (elTerr) elTerr.textContent = territory;
+        if (elRank) elRank.textContent = rank;
+
+        var hasPct = hasMeasuredTendency(tendencyPct);
+        if (!hasPct) {
+          setTendencyNone();
+        } else {
+          setTendencyBar(tendencyPct);
+        }
+
+        var tid = territoryCodeFromLabel(territory);
+        var ts = String(territory || '').trim();
+        var affChat = ts.indexOf('·') >= 0 ? ts.split('·').slice(1).join('·').trim() : ts || tid;
+
+        var n = hasPct
+          ? normalizeTendency3(
+              tendencyPct.conservative,
+              tendencyPct.centrist,
+              tendencyPct.progressive,
+            )
+          : null;
+        window.__scPlayer = {
+          userId: userId || 'guest',
+          territoryId: tid,
+          affiliationDisplay: affChat || tid,
+          tendency: tendency,
+          rank: rank,
+          tendencyPct: hasPct
+            ? {
+                conservative: Math.round(n.r * 10) / 10,
+                centrist: Math.round(n.c * 10) / 10,
+                progressive: Math.round(n.l * 10) / 10,
+              }
+            : { none: true },
+        };
+      }
+
+      function territoryCodeFromLabel(territoryStr) {
+        var allowed = [
+          'CONSERVATIVE',
+          'CENTRIST',
+          'PROGRESSIVE',
+          'KANTAPBIYA_LEFT',
+          'KANTAPBIYA_RIGHT',
+          'UNASSIGNED',
+        ];
+        var s = String(territoryStr || '').trim();
+        if (!s || s === '미편입') return 'UNASSIGNED';
+        var code = s.split('·')[0].trim();
+        if (allowed.indexOf(code) >= 0) return code;
+        return 'UNASSIGNED';
+      }
+
+      function applyGuestNeutralMeta() {
+        setMeta(
+          'guest_demo',
+          '정치 성향 없음 (미분류)',
+          '미편입',
+          '#— (미연동)',
+          null,
+        );
+      }
+
+      applyGuestNeutralMeta();
+
+      var AUTH_KEY = 'sc_sb_auth_session';
+      function readAuth() {
+        try {
+          var raw = sessionStorage.getItem(AUTH_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      async function syncMetaFromSession() {
+        var auth = readAuth();
+        var token = auth && auth.session && auth.session.access_token;
+        if (!token) {
+          applyGuestNeutralMeta();
+          return;
+        }
+        try {
+          var r = await fetch('/api/auth/me', {
+            headers: { Authorization: 'Bearer ' + token },
+          });
+          var j = await r.json();
+          if (!j.ok) {
+            applyGuestNeutralMeta();
+            return;
+          }
+          var u = j.user || {};
+          var id = u.email || u.id || '—';
+          setMeta(id, '정치 성향 없음 (미분류)', '미편입', '#— (미연동)', null);
+        } catch (_) {
+          applyGuestNeutralMeta();
+        }
+      }
+
+      syncMetaFromSession();
+    })();
+  </script>
+  <script>
+    (function () {
+      var rail = document.getElementById('chat-rail');
+      var panel = document.getElementById('chat-rail-panel');
+      var btnHide = document.getElementById('chat-rail-hide');
+      var btnReset = document.getElementById('chat-rail-size-reset');
+      var handleResize = document.getElementById('chat-rail-resize');
+      var btnTab = document.getElementById('chat-rail-tab');
+      var tabG = document.getElementById('chat-tab-global');
+      var tabT = document.getElementById('chat-tab-territory');
+      var box = document.getElementById('chat-messages');
+      var form = document.getElementById('chat-form');
+      var input = document.getElementById('chat-input');
+      if (!rail || !panel || !btnHide || !btnTab || !tabG || !tabT || !box || !form || !input) return;
+
+      window.__scPlayer =
+        window.__scPlayer || {
+          userId: 'guest_demo',
+          territoryId: 'UNASSIGNED',
+          affiliationDisplay: '미편입',
+        };
+
+      var collapsed = false;
+      var room = 'global';
+      var lastId = 0;
+      var seen = new Set();
+      var pollTimer = null;
+
+      function setCollapsed(on) {
+        collapsed = Boolean(on);
+        rail.classList.toggle('chat-dock--collapsed', collapsed);
+      }
+
+      btnHide.addEventListener('click', function () {
+        setCollapsed(true);
+      });
+      btnTab.addEventListener('click', function () {
+        setCollapsed(false);
+      });
+
+      var CHAT_MIN_W = 160;
+      var CHAT_MAX_W = 520;
+      var CHAT_MIN_H = 120;
+      var CHAT_MAX_H = 720;
+
+      function clampChat(n, lo, hi) {
+        return Math.max(lo, Math.min(hi, n));
+      }
+
+      function applyChatSize(w, h) {
+        var maxW = Math.min(CHAT_MAX_W, window.innerWidth - 48);
+        var maxH = Math.min(CHAT_MAX_H, window.innerHeight - 48);
+        w = clampChat(Math.round(w), CHAT_MIN_W, maxW);
+        h = clampChat(Math.round(h), CHAT_MIN_H, maxH);
+        rail.style.setProperty('--chat-panel-width', w + 'px');
+        rail.style.setProperty('--chat-panel-height', h + 'px');
+      }
+
+      function resetChatSize() {
+        rail.style.removeProperty('--chat-panel-width');
+        rail.style.removeProperty('--chat-panel-height');
+      }
+
+      if (btnReset) {
+        btnReset.addEventListener('click', function () {
+          resetChatSize();
+        });
+      }
+
+      if (handleResize) {
+        handleResize.addEventListener('mousedown', function (e) {
+          if (e.button !== 0 || collapsed) return;
+          e.preventDefault();
+          var r = panel.getBoundingClientRect();
+          var start = { mx: e.clientX, my: e.clientY, w: r.width, h: r.height };
+          rail.classList.add('is-resizing');
+          document.body.style.userSelect = 'none';
+
+          function onMove(ev) {
+            var nw = start.w + (start.mx - ev.clientX);
+            var nh = start.h + (start.my - ev.clientY);
+            applyChatSize(nw, nh);
+          }
+          function onUp() {
+            rail.classList.remove('is-resizing');
+            document.body.style.removeProperty('user-select');
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onUp);
+          }
+          window.addEventListener('mousemove', onMove);
+          window.addEventListener('mouseup', onUp);
+        });
+      }
+
+      function getAuthHeaders() {
+        var headers = { 'Content-Type': 'application/json' };
+        try {
+          var raw = sessionStorage.getItem('sc_sb_auth_session');
+          if (!raw) return headers;
+          var auth = JSON.parse(raw);
+          var t = auth && auth.session && auth.session.access_token;
+          if (t) headers.Authorization = 'Bearer ' + t;
+        } catch (_) {}
+        return headers;
+      }
+
+      function syncTabs() {
+        tabG.classList.toggle('is-active', room === 'global');
+        tabG.setAttribute('aria-selected', room === 'global' ? 'true' : 'false');
+        tabT.classList.toggle('is-active', room === 'territory');
+        tabT.setAttribute('aria-selected', room === 'territory' ? 'true' : 'false');
+      }
+
+      function resetRoomView() {
+        lastId = 0;
+        seen.clear();
+        box.textContent = '';
+      }
+
+      function switchRoom(next) {
+        if (room === next) return;
+        room = next;
+        syncTabs();
+        resetRoomView();
+        pollOnce();
+      }
+
+      tabG.addEventListener('click', function () {
+        switchRoom('global');
+      });
+      tabT.addEventListener('click', function () {
+        switchRoom('territory');
+      });
+
+      function appendMessages(items) {
+        var scroll = box.scrollTop + box.clientHeight >= box.scrollHeight - 24;
+        items.forEach(function (m) {
+          if (!m || seen.has(m.id)) return;
+          seen.add(m.id);
+          if (m.id > lastId) lastId = m.id;
+          var p = document.createElement('p');
+          p.className = 'chat-rail__line';
+          p.textContent = m.userId + '(' + m.affiliation + ') : ' + m.text;
+          box.appendChild(p);
+        });
+        if (scroll || lastId === 0) box.scrollTop = box.scrollHeight;
+      }
+
+      function buildMessagesUrl() {
+        var u = '/api/chat/messages?room=' + encodeURIComponent(room) + '&afterId=' + lastId;
+        if (room === 'territory') {
+          var tid =
+            (window.__scPlayer && window.__scPlayer.territoryId) || 'UNASSIGNED';
+          u += '&territoryId=' + encodeURIComponent(tid);
+        }
+        return u;
+      }
+
+      async function pollOnce() {
+        try {
+          var r = await fetch(buildMessagesUrl());
+          var j = await r.json();
+          if (!j.ok) return;
+          appendMessages(j.messages || []);
+        } catch (_) {}
+      }
+
+      function startPoll() {
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(pollOnce, 2500);
+      }
+
+      form.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        var text = String(input.value || '').trim();
+        if (!text) return;
+        var p = window.__scPlayer || {};
+        var body = {
+          room: room,
+          text: text,
+          affiliation: p.affiliationDisplay || '미정',
+          guestUserId: p.userId || 'guest',
+        };
+        if (room === 'territory') body.territoryId = p.territoryId || 'UNASSIGNED';
+        try {
+          var r = await fetch('/api/chat/messages', {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(body),
+          });
+          var j = await r.json();
+          if (j.ok && j.message) appendMessages([j.message]);
+          else if (!j.ok) console.warn('[chat]', j.error);
+        } catch (e) {
+          console.warn('[chat]', e);
+        }
+        input.value = '';
+        input.focus();
+      });
+
+      syncTabs();
+      pollOnce();
+      startPoll();
+    })();
+  </script>
+  <script>
+    (function () {
+      var BUNDLE_KEY = 'sc_board_bundle_v1';
+      var LEGACY_KEY = 'sc_board_posts_v1';
+      var FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
+      var ALL_TERRITORY_IDS = [
+        'UNASSIGNED',
+        'CONSERVATIVE',
+        'CENTRIST',
+        'PROGRESSIVE',
+        'KANTAPBIYA_LEFT',
+        'KANTAPBIYA_RIGHT',
+      ];
+      var MAX_IMAGES = 4;
+      var MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+      var MAX_COMMENT = 1500;
+      var CENTRIST_ISSUE_KEY = 'sc_centrist_daily_issue_v1';
+      var CENTRIST_THEME_POOL = [
+        {
+          topic: '물가·금리, 체감과 지표가 다를 때 무엇을 더 믿을까요?',
+          question: '지금 내 주변에서 가장 체감되는 ‘비싸짐’은 무엇이며, 그에 정책이 어떻게 반영되면 좋겠나요?',
+        },
+        {
+          topic: 'AI와 일자리 — 대체가 아니라 ‘협업’이 될 수 있을까요?',
+          question: '당신의 일(또는 공부) 영역에서 AI를 도입한다면, 반드시 사람이 맡아야 한다고 생각하는 부분은 어디인가요?',
+        },
+        {
+          topic: '지역·세대 갈등, 뉴스 속 당사자가 아닌 우리는 무엇을 할 수 있을까요?',
+          question: '같은 사안이라도 사람마다 다른 반응이 나오는 이유를 한 문장으로 정리해 본다면?',
+        },
+        {
+          topic: '기후·에너지 — 비용을 누가, 어떤 순서로 나눠 가질까요?',
+          question: '‘모두를 위한 전환’이 가능하다면, 가장 먼저 지켜져야 한다고 보는 원칙 한 가지는?',
+        },
+        {
+          topic: '청년 주거·일자리, ‘기회’의 기준은 공정과 효율 중 어디에 가까워야 할까요?',
+          question: '지금 사회에서 ‘한 번의 실수로 회복하기 어려운 구조’라고 느끼는 지점이 있다면 구체적으로?',
+        },
+        {
+          topic: '표현의 자유 vs 혐오·가짜뉴스, 선은 어디에 그을 수 있을까요?',
+          question: '법보다 먼저, 커뮤니티(온·오프라인) 안에서 지키고 싶은 최소한의 규칙을 제안한다면?',
+        },
+        {
+          topic: '복지 확대 vs 재정 건전성, 중도는 ‘둘 다’를 어떻게 말할 수 있을까요?',
+          question: '‘당장 필요한 안전망’과 ‘미래 세대 부담’ 사이에서, 오늘 한 줄로 남기고 싶은 입장은?',
+        },
+        {
+          topic: '외교·안보 이슈, 시민이 알아야 할 정보의 한계는 어디까지일까요?',
+          question: '공개되지 않는 정보 때문에 불안할 때, 시민으로서 가장 합리적인 행동 한 가지는 무엇이라고 보시나요?',
+        },
+        {
+          topic: '교통·도시 계획, ‘편의’와 ‘소음·환경’ 충돌을 어떻게 조정할까요?',
+          question: '내 동네에서 바꾸고 싶은 규칙(또는 관행)이 있다면, 찬반을 나누기 전에 먼저 합의해야 할 사실은?',
+        },
+        {
+          topic: '디지털 격차, ‘접속’이 아니라 ‘활용’까지 포함해야 할까요?',
+          question: '비슷한 기기를 써도 결과가 달라지는 경험을 본 적이 있다면, 그 차이를 줄이기 위한 작은 제안은?',
+        },
+      ];
+
+      var elList = document.getElementById('board-list');
+      var elModal = document.getElementById('board-modal');
+      var btnWrite = document.getElementById('board-btn-write');
+      var btnCancel = document.getElementById('board-modal-cancel');
+      var form = document.getElementById('board-form');
+      var titleIn = document.getElementById('board-title-input');
+      var bodyIn = document.getElementById('board-body-input');
+      var imgIn = document.getElementById('board-images-input');
+      var previews = document.getElementById('board-image-previews');
+      var selTerritory = document.getElementById('board-territory-select');
+      var elStageWrap = document.getElementById('board-stage-wrap');
+      var elStageTabs = document.getElementById('board-stage-tabs');
+      var elLocked = document.getElementById('board-locked');
+      var elBoardTitle = document.getElementById('board-title');
+      var elCentristHub = document.getElementById('centrist-hub-wrap');
+      var elCentristTopic = document.getElementById('centrist-issue-topic');
+      var elCentristQuestion = document.getElementById('centrist-issue-question');
+      var elCentristThreadRoot = document.getElementById('centrist-issue-thread-root');
+      var elCentristHotList = document.getElementById('centrist-hot-list');
+      var elCentristHotEmpty = document.getElementById('centrist-hot-empty');
+      var elBoardPostsHeading = document.getElementById('board-posts-heading');
+
+      if (!elList || !elModal || !form || !btnWrite || !btnCancel) return;
+
+      var pendingImages = [];
+      var currentTerritory = 'UNASSIGNED';
+      var currentStage = 1;
+
+      function isFourTier(tid) {
+        return FOUR_TIER_IDS.indexOf(tid) >= 0;
+      }
+
+      function effectiveStage() {
+        return isFourTier(currentTerritory) ? currentStage : 1;
+      }
+
+      function isBoardUnlocked() {
+        if (!isFourTier(currentTerritory)) return true;
+        return currentStage === 1;
+      }
+
+      function isCentristHubVisible() {
+        return currentTerritory === 'CENTRIST' && isBoardUnlocked();
+      }
+
+      function calendarDayKey() {
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1);
+        if (m.length < 2) m = '0' + m;
+        var day = String(d.getDate());
+        if (day.length < 2) day = '0' + day;
+        return y + '-' + m + '-' + day;
+      }
+
+      function hashDayString(s) {
+        var h = 0;
+        for (var i = 0; i < s.length; i++) {
+          h = (h * 31 + s.charCodeAt(i)) | 0;
+        }
+        return Math.abs(h);
+      }
+
+      function loadCentristIssueRecord() {
+        var dayKey = calendarDayKey();
+        try {
+          var raw = localStorage.getItem(CENTRIST_ISSUE_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          if (o && o.dayKey === dayKey && o.topic && o.aiQuestion) {
+            if (!Array.isArray(o.comments)) o.comments = [];
+            normalizeIssueComments(o);
+            return o;
+          }
+        } catch (_) {}
+        var idx = hashDayString(dayKey) % CENTRIST_THEME_POOL.length;
+        var th = CENTRIST_THEME_POOL[idx];
+        var rec = {
+          dayKey: dayKey,
+          topic: th.topic,
+          aiQuestion: th.question,
+          comments: [],
+        };
+        try {
+          localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(rec));
+        } catch (e) {
+          console.warn('[centrist issue]', e);
+        }
+        return rec;
+      }
+
+      function saveCentristIssueRecord(o) {
+        try {
+          localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(o));
+          return true;
+        } catch (e) {
+          alert('저장에 실패했습니다.');
+          return false;
+        }
+      }
+
+      function countCommentBreakdown(comments) {
+        if (!Array.isArray(comments)) return { top: 0, reply: 0, total: 0 };
+        var top = 0;
+        var reply = 0;
+        for (var i = 0; i < comments.length; i++) {
+          if (comments[i].parentId) reply++;
+          else top++;
+        }
+        return { top: top, reply: reply, total: comments.length };
+      }
+
+      function renderThreadedCommentNode(ctx, c, depth, container) {
+        var all = ctx.comments;
+        var wrap = document.createElement('div');
+        wrap.className = 'board__comment' + (depth > 0 ? ' board__comment--depth' : '');
+
+        var replies = all
+          .filter(function (x) {
+            return (x.parentId || null) === (c.id || null);
+          })
+          .sort(function (a, b) {
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          });
+        var n = replies.length;
+
+        var meta = document.createElement('div');
+        meta.className = 'board__comment-meta';
+        meta.textContent =
+          (c.authorId || '익명') +
+          ' · ' +
+          formatDate(c.createdAt) +
+          (n > 0 ? ' (답글 ' + n + ')' : '');
+
+        var te = document.createElement('div');
+        te.className = 'board__comment-text';
+        te.textContent = c.text || '';
+
+        var actions = document.createElement('div');
+        actions.className = 'board__comment-actions';
+
+        var btnReply = document.createElement('button');
+        btnReply.type = 'button';
+        btnReply.textContent = '답글';
+
+        var replySlot = document.createElement('div');
+        replySlot.className = 'board__reply-slot';
+
+        btnReply.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          if (ctx.canReply && !ctx.canReply()) return;
+          replySlot.textContent = '';
+          var ta = document.createElement('textarea');
+          ta.className = 'board__inline-reply';
+          ta.maxLength = MAX_COMMENT;
+          ta.placeholder = '답글 입력…';
+          var row = document.createElement('div');
+          row.className = 'board__reply-row';
+          var sub = document.createElement('button');
+          sub.type = 'button';
+          sub.className = 'board__reply-submit';
+          sub.textContent = '답글 등록';
+          sub.addEventListener('click', function (e2) {
+            e2.preventDefault();
+            ctx.onSubmit(ta.value, c.id);
+          });
+          row.appendChild(ta);
+          row.appendChild(sub);
+          replySlot.appendChild(row);
+        });
+
+        actions.appendChild(btnReply);
+        wrap.appendChild(meta);
+        wrap.appendChild(te);
+        wrap.appendChild(actions);
+        wrap.appendChild(replySlot);
+
+        var childrenWrap = document.createElement('div');
+        childrenWrap.className = 'board__comment-children';
+
+        replies.forEach(function (ch) {
+          renderThreadedCommentNode(ctx, ch, depth + 1, childrenWrap);
+        });
+
+        if (n > 0) {
+          childrenWrap.hidden = true;
+          var subToggle = document.createElement('button');
+          subToggle.type = 'button';
+          subToggle.className = 'board__comment-replies-toggle';
+          subToggle.setAttribute('aria-expanded', 'false');
+          subToggle.textContent = '대댓글 ' + n + '개 보기';
+          subToggle.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            var show = childrenWrap.hidden;
+            childrenWrap.hidden = !show;
+            subToggle.setAttribute('aria-expanded', show ? 'true' : 'false');
+            subToggle.textContent = show ? '대댓글 접기' : '대댓글 ' + n + '개 보기';
+          });
+          wrap.appendChild(subToggle);
+        }
+
+        wrap.appendChild(childrenWrap);
+        container.appendChild(wrap);
+      }
+
+      function normalizeIssueComments(rec) {
+        if (!rec || !Array.isArray(rec.comments)) return;
+        rec.comments.forEach(function (c) {
+          if (c.parentId === undefined || c.parentId === '') c.parentId = null;
+        });
+      }
+
+      function submitCentristIssueComment(text, parentId) {
+        if (!isCentristHubVisible()) return;
+        var t = String(text || '').trim();
+        if (!t) return;
+        if (t.length > MAX_COMMENT) {
+          alert('최대 ' + MAX_COMMENT + '자입니다.');
+          return;
+        }
+        var o = loadCentristIssueRecord();
+        normalizeIssueComments(o);
+        o.comments.push({
+          id: 'ic_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          authorId: uid(),
+          text: t,
+          createdAt: new Date().toISOString(),
+          parentId: parentId || null,
+        });
+        if (!saveCentristIssueRecord(o)) return;
+        renderCentristMainIssue();
+      }
+
+      function renderCentristIssueThread(rec) {
+        if (!elCentristThreadRoot) return;
+        elCentristThreadRoot.textContent = '';
+        normalizeIssueComments(rec);
+        var comments = rec.comments || [];
+        var st = countCommentBreakdown(comments);
+
+        var toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'board__comments-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+
+        function setToggleLabel(isOpen) {
+          if (st.total === 0) {
+            toggle.textContent = isOpen ? '의견·댓글 접기' : '의견·댓글 쓰기';
+          } else {
+            toggle.textContent = isOpen
+              ? '의견·댓글 접기 (댓글 ' + st.top + '·답글 ' + st.reply + ')'
+              : '의견·댓글 보기 (댓글 ' + st.top + '·답글 ' + st.reply + ')';
+          }
+        }
+        setToggleLabel(false);
+
+        var panel = document.createElement('div');
+        panel.className = 'board__comments-panel';
+        panel.hidden = true;
+
+        var ht = document.createElement('h4');
+        ht.className = 'board__comments-title';
+        ht.textContent = '스레드';
+
+        var list = document.createElement('div');
+        list.className = 'board__comment-list';
+
+        var ctx = {
+          comments: comments,
+          canReply: function () {
+            return isCentristHubVisible();
+          },
+          onSubmit: function (txt, pid) {
+            submitCentristIssueComment(txt, pid);
+          },
+        };
+
+        var roots = comments
+          .filter(function (x) {
+            return !x.parentId;
+          })
+          .sort(function (a, b) {
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          });
+        roots.forEach(function (c) {
+          renderThreadedCommentNode(ctx, c, 0, list);
+        });
+
+        var formRow = document.createElement('div');
+        formRow.className = 'board__comment-form';
+        var taTop = document.createElement('textarea');
+        taTop.maxLength = MAX_COMMENT;
+        taTop.placeholder = '질문에 대한 새 의견(댓글)';
+        taTop.rows = 2;
+        var btnTop = document.createElement('button');
+        btnTop.type = 'button';
+        btnTop.textContent = '의견 등록';
+        btnTop.className = 'board__comment-submit';
+        btnTop.addEventListener('click', function () {
+          submitCentristIssueComment(taTop.value, null);
+          taTop.value = '';
+        });
+        formRow.appendChild(taTop);
+        formRow.appendChild(btnTop);
+
+        panel.appendChild(ht);
+        panel.appendChild(list);
+        panel.appendChild(formRow);
+
+        toggle.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          panel.hidden = !panel.hidden;
+          var isOpen = !panel.hidden;
+          toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          setToggleLabel(isOpen);
+        });
+
+        elCentristThreadRoot.appendChild(toggle);
+        elCentristThreadRoot.appendChild(panel);
+      }
+
+      function renderCentristMainIssue() {
+        var rec = loadCentristIssueRecord();
+        normalizeIssueComments(rec);
+        if (elCentristTopic) elCentristTopic.textContent = rec.topic || '';
+        if (elCentristQuestion) elCentristQuestion.textContent = rec.aiQuestion || '';
+        renderCentristIssueThread(rec);
+      }
+
+      function isPostToday(iso, dayKey) {
+        return String(iso || '').slice(0, 10) === dayKey;
+      }
+
+      function hotScore(p) {
+        normalizePost(p);
+        return p.comments.length * 10 + Math.min(400, String(p.body || '').length) / 40;
+      }
+
+      function renderCentristHotRanking() {
+        if (!elCentristHotList) return;
+        elCentristHotList.textContent = '';
+        var dayKey = calendarDayKey();
+        var posts = getPosts('CENTRIST', 1);
+        var today = posts.filter(function (p) {
+          return isPostToday(p.createdAt, dayKey);
+        });
+        today.sort(function (a, b) {
+          var ds = hotScore(b) - hotScore(a);
+          if (ds !== 0) return ds;
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+        var top = today.slice(0, 5);
+        if (elCentristHotEmpty) elCentristHotEmpty.hidden = top.length > 0;
+        top.forEach(function (p, i) {
+          var li = document.createElement('li');
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'centrist-hot__btn';
+          btn.textContent = i + 1 + '위 · ' + (p.title || '(제목 없음)');
+          (function (pid) {
+            btn.addEventListener('click', function () {
+              scrollToPostById(pid);
+            });
+          })(p.id);
+          li.appendChild(btn);
+          elCentristHotList.appendChild(li);
+        });
+      }
+
+      function scrollToPostById(postId) {
+        if (!elList || !postId) return;
+        var sid = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(String(postId)) : String(postId);
+        var li = elList.querySelector('.board__item[data-post-id="' + sid + '"]');
+        if (!li) return;
+        var btn = li.querySelector('.board__item-btn');
+        li.classList.add('is-open');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+        li.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function territoryShortLabel(tid) {
+        var m = {
+          UNASSIGNED: '미편입',
+          CONSERVATIVE: '보수',
+          CENTRIST: '중도',
+          PROGRESSIVE: '진보',
+          KANTAPBIYA_LEFT: '깐따삐아 좌',
+          KANTAPBIYA_RIGHT: '깐따삐아 우',
+        };
+        return m[tid] || tid;
+      }
+
+      function postKey(tid, stage) {
+        return String(tid || 'UNASSIGNED') + '_s' + String(stage || 1);
+      }
+
+      function loadBundle() {
+        try {
+          var raw = localStorage.getItem(BUNDLE_KEY);
+          if (!raw) return { posts: {} };
+          var o = JSON.parse(raw);
+          if (!o || typeof o.posts !== 'object' || o.posts === null) return { posts: {} };
+          return o;
+        } catch (_) {
+          return { posts: {} };
+        }
+      }
+
+      function saveBundle(b) {
+        try {
+          localStorage.setItem(BUNDLE_KEY, JSON.stringify(b));
+          return true;
+        } catch (e) {
+          console.warn('[board] 저장 실패', e);
+          alert('저장에 실패했습니다. 본문·이미지·댓글을 줄여 보세요.');
+          return false;
+        }
+      }
+
+      function migrateLegacy() {
+        try {
+          var raw = localStorage.getItem(LEGACY_KEY);
+          if (!raw) return;
+          var arr = JSON.parse(raw);
+          if (!Array.isArray(arr) || !arr.length) {
+            localStorage.removeItem(LEGACY_KEY);
+            return;
+          }
+          var b = loadBundle();
+          var k = postKey('CENTRIST', 1);
+          if (!Array.isArray(b.posts[k]) || b.posts[k].length === 0) {
+            b.posts[k] = arr;
+            saveBundle(b);
+          }
+          localStorage.removeItem(LEGACY_KEY);
+        } catch (_) {}
+      }
+
+      function normalizePost(p) {
+        if (!p.comments || !Array.isArray(p.comments)) p.comments = [];
+        return p;
+      }
+
+      function getPosts(tid, stage) {
+        var k = postKey(tid, stage);
+        var raw = loadBundle().posts[k];
+        if (!Array.isArray(raw)) return [];
+        var copy;
+        try {
+          copy = JSON.parse(JSON.stringify(raw));
+        } catch (_) {
+          return [];
+        }
+        return copy.map(function (p) {
+          return normalizePost(p);
+        });
+      }
+
+      function setPosts(tid, stage, arr) {
+        var b = loadBundle();
+        b.posts[postKey(tid, stage)] = arr;
+        return saveBundle(b);
+      }
+
+      function loadPostsCurrent() {
+        return getPosts(currentTerritory, effectiveStage());
+      }
+
+      function sanitizeTitle(s) {
+        return String(s || '')
+          .replace(/[<>]/g, '')
+          .trim()
+          .slice(0, 120);
+      }
+
+      function seedTerritoryIfEmpty(tid) {
+        var posts = getPosts(tid, 1);
+        if (posts.length) return;
+        var label = territoryShortLabel(tid);
+        var tierNote = isFourTier(tid)
+          ? '이 영토는 게시판이 4단계로 나뉘어 있으며, 지금은 1단계만 열려 있습니다.'
+          : '이 영토 전용 게시판입니다. 다른 영토와 글 목록은 서로 다릅니다.';
+        setPosts(tid, 1, [
+          normalizePost({
+            id: 'seed_' + tid + '_welcome',
+            title: '[' + label + '] 게시판에 오신 것을 환영합니다',
+            body:
+              tierNote +
+              '\n\n· 제목만 BM 도입 전까지 < > 같은 태그 입력이 제한됩니다.\n' +
+              '· 글 본문을 펼친 뒤 「댓글·답글 보기」 버튼을 눌러야 스레드가 보입니다.\n' +
+              '· 데이터는 이 브라우저(localStorage)에만 저장되는 데모입니다.',
+            images: [],
+            authorId: '운영자(샘플)',
+            createdAt: new Date().toISOString(),
+            comments: [],
+          }),
+        ]);
+      }
+
+      function seedAllTerritories() {
+        ALL_TERRITORY_IDS.forEach(seedTerritoryIfEmpty);
+      }
+
+      function formatDate(iso) {
+        try {
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '';
+          return d.toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' });
+        } catch (_) {
+          return '';
+        }
+      }
+
+      function snippetFromBody(body) {
+        var s = String(body || '')
+          .replace(/\r\n/g, '\n')
+          .replace(/\n+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        return s.length > 140 ? s.slice(0, 140) + '…' : s;
+      }
+
+      function uid() {
+        return (window.__scPlayer && window.__scPlayer.userId) || 'guest';
+      }
+
+      function submitComment(postId, text, parentId) {
+        if (!isBoardUnlocked()) return;
+        var t = String(text || '').trim();
+        if (!t) return;
+        if (t.length > MAX_COMMENT) {
+          alert('댓글은 최대 ' + MAX_COMMENT + '자입니다.');
+          return;
+        }
+        var all = loadPostsCurrent();
+        var post = null;
+        for (var i = 0; i < all.length; i++) {
+          normalizePost(all[i]);
+          if (all[i].id === postId) {
+            post = all[i];
+            break;
+          }
+        }
+        if (!post) return;
+        post.comments.push({
+          id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+          authorId: uid(),
+          text: t,
+          createdAt: new Date().toISOString(),
+          parentId: parentId || null,
+        });
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+      }
+
+      function renderCommentsSection(post, bodyWrap) {
+        normalizePost(post);
+        var sec = document.createElement('div');
+        sec.className = 'board__comments';
+
+        var st = countCommentBreakdown(post.comments);
+        var toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'board__comments-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+
+        function setToggleLabel(isOpen) {
+          if (st.total === 0) {
+            toggle.textContent = isOpen ? '댓글·답글 접기' : '댓글·답글 쓰기';
+          } else {
+            toggle.textContent = isOpen
+              ? '댓글·답글 접기 (댓글 ' + st.top + '·답글 ' + st.reply + ')'
+              : '댓글·답글 보기 (댓글 ' + st.top + '·답글 ' + st.reply + ')';
+          }
+        }
+        setToggleLabel(false);
+
+        var panel = document.createElement('div');
+        panel.className = 'board__comments-panel';
+        panel.hidden = true;
+
+        var ht = document.createElement('h4');
+        ht.className = 'board__comments-title';
+        ht.textContent = '댓글';
+
+        var list = document.createElement('div');
+        list.className = 'board__comment-list';
+
+        var ctx = {
+          comments: post.comments,
+          canReply: function () {
+            return isBoardUnlocked();
+          },
+          onSubmit: function (txt, pid) {
+            submitComment(post.id, txt, pid);
+          },
+        };
+
+        var roots = post.comments
+          .filter(function (x) {
+            return !x.parentId;
+          })
+          .sort(function (a, b) {
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          });
+
+        roots.forEach(function (c) {
+          renderThreadedCommentNode(ctx, c, 0, list);
+        });
+
+        var formRow = document.createElement('div');
+        formRow.className = 'board__comment-form';
+        var taTop = document.createElement('textarea');
+        taTop.maxLength = MAX_COMMENT;
+        taTop.placeholder = '댓글을 입력하세요';
+        taTop.rows = 2;
+        var btnTop = document.createElement('button');
+        btnTop.type = 'button';
+        btnTop.textContent = '댓글 등록';
+        btnTop.className = 'board__comment-submit';
+        btnTop.addEventListener('click', function () {
+          submitComment(post.id, taTop.value, null);
+          taTop.value = '';
+        });
+        formRow.appendChild(taTop);
+        formRow.appendChild(btnTop);
+
+        panel.appendChild(ht);
+        panel.appendChild(list);
+        panel.appendChild(formRow);
+
+        toggle.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          panel.hidden = !panel.hidden;
+          var isOpen = !panel.hidden;
+          toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          setToggleLabel(isOpen);
+        });
+
+        sec.appendChild(toggle);
+        sec.appendChild(panel);
+        bodyWrap.appendChild(sec);
+      }
+
+      function renderPost(p) {
+        normalizePost(p);
+        var li = document.createElement('li');
+        li.className = 'board__item';
+        li.setAttribute('data-post-id', p.id || '');
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'board__item-btn';
+        btn.setAttribute('aria-expanded', 'false');
+
+        var h = document.createElement('h3');
+        h.className = 'board__item-title';
+        h.appendChild(document.createTextNode(p.title || '(제목 없음)'));
+        var stb = countCommentBreakdown(p.comments);
+        if (stb.total > 0) {
+          var badge = document.createElement('span');
+          badge.className = 'board__item-comment-badge';
+          badge.textContent = ' (댓글 ' + stb.top + '·답글 ' + stb.reply + ')';
+          h.appendChild(badge);
+        }
+
+        var meta = document.createElement('div');
+        meta.className = 'board__item-meta';
+        meta.textContent = (p.authorId || '익명') + ' · ' + formatDate(p.createdAt);
+
+        var snip = document.createElement('p');
+        snip.className = 'board__item-snippet';
+        snip.textContent = snippetFromBody(p.body) || '내용 없음';
+
+        btn.appendChild(h);
+        btn.appendChild(meta);
+        btn.appendChild(snip);
+
+        if (p.images && p.images.length) {
+          var th = document.createElement('img');
+          th.className = 'board__item-thumb';
+          th.src = p.images[0];
+          th.alt = '첨부 미리보기';
+          th.loading = 'lazy';
+          btn.appendChild(th);
+        }
+
+        var bodyWrap = document.createElement('div');
+        bodyWrap.className = 'board__item-body';
+
+        var textEl = document.createElement('div');
+        textEl.textContent = p.body || '';
+        bodyWrap.appendChild(textEl);
+
+        if (p.images && p.images.length) {
+          var gal = document.createElement('div');
+          gal.className = 'board__body-gallery';
+          p.images.forEach(function (src) {
+            var im = document.createElement('img');
+            im.src = src;
+            im.alt = '첨부 이미지';
+            im.loading = 'lazy';
+            gal.appendChild(im);
+          });
+          bodyWrap.appendChild(gal);
+        }
+
+        if (isBoardUnlocked()) {
+          renderCommentsSection(p, bodyWrap);
+        }
+
+        btn.addEventListener('click', function () {
+          var on = !li.classList.contains('is-open');
+          li.classList.toggle('is-open', on);
+          btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+        });
+
+        li.appendChild(btn);
+        li.appendChild(bodyWrap);
+        return li;
+      }
+
+      function refreshListOnly() {
+        elList.textContent = '';
+        var posts = loadPostsCurrent().slice();
+        if (currentTerritory === 'CENTRIST' && isBoardUnlocked()) {
+          posts.sort(function (a, b) {
+            return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+          });
+        } else {
+          posts.sort(function (a, b) {
+            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+          });
+        }
+        posts.forEach(function (p) {
+          elList.appendChild(renderPost(p));
+        });
+        if (currentTerritory === 'CENTRIST' && isBoardUnlocked()) {
+          renderCentristHotRanking();
+        }
+      }
+
+      function buildStageTabs() {
+        if (!elStageTabs) return;
+        elStageTabs.textContent = '';
+        for (var s = 1; s <= 4; s++) {
+          (function (stage) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'board__stage-tab';
+            b.setAttribute('role', 'tab');
+            b.dataset.stage = String(stage);
+            b.textContent = stage + '단계';
+            b.addEventListener('click', function () {
+              currentStage = stage;
+              syncStageTabStyles();
+              refreshBoardView();
+            });
+            elStageTabs.appendChild(b);
+          })(s);
+        }
+      }
+
+      function syncStageTabStyles() {
+        if (!elStageTabs) return;
+        var tabs = elStageTabs.querySelectorAll('.board__stage-tab');
+        for (var i = 0; i < tabs.length; i++) {
+          var t = tabs[i];
+          var st = parseInt(t.dataset.stage, 10);
+          var on = st === currentStage;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+      }
+
+      function refreshBoardView() {
+        if (elBoardTitle) {
+          if (currentTerritory === 'CENTRIST') {
+            elBoardTitle.textContent = '중도(일반) 진영 · 게시글 목록';
+          } else if (isFourTier(currentTerritory)) {
+            elBoardTitle.textContent =
+              '게시판 — ' + territoryShortLabel(currentTerritory) + ' (' + currentStage + '단계)';
+          } else {
+            elBoardTitle.textContent = '게시판 — ' + territoryShortLabel(currentTerritory);
+          }
+        }
+
+        if (elStageWrap) {
+          elStageWrap.hidden = !isFourTier(currentTerritory);
+        }
+
+        if (elLocked) {
+          var locked = isFourTier(currentTerritory) && currentStage > 1;
+          elLocked.hidden = !locked;
+        }
+
+        if (elList) {
+          elList.hidden = !isBoardUnlocked();
+        }
+
+        if (btnWrite) {
+          btnWrite.disabled = !isBoardUnlocked();
+          btnWrite.title = isBoardUnlocked() ? '' : '1단계만 글쓰기가 가능합니다.';
+        }
+
+        if (elCentristHub) {
+          var showHub = currentTerritory === 'CENTRIST' && isBoardUnlocked();
+          elCentristHub.hidden = !showHub;
+          if (elBoardPostsHeading) elBoardPostsHeading.hidden = !showHub;
+          if (showHub) {
+            renderCentristMainIssue();
+          }
+        }
+
+        if (isBoardUnlocked()) {
+          refreshListOnly();
+        } else if (elList) {
+          elList.textContent = '';
+        }
+      }
+
+      function openModal() {
+        if (!isBoardUnlocked()) {
+          alert('1단계 게시판에서만 글을 쓸 수 있습니다.');
+          return;
+        }
+        elModal.classList.add('is-open');
+        elModal.setAttribute('aria-hidden', 'false');
+        pendingImages = [];
+        if (titleIn) titleIn.value = '';
+        if (bodyIn) bodyIn.value = '';
+        if (imgIn) imgIn.value = '';
+        if (previews) previews.textContent = '';
+        if (titleIn) titleIn.focus();
+      }
+
+      function closeModal() {
+        elModal.classList.remove('is-open');
+        elModal.setAttribute('aria-hidden', 'true');
+      }
+
+      if (imgIn && previews) {
+        imgIn.addEventListener('change', function () {
+          pendingImages = [];
+          previews.textContent = '';
+          var files = Array.prototype.slice.call(imgIn.files || [], 0, MAX_IMAGES);
+          var i = 0;
+          function readNext() {
+            if (i >= files.length) return;
+            var f = files[i++];
+            if (f.size > MAX_IMAGE_BYTES) {
+              alert('이미지당 최대 2MB입니다: ' + f.name);
+              readNext();
+              return;
+            }
+            var fr = new FileReader();
+            fr.onload = function () {
+              var url = String(fr.result || '');
+              pendingImages.push(url);
+              var im = document.createElement('img');
+              im.src = url;
+              im.alt = '선택한 이미지';
+              previews.appendChild(im);
+              readNext();
+            };
+            fr.onerror = function () {
+              readNext();
+            };
+            fr.readAsDataURL(f);
+          }
+          readNext();
+        });
+      }
+
+      if (titleIn) {
+        titleIn.addEventListener('input', function () {
+          var v = titleIn.value.replace(/[<>]/g, '');
+          if (v !== titleIn.value) titleIn.value = v;
+        });
+      }
+
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        if (!isBoardUnlocked()) return;
+        var title = titleIn ? sanitizeTitle(titleIn.value) : '';
+        var body = bodyIn ? String(bodyIn.value || '').trim() : '';
+        if (!title) {
+          alert('제목을 입력해 주세요.');
+          return;
+        }
+        var post = normalizePost({
+          id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9),
+          title: title,
+          body: body,
+          images: pendingImages.slice(0, MAX_IMAGES),
+          authorId: uid(),
+          createdAt: new Date().toISOString(),
+          comments: [],
+        });
+        var all = loadPostsCurrent();
+        all.unshift(post);
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        closeModal();
+        refreshListOnly();
+      });
+
+      btnWrite.addEventListener('click', openModal);
+      btnCancel.addEventListener('click', closeModal);
+      elModal.addEventListener('click', function (e) {
+        if (e.target === elModal) closeModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && elModal.classList.contains('is-open')) closeModal();
+      });
+
+      if (selTerritory) {
+        var ptid = (window.__scPlayer && window.__scPlayer.territoryId) || 'UNASSIGNED';
+        if (selTerritory.querySelector('option[value="' + ptid + '"]')) {
+          selTerritory.value = ptid;
+        }
+        currentTerritory = selTerritory.value || 'UNASSIGNED';
+        selTerritory.addEventListener('change', function () {
+          currentTerritory = selTerritory.value || 'UNASSIGNED';
+          currentStage = 1;
+          syncStageTabStyles();
+          refreshBoardView();
+        });
+      }
+
+      window.__scBoardGoTerritory = function (tid) {
+        if (!selTerritory) return;
+        var v = String(tid || 'UNASSIGNED').trim();
+        if (!selTerritory.querySelector('option[value="' + v + '"]')) v = 'UNASSIGNED';
+        selTerritory.value = v;
+        currentTerritory = v;
+        currentStage = 1;
+        syncStageTabStyles();
+        refreshBoardView();
+      };
+
+      migrateLegacy();
+      seedAllTerritories();
+      buildStageTabs();
+      syncStageTabStyles();
+      refreshBoardView();
+    })();
+  </script>
+  <script>
+    (function () {
+      var BELT_KEY = 'sc_belt_pop_v1';
+      var KANTA_KEY = 'sc_kanta_pop_v1';
+
+      function clampPop(n) {
+        var x = Math.floor(Number(n));
+        if (!isFinite(x) || x < 0) return 0;
+        return x;
+      }
+
+      function beltStageFromPopulation(n) {
+        var c = clampPop(n);
+        if (c <= 100) return 1;
+        if (c <= 200) return 2;
+        if (c <= 500) return 3;
+        return 4;
+      }
+
+      function loadBeltPop() {
+        try {
+          var raw = localStorage.getItem(BELT_KEY);
+          var o = raw ? JSON.parse(raw) : {};
+          return {
+            CONSERVATIVE: clampPop(o.CONSERVATIVE),
+            PROGRESSIVE: clampPop(o.PROGRESSIVE),
+          };
+        } catch (_) {
+          return { CONSERVATIVE: 0, PROGRESSIVE: 0 };
+        }
+      }
+
+      function loadKantaPop() {
+        try {
+          var raw = localStorage.getItem(KANTA_KEY);
+          var o = raw ? JSON.parse(raw) : {};
+          return {
+            KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
+            KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
+          };
+        } catch (_) {
+          return { KANTAPBIYA_LEFT: 0, KANTAPBIYA_RIGHT: 0 };
+        }
+      }
+
+      function saveBeltPop(next) {
+        try {
+          localStorage.setItem(BELT_KEY, JSON.stringify(next));
+        } catch (_) {}
+      }
+
+      function saveKantaPop(next) {
+        try {
+          localStorage.setItem(KANTA_KEY, JSON.stringify(next));
+        } catch (_) {}
+      }
+
+      function el(id) {
+        return document.getElementById(id);
+      }
+
+      function applyTerritoryMapArt() {
+        var belt = loadBeltPop();
+        ['CONSERVATIVE', 'PROGRESSIVE'].forEach(function (tid) {
+          var count = belt[tid] || 0;
+          var stage = beltStageFromPopulation(count);
+          var img = el('zone-art-' + tid);
+          var meta = el('zone-meta-' + tid);
+          if (img) {
+            var slug = tid === 'CONSERVATIVE' ? 'conservative' : 'progressive';
+            img.src = '/territories/' + slug + '-stage-' + stage + '.png';
+            var label = tid === 'CONSERVATIVE' ? '보수' : '진보';
+            img.alt = label + ' 진영 ' + stage + '단계 영토';
+          }
+          if (meta) {
+            meta.textContent =
+              '소속 ' + count + '명 · 영토 ' + stage + '단계 (0~100→1, 101~200→2, 201~500→3, 501+→4)';
+          }
+        });
+
+        var kanta = loadKantaPop();
+        ['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'].forEach(function (tid) {
+          var count = kanta[tid] || 0;
+          var stage = beltStageFromPopulation(count);
+          var img = el('zone-art-' + tid);
+          var meta = el('zone-meta-' + tid);
+          if (img) {
+            var slug = tid === 'KANTAPBIYA_LEFT' ? 'kantapbiya-left' : 'kantapbiya-right';
+            img.src = '/territories/' + slug + '-stage-' + stage + '.png';
+            var label = tid === 'KANTAPBIYA_LEFT' ? '깐따삐아 좌' : '깐따삐아 우';
+            img.alt = label + ' 행성 ' + stage + '단계';
+          }
+          if (meta) {
+            meta.textContent =
+              '소속 ' + count + '명 · 행성 ' + stage + '단계 (0~100→1, 101~200→2, 201~500→3, 501+→4)';
+          }
+        });
+      }
+
+      window.__scRefreshBeltTerritoryArt = applyTerritoryMapArt;
+
+      window.__scTerritoryPop = {
+        get: function () {
+          var b = loadBeltPop();
+          var k = loadKantaPop();
+          return {
+            CONSERVATIVE: b.CONSERVATIVE,
+            PROGRESSIVE: b.PROGRESSIVE,
+            KANTAPBIYA_LEFT: k.KANTAPBIYA_LEFT,
+            KANTAPBIYA_RIGHT: k.KANTAPBIYA_RIGHT,
+          };
+        },
+        set: function (patch) {
+          var b = loadBeltPop();
+          var k = loadKantaPop();
+          if (patch && typeof patch === 'object') {
+            if (patch.CONSERVATIVE != null) b.CONSERVATIVE = clampPop(patch.CONSERVATIVE);
+            if (patch.PROGRESSIVE != null) b.PROGRESSIVE = clampPop(patch.PROGRESSIVE);
+            if (patch.KANTAPBIYA_LEFT != null) k.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
+            if (patch.KANTAPBIYA_RIGHT != null) k.KANTAPBIYA_RIGHT = clampPop(patch.KANTAPBIYA_RIGHT);
+          }
+          saveBeltPop(b);
+          saveKantaPop(k);
+          applyTerritoryMapArt();
+          return window.__scTerritoryPop.get();
+        },
+        stageFromCount: beltStageFromPopulation,
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyTerritoryMapArt);
+      } else {
+        applyTerritoryMapArt();
+      }
+    })();
+  </script>
 </body>
 </html>
