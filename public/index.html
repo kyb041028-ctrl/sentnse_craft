@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>센텐스크래프트 — 글로 싸우는 전쟁 (베타 뼈대)</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121a33;
+      --text: #e8eefc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem 4rem;
+    }
+    main { max-width: 42rem; margin: 0 auto; }
+    h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.25rem;
+    }
+    .muted { color: var(--muted); font-size: 0.95rem; }
+    code { font-size: 0.85em; background: rgba(0,0,0,0.35); padding: 0.15em 0.4em; border-radius: 4px; }
+    a { color: var(--accent); }
+    ul { padding-left: 1.2rem; }
+
+    /* ----- 영토 맵(이미지 없음 — 경계만) ----- */
+    .territory-map {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 2px dashed rgba(255, 255, 255, 0.12);
+    }
+    .territory-map h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .territory-map .hint {
+      margin: 0 0 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .belt-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    @media (max-width: 520px) {
+      .belt-row { grid-template-columns: 1fr; }
+    }
+
+    .zone {
+      min-height: 5.5rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      border: 2px solid;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .zone .id {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      opacity: 0.75;
+      font-family: ui-monospace, monospace;
+    }
+
+    .zone--conservative {
+      border-color: rgba(248, 113, 113, 0.85);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+    }
+    .zone--centrist {
+      border-color: rgba(148, 163, 184, 0.9);
+      background: rgba(148, 163, 184, 0.1);
+      color: #e2e8f0;
+    }
+    .zone--progressive {
+      border-color: rgba(96, 165, 250, 0.9);
+      background: rgba(59, 130, 246, 0.12);
+      color: #bfdbfe;
+    }
+
+    .kantapbiya-shell {
+      margin-top: 0.5rem;
+      padding: 0.65rem;
+      border-radius: 10px;
+      border: 2px solid rgba(192, 132, 252, 0.75);
+      background: rgba(139, 92, 246, 0.08);
+    }
+    .kantapbiya-shell > .label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #e9d5ff;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .kantapbiya-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    @media (max-width: 520px) {
+      .kantapbiya-row { grid-template-columns: 1fr; }
+    }
+    .zone--k-left {
+      border-color: rgba(244, 114, 182, 0.85);
+      background: rgba(236, 72, 153, 0.1);
+      color: #fbcfe8;
+    }
+    .zone--k-right {
+      border-color: rgba(251, 191, 36, 0.85);
+      background: rgba(245, 158, 11, 0.1);
+      color: #fde68a;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>센텐스크래프트</h1>
+    <p class="muted">글로 싸우는 전쟁 — 정치·사회·금융 등 이슈를 게시판으로 다루는 공간 (준비 중)</p>
+
+    <section class="card territory-map" aria-labelledby="territory-map-title">
+      <h2 id="territory-map-title">영토 구역 (경계만 · 그림은 나중에)</h2>
+      <p class="hint">가로 한 줄 = 메인 벨트(보수—중도—진보). 아래 보라 테두리 = 깐따삐아 행성 안 좌·우.</p>
+
+      <div class="belt-row" role="group" aria-label="메인 벨트 세 진영">
+        <div class="zone zone--conservative" data-territory-id="CONSERVATIVE">
+          보수 진영
+          <span class="id">CONSERVATIVE · 게시판 4단계</span>
+        </div>
+        <div class="zone zone--centrist" data-territory-id="CENTRIST">
+          중도(일반) 진영
+          <span class="id">CENTRIST · 정치색 연습장</span>
+        </div>
+        <div class="zone zone--progressive" data-territory-id="PROGRESSIVE">
+          진보 진영
+          <span class="id">PROGRESSIVE · 게시판 4단계</span>
+        </div>
+      </div>
+
+      <div class="kantapbiya-shell" role="group" aria-label="깐따삐아 행성">
+        <div class="label">깐따삐아 (별도 행성)</div>
+        <div class="kantapbiya-row">
+          <div class="zone zone--k-left" data-territory-id="KANTAPBIYA_LEFT">
+            깐따삐아 · 좌파 영토
+            <span class="id">KANTAPBIYA_LEFT · 4단계</span>
+          </div>
+          <div class="zone zone--k-right" data-territory-id="KANTAPBIYA_RIGHT">
+            깐따삐아 · 우파 영토
+            <span class="id">KANTAPBIYA_RIGHT · 4단계</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="card">
+      <p><strong>지금 이 페이지가 보이면 정상입니다.</strong></p>
+      <p class="muted">
+        예전에 섞였던 “다른 실험 화면”은 빼 두었습니다. 앞으로 화면 파일은
+        <code>public</code> 폴더만 보면 됩니다.
+      </p>
+      <ul>
+        <li>서버 실행: 터미널에서 <code>npm start</code></li>
+        <li>주소창: <code>http://localhost:3000</code> (파일을 더블클릭해서 열면 안 됩니다)</li>
+        <li>기획 정리 문서: 프로젝트 안 <code>docs/PRODUCT_센텐스크래프트_기획.md</code></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="muted">규칙 표(API로도 내려감): <code>/api/public-config</code></p>
+    </div>
+  </main>
+</body>
+</html>

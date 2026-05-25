@@ -1,0 +1,125 @@
+# GitHub에 올려서 집에서 이어하기 (쉬운 순서)
+
+## 한 줄 요약
+
+**지금 컴퓨터**에서 폴더를 **한 번 GitHub에 밀어 올리고(push)**  
+**집 컴퓨터**에서는 **복제(clone)** 해서 같은 폴더를 받으면 됩니다.
+
+---
+
+## 그림으로
+
+```mermaid
+flowchart LR
+  A[지금 PC 폴더] -->|push| B[GitHub]
+  B -->|clone| C[집 PC 폴더]
+```
+
+---
+
+## 0) 미리 준비 (두 대 다)
+
+1. **Git 설치**  
+   - Windows: [https://git-scm.com/download/win](https://git-scm.com/download/win)  
+   - 설치 후 **터미널을 다시 열고** `git --version` 이 나오면 OK.
+
+2. **GitHub 계정**  
+   - [https://github.com](https://github.com) 에 로그인.
+
+---
+
+## 1) GitHub에서 빈 저장소 만들기
+
+1. GitHub 오른쪽 위 **+** → **New repository**
+2. **Repository name** 예: `sentence-craft`
+3. **Public** 선택 (비공개도 가능)
+4. **README 추가는 처음엔 안 해도 됨** (로컬에 이미 파일이 많으면 충돌 줄이려고 비워 두기도 함)
+5. **Create repository** 클릭
+6. 다음 화면에 나오는 주소를 복사해 둡니다.  
+   - 예: `https://github.com/내아이디/sentence-craft.git`
+
+---
+
+## 2) 지금 PC — 폴더를 Git에 넣고 올리기
+
+터미널(또는 Cursor 터미널)에서 **프로젝트 폴더**로 이동한 뒤:
+
+```bash
+cd Desktop\sentence-craft
+```
+
+아래를 **위에서부터 한 줄씩** 실행합니다. (`내아이디`, `저장소이름`은 본인 것으로 바꾸세요.)
+
+```bash
+git init
+git add .
+git status
+git commit -m "센텐스크래프트 베타 작업 저장"
+git branch -M main
+git remote add origin https://github.com/내아이디/저장소이름.git
+git push -u origin main
+```
+
+- 처음 `git push` 할 때 **GitHub 로그인** 창이 뜰 수 있어요. 안내에 따라 하면 됩니다.
+- **`git commit` 할 때** `.env` 는 **올라가면 안 됩니다.**  
+  이 프로젝트에는 이미 `.gitignore` 에 `.env` 가 들어 있어서, 보통은 자동으로 빠집니다.  
+  `git status` 에 **`.env`가 보이면** 절대 커밋하지 말고 알려주세요.
+
+---
+
+## 3) 집 PC — 받아오기
+
+```bash
+cd 원하는폴더
+git clone https://github.com/내아이디/저장소이름.git
+cd 저장소이름
+npm install
+```
+
+그다음 **집에만 있는 비밀 정보**:
+
+- `.env.example` 을 복사해서 이름을 **`.env`** 로 바꾼 뒤  
+  Supabase **URL** 과 **anon 키**를 다시 넣기 (집 PC에는 예전 `.env` 가 없을 수 있음)
+
+```bash
+npm start
+```
+
+브라우저에서 `http://localhost:3000` 으로 확인.
+
+---
+
+## 나중에 “집에서 고친 걸 다시 회사로” 올릴 때
+
+집 폴더에서:
+
+```bash
+git add .
+git commit -m "집에서 수정한 내용 한 줄 설명"
+git push
+```
+
+회사 PC에서는:
+
+```bash
+git pull
+```
+
+---
+
+## Git이 너무 어렵다면
+
+**GitHub Desktop** ([https://desktop.github.com](https://desktop.github.com)) 을 쓰면  
+버튼으로 **commit / push / pull** 할 수 있어요. 위 순서는 같고, 명령 대신 화면만 다릅니다.
+
+---
+
+## 자주 나는 문제
+
+| 증상 | 할 일 |
+|------|--------|
+| `git` 을 찾을 수 없음 | Git for Windows 설치 후 터미널 재시작 |
+| `push` 거절 | GitHub에 로그인·권한 확인, 저장소 주소 오타 확인 |
+| `.env` 가 올라갈 뻔함 | `git status` 에서 제거 후 `.gitignore` 확인 |
+
+이 문서는 프로젝트 안 `docs/GITHUB_집에서_이어하기.md` 에 저장해 두었습니다.

@@ -1,0 +1,21 @@
+{
+  "name": "sentence-craft",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "description": "센텐스크래프트 Ver 1.0 베타 — Node 백엔드 뼈대",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "i18n-iso-countries": "^7.14.0"
+  }
+}
