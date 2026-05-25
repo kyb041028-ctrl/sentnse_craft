@@ -122,6 +122,37 @@ git pull
 | `push` 거절 | GitHub에 로그인·권한 확인, 저장소 주소 오타 확인 |
 | `.env` 가 올라갈 뻔함 | `git status` 에서 제거 후 `.gitignore` 확인 |
 
+### `remote: Repository not found` 가 나올 때
+
+GitHub 웹을 **켜 둘 필요는 없고**, 아래를 순서대로 확인하세요.
+
+1. **저장소가 실제로 있는지**  
+   브라우저에서 `https://github.com/본인아이디/저장소이름` 이 열리는지 확인합니다.  
+   **이름 한 글자라도 다르면** 푸시가 안 됩니다. (예: `sentens_craft` vs `sentence-craft`)
+
+2. **로컬 `origin` 주소가 위와 똑같은지**  
+   프로젝트 폴더에서:
+
+   ```bash
+   git remote -v
+   ```
+
+   잘못됐으면 바꿉니다 (본인 주소로 수정):
+
+   ```bash
+   git remote set-url origin https://github.com/본인아이디/저장소이름.git
+   ```
+
+   가능하면 **`https://` 로 시작**하게 두는 것이 좋습니다.
+
+3. **비공개(Private) 저장소**인데 로그인·토큰이 없으면  
+   GitHub는 보안상 이유로 **같은 "not found" 메시지**를 줄 수 있습니다.  
+   - Windows: 자격 증명 관리자에서 github.com 항목 확인, 또는  
+   - GitHub **Settings → Developer settings → Personal access tokens** 에서 `repo` 권한 토큰을 만들고, 푸시할 때 비밀번호 대신 토큰 입력
+
+4. **아직 GitHub에 저장소를 안 만들었으면**  
+   GitHub에서 **New repository** 로 빈 저장소를 만든 뒤, 위 2번처럼 `origin` 을 그 주소로 맞춘 다음 다시 `git push -u origin main` 합니다.
+
 이 문서는 프로젝트 안 `docs/GITHUB_집에서_이어하기.md` 에 저장해 두었습니다.
 
 ---
