@@ -117,22 +117,6 @@
     #board-back-main:hover {
       border-color: rgba(56, 189, 248, 0.45);
     }
-    .app-unassigned-row {
-      margin-top: 0.75rem;
-    }
-    #btn-board-unassigned {
-      padding: 0.45rem 0.85rem;
-      border-radius: 8px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: rgba(148, 163, 184, 0.12);
-      color: #e2e8f0;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    #btn-board-unassigned:hover {
-      background: rgba(148, 163, 184, 0.2);
-    }
     #auth-guest-btn {
       margin-top: 0.65rem;
       width: 100%;
@@ -190,6 +174,33 @@
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: linear-gradient(180deg, #93c5fd 0%, #bfdbfe 40%, #e2e8f0 55%, #64748b 55%);
+    }
+    .territory-map-canvas--pixel {
+      background: #0b1220;
+      padding: 0.45rem 0.35rem 0.55rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    #territory-pixel-map {
+      width: 100%;
+      max-width: 52rem;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+    }
+    #territory-pixel-map.is-hover {
+      cursor: pointer;
+    }
+    .territory-pixel-meta {
+      margin: 0.45rem 0 0;
+      font-size: 0.72rem;
+      line-height: 1.45;
+      text-align: center;
     }
     .territory-sky {
       padding: 0.65rem 0.5rem 0.2rem;
@@ -1100,6 +1111,184 @@
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+    .board__item-react {
+      padding: 0.25rem 1.25rem 0.55rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .sc-react-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem 0.65rem;
+    }
+    .sc-react-btn {
+      font: inherit;
+      font-size: 0.72rem;
+      padding: 0.22rem 0.42rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.12rem;
+      max-width: 100%;
+    }
+    .sc-react-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .sc-react-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .sc-react-btn.is-active {
+      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(56, 189, 248, 0.18);
+    }
+    .sc-react-btn--planet.is-active {
+      border-color: rgba(167, 139, 250, 0.65);
+      background: rgba(139, 92, 246, 0.2);
+    }
+    .sc-react-ico {
+      display: inline-block;
+      line-height: 1;
+      font-size: 1.05rem;
+    }
+    .sc-react-ico--up::before {
+      content: '👍';
+    }
+    .sc-react-ico--down::before {
+      content: '👎';
+    }
+    .sc-react-ico--planet::before {
+      content: '🪐';
+    }
+    .sc-react-ico--empathy::before {
+      content: '❤️';
+    }
+    .sc-react-btn--empathy.is-active {
+      border-color: rgba(244, 114, 182, 0.55);
+      background: rgba(244, 114, 182, 0.16);
+    }
+    .board-growth {
+      margin: 0.75rem 0 0.5rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .board-growth__title {
+      margin: 0 0 0.35rem;
+      font-size: 0.92rem;
+    }
+    .board-growth__hint {
+      margin: 0 0 0.65rem;
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+    .board-growth__row {
+      display: grid;
+      grid-template-columns: 4.5rem 1fr auto;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+      margin-bottom: 0.45rem;
+    }
+    .board-growth__k {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .board-growth__track {
+      height: 0.55rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .board-growth__fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+    .board-growth__fill--self {
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+    }
+    .board-growth__fill--team {
+      background: linear-gradient(90deg, #22c55e, #eab308);
+    }
+    .board-growth__num {
+      font-size: 0.72rem;
+      min-width: 3.2rem;
+      text-align: right;
+    }
+    .board-growth__season {
+      margin-top: 0.5rem;
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.65rem;
+    }
+    .board-growth__demo {
+      font: inherit;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+    .board-growth__season-note {
+      font-size: 0.65rem;
+      opacity: 0.85;
+      flex: 1 1 100%;
+    }
+    .board-debate {
+      margin: 0.5rem 0 0.75rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      border: 1px dashed rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.06);
+    }
+    .board-debate__title {
+      margin: 0 0 0.35rem;
+      font-size: 0.88rem;
+    }
+    .board-debate p {
+      margin: 0.25rem 0 0;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+    .sc-react-hover-txt {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      vertical-align: middle;
+      font-size: 0.68rem;
+      color: #cbd5e1;
+      transition: max-width 0.22s ease, opacity 0.16s ease;
+    }
+    .sc-react-btn:hover:not(:disabled) .sc-react-hover-txt {
+      max-width: 5rem;
+      opacity: 1;
+    }
+    .sc-react-count {
+      color: #94a3b8;
+      min-width: 0.85rem;
+      font-size: 0.72rem;
+    }
+    .board__comment-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.65rem;
+    }
     .board__item-body {
       display: none;
       padding: 0 1.25rem 1rem;
@@ -1620,149 +1809,33 @@
           <h1>센텐스크래프트</h1>
           <div id="app-user-status" aria-live="polite"></div>
         </div>
-        <p class="muted">영토를 선택하면 해당 영토 <strong>전용 게시판</strong>으로 이동합니다.</p>
+        <p class="muted">
+          영토를 선택하면 해당 영토 <strong>전용 게시판</strong>으로 이동합니다. 기본 메인은
+          <strong>중도(CENTRIST)</strong> 게시판입니다.
+        </p>
 
         <section class="card territory-map" aria-labelledby="territory-map-title">
           <h2 id="territory-map-title">영토 구역</h2>
           <p class="hint">
-            셀을 누르면 해당 영토 게시판으로 이동합니다. <strong>중도 메인 랜드</strong> 위에 보수·진보 진영이 올라가
-            있고, <strong>깐따삐아 좌·우</strong>는 하늘에 떠 있는 행성으로 표시됩니다. 보수·진보·깐따삐아(좌·우)는
-            소속 인원에 따라 1~4단계 일러스트가 바뀝니다(0~100 → 1, 101~200 → 2, 201~500 → 3, 501+ → 4). 메인
-            랜드 배경은 고정입니다. 베타 인원:
-            <code>localStorage</code> 키 <code>sc_belt_pop_v1</code>(보수·진보),
-            <code>sc_kanta_pop_v1</code>(깐따삐아). 예:
-            <code>__scTerritoryPop.set({ CONSERVATIVE: 150, KANTAPBIYA_LEFT: 220 })</code>
+            <strong>픽셀 지도</strong>를 클릭하면 해당 영토 게시판으로 이동합니다. 하늘의 두 구체는 깐따삐아 좌·우,
+            아래 땅·바다는 보수·중도·진보입니다. 소속 인구(맥스 50만)에 따라 <strong>발전 단계 1~40</strong>과
+            <strong>가로 너비</strong>가 바뀌고, <strong>시각 티어 1~10</strong>에 맞춰 픽셀 연출이 달라집니다.
+            <code>localStorage</code> 키 <code>sc_map_pop_v1</code>(JSON). 예:
+            <code>__scTerritoryPop.set({ CONSERVATIVE: 800, CENTRIST: 120, PROGRESSIVE: 0, KANTAPBIYA_LEFT: 400 })</code>
           </p>
 
-          <div class="territory-map-canvas">
-            <div class="territory-sky" role="group" aria-label="깐따삐아 행성">
-              <div class="territory-sky__label">깐따삐아 · 하늘의 행성</div>
-              <div class="territory-sky__planets">
-                <div
-                  class="zone zone--k-left zone--clickable zone--planet-visual"
-                  tabindex="0"
-                  role="link"
-                  data-territory-id="KANTAPBIYA_LEFT"
-                >
-                  <img
-                    class="zone__planet-img"
-                    id="zone-art-KANTAPBIYA_LEFT"
-                    src="/territories/kantapbiya-left-stage-1.png"
-                    alt=""
-                    width="200"
-                    height="200"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div class="zone__planet-overlay">
-                    <span class="zone__planet-title">깐따삐아 · 좌</span>
-                    <span class="zone__planet-id">KANTAPBIYA_LEFT · 4단계</span>
-                    <p class="zone__planet-meta" id="zone-meta-KANTAPBIYA_LEFT"></p>
-                  </div>
-                </div>
-                <div
-                  class="zone zone--k-right zone--clickable zone--planet-visual"
-                  tabindex="0"
-                  role="link"
-                  data-territory-id="KANTAPBIYA_RIGHT"
-                >
-                  <img
-                    class="zone__planet-img"
-                    id="zone-art-KANTAPBIYA_RIGHT"
-                    src="/territories/kantapbiya-right-stage-1.png"
-                    alt=""
-                    width="200"
-                    height="200"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div class="zone__planet-overlay">
-                    <span class="zone__planet-title">깐따삐아 · 우</span>
-                    <span class="zone__planet-id">KANTAPBIYA_RIGHT · 4단계</span>
-                    <p class="zone__planet-meta" id="zone-meta-KANTAPBIYA_RIGHT"></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="territory-mainland" role="group" aria-label="메인 대지와 진영">
-              <img
-                class="territory-mainland__bg"
-                src="/territories/preview/preview-centrist-mainland.png"
-                alt=""
-                width="1200"
-                height="600"
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="territory-mainland__overlay">
-                <div class="mainland-slot mainland-slot--left">
-                  <div
-                    class="zone zone--conservative zone--clickable zone--belt-visual"
-                    tabindex="0"
-                    role="link"
-                    data-territory-id="CONSERVATIVE"
-                  >
-                    <img
-                      class="zone__belt-bg"
-                      id="zone-art-CONSERVATIVE"
-                      src="/territories/conservative-stage-1.png"
-                      alt=""
-                      width="400"
-                      height="400"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div class="zone__belt-overlay">
-                      <span class="zone__belt-title">보수 진영</span>
-                      <span class="zone__belt-id">CONSERVATIVE · 게시판 4단계</span>
-                      <p class="zone__belt-meta" id="zone-meta-CONSERVATIVE"></p>
-                    </div>
-                  </div>
-                </div>
-                <div class="mainland-slot mainland-slot--center">
-                  <div
-                    class="zone zone--centrist zone--clickable zone--centrist-main"
-                    tabindex="0"
-                    role="link"
-                    data-territory-id="CENTRIST"
-                  >
-                    중도(일반) 진영
-                    <span class="id">CENTRIST · 정치색 연습장</span>
-                  </div>
-                </div>
-                <div class="mainland-slot mainland-slot--right">
-                  <div
-                    class="zone zone--progressive zone--clickable zone--belt-visual"
-                    tabindex="0"
-                    role="link"
-                    data-territory-id="PROGRESSIVE"
-                  >
-                    <img
-                      class="zone__belt-bg"
-                      id="zone-art-PROGRESSIVE"
-                      src="/territories/progressive-stage-1.png"
-                      alt=""
-                      width="400"
-                      height="400"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div class="zone__belt-overlay">
-                      <span class="zone__belt-title">진보 진영</span>
-                      <span class="zone__belt-id">PROGRESSIVE · 게시판 4단계</span>
-                      <p class="zone__belt-meta" id="zone-meta-PROGRESSIVE"></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="territory-map-canvas territory-map-canvas--pixel">
+            <canvas
+              id="territory-pixel-map"
+              width="480"
+              height="272"
+              tabindex="0"
+              role="img"
+              aria-label="영토 픽셀 지도. 하늘의 행성과 아래 세 진영 영역을 누르면 게시판으로 이동합니다."
+            ></canvas>
+            <p class="territory-pixel-meta muted" id="territory-pixel-meta" aria-live="polite"></p>
           </div>
 
-          <p class="hint app-unassigned-row">
-            소속이 아직 없을 때는 미편입 게시판을 이용할 수 있습니다.
-            <button type="button" id="btn-board-unassigned">미편입 게시판 열기</button>
-          </p>
         </section>
 
         <div class="card">
@@ -1805,7 +1878,8 @@
           <section class="card centrist-hot" aria-labelledby="centrist-hot-title">
             <h2 id="centrist-hot-title" class="centrist-hot__h">오늘 핫한 게시물 (1~5위 · 제목만)</h2>
             <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.75rem">
-              오늘 작성된 글 중 댓글 반응이 많은 순입니다. 제목을 누르면 아래 목록에서 해당 글로 이동합니다.
+              오늘 작성된 글 중 <strong>공감·댓글·본문 길이</strong> 등으로 점수를 매깁니다. 제목을 누르면 아래 목록에서 해당 글로
+              이동합니다.
             </p>
             <ol id="centrist-hot-list" class="centrist-hot__list"></ol>
             <p id="centrist-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
@@ -1828,9 +1902,8 @@
             <div class="board__context-row">
               <label class="board__context-label" for="board-territory-select">영토</label>
               <select id="board-territory-select" class="board__territory-select">
-                <option value="UNASSIGNED">미편입 (UNASSIGNED)</option>
+                <option value="CENTRIST">중도 — 메인 게시판 (CENTRIST)</option>
                 <option value="CONSERVATIVE">보수 — CONSERVATIVE (게시판 4단계)</option>
-                <option value="CENTRIST">중도 — CENTRIST (정치색 연습장)</option>
                 <option value="PROGRESSIVE">진보 — PROGRESSIVE (게시판 4단계)</option>
                 <option value="KANTAPBIYA_LEFT">깐따삐아 좌파 — KANTAPBIYA_LEFT (4단계)</option>
                 <option value="KANTAPBIYA_RIGHT">깐따삐아 우파 — KANTAPBIYA_RIGHT (4단계)</option>
@@ -1841,6 +1914,46 @@
               <div id="board-stage-tabs" class="board__stage-tabs" role="tablist" aria-label="게시판 단계"></div>
             </div>
           </div>
+
+          <section class="board-growth" id="board-growth-panel" aria-labelledby="board-growth-title">
+            <h3 id="board-growth-title" class="board-growth__title">성장 · 영토 기여</h3>
+            <p class="board-growth__hint muted">
+              <strong>공감(하트)</strong>은 인기·핫랭킹·영토 인구(덩치)에만 반영됩니다.
+              <strong>엄지 반응</strong>은 정치 성향 시뮬 전용입니다.
+            </p>
+            <div class="board-growth__row">
+              <span class="board-growth__k">내 기여</span>
+              <div class="board-growth__track" id="board-contrib-self-track" aria-label="이 영토에서 공감을 준 누적">
+                <div id="board-contrib-self-fill" class="board-growth__fill board-growth__fill--self"></div>
+              </div>
+              <span id="board-contrib-self-val" class="board-growth__num muted">0</span>
+            </div>
+            <div class="board-growth__row">
+              <span class="board-growth__k">영토 인구</span>
+              <div class="board-growth__track" id="board-contrib-team-track" aria-label="이 영토 합산 인구">
+                <div id="board-contrib-team-fill" class="board-growth__fill board-growth__fill--team"></div>
+              </div>
+              <span id="board-contrib-team-val" class="board-growth__num muted">0</span>
+            </div>
+            <div class="board-growth__season muted">
+              <span id="board-season-label">시즌 1</span>
+              · 업적 <span id="board-ach-count">0</span> · 칭호 <span id="board-title-count">0</span>
+              <button type="button" id="board-season-demo-btn" class="board-growth__demo">
+                소프트 시즌 넘기기(데모)
+              </button>
+              <span class="board-growth__season-note">(자동 시즌 주기는 정책 확정 후 연결)</span>
+            </div>
+          </section>
+
+          <section class="board-debate" id="board-debate-panel" aria-labelledby="board-debate-title">
+            <h3 id="board-debate-title" class="board-debate__title">영토 토론전 (실시간만)</h3>
+            <p>
+              주 1~2회, <strong>정해진 시간에만</strong> 진행합니다. 비동기(기간 내 자유 제출) 방식은 사용하지 않습니다. 승리
+              영토 보상은 추후 연동 예정입니다.
+            </p>
+            <p id="board-debate-next" class="muted">다음 라이브 일정: 운영 공지 시 이곳에 표시됩니다.</p>
+          </section>
+
           <div id="board-locked" class="board__locked" hidden>
             <p class="board__locked-title">이 단계는 아직 이용할 수 없습니다</p>
             <p class="board__locked-text">
@@ -2015,6 +2128,7 @@
     </button>
   </div>
 
+  <script src="/alignment-scoring.js"></script>
   <script>
     (function () {
       var AUTH_KEY = 'sc_sb_auth_session';
@@ -2068,7 +2182,6 @@
 
       function bindAppNavigation() {
         var main = el('screen-main');
-        var btnU = el('btn-board-unassigned');
         var back = el('board-back-main');
         if (main && !main.dataset.scNavBound) {
           main.dataset.scNavBound = '1';
@@ -2086,12 +2199,6 @@
             e.preventDefault();
             var tid = z.getAttribute('data-territory-id');
             if (tid && window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(tid);
-          });
-        }
-        if (btnU && !btnU.dataset.scBound) {
-          btnU.dataset.scBound = '1';
-          btnU.addEventListener('click', function () {
-            if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard('UNASSIGNED');
           });
         }
         if (back && !back.dataset.scBound) {
@@ -2445,6 +2552,8 @@
         };
       }
 
+      window.__scDockSetMeta = setMeta;
+
       function territoryCodeFromLabel(territoryStr) {
         var allowed = [
           'CONSERVATIVE',
@@ -2452,20 +2561,19 @@
           'PROGRESSIVE',
           'KANTAPBIYA_LEFT',
           'KANTAPBIYA_RIGHT',
-          'UNASSIGNED',
         ];
         var s = String(territoryStr || '').trim();
-        if (!s || s === '미편입') return 'UNASSIGNED';
+        if (!s || s === '미편입') return 'CENTRIST';
         var code = s.split('·')[0].trim();
         if (allowed.indexOf(code) >= 0) return code;
-        return 'UNASSIGNED';
+        return 'CENTRIST';
       }
 
       function applyGuestNeutralMeta() {
         setMeta(
           'guest_demo',
           '정치 성향 없음 (미분류)',
-          '미편입',
+          'CENTRIST · 중도(메인)',
           '#— (미연동)',
           null,
         );
@@ -2489,6 +2597,8 @@
         var token = auth && auth.session && auth.session.access_token;
         if (!token) {
           applyGuestNeutralMeta();
+          if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
+          if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
           return;
         }
         try {
@@ -2498,13 +2608,19 @@
           var j = await r.json();
           if (!j.ok) {
             applyGuestNeutralMeta();
+            if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
+            if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
             return;
           }
           var u = j.user || {};
           var id = u.email || u.id || '—';
-          setMeta(id, '정치 성향 없음 (미분류)', '미편입', '#— (미연동)', null);
+          setMeta(id, '정치 성향 없음 (미분류)', 'CENTRIST · 중도(메인)', '#— (미연동)', null);
+          if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
+          if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
         } catch (_) {
           applyGuestNeutralMeta();
+          if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
+          if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
         }
       }
 
@@ -2529,8 +2645,8 @@
       window.__scPlayer =
         window.__scPlayer || {
           userId: 'guest_demo',
-          territoryId: 'UNASSIGNED',
-          affiliationDisplay: '미편입',
+          territoryId: 'CENTRIST',
+          affiliationDisplay: 'CENTRIST · 중도(메인)',
         };
 
       var collapsed = false;
@@ -2663,7 +2779,7 @@
         var u = '/api/chat/messages?room=' + encodeURIComponent(room) + '&afterId=' + lastId;
         if (room === 'territory') {
           var tid =
-            (window.__scPlayer && window.__scPlayer.territoryId) || 'UNASSIGNED';
+            (window.__scPlayer && window.__scPlayer.territoryId) || 'CENTRIST';
           u += '&territoryId=' + encodeURIComponent(tid);
         }
         return u;
@@ -2694,7 +2810,7 @@
           affiliation: p.affiliationDisplay || '미정',
           guestUserId: p.userId || 'guest',
         };
-        if (room === 'territory') body.territoryId = p.territoryId || 'UNASSIGNED';
+        if (room === 'territory') body.territoryId = p.territoryId || 'CENTRIST';
         try {
           var r = await fetch('/api/chat/messages', {
             method: 'POST',
@@ -2722,7 +2838,6 @@
       var LEGACY_KEY = 'sc_board_posts_v1';
       var FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
       var ALL_TERRITORY_IDS = [
-        'UNASSIGNED',
         'CONSERVATIVE',
         'CENTRIST',
         'PROGRESSIVE',
@@ -2732,6 +2847,18 @@
       var MAX_IMAGES = 4;
       var MAX_IMAGE_BYTES = 2 * 1024 * 1024;
       var MAX_COMMENT = 1500;
+      var ALIGN_LS = 'sc_political_scores_v1';
+      var PLANET_DELTA = 14;
+      var GROWTH_CONTRIB_KEY = 'sc_growth_contrib_v1';
+      var PERSISTENT_META_KEY = 'sc_persistent_meta_v1';
+      var SEASON_SOFT_KEY = 'sc_season_soft_v1';
+      var DEBATE_SCHEDULE_KEY = 'sc_debate_schedule_v1';
+      var EMPATHY_POP_BUMP = 4;
+      var PERSONAL_CONTRIB_CAP = 220;
+      var KANTA_AFFIL_LABELS = {
+        KANTAPBIYA_LEFT: 'KANTAPBIYA_LEFT · 깐따삐아 좌파',
+        KANTAPBIYA_RIGHT: 'KANTAPBIYA_RIGHT · 깐따삐아 우파',
+      };
       var CENTRIST_ISSUE_KEY = 'sc_centrist_daily_issue_v2';
       var CENTRIST_TAB_KEY = 'sc_centrist_issue_tab_v1';
       var CENTRIST_ISSUES_PER_CATEGORY = 5;
@@ -2936,11 +3063,21 @@
       var elCentristHotList = document.getElementById('centrist-hot-list');
       var elCentristHotEmpty = document.getElementById('centrist-hot-empty');
       var elBoardPostsHeading = document.getElementById('board-posts-heading');
+      var elGrowthPanel = document.getElementById('board-growth-panel');
+      var elContribSelfFill = document.getElementById('board-contrib-self-fill');
+      var elContribSelfVal = document.getElementById('board-contrib-self-val');
+      var elContribTeamFill = document.getElementById('board-contrib-team-fill');
+      var elContribTeamVal = document.getElementById('board-contrib-team-val');
+      var elSeasonLabel = document.getElementById('board-season-label');
+      var elAchCount = document.getElementById('board-ach-count');
+      var elTitleCount = document.getElementById('board-title-count');
+      var btnSeasonDemo = document.getElementById('board-season-demo-btn');
+      var elDebateNext = document.getElementById('board-debate-next');
 
       if (!elList || !elModal || !form || !btnWrite || !btnCancel) return;
 
       var pendingImages = [];
-      var currentTerritory = 'UNASSIGNED';
+      var currentTerritory = 'CENTRIST';
       var currentStage = 1;
 
       function isFourTier(tid) {
@@ -3102,6 +3239,7 @@
       }
 
       function renderThreadedCommentNode(ctx, c, depth, container) {
+        normalizeComment(c);
         var all = ctx.comments;
         var wrap = document.createElement('div');
         wrap.className = 'board__comment' + (depth > 0 ? ' board__comment--depth' : '');
@@ -3129,6 +3267,41 @@
 
         var actions = document.createElement('div');
         actions.className = 'board__comment-actions';
+
+        if (ctx.postId) {
+          var meC = uid();
+          var authorC = String(c.authorId || '').trim();
+          var ownComment = authorC === String(meC || '').trim();
+          var canThumb = !ownComment && isBoardUnlocked() && !!window.AlignmentScoring;
+          var canPlanet = !ownComment && isBoardUnlocked();
+          var canEmpathy = !ownComment && isBoardUnlocked();
+          var bar = buildReactionControls({
+            nEmpathy: c.reactions.empathy.length,
+            activeEmpathy: c.reactions.empathy.indexOf(meC) >= 0,
+            disabledEmpathy: !canEmpathy,
+            onEmpathy: function () {
+              onToggleEmpathyComment(ctx.postId, c.id);
+            },
+            nLike: c.reactions.likes.length,
+            nDis: c.reactions.dislikes.length,
+            nPlanet: c.reactions.planetVoters.length,
+            activeLike: c.reactions.likes.indexOf(meC) >= 0,
+            activeDis: c.reactions.dislikes.indexOf(meC) >= 0,
+            activePlanet: c.reactions.planetVoters.indexOf(meC) >= 0,
+            disabled: !canThumb,
+            disabledPlanet: !canPlanet,
+            onLike: function () {
+              onToggleCommentReaction(ctx.postId, c.id, true);
+            },
+            onDis: function () {
+              onToggleCommentReaction(ctx.postId, c.id, false);
+            },
+            onPlanet: function () {
+              togglePlanetOnComment(ctx.postId, c.id);
+            },
+          });
+          actions.appendChild(bar);
+        }
 
         var btnReply = document.createElement('button');
         btnReply.type = 'button';
@@ -3397,9 +3570,182 @@
         return String(iso || '').slice(0, 10) === dayKey;
       }
 
+      function loadGrowthContribRoot() {
+        try {
+          var raw = localStorage.getItem(GROWTH_CONTRIB_KEY);
+          if (!raw) return { byUser: {} };
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' && o.byUser && typeof o.byUser === 'object' ? o : { byUser: {} };
+        } catch (_) {
+          return { byUser: {} };
+        }
+      }
+
+      function saveGrowthContribRoot(root) {
+        try {
+          localStorage.setItem(GROWTH_CONTRIB_KEY, JSON.stringify(root));
+        } catch (e) {
+          console.warn('[board] growth contrib save failed', e);
+        }
+      }
+
+      function getPersonalTerritoryContrib(userId, tid) {
+        var id = String(userId || '').trim() || 'guest';
+        var t = String(tid || '').trim();
+        var root = loadGrowthContribRoot();
+        var u = root.byUser[id];
+        if (!u || typeof u !== 'object') return 0;
+        var n = Number(u[t]);
+        return isFinite(n) && n > 0 ? Math.floor(n) : 0;
+      }
+
+      function addPersonalTerritoryContrib(userId, tid, delta) {
+        var id = String(userId || '').trim() || 'guest';
+        var t = String(tid || '').trim();
+        if (!t || t === 'UNASSIGNED') return;
+        var root = loadGrowthContribRoot();
+        if (!root.byUser[id]) root.byUser[id] = {};
+        var cur = Number(root.byUser[id][t]) || 0;
+        root.byUser[id][t] = Math.max(0, cur + delta);
+        saveGrowthContribRoot(root);
+      }
+
+      function bumpMapPopForTerritory(tid, delta) {
+        var t = String(tid || '').trim();
+        if (!t || t === 'UNASSIGNED') return;
+        var allowed = { CONSERVATIVE: 1, CENTRIST: 1, PROGRESSIVE: 1, KANTAPBIYA_LEFT: 1, KANTAPBIYA_RIGHT: 1 };
+        if (!allowed[t]) return;
+        if (!window.__scTerritoryPop || typeof window.__scTerritoryPop.get !== 'function') return;
+        var g = window.__scTerritoryPop.get();
+        var cur = Number(g[t]) || 0;
+        var next = Math.max(0, Math.min(500000, Math.floor(cur + delta)));
+        var patch = {};
+        patch[t] = next;
+        window.__scTerritoryPop.set(patch);
+      }
+
+      function loadPersistentMeta() {
+        try {
+          var raw = localStorage.getItem(PERSISTENT_META_KEY);
+          if (!raw) return { achievements: [], titles: [] };
+          var o = JSON.parse(raw);
+          if (!o || typeof o !== 'object') return { achievements: [], titles: [] };
+          return {
+            achievements: Array.isArray(o.achievements) ? o.achievements : [],
+            titles: Array.isArray(o.titles) ? o.titles : [],
+          };
+        } catch (_) {
+          return { achievements: [], titles: [] };
+        }
+      }
+
+      function savePersistentMeta(o) {
+        try {
+          localStorage.setItem(PERSISTENT_META_KEY, JSON.stringify(o));
+        } catch (e) {
+          console.warn('[board] persistent meta save failed', e);
+        }
+      }
+
+      function loadSeasonSoft() {
+        try {
+          var raw = localStorage.getItem(SEASON_SOFT_KEY);
+          if (!raw) return { season: 1, seasonalContrib: {} };
+          var o = JSON.parse(raw);
+          if (!o || typeof o !== 'object') return { season: 1, seasonalContrib: {} };
+          return {
+            season: Math.max(1, parseInt(o.season, 10) || 1),
+            seasonalContrib: o.seasonalContrib && typeof o.seasonalContrib === 'object' ? o.seasonalContrib : {},
+          };
+        } catch (_) {
+          return { season: 1, seasonalContrib: {} };
+        }
+      }
+
+      function saveSeasonSoft(o) {
+        try {
+          localStorage.setItem(SEASON_SOFT_KEY, JSON.stringify(o));
+        } catch (e) {
+          console.warn('[board] season save failed', e);
+        }
+      }
+
+      function addSeasonalContrib(userId, tid, delta) {
+        var id = String(userId || '').trim() || 'guest';
+        var t = String(tid || '').trim();
+        if (!t || t === 'UNASSIGNED') return;
+        var ss = loadSeasonSoft();
+        if (!ss.seasonalContrib[id]) ss.seasonalContrib[id] = {};
+        var cur = Number(ss.seasonalContrib[id][t]) || 0;
+        ss.seasonalContrib[id][t] = Math.max(0, cur + delta);
+        saveSeasonSoft(ss);
+      }
+
+      function applyEmpathyEcosystem(giverId, territoryId, delta) {
+        var g = String(giverId || '').trim();
+        var t = String(territoryId || '').trim();
+        if (!g || !t || t === 'UNASSIGNED') return;
+        bumpMapPopForTerritory(t, delta * EMPATHY_POP_BUMP);
+        addPersonalTerritoryContrib(g, t, delta);
+        addSeasonalContrib(g, t, delta);
+      }
+
+      function refreshGrowthPanel() {
+        if (!elGrowthPanel || !elContribSelfFill || !elContribTeamFill) return;
+        var me = uid();
+        var tid = currentTerritory;
+        var personal = getPersonalTerritoryContrib(me, tid);
+        var wSelf = Math.min(100, Math.round((personal / PERSONAL_CONTRIB_CAP) * 100));
+        elContribSelfFill.style.width = wSelf + '%';
+        if (elContribSelfVal) elContribSelfVal.textContent = String(personal);
+
+        var pop = 0;
+        if (window.__scTerritoryPop && typeof window.__scTerritoryPop.get === 'function') {
+          var pg = window.__scTerritoryPop.get();
+          pop = Math.floor(Number(pg[tid]) || 0);
+        }
+        var wTeam = tid && tid !== 'UNASSIGNED' ? Math.min(100, Math.round((pop / 500000) * 100)) : 0;
+        elContribTeamFill.style.width = wTeam + '%';
+        if (elContribTeamVal) elContribTeamVal.textContent = tid === 'UNASSIGNED' ? '—' : String(pop);
+
+        var ss = loadSeasonSoft();
+        if (elSeasonLabel) elSeasonLabel.textContent = '시즌 ' + String(ss.season || 1);
+        var pm = loadPersistentMeta();
+        if (elAchCount) elAchCount.textContent = String(pm.achievements.length);
+        if (elTitleCount) elTitleCount.textContent = String(pm.titles.length);
+
+        if (elDebateNext) {
+          try {
+            var dr = localStorage.getItem(DEBATE_SCHEDULE_KEY);
+            if (dr) {
+              var dj = JSON.parse(dr);
+              if (dj && dj.nextLiveLabelKo) {
+                elDebateNext.textContent = '다음 라이브 일정: ' + String(dj.nextLiveLabelKo);
+              }
+            }
+          } catch (_) {}
+        }
+      }
+
+      function softSeasonAdvanceDemo() {
+        var pm = loadPersistentMeta();
+        var ss = loadSeasonSoft();
+        ss.season = (ss.season || 1) + 1;
+        ss.seasonalContrib = {};
+        saveSeasonSoft(ss);
+        savePersistentMeta(pm);
+        alert(
+          '시즌 ' +
+            ss.season +
+            ' — 소프트 리셋: 시즌 집계만 초기화했습니다. 칭호·업적 데이터는 그대로 유지됩니다.',
+        );
+        refreshGrowthPanel();
+      }
+
       function hotScore(p) {
         normalizePost(p);
-        return p.comments.length * 10 + Math.min(400, String(p.body || '').length) / 40;
+        var em = p.reactions.empathy && p.reactions.empathy.length ? p.reactions.empathy.length : 0;
+        return em * 8 + p.comments.length * 10 + Math.min(400, String(p.body || '').length) / 40;
       }
 
       function renderCentristHotRanking() {
@@ -3457,7 +3803,7 @@
       }
 
       function postKey(tid, stage) {
-        return String(tid || 'UNASSIGNED') + '_s' + String(stage || 1);
+        return String(tid || 'CENTRIST') + '_s' + String(stage || 1);
       }
 
       function loadBundle() {
@@ -3502,9 +3848,297 @@
         } catch (_) {}
       }
 
+      function normalizeComment(c) {
+        if (!c || typeof c !== 'object') return c;
+        if (!c.reactions || typeof c.reactions !== 'object') {
+          c.reactions = { likes: [], dislikes: [], planetVoters: [], empathy: [] };
+        }
+        if (!Array.isArray(c.reactions.likes)) c.reactions.likes = [];
+        if (!Array.isArray(c.reactions.dislikes)) c.reactions.dislikes = [];
+        if (!Array.isArray(c.reactions.planetVoters)) c.reactions.planetVoters = [];
+        if (!Array.isArray(c.reactions.empathy)) c.reactions.empathy = [];
+        return c;
+      }
+
+      function normalizeCommentsTree(arr) {
+        if (!Array.isArray(arr)) return;
+        for (var i = 0; i < arr.length; i++) normalizeComment(arr[i]);
+      }
+
       function normalizePost(p) {
         if (!p.comments || !Array.isArray(p.comments)) p.comments = [];
+        if (!p.reactions || typeof p.reactions !== 'object') p.reactions = { likes: [], dislikes: [], planetVoters: [], empathy: [] };
+        if (!Array.isArray(p.reactions.likes)) p.reactions.likes = [];
+        if (!Array.isArray(p.reactions.dislikes)) p.reactions.dislikes = [];
+        if (!Array.isArray(p.reactions.planetVoters)) p.reactions.planetVoters = [];
+        if (!Array.isArray(p.reactions.empathy)) p.reactions.empathy = [];
+        normalizeCommentsTree(p.comments);
         return p;
+      }
+
+      function readUserBucket(userId) {
+        var id = String(userId || '').trim() || 'guest';
+        var map = loadScoresMap();
+        var o = map[id];
+        return o && typeof o === 'object' ? o : {};
+      }
+
+      function bucketScores(prev) {
+        var A = window.AlignmentScoring;
+        var init = A ? A.initialScores() : { conservative: 4, centrist: 4, progressive: 4 };
+        if (!prev || typeof prev !== 'object') return init;
+        return {
+          conservative:
+            typeof prev.conservative === 'number' && !isNaN(prev.conservative) ? prev.conservative : init.conservative,
+          centrist: typeof prev.centrist === 'number' && !isNaN(prev.centrist) ? prev.centrist : init.centrist,
+          progressive:
+            typeof prev.progressive === 'number' && !isNaN(prev.progressive) ? prev.progressive : init.progressive,
+        };
+      }
+
+      function loadScoresMap() {
+        try {
+          var raw = localStorage.getItem(ALIGN_LS);
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveScoresMap(map) {
+        try {
+          localStorage.setItem(ALIGN_LS, JSON.stringify(map));
+        } catch (e) {
+          console.warn('[board] alignment scores save failed', e);
+        }
+      }
+
+      function getScoresForUser(userId) {
+        var id = String(userId || '').trim() || 'guest';
+        var A = window.AlignmentScoring;
+        if (!A) {
+          return { conservative: 1 / 3, centrist: 1 / 3, progressive: 1 / 3 };
+        }
+        return bucketScores(readUserBucket(id));
+      }
+
+      function setScoresForUser(userId, scores) {
+        var id = String(userId || '').trim() || 'guest';
+        var map = loadScoresMap();
+        var prev = readUserBucket(id);
+        var pp = typeof prev.planetPct === 'number' && !isNaN(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0;
+        var ft =
+          prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+            ? prev.forcedTerritory
+            : null;
+        map[id] = {
+          conservative: scores.conservative,
+          centrist: scores.centrist,
+          progressive: scores.progressive,
+          planetPct: pp,
+          forcedTerritory: ft,
+        };
+        saveScoresMap(map);
+      }
+
+      function getPlanetPct(userId) {
+        var b = readUserBucket(userId);
+        var n = Number(b.planetPct);
+        if (!isFinite(n)) return 0;
+        return Math.max(0, Math.min(100, n));
+      }
+
+      function getForcedTerritory(userId) {
+        var b = readUserBucket(userId);
+        if (b.forcedTerritory === 'KANTAPBIYA_LEFT' || b.forcedTerritory === 'KANTAPBIYA_RIGHT') return b.forcedTerritory;
+        return null;
+      }
+
+      function kantaSideFromUser(authorId) {
+        var u = getScoresForUser(authorId);
+        var A = window.AlignmentScoring;
+        if (!A) return 'KANTAPBIYA_LEFT';
+        var bu = A.unit3(u);
+        if (bu.progressive >= bu.conservative) return 'KANTAPBIYA_LEFT';
+        return 'KANTAPBIYA_RIGHT';
+      }
+
+      function addPlanetScoreForAuthor(authorId, delta) {
+        var id = String(authorId || '').trim();
+        if (!id) return { next: 0, forced: null, crossed: false, cleared: false };
+        var prevPct = getPlanetPct(id);
+        var next = Math.max(0, Math.min(100, prevPct + delta));
+        var prevForced = getForcedTerritory(id);
+        var forced = next >= 50 ? kantaSideFromUser(id) : null;
+        var map = loadScoresMap();
+        var prev = readUserBucket(id);
+        var sc = bucketScores(prev);
+        map[id] = {
+          conservative: sc.conservative,
+          centrist: sc.centrist,
+          progressive: sc.progressive,
+          planetPct: next,
+          forcedTerritory: forced,
+        };
+        saveScoresMap(map);
+        return {
+          next: next,
+          forced: forced,
+          crossed: prevPct < 50 && next >= 50,
+          cleared: !!prevForced && !forced,
+        };
+      }
+
+      function syncForcedAffiliationForAuthor(authorId, planetRes) {
+        var p = window.__scPlayer;
+        if (!p || String(p.userId) !== String(authorId)) return;
+        var ft = getForcedTerritory(authorId);
+        if (ft) {
+          p.territoryId = ft;
+          p.affiliationDisplay = KANTA_AFFIL_LABELS[ft] || ft;
+        } else {
+          p.territoryId = 'CENTRIST';
+          p.affiliationDisplay = 'CENTRIST · 중도(메인)';
+        }
+        if (typeof window.__scBoardSyncTerritorySelect === 'function') {
+          window.__scBoardSyncTerritorySelect(p.territoryId || 'CENTRIST');
+        }
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+        if (planetRes && planetRes.crossed && ft) {
+          alert(
+            '행성 점수가 50%를 넘어 소속이 깐따삐아 ' + (ft === 'KANTAPBIYA_LEFT' ? '좌파' : '우파') + '로 자동 조정되었습니다.',
+          );
+        }
+      }
+
+      function applyStoredForceToPlayer() {
+        var p = window.__scPlayer;
+        if (!p) return;
+        var uidStr = p.userId || 'guest';
+        var ft = getForcedTerritory(uidStr);
+        if (!ft) return;
+        p.territoryId = ft;
+        p.affiliationDisplay = KANTA_AFFIL_LABELS[ft] || ft;
+        if (typeof window.__scBoardSyncTerritorySelect === 'function') {
+          window.__scBoardSyncTerritorySelect(ft);
+        }
+      }
+
+      function scaleDelta(d, k) {
+        return {
+          conservative: d.conservative * k,
+          centrist: d.centrist * k,
+          progressive: d.progressive * k,
+        };
+      }
+
+      function buildReactionControls(opts) {
+        var row = document.createElement('div');
+        row.className = 'sc-react-bar' + (opts.extraClass ? ' ' + opts.extraClass : '');
+
+        if (opts.onEmpathy) {
+          var ebtn = document.createElement('button');
+          ebtn.type = 'button';
+          ebtn.className = 'sc-react-btn sc-react-btn--empathy' + (opts.activeEmpathy ? ' is-active' : '');
+          ebtn.disabled = !!opts.disabledEmpathy;
+          var eico = document.createElement('span');
+          eico.className = 'sc-react-ico sc-react-ico--empathy';
+          eico.setAttribute('aria-hidden', 'true');
+          var elab = document.createElement('span');
+          elab.className = 'sc-react-hover-txt';
+          elab.textContent = '정치 성향에 영향을 주지 않습니다';
+          ebtn.appendChild(eico);
+          ebtn.appendChild(elab);
+          ebtn.setAttribute('aria-label', '공감 — 정치 성향에 영향 없음');
+          ebtn.title = '공감 — 정치 성향에 영향을 주지 않습니다. 인기·영토 인구에만 반영됩니다.';
+          ebtn.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            opts.onEmpathy(ev);
+          });
+          var ecnt = document.createElement('span');
+          ecnt.className = 'sc-react-count';
+          ecnt.textContent = String(opts.nEmpathy != null ? opts.nEmpathy : 0);
+          row.appendChild(ebtn);
+          row.appendChild(ecnt);
+        }
+
+        function addPair(asLike, count, active, disabled, onClick) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sc-react-btn sc-react-btn--' + (asLike ? 'like' : 'dislike') + (active ? ' is-active' : '');
+          btn.disabled = !!disabled;
+          var ico = document.createElement('span');
+          ico.className = 'sc-react-ico sc-react-ico--' + (asLike ? 'up' : 'down');
+          ico.setAttribute('aria-hidden', 'true');
+          var lab = document.createElement('span');
+          lab.className = 'sc-react-hover-txt';
+          lab.textContent = asLike ? '정치 반응(동조)' : '정치 반응(비동조)';
+          btn.appendChild(ico);
+          btn.appendChild(lab);
+          btn.setAttribute('aria-label', asLike ? '정치 반응 — 좋아요' : '정치 반응 — 싫어요');
+          btn.title = asLike ? '정치 성향 시뮬에만 반영됩니다.' : '정치 성향 시뮬에만 반영됩니다.';
+          if (onClick) {
+            btn.addEventListener('click', function (ev) {
+              ev.preventDefault();
+              ev.stopPropagation();
+              onClick(ev);
+            });
+          }
+          var cnt = document.createElement('span');
+          cnt.className = 'sc-react-count';
+          cnt.textContent = String(count);
+          row.appendChild(btn);
+          row.appendChild(cnt);
+        }
+
+        addPair(true, opts.nLike, opts.activeLike, opts.disabled, opts.onLike);
+        addPair(false, opts.nDis, opts.activeDis, opts.disabled, opts.onDis);
+
+        var pbtn = document.createElement('button');
+        pbtn.type = 'button';
+        pbtn.className = 'sc-react-btn sc-react-btn--planet' + (opts.activePlanet ? ' is-active' : '');
+        pbtn.disabled = !!opts.disabledPlanet;
+        var pico = document.createElement('span');
+        pico.className = 'sc-react-ico sc-react-ico--planet';
+        pico.setAttribute('aria-hidden', 'true');
+        var plab = document.createElement('span');
+        plab.className = 'sc-react-hover-txt';
+        plab.textContent = '행성 표시';
+        pbtn.appendChild(pico);
+        pbtn.appendChild(plab);
+        pbtn.setAttribute('aria-label', '행성 표시 — 극단으로 분류해 작성자에게 행성 점수');
+        pbtn.title = '극단적 표현으로 표시 — 작성자에게 행성 점수가 쌓입니다 (50% 이상 시 깐따삐아 소속).';
+        if (opts.onPlanet) {
+          pbtn.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            opts.onPlanet(ev);
+          });
+        }
+        var pcnt = document.createElement('span');
+        pcnt.className = 'sc-react-count';
+        pcnt.textContent = String(opts.nPlanet != null ? opts.nPlanet : 0);
+        row.appendChild(pbtn);
+        row.appendChild(pcnt);
+
+        return row;
+      }
+
+      function applyReactionScoresWithMult(actorId, authorId, isLike, mult) {
+        var A = window.AlignmentScoring;
+        if (!A || mult === 0) return;
+        var act = String(actorId || '').trim();
+        var aut = String(authorId || '').trim();
+        if (!act || !aut || act === aut) return;
+        var sA = getScoresForUser(act);
+        var sU = getScoresForUser(aut);
+        var dR = scaleDelta(A.deltaReactorOnOthersPost(sA, sU, isLike), mult);
+        var dAuth = scaleDelta(A.deltaAuthorReceivingReaction(sU, sA, isLike), mult);
+        setScoresForUser(act, A.applyDelta(sA, dR));
+        setScoresForUser(aut, A.applyDelta(sU, dAuth));
       }
 
       function getPosts(tid, stage) {
@@ -3590,6 +4224,233 @@
         return (window.__scPlayer && window.__scPlayer.userId) || 'guest';
       }
 
+      function onTogglePostReaction(postId, asLike) {
+        if (!isBoardUnlocked()) return;
+        var A = window.AlignmentScoring;
+        if (!A) {
+          alert('정치 성향 계산 모듈을 불러오지 못했습니다. 페이지를 새로고침 해 주세요.');
+          return;
+        }
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = null;
+        for (var i = 0; i < all.length; i++) {
+          normalizePost(all[i]);
+          if (all[i].id === postId) {
+            post = all[i];
+            break;
+          }
+        }
+        if (!post) return;
+        var auth = String(post.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+
+        var L = post.reactions.likes;
+        var D = post.reactions.dislikes;
+        var inL = L.indexOf(me) >= 0;
+        var inD = D.indexOf(me) >= 0;
+
+        if (asLike) {
+          if (inL) {
+            L.splice(L.indexOf(me), 1);
+            applyReactionScoresWithMult(me, auth, true, -1);
+          } else {
+            if (inD) {
+              D.splice(D.indexOf(me), 1);
+              applyReactionScoresWithMult(me, auth, false, -1);
+            }
+            L.push(me);
+            applyReactionScoresWithMult(me, auth, true, 1);
+          }
+        } else {
+          if (inD) {
+            D.splice(D.indexOf(me), 1);
+            applyReactionScoresWithMult(me, auth, false, -1);
+          } else {
+            if (inL) {
+              L.splice(L.indexOf(me), 1);
+              applyReactionScoresWithMult(me, auth, true, -1);
+            }
+            D.push(me);
+            applyReactionScoresWithMult(me, auth, false, 1);
+          }
+        }
+
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+      }
+
+      function findPostInCurrentList(all, postId) {
+        for (var i = 0; i < all.length; i++) {
+          normalizePost(all[i]);
+          if (all[i].id === postId) return all[i];
+        }
+        return null;
+      }
+
+      function findCommentById(comments, commentId) {
+        if (!Array.isArray(comments)) return null;
+        for (var i = 0; i < comments.length; i++) {
+          if (comments[i].id === commentId) return comments[i];
+        }
+        return null;
+      }
+
+      function onToggleCommentReaction(postId, commentId, asLike) {
+        if (!isBoardUnlocked()) return;
+        var A = window.AlignmentScoring;
+        if (!A) {
+          alert('정치 성향 계산 모듈을 불러오지 못했습니다. 페이지를 새로고침 해 주세요.');
+          return;
+        }
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = findPostInCurrentList(all, postId);
+        if (!post) return;
+        var c = findCommentById(post.comments, commentId);
+        if (!c) return;
+        normalizeComment(c);
+        var auth = String(c.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+
+        var L = c.reactions.likes;
+        var D = c.reactions.dislikes;
+        var inL = L.indexOf(me) >= 0;
+        var inD = D.indexOf(me) >= 0;
+
+        if (asLike) {
+          if (inL) {
+            L.splice(L.indexOf(me), 1);
+            applyReactionScoresWithMult(me, auth, true, -1);
+          } else {
+            if (inD) {
+              D.splice(D.indexOf(me), 1);
+              applyReactionScoresWithMult(me, auth, false, -1);
+            }
+            L.push(me);
+            applyReactionScoresWithMult(me, auth, true, 1);
+          }
+        } else {
+          if (inD) {
+            D.splice(D.indexOf(me), 1);
+            applyReactionScoresWithMult(me, auth, false, -1);
+          } else {
+            if (inL) {
+              L.splice(L.indexOf(me), 1);
+              applyReactionScoresWithMult(me, auth, true, -1);
+            }
+            D.push(me);
+            applyReactionScoresWithMult(me, auth, false, 1);
+          }
+        }
+
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+      }
+
+      function togglePlanetOnPost(postId) {
+        if (!isBoardUnlocked()) return;
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = findPostInCurrentList(all, postId);
+        if (!post) return;
+        var auth = String(post.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var pv = post.reactions.planetVoters;
+        var ix = pv.indexOf(me);
+        var r;
+        if (ix >= 0) {
+          pv.splice(ix, 1);
+          r = addPlanetScoreForAuthor(auth, -PLANET_DELTA);
+        } else {
+          pv.push(me);
+          r = addPlanetScoreForAuthor(auth, PLANET_DELTA);
+        }
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        syncForcedAffiliationForAuthor(auth, r);
+      }
+
+      function togglePlanetOnComment(postId, commentId) {
+        if (!isBoardUnlocked()) return;
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = findPostInCurrentList(all, postId);
+        if (!post) return;
+        var c = findCommentById(post.comments, commentId);
+        if (!c) return;
+        normalizeComment(c);
+        var auth = String(c.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var pv = c.reactions.planetVoters;
+        var ix = pv.indexOf(me);
+        var r;
+        if (ix >= 0) {
+          pv.splice(ix, 1);
+          r = addPlanetScoreForAuthor(auth, -PLANET_DELTA);
+        } else {
+          pv.push(me);
+          r = addPlanetScoreForAuthor(auth, PLANET_DELTA);
+        }
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        syncForcedAffiliationForAuthor(auth, r);
+      }
+
+      function onToggleEmpathyPost(postId) {
+        if (!isBoardUnlocked()) return;
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = findPostInCurrentList(all, postId);
+        if (!post) return;
+        normalizePost(post);
+        var auth = String(post.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var em = post.reactions.empathy;
+        var ix = em.indexOf(me);
+        var tid = currentTerritory;
+        if (ix >= 0) {
+          em.splice(ix, 1);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, -1);
+        } else {
+          em.push(me);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, 1);
+        }
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        refreshGrowthPanel();
+        if (typeof window.__scRefreshBeltTerritoryArt === 'function') window.__scRefreshBeltTerritoryArt();
+      }
+
+      function onToggleEmpathyComment(postId, commentId) {
+        if (!isBoardUnlocked()) return;
+        var me = uid();
+        var all = loadPostsCurrent();
+        var post = findPostInCurrentList(all, postId);
+        if (!post) return;
+        var c = findCommentById(post.comments, commentId);
+        if (!c) return;
+        normalizeComment(c);
+        var auth = String(c.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var em = c.reactions.empathy;
+        var ix = em.indexOf(me);
+        var tid = currentTerritory;
+        if (ix >= 0) {
+          em.splice(ix, 1);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, -1);
+        } else {
+          em.push(me);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, 1);
+        }
+        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        refreshListOnly();
+        refreshGrowthPanel();
+        if (typeof window.__scRefreshBeltTerritoryArt === 'function') window.__scRefreshBeltTerritoryArt();
+      }
+
       function submitComment(postId, text, parentId) {
         if (!isBoardUnlocked()) return;
         var t = String(text || '').trim();
@@ -3614,6 +4475,7 @@
           text: t,
           createdAt: new Date().toISOString(),
           parentId: parentId || null,
+          reactions: { likes: [], dislikes: [], planetVoters: [], empathy: [] },
         });
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
         refreshListOnly();
@@ -3653,6 +4515,7 @@
         list.className = 'board__comment-list';
 
         var ctx = {
+          postId: post.id,
           comments: post.comments,
           canReply: function () {
             return isBoardUnlocked();
@@ -3752,6 +4615,41 @@
           btn.appendChild(th);
         }
 
+        var reactRow = document.createElement('div');
+        reactRow.className = 'board__item-react';
+        var meR = uid();
+        var authorStr = String(p.authorId || '').trim();
+        var ownPost = authorStr === String(meR || '').trim();
+        var canThumb = !ownPost && isBoardUnlocked() && !!window.AlignmentScoring;
+        var canPlanet = !ownPost && isBoardUnlocked();
+        var canEmpathy = !ownPost && isBoardUnlocked();
+        var bar = buildReactionControls({
+          nEmpathy: p.reactions.empathy.length,
+          activeEmpathy: p.reactions.empathy.indexOf(meR) >= 0,
+          disabledEmpathy: !canEmpathy,
+          onEmpathy: function () {
+            onToggleEmpathyPost(p.id);
+          },
+          nLike: p.reactions.likes.length,
+          nDis: p.reactions.dislikes.length,
+          nPlanet: p.reactions.planetVoters.length,
+          activeLike: p.reactions.likes.indexOf(meR) >= 0,
+          activeDis: p.reactions.dislikes.indexOf(meR) >= 0,
+          activePlanet: p.reactions.planetVoters.indexOf(meR) >= 0,
+          disabled: !canThumb,
+          disabledPlanet: !canPlanet,
+          onLike: function () {
+            onTogglePostReaction(p.id, true);
+          },
+          onDis: function () {
+            onTogglePostReaction(p.id, false);
+          },
+          onPlanet: function () {
+            togglePlanetOnPost(p.id);
+          },
+        });
+        reactRow.appendChild(bar);
+
         var bodyWrap = document.createElement('div');
         bodyWrap.className = 'board__item-body';
 
@@ -3783,6 +4681,7 @@
         });
 
         li.appendChild(btn);
+        li.appendChild(reactRow);
         li.appendChild(bodyWrap);
         return li;
       }
@@ -3884,6 +4783,7 @@
         } else if (elList) {
           elList.textContent = '';
         }
+        refreshGrowthPanel();
       }
 
       function openModal() {
@@ -3973,6 +4873,11 @@
 
       btnWrite.addEventListener('click', openModal);
       btnCancel.addEventListener('click', closeModal);
+      if (btnSeasonDemo) {
+        btnSeasonDemo.addEventListener('click', function () {
+          softSeasonAdvanceDemo();
+        });
+      }
       elModal.addEventListener('click', function (e) {
         if (e.target === elModal) closeModal();
       });
@@ -3981,133 +4886,428 @@
       });
 
       if (selTerritory) {
-        var ptid = (window.__scPlayer && window.__scPlayer.territoryId) || 'UNASSIGNED';
+        var ptid = (window.__scPlayer && window.__scPlayer.territoryId) || 'CENTRIST';
         if (selTerritory.querySelector('option[value="' + ptid + '"]')) {
           selTerritory.value = ptid;
+        } else {
+          selTerritory.value = 'CENTRIST';
         }
-        currentTerritory = selTerritory.value || 'UNASSIGNED';
+        currentTerritory = selTerritory.value || 'CENTRIST';
         selTerritory.addEventListener('change', function () {
-          currentTerritory = selTerritory.value || 'UNASSIGNED';
+          currentTerritory = selTerritory.value || 'CENTRIST';
           currentStage = 1;
           syncStageTabStyles();
           refreshBoardView();
         });
       }
 
-      window.__scBoardGoTerritory = function (tid) {
+      window.__scBoardSyncTerritorySelect = function (tid) {
         if (!selTerritory) return;
-        var v = String(tid || 'UNASSIGNED').trim();
-        if (!selTerritory.querySelector('option[value="' + v + '"]')) v = 'UNASSIGNED';
+        var v = String(tid || 'CENTRIST').trim();
+        if (!selTerritory.querySelector('option[value="' + v + '"]')) v = 'CENTRIST';
         selTerritory.value = v;
         currentTerritory = v;
         currentStage = 1;
         syncStageTabStyles();
         refreshBoardView();
       };
+      window.__scBoardGoTerritory = window.__scBoardSyncTerritorySelect;
+
+      window.__scRefreshAlignmentUI = function () {
+        var p = window.__scPlayer;
+        var dock = window.__scDockSetMeta;
+        var A = window.AlignmentScoring;
+        if (!p || !dock || !A) return;
+        var tidLabel = p.affiliationDisplay || 'CENTRIST · 중도(메인)';
+        var uidStr = p.userId || 'guest';
+        var s = getScoresForUser(uidStr);
+        var pct = A.toDisplayPercent(s);
+        var label = A.tendencyLabelFromPercent(pct);
+        var rank = p.rank != null ? p.rank : '#— (미연동)';
+        dock(uidStr, label, tidLabel, rank, {
+          conservative: pct.conservative,
+          centrist: pct.centrist,
+          progressive: pct.progressive,
+        });
+      };
+
+      window.__scApplyStoredKantaAffiliation = applyStoredForceToPlayer;
 
       migrateLegacy();
       seedAllTerritories();
       buildStageTabs();
       syncStageTabStyles();
       refreshBoardView();
+      applyStoredForceToPlayer();
+      if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
     })();
   </script>
   <script>
     (function () {
+      var MAP_POP_KEY = 'sc_map_pop_v1';
       var BELT_KEY = 'sc_belt_pop_v1';
       var KANTA_KEY = 'sc_kanta_pop_v1';
+      var MAX_POP = 500000;
+      var POPULATION_STAGE_MAX = [
+        320, 1055, 2251, 3940, 6147, 8894, 12199, 16078, 20546, 25616, 31301, 37611, 44558, 52151, 60399,
+        69311, 78896, 89161, 100114, 111763, 124114, 137174, 150950, 165447, 180672, 196631, 213329,
+        230772, 248965, 267914, 287623, 308098, 329343, 351363, 374162, 397745, 422116, 447280, 473241,
+        500000,
+      ];
 
-      function clampPop(n) {
-        var x = Math.floor(Number(n));
-        if (!isFinite(x) || x < 0) return 0;
-        return x;
-      }
-
-      function beltStageFromPopulation(n) {
-        var c = clampPop(n);
-        if (c <= 100) return 1;
-        if (c <= 200) return 2;
-        if (c <= 500) return 3;
-        return 4;
-      }
-
-      function loadBeltPop() {
-        try {
-          var raw = localStorage.getItem(BELT_KEY);
-          var o = raw ? JSON.parse(raw) : {};
-          return {
-            CONSERVATIVE: clampPop(o.CONSERVATIVE),
-            PROGRESSIVE: clampPop(o.PROGRESSIVE),
-          };
-        } catch (_) {
-          return { CONSERVATIVE: 0, PROGRESSIVE: 0 };
-        }
-      }
-
-      function loadKantaPop() {
-        try {
-          var raw = localStorage.getItem(KANTA_KEY);
-          var o = raw ? JSON.parse(raw) : {};
-          return {
-            KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
-            KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
-          };
-        } catch (_) {
-          return { KANTAPBIYA_LEFT: 0, KANTAPBIYA_RIGHT: 0 };
-        }
-      }
-
-      function saveBeltPop(next) {
-        try {
-          localStorage.setItem(BELT_KEY, JSON.stringify(next));
-        } catch (_) {}
-      }
-
-      function saveKantaPop(next) {
-        try {
-          localStorage.setItem(KANTA_KEY, JSON.stringify(next));
-        } catch (_) {}
-      }
+      var LAST_HIT = [];
 
       function el(id) {
         return document.getElementById(id);
       }
 
+      function clampPop(n) {
+        var x = Math.floor(Number(n));
+        if (!isFinite(x) || x < 0) return 0;
+        if (x > MAX_POP) return MAX_POP;
+        return x;
+      }
+
+      function stageFromPopulation(p) {
+        var P = clampPop(p);
+        if (P <= 0) return 1;
+        for (var i = 0; i < POPULATION_STAGE_MAX.length; i++) {
+          if (P <= POPULATION_STAGE_MAX[i]) return i + 1;
+        }
+        return 40;
+      }
+
+      function visualTierFromStage(st) {
+        var s = Math.max(1, Math.min(40, Math.floor(st)));
+        return Math.min(10, Math.max(1, Math.ceil(s / 4)));
+      }
+
+      function sizeWeightStage(st) {
+        var s = Math.max(1, Math.min(40, Math.floor(st)));
+        return 22 + (s - 1) * 2;
+      }
+
+      function loadMapPop() {
+        try {
+          var raw = localStorage.getItem(MAP_POP_KEY);
+          if (raw) {
+            var o = JSON.parse(raw);
+            return {
+              CONSERVATIVE: clampPop(o.CONSERVATIVE),
+              CENTRIST: clampPop(o.CENTRIST),
+              PROGRESSIVE: clampPop(o.PROGRESSIVE),
+              KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
+              KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
+            };
+          }
+        } catch (_) {}
+        var out = {
+          CONSERVATIVE: 0,
+          CENTRIST: 0,
+          PROGRESSIVE: 0,
+          KANTAPBIYA_LEFT: 0,
+          KANTAPBIYA_RIGHT: 0,
+        };
+        try {
+          var b = JSON.parse(localStorage.getItem(BELT_KEY) || '{}');
+          out.CONSERVATIVE = clampPop(b.CONSERVATIVE);
+          out.PROGRESSIVE = clampPop(b.PROGRESSIVE);
+        } catch (_) {}
+        try {
+          var k = JSON.parse(localStorage.getItem(KANTA_KEY) || '{}');
+          out.KANTAPBIYA_LEFT = clampPop(k.KANTAPBIYA_LEFT);
+          out.KANTAPBIYA_RIGHT = clampPop(k.KANTAPBIYA_RIGHT);
+        } catch (_) {}
+        return out;
+      }
+
+      function saveMapPop(o) {
+        try {
+          localStorage.setItem(MAP_POP_KEY, JSON.stringify(o));
+          localStorage.setItem(
+            BELT_KEY,
+            JSON.stringify({ CONSERVATIVE: o.CONSERVATIVE, PROGRESSIVE: o.PROGRESSIVE })
+          );
+          localStorage.setItem(
+            KANTA_KEY,
+            JSON.stringify({ KANTAPBIYA_LEFT: o.KANTAPBIYA_LEFT, KANTAPBIYA_RIGHT: o.KANTAPBIYA_RIGHT })
+          );
+        } catch (_) {}
+      }
+
+      function mulberry32(str) {
+        var a = 0;
+        for (var i = 0; i < str.length; i++) a = (a * 31 + str.charCodeAt(i)) | 0;
+        return function () {
+          var t = (a += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function px(ctx, x, y, w, h, fill) {
+        ctx.fillStyle = fill;
+        ctx.fillRect(x | 0, y | 0, Math.max(1, w | 0), Math.max(1, h | 0));
+      }
+
+      function drawSky(ctx, W, skyH) {
+        var g = ctx.createLinearGradient(0, 0, 0, skyH);
+        g.addColorStop(0, '#38bdf8');
+        g.addColorStop(0.55, '#bae6fd');
+        g.addColorStop(1, '#e0f2fe');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, skyH);
+        px(ctx, 40, 12, 52, 10, 'rgba(255,255,255,0.55)');
+        px(ctx, 300, 8, 36, 8, 'rgba(255,255,255,0.45)');
+        px(ctx, 200, 22, 28, 6, 'rgba(255,255,255,0.35)');
+      }
+
+      function drawSea(ctx, W, y0, y1) {
+        for (var y = y0; y < y1; y += 4) {
+          var t = (y - y0) / (y1 - y0);
+          var c = t < 0.35 ? '#1d4ed8' : t < 0.7 ? '#1e40af' : '#172554';
+          px(ctx, 0, y, W, 4, c);
+        }
+        for (var x = 0; x < W; x += 17) {
+          px(ctx, x + (((x / 17) | 0) % 3) * 2, y0 + 8 + (((x / 17) | 0) % 5) * 11, 10, 3, 'rgba(255,255,255,0.12)');
+        }
+      }
+
+      function drawEarthColumn(ctx, x, w, y0, h, belt, tier, seedStr) {
+        var rnd = mulberry32(seedStr + '|' + belt + '|' + tier);
+        var sand = belt === 'c' ? '#d6c4a0' : belt === 'n' ? '#c5d9b8' : '#b8d4e8';
+        var dark = belt === 'c' ? '#8b7355' : belt === 'n' ? '#6b8f6b' : '#5a8fb8';
+        ctx.fillStyle = sand;
+        ctx.fillRect(x, y0, w, h);
+        for (var row = 0; row < 6; row++) {
+          px(ctx, x + 2, y0 + row * 6, w - 4, 2, 'rgba(0,0,0,0.06)');
+        }
+        var trees = 2 + tier * 2;
+        for (var i = 0; i < trees; i++) {
+          var tx = x + 4 + Math.floor(rnd() * Math.max(4, w - 16));
+          var ty = y0 + 18 + Math.floor(rnd() * (h - 40));
+          px(ctx, tx, ty - 10, 4, 12, '#166534');
+          px(ctx, tx - 2, ty - 4, 8, 4, '#22c55e');
+        }
+        if (tier >= 2) {
+          var hx = x + Math.floor(w / 2) - 6;
+          var hy = y0 + h - 28;
+          px(ctx, hx, hy, 12, 10, '#9a3412');
+          px(ctx, hx + 3, hy - 6, 6, 6, '#ea580c');
+        }
+        if (tier >= 4) {
+          px(ctx, x + 6, y0 + h - 14, w - 12, 3, dark);
+        }
+        if (tier >= 6) {
+          for (var j = 0; j < 3 + tier; j++) {
+            px(ctx, x + 5 + j * 10, y0 + h - 20, 4, 5, '#facc15');
+          }
+        }
+        if (tier >= 8) {
+          px(ctx, x + w - 14, y0 + 8, 6, 22, '#57534e');
+          px(ctx, x + w - 16, y0 + 6, 10, 4, '#78716c');
+        }
+        ctx.strokeStyle = 'rgba(15,23,42,0.35)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 0.5, y0 + 0.5, w - 1, h - 1);
+      }
+
+      function drawAlienPlanet(ctx, cx, cy, r, tier, side) {
+        var grd = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 2, cx, cy, r);
+        grd.addColorStop(0, '#a78bfa');
+        grd.addColorStop(0.6, '#6d28d9');
+        grd.addColorStop(1, '#3b0764');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+        px(ctx, cx - r * 0.35, cy - r * 0.2, r * 0.5, r * 0.25, 'rgba(255,255,255,0.15)');
+        var rnd = mulberry32('planet|' + side + '|' + tier);
+        var blobs = 3 + tier * 2;
+        for (var i = 0; i < blobs; i++) {
+          var ang = rnd() * Math.PI * 2;
+          var dist = rnd() * (r - 10);
+          var bx = cx + Math.cos(ang) * dist - 3;
+          var by = cy + Math.sin(ang) * dist - 2;
+          px(ctx, bx, by, 6, 5, side === 'L' ? '#bef264' : '#fde047');
+          px(ctx, bx + 1, by - 2, 2, 2, '#0f172a');
+        }
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      function splitMainlandWidths(innerW, sC, sN, sP) {
+        var WC = sizeWeightStage(sC);
+        var WN = sizeWeightStage(sN);
+        var WP = sizeWeightStage(sP);
+        var sum = WC + WN + WP;
+        var rC = WC / sum;
+        var rN = WN / sum;
+        var rP = WP / sum;
+        var minR = 0.16;
+        rC = Math.max(minR, rC);
+        rN = Math.max(minR, rN);
+        rP = Math.max(minR, rP);
+        var s2 = rC + rN + rP;
+        rC /= s2;
+        rN /= s2;
+        rP /= s2;
+        var wC = Math.floor(innerW * rC);
+        var wN = Math.floor(innerW * rN);
+        var wP = innerW - wC - wN;
+        return { wC: wC, wN: wN, wP: wP };
+      }
+
       function applyTerritoryMapArt() {
-        var belt = loadBeltPop();
-        ['CONSERVATIVE', 'PROGRESSIVE'].forEach(function (tid) {
-          var count = belt[tid] || 0;
-          var stage = beltStageFromPopulation(count);
-          var img = el('zone-art-' + tid);
-          var meta = el('zone-meta-' + tid);
-          if (img) {
-            var slug = tid === 'CONSERVATIVE' ? 'conservative' : 'progressive';
-            img.src = '/territories/' + slug + '-stage-' + stage + '.png';
-            var label = tid === 'CONSERVATIVE' ? '보수' : '진보';
-            img.alt = label + ' 진영 ' + stage + '단계 영토';
-          }
-          if (meta) {
-            meta.textContent =
-              '소속 ' + count + '명 · 영토 ' + stage + '단계 (0~100→1, 101~200→2, 201~500→3, 501+→4)';
-          }
+        var canvas = el('territory-pixel-map');
+        var metaEl = el('territory-pixel-meta');
+        if (!canvas || !canvas.getContext) return;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.imageSmoothingEnabled = false;
+
+        var W = canvas.width;
+        var H = canvas.height;
+        var pop = loadMapPop();
+        var sC = stageFromPopulation(pop.CONSERVATIVE);
+        var sN = stageFromPopulation(pop.CENTRIST);
+        var sP = stageFromPopulation(pop.PROGRESSIVE);
+        var tKL = visualTierFromStage(stageFromPopulation(pop.KANTAPBIYA_LEFT));
+        var tKR = visualTierFromStage(stageFromPopulation(pop.KANTAPBIYA_RIGHT));
+        var vC = visualTierFromStage(sC);
+        var vN = visualTierFromStage(sN);
+        var vP = visualTierFromStage(sP);
+
+        LAST_HIT = [];
+        ctx.clearRect(0, 0, W, H);
+
+        var skyH = 76;
+        drawSky(ctx, W, skyH);
+
+        var rPl = 38;
+        var cxL = 118;
+        var cxR = W - 118;
+        var cyP = 44;
+        drawAlienPlanet(ctx, cxL, cyP, rPl, tKL, 'L');
+        drawAlienPlanet(ctx, cxR, cyP, rPl, tKR, 'R');
+        LAST_HIT.push({
+          id: 'KANTAPBIYA_LEFT',
+          x: cxL - rPl - 4,
+          y: cyP - rPl - 4,
+          w: rPl * 2 + 8,
+          h: rPl * 2 + 8,
+        });
+        LAST_HIT.push({
+          id: 'KANTAPBIYA_RIGHT',
+          x: cxR - rPl - 4,
+          y: cyP - rPl - 4,
+          w: rPl * 2 + 8,
+          h: rPl * 2 + 8,
         });
 
-        var kanta = loadKantaPop();
-        ['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'].forEach(function (tid) {
-          var count = kanta[tid] || 0;
-          var stage = beltStageFromPopulation(count);
-          var img = el('zone-art-' + tid);
-          var meta = el('zone-meta-' + tid);
-          if (img) {
-            var slug = tid === 'KANTAPBIYA_LEFT' ? 'kantapbiya-left' : 'kantapbiya-right';
-            img.src = '/territories/' + slug + '-stage-' + stage + '.png';
-            var label = tid === 'KANTAPBIYA_LEFT' ? '깐따삐아 좌' : '깐따삐아 우';
-            img.alt = label + ' 행성 ' + stage + '단계';
+        var beachY = 168;
+        drawSea(ctx, W, beachY, H);
+
+        var landTop = skyH - 6;
+        var landBot = beachY - 2;
+        var landH = landBot - landTop;
+        var pad = 4;
+        var innerW = W - pad * 2;
+        var sw = splitMainlandWidths(innerW, sC, sN, sP);
+        var x0 = pad;
+        drawEarthColumn(ctx, x0, sw.wC, landTop, landH, 'c', vC, 'CONSERVATIVE');
+        drawEarthColumn(ctx, x0 + sw.wC, sw.wN, landTop, landH, 'n', vN, 'CENTRIST');
+        drawEarthColumn(ctx, x0 + sw.wC + sw.wN, sw.wP, landTop, landH, 'p', vP, 'PROGRESSIVE');
+        LAST_HIT.push({ id: 'CONSERVATIVE', x: x0, y: landTop, w: sw.wC, h: landH });
+        LAST_HIT.push({ id: 'CENTRIST', x: x0 + sw.wC, y: landTop, w: sw.wN, h: landH });
+        LAST_HIT.push({ id: 'PROGRESSIVE', x: x0 + sw.wC + sw.wN, y: landTop, w: sw.wP, h: landH });
+
+        ctx.fillStyle = 'rgba(15,23,42,0.55)';
+        ctx.font = 'bold 9px ui-monospace, monospace';
+        ctx.fillText('K-L ' + pop.KANTAPBIYA_LEFT + ' ·T' + tKL, cxL - 32, cyP + rPl + 14);
+        ctx.fillText('K-R ' + pop.KANTAPBIYA_RIGHT + ' ·T' + tKR, cxR - 32, cyP + rPl + 14);
+        ctx.fillText('CON ' + pop.CONSERVATIVE + ' S' + sC, x0 + 3, landTop + 12);
+        ctx.fillText('CEN ' + pop.CENTRIST + ' S' + sN, x0 + sw.wC + 3, landTop + 12);
+        ctx.fillText('PRO ' + pop.PROGRESSIVE + ' S' + sP, x0 + sw.wC + sw.wN + 3, landTop + 12);
+
+        if (metaEl) {
+          metaEl.textContent =
+            '보수 ' +
+            pop.CONSERVATIVE +
+            '명 · 단계' +
+            sC +
+            ' ·시각' +
+            vC +
+            ' | 중도 ' +
+            pop.CENTRIST +
+            '명 ·' +
+            sN +
+            '/' +
+            vN +
+            ' | 진보 ' +
+            pop.PROGRESSIVE +
+            '명 ·' +
+            sP +
+            '/' +
+            vP +
+            ' | 깐따좌 ' +
+            pop.KANTAPBIYA_LEFT +
+            ' T' +
+            tKL +
+            ' · 깐따우 ' +
+            pop.KANTAPBIYA_RIGHT +
+            ' T' +
+            tKR;
+        }
+      }
+
+      function canvasToMap(ev, canvas) {
+        var rect = canvas.getBoundingClientRect();
+        var sx = canvas.width / rect.width;
+        var sy = canvas.height / rect.height;
+        return {
+          mx: (ev.clientX - rect.left) * sx,
+          my: (ev.clientY - rect.top) * sy,
+        };
+      }
+
+      function hitTerritory(mx, my) {
+        for (var i = LAST_HIT.length - 1; i >= 0; i--) {
+          var h = LAST_HIT[i];
+          if (mx >= h.x && mx <= h.x + h.w && my >= h.y && my <= h.y + h.h) return h.id;
+        }
+        return null;
+      }
+
+      function bindPixelMap() {
+        var canvas = el('territory-pixel-map');
+        if (!canvas || canvas.dataset.scPixelBound) return;
+        canvas.dataset.scPixelBound = '1';
+        canvas.addEventListener('click', function (ev) {
+          var m = canvasToMap(ev, canvas);
+          var tid = hitTerritory(m.mx, m.my);
+          if (tid && window.__scApp && window.__scApp.goBoard) {
+            ev.preventDefault();
+            window.__scApp.goBoard(tid);
           }
-          if (meta) {
-            meta.textContent =
-              '소속 ' + count + '명 · 행성 ' + stage + '단계 (0~100→1, 101~200→2, 201~500→3, 501+→4)';
-          }
+        });
+        canvas.addEventListener('keydown', function (ev) {
+          if (ev.key !== 'Enter' && ev.key !== ' ') return;
+          ev.preventDefault();
+        });
+        canvas.addEventListener('mousemove', function (ev) {
+          var m = canvasToMap(ev, canvas);
+          canvas.classList.toggle('is-hover', !!hitTerritory(m.mx, m.my));
+        });
+        canvas.addEventListener('mouseleave', function () {
+          canvas.classList.remove('is-hover');
+        });
+        window.addEventListener('resize', function () {
+          applyTerritoryMapArt();
         });
       }
 
@@ -4115,36 +5315,34 @@
 
       window.__scTerritoryPop = {
         get: function () {
-          var b = loadBeltPop();
-          var k = loadKantaPop();
-          return {
-            CONSERVATIVE: b.CONSERVATIVE,
-            PROGRESSIVE: b.PROGRESSIVE,
-            KANTAPBIYA_LEFT: k.KANTAPBIYA_LEFT,
-            KANTAPBIYA_RIGHT: k.KANTAPBIYA_RIGHT,
-          };
+          return loadMapPop();
         },
         set: function (patch) {
-          var b = loadBeltPop();
-          var k = loadKantaPop();
+          var o = loadMapPop();
           if (patch && typeof patch === 'object') {
-            if (patch.CONSERVATIVE != null) b.CONSERVATIVE = clampPop(patch.CONSERVATIVE);
-            if (patch.PROGRESSIVE != null) b.PROGRESSIVE = clampPop(patch.PROGRESSIVE);
-            if (patch.KANTAPBIYA_LEFT != null) k.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
-            if (patch.KANTAPBIYA_RIGHT != null) k.KANTAPBIYA_RIGHT = clampPop(patch.KANTAPBIYA_RIGHT);
+            if (patch.CONSERVATIVE != null) o.CONSERVATIVE = clampPop(patch.CONSERVATIVE);
+            if (patch.CENTRIST != null) o.CENTRIST = clampPop(patch.CENTRIST);
+            if (patch.PROGRESSIVE != null) o.PROGRESSIVE = clampPop(patch.PROGRESSIVE);
+            if (patch.KANTAPBIYA_LEFT != null) o.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
+            if (patch.KANTAPBIYA_RIGHT != null) o.KANTAPBIYA_RIGHT = clampPop(patch.KANTAPBIYA_RIGHT);
           }
-          saveBeltPop(b);
-          saveKantaPop(k);
+          saveMapPop(o);
           applyTerritoryMapArt();
-          return window.__scTerritoryPop.get();
+          return loadMapPop();
         },
-        stageFromCount: beltStageFromPopulation,
+        stageFromCount: stageFromPopulation,
+        visualTierFromStage: visualTierFromStage,
       };
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyTerritoryMapArt);
-      } else {
+      function bootMap() {
+        bindPixelMap();
         applyTerritoryMapArt();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootMap);
+      } else {
+        bootMap();
       }
     })();
   </script>
