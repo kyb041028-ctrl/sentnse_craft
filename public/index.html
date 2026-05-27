@@ -167,6 +167,264 @@
       color: var(--muted);
     }
 
+    /* ----- 중도 풀 배경(1~6단계 아트) + 클릭 시 게시판 ----- */
+    .territory-centrist-hero {
+      margin-top: 1rem;
+    }
+    .territory-centrist-hero__frame {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: min(58vh, 26rem);
+      background: #0b1628;
+    }
+    @media (min-width: 640px) {
+      .territory-centrist-hero__frame {
+        min-height: min(62vh, 32rem);
+      }
+    }
+    .territory-centrist-hero__bg {
+      position: absolute;
+      inset: 0;
+      background-color: #0b1628;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      transition: filter 0.2s ease;
+    }
+    .territory-centrist-hero__hit {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: inherit;
+      background: transparent;
+      cursor: pointer;
+    }
+    .territory-centrist-hero__frame:has(.territory-centrist-hero__hit:hover) .territory-centrist-hero__bg,
+    .territory-centrist-hero__frame:has(.territory-centrist-hero__hit:focus-visible) .territory-centrist-hero__bg {
+      filter: brightness(1.06);
+    }
+    .territory-centrist-hero__hit:hover {
+      background: rgba(255, 255, 255, 0.035);
+    }
+    .territory-centrist-hero__faction-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .territory-faction-hit {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      line-height: 0;
+      pointer-events: auto;
+      border-radius: 12px;
+      transition: transform 0.18s ease, filter 0.18s ease;
+      filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.5));
+    }
+    .territory-faction-hit:hover {
+      filter: drop-shadow(0 7px 20px rgba(0, 0, 0, 0.58));
+    }
+    .territory-faction-hit--belt:hover {
+      transform: translate(-50%, -50%) scale(1.04);
+    }
+    .territory-faction-hit--kanta:hover {
+      transform: rotate(30deg) scale(1.05);
+    }
+    .territory-faction-hit:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.75);
+      outline-offset: 3px;
+    }
+    .territory-faction-hit__img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: top;
+      pointer-events: none;
+      border-radius: 10px;
+    }
+    /* 진보·보수: 좌우 끝·상공(중앙 원형 땅 밖), 중도 팔레트에 맞춘 후광 + 단계 게이지 */
+    .territory-faction-hit--belt {
+      width: min(19%, 6.75rem);
+      max-width: 6.75rem;
+      min-width: 3.85rem;
+    }
+    .territory-faction-hit--belt-left {
+      left: 5%;
+      top: 34%;
+      transform: translate(-50%, -50%);
+    }
+    .territory-faction-hit--belt-right {
+      left: 95%;
+      top: 34%;
+      transform: translate(-50%, -50%);
+    }
+    .territory-belt-stack {
+      position: relative;
+      display: block;
+      line-height: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .territory-belt-stack {
+        animation: territoryBeltFloat 4.5s ease-in-out infinite;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-belt-stack {
+        animation: none;
+      }
+    }
+    @keyframes territoryBeltFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+    .territory-belt-aero {
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      width: 140%;
+      height: 55%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+      filter: blur(10px);
+    }
+    .territory-faction-hit--belt-prog .territory-belt-aero {
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(56, 189, 248, 0.42) 0%,
+        rgba(14, 165, 233, 0.18) 45%,
+        transparent 72%
+      );
+    }
+    .territory-faction-hit--belt-con .territory-belt-aero {
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(251, 191, 36, 0.38) 0%,
+        rgba(245, 158, 11, 0.16) 45%,
+        transparent 72%
+      );
+    }
+    .territory-belt-underglow {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 118%;
+      height: 42%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 18px 36px rgba(15, 23, 42, 0.55);
+      opacity: 0.55;
+    }
+    .territory-belt-img {
+      position: relative;
+      z-index: 2;
+      border-radius: 12px;
+      filter: saturate(0.78) brightness(1.08) contrast(1.02) hue-rotate(-6deg)
+        drop-shadow(0 0 14px rgba(125, 211, 252, 0.35));
+    }
+    .territory-faction-hit--belt-con .territory-belt-img {
+      filter: saturate(0.78) brightness(1.06) contrast(1.02) hue-rotate(8deg)
+        drop-shadow(0 0 14px rgba(253, 224, 71, 0.28));
+    }
+    .territory-belt-civtrack {
+      position: relative;
+      width: 88%;
+      max-width: 6.5rem;
+      margin: 0.3rem auto 0;
+      height: 0.28rem;
+      border-radius: 999px;
+      z-index: 3;
+      pointer-events: none;
+      background-color: rgba(15, 23, 42, 0.55);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+      background-size: calc(100% / 6) 100%;
+      background-repeat: repeat-x;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+    .territory-belt-civfill {
+      display: block;
+      height: 100%;
+      width: 16.666%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #38bdf8, #a5f3fc 55%, #e0f2fe);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.55);
+      transition: width 0.35s ease;
+    }
+    .territory-faction-hit--belt-con .territory-belt-civfill {
+      background: linear-gradient(90deg, #f59e0b, #fcd34d 55%, #fef9c3);
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.45);
+    }
+    .territory-faction-hit--kanta {
+      left: -0.2rem;
+      top: -0.15rem;
+      width: min(34%, 8.5rem);
+      max-width: 8.5rem;
+      min-width: 4.75rem;
+      transform: rotate(30deg);
+      transform-origin: 0 0;
+    }
+    @media (max-width: 420px) {
+      .territory-faction-hit--belt {
+        width: min(24%, 6.25rem);
+        max-width: 6.25rem;
+        min-width: 3.5rem;
+      }
+      .territory-faction-hit--belt-left {
+        left: 5%;
+      }
+      .territory-faction-hit--belt-right {
+        left: 95%;
+      }
+      .territory-faction-hit--belt-left,
+      .territory-faction-hit--belt-right {
+        top: 36%;
+      }
+      .territory-faction-hit--kanta {
+        width: min(38%, 7rem);
+        max-width: 7rem;
+        min-width: 4rem;
+        left: -0.15rem;
+        top: -0.1rem;
+      }
+    }
+    .territory-centrist-hero__caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0.45rem 0.65rem 0.5rem;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(11, 16, 40, 0.92) 0%, rgba(11, 16, 40, 0.35) 55%, transparent 100%);
+      color: var(--muted);
+    }
+
     /* 영토 맵: 하늘 행성 + 메인 랜드 + 얹힌 진영 */
     .territory-map-canvas {
       margin-top: 0.35rem;
@@ -1811,12 +2069,95 @@
         </div>
         <p class="muted">
           영토를 선택하면 해당 영토 <strong>전용 게시판</strong>으로 이동합니다. 기본 메인은
-          <strong>중도(CENTRIST)</strong> 게시판입니다.
+          <strong>중도(CENTRIST)</strong> 게시판입니다. 아래 큰 배경은 중도 영토
+          <strong>1~6단계</strong> 아트이며, 인구에 따른 성장 단계(1~40)를 여섯 구간으로 묶어 바뀝니다.
         </p>
+
+        <section class="territory-centrist-hero" aria-label="중도 영토 배경">
+          <div class="territory-centrist-hero__frame">
+            <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
+            <button
+              type="button"
+              class="territory-centrist-hero__hit zone--clickable"
+              id="territory-centrist-hero-btn"
+              aria-label="중도(CENTRIST) 게시판으로 이동"
+            ></button>
+            <div class="territory-centrist-hero__faction-layer" id="territory-faction-overlay-root">
+              <button
+                type="button"
+                class="territory-faction-hit territory-faction-hit--kanta zone--clickable"
+                id="territory-faction-kanta"
+                data-territory-target="KANTAPBIYA_LEFT"
+                aria-label="깐따삐아 게시판으로 이동"
+              >
+                <img
+                  class="territory-faction-hit__img"
+                  src="/territories/kantapbiya-hero-entry.png"
+                  alt=""
+                  width="220"
+                  height="220"
+                  decoding="async"
+                />
+              </button>
+              <button
+                type="button"
+                class="territory-faction-hit territory-faction-hit--belt territory-faction-hit--belt-left territory-faction-hit--belt-prog zone--clickable"
+                id="territory-faction-progressive"
+                aria-label="진보 게시판으로 이동"
+              >
+                <span class="territory-belt-stack">
+                  <span class="territory-belt-aero" aria-hidden="true"></span>
+                  <span class="territory-belt-underglow" aria-hidden="true"></span>
+                  <img
+                    class="territory-faction-hit__img territory-belt-img"
+                    id="territory-faction-progressive-img"
+                    src="/territories/mainland-belt-stage-1.png"
+                    alt=""
+                    width="320"
+                    height="320"
+                    decoding="async"
+                  />
+                  <span class="territory-belt-civtrack" aria-hidden="true"
+                    ><span class="territory-belt-civfill" id="territory-belt-civfill-p"></span
+                  ></span>
+                </span>
+              </button>
+              <button
+                type="button"
+                class="territory-faction-hit territory-faction-hit--belt territory-faction-hit--belt-right territory-faction-hit--belt-con zone--clickable"
+                id="territory-faction-conservative"
+                aria-label="보수 게시판으로 이동"
+              >
+                <span class="territory-belt-stack">
+                  <span class="territory-belt-aero" aria-hidden="true"></span>
+                  <span class="territory-belt-underglow" aria-hidden="true"></span>
+                  <img
+                    class="territory-faction-hit__img territory-belt-img"
+                    id="territory-faction-conservative-img"
+                    src="/territories/mainland-belt-stage-1.png"
+                    alt=""
+                    width="320"
+                    height="320"
+                    decoding="async"
+                  />
+                  <span class="territory-belt-civtrack" aria-hidden="true"
+                    ><span class="territory-belt-civfill" id="territory-belt-civfill-c"></span
+                  ></span>
+                </span>
+              </button>
+            </div>
+            <p class="territory-centrist-hero__caption muted" id="territory-centrist-hero-caption" aria-live="polite"></p>
+          </div>
+        </section>
 
         <section class="card territory-map" aria-labelledby="territory-map-title">
           <h2 id="territory-map-title">영토 구역</h2>
           <p class="hint">
+            위쪽 <strong>중도 배경</strong> 빈 곳을 누르면 중도 게시판으로 갑니다. 같은 배경 위에
+            <strong>좌상단 깐따삐아</strong>, <strong>좌우 끝 상공의 진보·보수</strong> 섬 아이콘이 올라가며 각각 해당
+            게시판으로 이동합니다. 진보·보수는 동일 섬 아트(<code>mainland-belt-stage-1~6</code>)에
+            <strong>청록/호박 톤 후광</strong>과 아래 <strong>문명 1~6단계 바</strong>로 인구 구간을 보여 줍니다.
+            배경 PNG는 <code>/territories/centrist-stage-1.png</code> ~ <code>6</code>입니다.
             <strong>픽셀 지도</strong>를 클릭하면 해당 영토 게시판으로 이동합니다. 하늘의 두 구체는 깐따삐아 좌·우,
             아래 땅·바다는 보수·중도·진보입니다. 소속 인구(맥스 50만)에 따라 <strong>발전 단계 1~40</strong>과
             <strong>가로 너비</strong>가 바뀌고, <strong>시각 티어 1~10</strong>에 맞춰 픽셀 연출이 달라집니다.
@@ -5162,7 +5503,76 @@
         return { wC: wC, wN: wN, wP: wP };
       }
 
+      function tier6ArtFromPopulationCount(p) {
+        var st = stageFromPopulation(p);
+        return Math.min(6, Math.max(1, Math.ceil((st * 6) / 40)));
+      }
+
+      function centristArtStageFromCentristPopulation(p) {
+        return tier6ArtFromPopulationCount(p);
+      }
+
+      function kantapbiyaTargetFromPop(pop) {
+        if (pop.KANTAPBIYA_LEFT >= pop.KANTAPBIYA_RIGHT) return 'KANTAPBIYA_LEFT';
+        return 'KANTAPBIYA_RIGHT';
+      }
+
+      function applyCentristHeroArt() {
+        var layer = el('territory-centrist-hero-bg');
+        var cap = el('territory-centrist-hero-caption');
+        if (!layer) return;
+        var pop = loadMapPop();
+        var st = stageFromPopulation(pop.CENTRIST);
+        var art = centristArtStageFromCentristPopulation(pop.CENTRIST);
+        layer.style.backgroundImage = "url('/territories/centrist-stage-" + art + ".png')";
+
+        var artP = tier6ArtFromPopulationCount(pop.PROGRESSIVE);
+        var artC = tier6ArtFromPopulationCount(pop.CONSERVATIVE);
+        var imgP = el('territory-faction-progressive-img');
+        var imgC = el('territory-faction-conservative-img');
+        if (imgP) imgP.src = '/territories/mainland-belt-stage-' + artP + '.png';
+        if (imgC) imgC.src = '/territories/mainland-belt-stage-' + artC + '.png';
+
+        var fillP = el('territory-belt-civfill-p');
+        var fillC = el('territory-belt-civfill-c');
+        if (fillP) fillP.style.width = (100 * artP) / 6 + '%';
+        if (fillC) fillC.style.width = (100 * artC) / 6 + '%';
+
+        var kBtn = el('territory-faction-kanta');
+        if (kBtn) {
+          var kt = kantapbiyaTargetFromPop(pop);
+          kBtn.setAttribute('data-territory-target', kt);
+          kBtn.setAttribute(
+            'aria-label',
+            '깐따삐아 ' + (kt === 'KANTAPBIYA_LEFT' ? '좌파' : '우파') + ' 게시판으로 이동 (인구 많은 쪽)',
+          );
+        }
+
+        if (cap) {
+          var kt2 = kantapbiyaTargetFromPop(pop);
+          cap.textContent =
+            '중도 · 인구 ' +
+            pop.CENTRIST +
+            '명 · 단계 ' +
+            st +
+            '/40 · 배경 ' +
+            art +
+            '/6 · 빈 곳 클릭 → 중도 | 좌 ' +
+            artP +
+            '/6 진보 · 우 ' +
+            artC +
+            '/6 보수 · 좌상 깐따 → ' +
+            (kt2 === 'KANTAPBIYA_LEFT' ? '좌' : '우') +
+            ' (좌 ' +
+            pop.KANTAPBIYA_LEFT +
+            ' / 우 ' +
+            pop.KANTAPBIYA_RIGHT +
+            ')';
+        }
+      }
+
       function applyTerritoryMapArt() {
+        applyCentristHeroArt();
         var canvas = el('territory-pixel-map');
         var metaEl = el('territory-pixel-meta');
         if (!canvas || !canvas.getContext) return;
@@ -5283,6 +5693,36 @@
         return null;
       }
 
+      function bindCentristHero() {
+        var btn = el('territory-centrist-hero-btn');
+        if (!btn || btn.dataset.scCentristBound) return;
+        btn.dataset.scCentristBound = '1';
+        btn.addEventListener('click', function () {
+          if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard('CENTRIST');
+        });
+
+        function wireFaction(id) {
+          var b = el(id);
+          if (!b || b.dataset.scFactionBound) return;
+          b.dataset.scFactionBound = '1';
+          b.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+            var tid =
+              id === 'territory-faction-kanta'
+                ? b.getAttribute('data-territory-target') || 'KANTAPBIYA_LEFT'
+                : id === 'territory-faction-progressive'
+                  ? 'PROGRESSIVE'
+                  : id === 'territory-faction-conservative'
+                    ? 'CONSERVATIVE'
+                    : null;
+            if (tid && window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(tid);
+          });
+        }
+        wireFaction('territory-faction-kanta');
+        wireFaction('territory-faction-progressive');
+        wireFaction('territory-faction-conservative');
+      }
+
       function bindPixelMap() {
         var canvas = el('territory-pixel-map');
         if (!canvas || canvas.dataset.scPixelBound) return;
@@ -5312,6 +5752,7 @@
       }
 
       window.__scRefreshBeltTerritoryArt = applyTerritoryMapArt;
+      window.__scRefreshCentristHeroArt = applyCentristHeroArt;
 
       window.__scTerritoryPop = {
         get: function () {
@@ -5336,6 +5777,7 @@
 
       function bootMap() {
         bindPixelMap();
+        bindCentristHero();
         applyTerritoryMapArt();
       }
 
