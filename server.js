@@ -400,6 +400,7 @@ app.get('/api/me/profile', requireSupabase, async (req, res) => {
 
 const CHAT_MAX_PER_ROOM = 400;
 const CHAT_TERRITORY_IDS = new Set([
+  'COMMON',
   'CONSERVATIVE',
   'CENTRIST',
   'PROGRESSIVE',

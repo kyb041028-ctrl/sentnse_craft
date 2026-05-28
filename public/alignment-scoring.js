@@ -111,19 +111,78 @@
     };
   }
 
+  /** 보수−진보 격차: 미만이면 표시·라벨은 중립 */
+  var LEAN_NEUTRAL_MAX = 12;
+  /** 격차가 이상이면 “약함”, 그 이상이면 분명한 한쪽 */
+  var LEAN_MILD_MAX = 25;
+
+  /**
+   * 화면용 최종 기울기 — 양극(보수·진보) 격차만 사용. 중도 축은 영토 해금 등 내부 계산용.
+   * @returns {{ gap: number, side: 'neutral'|'conservative'|'progressive', tier: 'neutral'|'mild'|'strong', conservative: number, centrist: number, progressive: number }}
+   */
+  function leanFromPercent(pct) {
+    var r = Math.max(0, Number(pct && pct.conservative) || 0);
+    var l = Math.max(0, Number(pct && pct.progressive) || 0);
+    var c = Math.max(0, Number(pct && pct.centrist) || 0);
+    var gap = Math.abs(r - l);
+    var side = 'neutral';
+    if (gap >= 0.5) {
+      if (r > l) side = 'conservative';
+      else if (l > r) side = 'progressive';
+    }
+    var tier = 'neutral';
+    if (gap >= LEAN_MILD_MAX) tier = 'strong';
+    else if (gap >= LEAN_NEUTRAL_MAX) tier = 'mild';
+    return {
+      gap: Math.round(gap),
+      side: side,
+      tier: tier,
+      conservative: r,
+      centrist: c,
+      progressive: l,
+    };
+  }
+
   function tendencyLabelFromPercent(pct) {
-    var r = pct.conservative;
-    var c = pct.centrist;
-    var l = pct.progressive;
-    var m = Math.max(r, c, l);
-    if (m < 38) return '혼합·중립에 가까움';
-    if (r === m && r >= c && r >= l) return '보수 쪽 성향';
-    if (l === m && l >= r && l >= c) return '진보 쪽 성향';
-    if (c === m) return '중도 쪽 성향';
-    if (r >= 33 && l >= 33) return '보수·진보 혼합';
-    if (r >= 33 && c >= 33) return '보수·중도 혼합';
-    if (l >= 33 && c >= 33) return '진보·중도 혼합';
-    return '혼합 성향';
+    var lean = leanFromPercent(pct);
+    if (lean.tier === 'neutral') return '중립';
+    var pole = lean.side === 'conservative' ? '보수' : '진보';
+    var suffix = lean.tier === 'mild' ? ' (약함)' : '';
+    return pole + ' +' + lean.gap + suffix;
+  }
+
+  /** 도크 막대 아래 설명 */
+  function tendencyLegendFromPercent(pct) {
+    var lean = leanFromPercent(pct);
+    if (lean.tier === 'neutral') {
+      return lean.gap > 0
+        ? '사람 · 중립 (보수·진보 격차 ' + lean.gap + ')'
+        : '사람 · 중립';
+    }
+    var pole = lean.side === 'conservative' ? '보수' : '진보';
+    var strength = lean.tier === 'mild' ? '약한 ' : '';
+    return (
+      '사람 · ' +
+      strength +
+      pole +
+      ' 쪽 +' +
+      lean.gap +
+      ' · 영토 해금은 축별 40% 기준'
+    );
+  }
+
+  /** 스펙트럼 막대: 중립=가운데, 한쪽 기울기=보수(좌)·진보(우) 비율 */
+  function leanBarWidths(pct) {
+    var lean = leanFromPercent(pct);
+    var g = Math.min(50, lean.gap);
+    if (lean.tier === 'neutral') {
+      return { conservative: 0, centrist: 100, progressive: 0 };
+    }
+    var half = g / 2;
+    if (lean.side === 'conservative') {
+      return { conservative: 50 + half, centrist: 0, progressive: 50 - half };
+    }
+    return { conservative: 50 - half, centrist: 0, progressive: 50 + half };
   }
 
   global.AlignmentScoring = {
@@ -136,6 +195,11 @@
     deltaReactorOnOthersPost: deltaReactorOnOthersPost,
     deltaAuthorReceivingReaction: deltaAuthorReceivingReaction,
     applyDelta: applyDelta,
+    LEAN_NEUTRAL_MAX: LEAN_NEUTRAL_MAX,
+    LEAN_MILD_MAX: LEAN_MILD_MAX,
+    leanFromPercent: leanFromPercent,
+    leanBarWidths: leanBarWidths,
     tendencyLabelFromPercent: tendencyLabelFromPercent,
+    tendencyLegendFromPercent: tendencyLegendFromPercent,
   };
 })(typeof window !== 'undefined' ? window : this);

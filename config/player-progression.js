@@ -1,9 +1,10 @@
 /**
  * =============================================================================
- * 유저 레벨(1~10) · 경험치 · 4단계 랭크(10레벨 이후, 받은 좋아요 절대평가)
+ * 유저 레벨(1~5) · 경험치 · 4단계 랭크(5레벨 이후, 받은 좋아요 절대평가)
  * =============================================================================
- * - 레벨 1~10: 글·댓글 작성으로 totalXp (쉬운 구간)
- * - 10레벨: 랭크 해금
+ * - 레벨 1~5: 글·댓글 작성으로 totalXp
+ * - 3레벨: 타 영토 1단계 눈팅(읽기)
+ * - 5레벨: 랭크 해금
  * - 소속 내 받은 좋아요 **하위 50%** → 일반시민
  * - 상위 50%: 평론가·정치인·총수 (절대 기준 + 인구 캡)
  * - 정치인: 소속(영토) 인구의 10% 이내 / 총수: 소속당 최대 5명
@@ -12,9 +13,10 @@
 
 'use strict';
 
-const MAX_LEVEL = 10;
+const MAX_LEVEL = 5;
+const LURK_UNLOCK_LEVEL = 3;
 const MAX_RANK_TIER = 4;
-const RANK_UNLOCK_LEVEL = 10;
+const RANK_UNLOCK_LEVEL = 5;
 
 const XP_REWARDS = Object.freeze({
   post_write: 25,
@@ -22,8 +24,8 @@ const XP_REWARDS = Object.freeze({
   issue_comment: 10,
 });
 
-/** 레벨 1→2 … 9→10. 합계 425 XP (글·댓글 몇 번이면 10레벨) */
-const XP_PER_LEVEL = Object.freeze([25, 30, 35, 40, 45, 50, 55, 60, 65, 70]);
+/** 레벨 1→2 … 4→5 */
+const XP_PER_LEVEL = Object.freeze([40, 50, 60, 70, 80]);
 
 function buildCumulativeThresholds() {
   const out = [0];
@@ -292,6 +294,7 @@ function normalizeState(raw, userId, map) {
 function getPublicPlayerProgressionConfig() {
   return Object.freeze({
     maxLevel: MAX_LEVEL,
+    lurkUnlockLevel: LURK_UNLOCK_LEVEL,
     rankUnlockLevel: RANK_UNLOCK_LEVEL,
     maxRankTier: MAX_RANK_TIER,
     xpRewards: XP_REWARDS,
@@ -309,7 +312,7 @@ function getPublicPlayerProgressionConfig() {
     rankPopulationCaps: RANK_POPULATION_CAPS,
     citizenBottomRatio: CITIZEN_BOTTOM_RATIO,
     notesKo: [
-      '레벨 10 달성 후 랭크 해금.',
+      '레벨 3: 타 영토 1단계 눈팅(읽기). 레벨 5: 랭크 해금.',
       '소속 내 받은 좋아요 하위 50% → 일반시민.',
       '상위 50%: 평론가 이상은 절대 기준(글·댓글 좋아요·팔로워).',
       '정치인: 소속 인구 10% 이내, 총수: 소속당 5명 이내.',
@@ -319,6 +322,7 @@ function getPublicPlayerProgressionConfig() {
 
 module.exports = Object.freeze({
   MAX_LEVEL,
+  LURK_UNLOCK_LEVEL,
   RANK_UNLOCK_LEVEL,
   MAX_RANK_TIER,
   XP_REWARDS,

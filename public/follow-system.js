@@ -144,7 +144,8 @@
 
   function territoryLabel(tid) {
     var m = {
-      CENTRIST: '중도',
+      COMMON: '모두의 공간',
+      CENTRIST: '중도 영토',
       CONSERVATIVE: '보수',
       PROGRESSIVE: '진보',
       KANTAPBIYA_LEFT: '깐따삐아 좌',
@@ -164,7 +165,7 @@
       postId: String(meta.postId || ''),
       authorId: authorId,
       title: String(meta.title || '(제목 없음)').slice(0, 80),
-      territoryId: String(meta.territoryId || 'CENTRIST'),
+      territoryId: String(meta.territoryId || 'COMMON'),
       stage: Math.max(1, Math.floor(Number(meta.stage) || 1)),
       createdAt: new Date().toISOString(),
       read: false,

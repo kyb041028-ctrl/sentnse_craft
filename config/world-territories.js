@@ -17,11 +17,16 @@ const MAIN_BELT = Object.freeze({
     /** 게시판 단계 수 (1~4) */
     forumTierCount: 4,
   },
+  COMMON: {
+    id: 'COMMON',
+    labelKo: '모두의 공간',
+    /** 공용 광장 — 데일리 이슈·자유게시판. 영토 소속·4단계와 별도 */
+    forumTierCount: 0,
+  },
   CENTRIST: {
     id: 'CENTRIST',
-    labelKo: '중도(일반) 진영',
-    /** 중도는 “소속 영토”가 아니라 정치색이 쌓이는 연습장에 가깝게 둡니다. */
-    forumTierCount: 0,
+    labelKo: '중도 영토',
+    forumTierCount: 4,
   },
   PROGRESSIVE: {
     id: 'PROGRESSIVE',

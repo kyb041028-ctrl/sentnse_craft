@@ -1,12 +1,13 @@
 /**
- * 센텐스크래프트 — 레벨(1~10) · 경험치 · 랭크(받은 좋아요 절대평가, localStorage)
+ * 센텐스크래프트 — 레벨(1~5) · 경험치 · 랭크(받은 좋아요 절대평가, localStorage)
  */
 (function (global) {
   'use strict';
 
   var LS_KEY = 'sc_player_progression_v1';
-  var MAX_LEVEL = 10;
-  var RANK_UNLOCK_LEVEL = 10;
+  var MAX_LEVEL = 5;
+  var LURK_UNLOCK_LEVEL = 3;
+  var RANK_UNLOCK_LEVEL = 5;
   var MAX_RANK_TIER = 4;
 
   var XP_REWARDS = {
@@ -15,7 +16,8 @@
     issue_comment: 10,
   };
 
-  var XP_PER_LEVEL = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70];
+  /** 레벨 1→2 … 4→5 */
+  var XP_PER_LEVEL = [40, 50, 60, 70, 80];
 
   var LEVEL_CUMULATIVE_XP = [0];
   (function buildThresholds() {
@@ -52,7 +54,8 @@
   var TERRITORY_LABELS = {
     UNASSIGNED: '미편입',
     CONSERVATIVE: '보수',
-    CENTRIST: '중도',
+    COMMON: '모두의 공간',
+    CENTRIST: '중도 영토',
     PROGRESSIVE: '진보',
     KANTAPBIYA_LEFT: '깐따삐아 좌',
     KANTAPBIYA_RIGHT: '깐따삐아 우',
@@ -588,14 +591,37 @@
       global.__scPlayer.territoryRank = standings.territoryRank;
       global.__scPlayer.influenceScore = standings.score;
     }
+    if (typeof global.__scRefreshBoardView === 'function') {
+      global.__scRefreshBoardView();
+    }
+  }
+
+  function getPermissionsGuideData() {
+    return {
+      maxLevel: MAX_LEVEL,
+      lurkUnlockLevel: LURK_UNLOCK_LEVEL,
+      rankUnlockLevel: RANK_UNLOCK_LEVEL,
+      xpRewards: Object.assign({}, XP_REWARDS),
+      xpPerLevel: XP_PER_LEVEL.slice(),
+      levelCumulativeXp: LEVEL_CUMULATIVE_XP.slice(),
+      rankTiers: RANK_TIERS.map(function (r) {
+        return { tier: r.tier, labelKo: r.labelKo, shortKo: r.shortKo };
+      }),
+      rankAbsolute: Object.assign({}, RANK_ABSOLUTE),
+      rankCaps: Object.assign({}, RANK_CAPS),
+      citizenBottomRatio: CITIZEN_BOTTOM_RATIO,
+      rankFollowerWeight: RANK_FOLLOWER_WEIGHT,
+    };
   }
 
   global.PlayerProgression = {
     MAX_LEVEL: MAX_LEVEL,
+    LURK_UNLOCK_LEVEL: LURK_UNLOCK_LEVEL,
     RANK_UNLOCK_LEVEL: RANK_UNLOCK_LEVEL,
     MAX_RANK_TIER: MAX_RANK_TIER,
     XP_REWARDS: XP_REWARDS,
     RANK_ABSOLUTE: RANK_ABSOLUTE,
+    getPermissionsGuideData: getPermissionsGuideData,
     getState: getState,
     setState: setState,
     grantXp: grantXp,
