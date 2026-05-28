@@ -953,9 +953,296 @@
       background: rgba(148, 163, 184, 0.12);
       border-color: rgba(148, 163, 184, 0.22);
     }
+    .avatar-dock__meta-row--level {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.28);
+    }
     .avatar-dock__meta-row--rank {
       background: rgba(52, 211, 153, 0.1);
       border-color: rgba(52, 211, 153, 0.22);
+    }
+    .avatar-dock__meta-row--followers {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.22);
+    }
+    .avatar-dock__meta-row--standings {
+      background: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.25);
+    }
+    .avatar-dock__meta-row--rankmenu {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.2);
+      justify-content: center;
+    }
+    .avatar-dock__menu-btn {
+      width: 100%;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      cursor: pointer;
+    }
+    .avatar-dock__menu-btn:hover {
+      filter: brightness(1.08);
+    }
+    .sc-rank-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .sc-rank-modal[hidden] {
+      display: none;
+    }
+    .sc-rank-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .sc-rank-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(26rem, 100%);
+      max-height: min(85vh, 32rem);
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+    .sc-rank-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sc-rank-modal__head h2 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sc-rank-modal__head button {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-rank-modal__tabs {
+      display: flex;
+      gap: 0.35rem;
+      padding: 0.45rem 0.55rem 0;
+    }
+    .sc-rank-modal__tab {
+      flex: 1;
+      padding: 0.35rem 0.4rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-rank-modal__tab.is-active {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+    }
+    .sc-rank-modal__my {
+      margin: 0;
+      padding: 0.45rem 0.65rem;
+      font-size: 0.65rem;
+      color: #cbd5e1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-rank-modal__list {
+      list-style: none;
+      margin: 0;
+      padding: 0.35rem 0.45rem 0.55rem;
+      overflow: auto;
+      flex: 1;
+    }
+    .sc-rank-modal__item {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      grid-template-rows: auto auto;
+      gap: 0.1rem 0.45rem;
+      padding: 0.4rem 0.35rem;
+      border-radius: 8px;
+      font-size: 0.65rem;
+    }
+    .sc-rank-modal__item.is-me {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .sc-rank-modal__pos {
+      grid-row: 1 / span 2;
+      font-weight: 800;
+      color: #38bdf8;
+      font-size: 0.75rem;
+      align-self: center;
+      text-align: center;
+    }
+    .sc-rank-modal__main {
+      color: #f1f5f9;
+      line-height: 1.35;
+    }
+    .sc-rank-modal__sub {
+      grid-column: 2;
+      color: #94a3b8;
+      font-size: 0.58rem;
+    }
+    .sc-rank-modal__empty,
+    .sc-rank-modal__more {
+      padding: 0.5rem;
+      font-size: 0.68rem;
+    }
+    .avatar-xpbar {
+      display: block;
+      width: 100%;
+      height: 11px;
+      border-radius: 7px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .avatar-xpbar__fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(34, 211, 238, 0.85), rgba(56, 189, 248, 0.95), rgba(129, 140, 248, 0.9));
+      transition: width 0.35s ease;
+    }
+    .avatar-xpbar__legend {
+      font-size: 0.58rem;
+      color: #94a3b8;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .board__follow-btn {
+      margin-left: 0.35rem;
+      padding: 0.12rem 0.45rem;
+      font-size: 0.62rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      cursor: pointer;
+    }
+    .board__follow-btn.is-following {
+      border-color: rgba(52, 211, 153, 0.4);
+      background: rgba(52, 211, 153, 0.15);
+      color: #6ee7b7;
+    }
+    .board__follow-btn:hover {
+      filter: brightness(1.08);
+    }
+    .sc-follow-notify-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .sc-follow-notify-toggle {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(18, 26, 51, 0.9);
+      color: #e2e8f0;
+      cursor: pointer;
+      position: relative;
+    }
+    .sc-follow-notify-badge {
+      position: absolute;
+      top: -0.35rem;
+      right: -0.25rem;
+      min-width: 1rem;
+      height: 1rem;
+      padding: 0 0.25rem;
+      border-radius: 999px;
+      background: #f43f5e;
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 800;
+      line-height: 1rem;
+      text-align: center;
+    }
+    .sc-follow-notify-badge[hidden] {
+      display: none;
+    }
+    .sc-follow-notify-panel {
+      position: absolute;
+      top: calc(100% + 0.35rem);
+      right: 0;
+      z-index: 120;
+      width: min(22rem, 92vw);
+      max-height: 16rem;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+    .sc-follow-notify-panel[hidden] {
+      display: none;
+    }
+    .sc-follow-notify__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.45rem 0.55rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .sc-follow-notify__head button {
+      font-size: 0.62rem;
+      padding: 0.15rem 0.35rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-follow-notify-list {
+      list-style: none;
+      margin: 0;
+      padding: 0.25rem;
+    }
+    .sc-follow-notify__item.is-unread .sc-follow-notify__btn {
+      border-left: 3px solid #38bdf8;
+    }
+    .sc-follow-notify__btn {
+      width: 100%;
+      text-align: left;
+      padding: 0.45rem 0.5rem;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #e2e8f0;
+      font-size: 0.68rem;
+      cursor: pointer;
+    }
+    .sc-follow-notify__btn:hover {
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .sc-follow-notify__empty {
+      padding: 0.65rem;
+      font-size: 0.68rem;
     }
     .avatar-dock__k {
       margin: 0;
@@ -972,6 +1259,11 @@
       color: #f1f5f9;
       word-break: break-word;
       overflow-wrap: anywhere;
+    }
+    .avatar-dock__v--multiline {
+      font-size: 0.62rem;
+      line-height: 1.4;
+      font-weight: 600;
     }
     .avatar-dock__vstack {
       min-width: 0;
@@ -2236,6 +2528,22 @@
               </p>
             </div>
             <div class="board__actions">
+              <div class="sc-follow-notify-wrap">
+                <button type="button" id="sc-follow-notify-toggle" class="sc-follow-notify-toggle" aria-expanded="false">
+                  팔로우 알림
+                  <span id="sc-follow-notify-badge" class="sc-follow-notify-badge" hidden>0</span>
+                </button>
+                <div id="sc-follow-notify-panel" class="sc-follow-notify-panel" hidden>
+                  <div class="sc-follow-notify__head">
+                    <span>팔로우한 유저 새 글</span>
+                    <span>
+                      <button type="button" id="sc-follow-notify-read">읽음</button>
+                      <button type="button" id="sc-follow-notify-clear">비우기</button>
+                    </span>
+                  </div>
+                  <ul id="sc-follow-notify-list" class="sc-follow-notify-list"></ul>
+                </div>
+              </div>
               <button type="button" id="board-btn-write">글쓰기</button>
             </div>
           </div>
@@ -2386,13 +2694,42 @@
               <div id="avatar-tbar-legend" class="avatar-tbar__legend"></div>
             </div>
           </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--level">
+            <span class="avatar-dock__k">레벨</span>
+            <div class="avatar-dock__vstack">
+              <span class="avatar-dock__v" id="avatar-meta-level">Lv. 1</span>
+              <div
+                id="avatar-xpbar-track"
+                class="avatar-xpbar"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                aria-label="현재 레벨 경험치 진행"
+              >
+                <div id="avatar-xpbar-fill" class="avatar-xpbar__fill" style="width: 0%"></div>
+              </div>
+              <div id="avatar-xpbar-legend" class="avatar-xpbar__legend">0 / 80 XP (0%)</div>
+            </div>
+          </div>
           <div class="avatar-dock__meta-row avatar-dock__meta-row--territory">
             <span class="avatar-dock__k">소속 영토</span>
             <span class="avatar-dock__v" id="avatar-meta-territory">—</span>
           </div>
           <div class="avatar-dock__meta-row avatar-dock__meta-row--rank">
-            <span class="avatar-dock__k">랭킹</span>
-            <span class="avatar-dock__v" id="avatar-meta-rank">—</span>
+            <span class="avatar-dock__k">랭크</span>
+            <span class="avatar-dock__v" id="avatar-meta-rank">랭크 · 레벨 10 달성 후 해금</span>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--followers">
+            <span class="avatar-dock__k">팔로워</span>
+            <span class="avatar-dock__v" id="avatar-meta-followers">0명</span>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--standings">
+            <span class="avatar-dock__k">내 순위</span>
+            <span class="avatar-dock__v avatar-dock__v--multiline" id="avatar-meta-standings">—</span>
+          </div>
+          <div class="avatar-dock__meta-row avatar-dock__meta-row--rankmenu">
+            <button type="button" id="avatar-btn-rankings" class="avatar-dock__menu-btn">랭킹 보기 (1~100위)</button>
           </div>
         </div>
       </div>
@@ -2469,7 +2806,30 @@
     </button>
   </div>
 
+  <div id="sc-rank-modal" class="sc-rank-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="sc-rank-modal-title">
+    <div id="sc-rank-modal-backdrop" class="sc-rank-modal__backdrop"></div>
+    <div class="sc-rank-modal__panel">
+      <div class="sc-rank-modal__head">
+        <h2 id="sc-rank-modal-title">전체 랭킹</h2>
+        <button type="button" id="sc-rank-modal-close">닫기</button>
+      </div>
+      <div class="sc-rank-modal__tabs" role="tablist">
+        <button type="button" class="sc-rank-modal__tab is-active" data-mode="global" role="tab" aria-selected="true">
+          전체 랭킹
+        </button>
+        <button type="button" class="sc-rank-modal__tab" data-mode="territory" role="tab" aria-selected="false">
+          소속별 랭킹
+        </button>
+      </div>
+      <p id="sc-rank-modal-my" class="sc-rank-modal__my">내 순위: —</p>
+      <ol id="sc-rank-modal-list" class="sc-rank-modal__list"></ol>
+    </div>
+  </div>
+
   <script src="/alignment-scoring.js"></script>
+  <script src="/player-progression.js"></script>
+  <script src="/follow-system.js"></script>
+  <script src="/rank-leaderboard.js"></script>
   <script>
     (function () {
       var AUTH_KEY = 'sc_sb_auth_session';
@@ -2915,7 +3275,7 @@
           'guest_demo',
           '정치 성향 없음 (미분류)',
           'CENTRIST · 중도(메인)',
-          '#— (미연동)',
+          '랭크 · 레벨 10 달성 후 해금',
           null,
         );
       }
@@ -2940,6 +3300,7 @@
           applyGuestNeutralMeta();
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+          if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
           return;
         }
         try {
@@ -2951,17 +3312,20 @@
             applyGuestNeutralMeta();
             if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
             if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+            if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
             return;
           }
           var u = j.user || {};
           var id = u.email || u.id || '—';
-          setMeta(id, '정치 성향 없음 (미분류)', 'CENTRIST · 중도(메인)', '#— (미연동)', null);
+          setMeta(id, '정치 성향 없음 (미분류)', 'CENTRIST · 중도(메인)', '랭크 · 레벨 10 달성 후 해금', null);
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+          if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
         } catch (_) {
           applyGuestNeutralMeta();
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+          if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
         }
       }
 
@@ -3744,6 +4108,7 @@
           parentId: parentId || null,
         });
         if (!saveCentristIssueBundle(bundle)) return;
+        if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('issue_comment');
         renderCentristHub();
       }
 
@@ -4565,6 +4930,12 @@
         return (window.__scPlayer && window.__scPlayer.userId) || 'guest';
       }
 
+      function applyReceivedLikeForAuthor(authorId, kind, delta) {
+        if (typeof window.__scGrantReceivedLike === 'function') {
+          window.__scGrantReceivedLike(authorId, kind, delta);
+        }
+      }
+
       function onTogglePostReaction(postId, asLike) {
         if (!isBoardUnlocked()) return;
         var A = window.AlignmentScoring;
@@ -4595,6 +4966,7 @@
           if (inL) {
             L.splice(L.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, true, -1);
+            applyReceivedLikeForAuthor(auth, 'post', -1);
           } else {
             if (inD) {
               D.splice(D.indexOf(me), 1);
@@ -4602,6 +4974,7 @@
             }
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1);
+            applyReceivedLikeForAuthor(auth, 'post', 1);
           }
         } else {
           if (inD) {
@@ -4611,6 +4984,7 @@
             if (inL) {
               L.splice(L.indexOf(me), 1);
               applyReactionScoresWithMult(me, auth, true, -1);
+              applyReceivedLikeForAuthor(auth, 'post', -1);
             }
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1);
@@ -4664,6 +5038,7 @@
           if (inL) {
             L.splice(L.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, true, -1);
+            applyReceivedLikeForAuthor(auth, 'comment', -1);
           } else {
             if (inD) {
               D.splice(D.indexOf(me), 1);
@@ -4671,6 +5046,7 @@
             }
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1);
+            applyReceivedLikeForAuthor(auth, 'comment', 1);
           }
         } else {
           if (inD) {
@@ -4680,6 +5056,7 @@
             if (inL) {
               L.splice(L.indexOf(me), 1);
               applyReactionScoresWithMult(me, auth, true, -1);
+              applyReceivedLikeForAuthor(auth, 'comment', -1);
             }
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1);
@@ -4819,6 +5196,7 @@
           reactions: { likes: [], dislikes: [], planetVoters: [], empathy: [] },
         });
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('board_comment');
         refreshListOnly();
       }
 
@@ -4935,9 +5313,28 @@
           h.appendChild(badge);
         }
 
+        var meR = uid();
+        var authorStr = String(p.authorId || '').trim();
+        var ownPost = authorStr === String(meR || '').trim();
+
         var meta = document.createElement('div');
         meta.className = 'board__item-meta';
-        meta.textContent = (p.authorId || '익명') + ' · ' + formatDate(p.createdAt);
+        meta.appendChild(document.createTextNode((p.authorId || '익명') + ' · ' + formatDate(p.createdAt)));
+        if (!ownPost && authorStr && global.FollowSystem) {
+          var fb = document.createElement('button');
+          fb.type = 'button';
+          fb.className = 'board__follow-btn';
+          fb.setAttribute('data-author-id', authorStr);
+          fb.setAttribute('aria-pressed', global.FollowSystem.isFollowing(authorStr) ? 'true' : 'false');
+          fb.textContent = global.FollowSystem.isFollowing(authorStr) ? '팔로잉 ✓' : '팔로우';
+          if (global.FollowSystem.isFollowing(authorStr)) fb.classList.add('is-following');
+          fb.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            global.FollowSystem.toggleFollow(authorStr);
+          });
+          meta.appendChild(fb);
+        }
 
         var snip = document.createElement('p');
         snip.className = 'board__item-snippet';
@@ -4958,9 +5355,6 @@
 
         var reactRow = document.createElement('div');
         reactRow.className = 'board__item-react';
-        var meR = uid();
-        var authorStr = String(p.authorId || '').trim();
-        var ownPost = authorStr === String(meR || '').trim();
         var canThumb = !ownPost && isBoardUnlocked() && !!window.AlignmentScoring;
         var canPlanet = !ownPost && isBoardUnlocked();
         var canEmpathy = !ownPost && isBoardUnlocked();
@@ -5208,6 +5602,16 @@
         var all = loadPostsCurrent();
         all.unshift(post);
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('post_write');
+        if (window.FollowSystem && typeof window.FollowSystem.onAuthorNewPost === 'function') {
+          window.FollowSystem.onAuthorNewPost({
+            postId: post.id,
+            authorId: post.authorId,
+            title: post.title,
+            territoryId: currentTerritory,
+            stage: effectiveStage(),
+          });
+        }
         closeModal();
         refreshListOnly();
       });
@@ -5254,6 +5658,25 @@
       };
       window.__scBoardGoTerritory = window.__scBoardSyncTerritorySelect;
 
+      window.__scBoardNavigateToPost = function (territoryId, stage, postId) {
+        if (typeof window.__scApp !== 'undefined' && window.__scApp && typeof window.__scApp.goBoard === 'function') {
+          window.__scApp.goBoard(territoryId || undefined);
+        }
+        if (selTerritory && territoryId) {
+          var v = String(territoryId).trim();
+          if (selTerritory.querySelector('option[value="' + v + '"]')) {
+            selTerritory.value = v;
+            currentTerritory = v;
+          }
+        }
+        currentStage = Math.max(1, Math.min(4, Math.floor(Number(stage) || 1)));
+        syncStageTabStyles();
+        refreshBoardView();
+        window.setTimeout(function () {
+          scrollToPostById(postId);
+        }, 80);
+      };
+
       window.__scRefreshAlignmentUI = function () {
         var p = window.__scPlayer;
         var dock = window.__scDockSetMeta;
@@ -5264,12 +5687,13 @@
         var s = getScoresForUser(uidStr);
         var pct = A.toDisplayPercent(s);
         var label = A.tendencyLabelFromPercent(pct);
-        var rank = p.rank != null ? p.rank : '#— (미연동)';
+        var rank = p.rank != null ? p.rank : '랭크 · 레벨 10 달성 후 해금';
         dock(uidStr, label, tidLabel, rank, {
           conservative: pct.conservative,
           centrist: pct.centrist,
           progressive: pct.progressive,
         });
+        if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
       };
 
       window.__scApplyStoredKantaAffiliation = applyStoredForceToPlayer;
@@ -5281,6 +5705,7 @@
       refreshBoardView();
       applyStoredForceToPlayer();
       if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+      if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
     })();
   </script>
   <script>

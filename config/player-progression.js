@@ -1,0 +1,343 @@
+/**
+ * =============================================================================
+ * 유저 레벨(1~10) · 경험치 · 4단계 랭크(10레벨 이후, 받은 좋아요 절대평가)
+ * =============================================================================
+ * - 레벨 1~10: 글·댓글 작성으로 totalXp (쉬운 구간)
+ * - 10레벨: 랭크 해금
+ * - 소속 내 받은 좋아요 **하위 50%** → 일반시민
+ * - 상위 50%: 평론가·정치인·총수 (절대 기준 + 인구 캡)
+ * - 정치인: 소속(영토) 인구의 10% 이내 / 총수: 소속당 최대 5명
+ * =============================================================================
+ */
+
+'use strict';
+
+const MAX_LEVEL = 10;
+const MAX_RANK_TIER = 4;
+const RANK_UNLOCK_LEVEL = 10;
+
+const XP_REWARDS = Object.freeze({
+  post_write: 25,
+  board_comment: 12,
+  issue_comment: 10,
+});
+
+/** 레벨 1→2 … 9→10. 합계 425 XP (글·댓글 몇 번이면 10레벨) */
+const XP_PER_LEVEL = Object.freeze([25, 30, 35, 40, 45, 50, 55, 60, 65, 70]);
+
+function buildCumulativeThresholds() {
+  const out = [0];
+  let sum = 0;
+  for (let i = 0; i < XP_PER_LEVEL.length; i++) {
+    sum += XP_PER_LEVEL[i];
+    out.push(sum);
+  }
+  return Object.freeze(out);
+}
+
+const LEVEL_CUMULATIVE_XP = buildCumulativeThresholds();
+
+/** 절대평가 — 받은 좋아요·팔로워 (타인만 집계) */
+const RANK_ABSOLUTE_THRESHOLDS = Object.freeze({
+  2: Object.freeze({ postLikes: 3, commentLikes: 2, followers: 2, labelKo: '평론가' }),
+  3: Object.freeze({ postLikes: 15, commentLikes: 8, followers: 8, labelKo: '정치인' }),
+  4: Object.freeze({ postLikes: 40, commentLikes: 20, followers: 20, labelKo: '총수' }),
+});
+
+/** 랭크 영향력: 팔로워 1명 가중치 */
+const RANK_FOLLOWER_WEIGHT = 5;
+
+/** 소속(영토) 인구 대비 상한 */
+const RANK_POPULATION_CAPS = Object.freeze({
+  politicianMaxRatio: 0.1,
+  chiefsMaxCount: 5,
+});
+
+/** 소속 내 랭크 대상자 중 하위 N% → 일반시민 (0.5 = 50%) */
+const CITIZEN_BOTTOM_RATIO = 0.5;
+
+const RANK_TIERS = Object.freeze([
+  { tier: 1, labelKo: '일반시민', shortKo: '일반시민', permissions: Object.freeze({}) },
+  { tier: 2, labelKo: '평론가', shortKo: '평론가', permissions: Object.freeze({}) },
+  { tier: 3, labelKo: '정치인', shortKo: '정치인', permissions: Object.freeze({}) },
+  { tier: 4, labelKo: '총수', shortKo: '총수', permissions: Object.freeze({}) },
+]);
+
+function levelFromTotalXp(totalXp) {
+  const xp = Math.max(0, Math.floor(Number(totalXp) || 0));
+  let lv = 1;
+  for (let i = LEVEL_CUMULATIVE_XP.length - 1; i >= 0; i--) {
+    if (xp >= LEVEL_CUMULATIVE_XP[i]) {
+      lv = i + 1;
+      break;
+    }
+  }
+  return Math.min(MAX_LEVEL, Math.max(1, lv));
+}
+
+function xpProgressInLevel(level, totalXp) {
+  const lv = Math.min(MAX_LEVEL, Math.max(1, Math.floor(level)));
+  const xp = Math.max(0, Math.floor(Number(totalXp) || 0));
+  const floor = LEVEL_CUMULATIVE_XP[lv - 1] || 0;
+  if (lv >= MAX_LEVEL) {
+    return Object.freeze({
+      floor,
+      ceiling: floor,
+      current: xp - floor,
+      needed: 0,
+      pct: 100,
+      isMaxLevel: true,
+    });
+  }
+  const ceiling = LEVEL_CUMULATIVE_XP[lv] || floor;
+  const needed = Math.max(1, ceiling - floor);
+  const current = Math.max(0, Math.min(needed, xp - floor));
+  const pct = Math.round((100 * current) / needed);
+  return Object.freeze({
+    floor,
+    ceiling,
+    current,
+    needed,
+    pct: Math.max(0, Math.min(100, pct)),
+    isMaxLevel: false,
+  });
+}
+
+function getRankTierRow(tier) {
+  const t = Math.floor(Number(tier));
+  if (!isFinite(t) || t < 1) return RANK_TIERS[0];
+  if (t > RANK_TIERS.length) return RANK_TIERS[RANK_TIERS.length - 1];
+  return RANK_TIERS[t - 1];
+}
+
+function normalizeLikeCount(n) {
+  return Math.max(0, Math.floor(Number(n) || 0));
+}
+
+/** 랭크 정렬용 영향력 (받은 좋아요 + 팔로워) */
+function rankInfluenceScore(state) {
+  const post = normalizeLikeCount(state.receivedPostLikes);
+  const comment = normalizeLikeCount(state.receivedCommentLikes);
+  const followers = normalizeLikeCount(state.receivedFollowers);
+  return post + comment * 2 + followers * RANK_FOLLOWER_WEIGHT;
+}
+
+/**
+ * 절대 기준만으로 달성 가능한 최고 랭크 (0=미달, 2~4, 인구·하위50% 미적용)
+ */
+function meetsAbsoluteThreshold(tier, stats) {
+  const th = RANK_ABSOLUTE_THRESHOLDS[tier];
+  if (!th) return false;
+  return (
+    normalizeLikeCount(stats.postLikes) >= th.postLikes &&
+    normalizeLikeCount(stats.commentLikes) >= th.commentLikes &&
+    normalizeLikeCount(stats.followers) >= th.followers
+  );
+}
+
+function absoluteRankTierFromStats(level, stats) {
+  if (level < RANK_UNLOCK_LEVEL) return 0;
+  if (meetsAbsoluteThreshold(4, stats)) return 4;
+  if (meetsAbsoluteThreshold(3, stats)) return 3;
+  if (meetsAbsoluteThreshold(2, stats)) return 2;
+  return 0;
+}
+
+/** @deprecated */
+function absoluteRankTierFromLikes(level, likes) {
+  return absoluteRankTierFromStats(level, {
+    postLikes: likes.postLikes,
+    commentLikes: likes.commentLikes,
+    followers: likes.followers || 0,
+  });
+}
+
+/** @deprecated alias */
+function qualifyingRankTierFromLikes(level, likes) {
+  return absoluteRankTierFromLikes(level, likes);
+}
+
+/**
+ * @param {string} territoryId
+ * @param {Record<string, object>} map
+ * @param {string} excludeUserId
+ */
+function countTerritoryMembers(territoryId, map, excludeUserId) {
+  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  let n = 0;
+  Object.keys(map || {}).forEach((uid) => {
+    if (excludeUserId && uid === excludeUserId) return;
+    const row = map[uid];
+    if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+    if (levelFromTotalXp(row.totalXp) >= RANK_UNLOCK_LEVEL) n += 1;
+  });
+  return Math.max(1, n);
+}
+
+function countRankHoldersInTerritory(territoryId, map, minTier, excludeUserId, tierByUser) {
+  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  let n = 0;
+  Object.keys(map || {}).forEach((uid) => {
+    if (excludeUserId && uid === excludeUserId) return;
+    const row = map[uid];
+    if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+    const rt = Math.floor(
+      Number(tierByUser && tierByUser[uid] !== undefined ? tierByUser[uid] : row.rankTier) || 0,
+    );
+    if (rt >= minTier) n += 1;
+  });
+  return n;
+}
+
+function applyPopulationCaps(userId, territoryId, tier, map, tierByUser) {
+  let t = tier;
+  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  if (t >= 4) {
+    const chiefs = countRankHoldersInTerritory(tid, map, 4, userId, tierByUser);
+    if (chiefs >= RANK_POPULATION_CAPS.chiefsMaxCount) t = Math.min(t, 3);
+  }
+  if (t >= 3) {
+    const pop = countTerritoryMembers(tid, map, userId);
+    const maxPoliticians = Math.max(1, Math.floor(pop * RANK_POPULATION_CAPS.politicianMaxRatio));
+    const politicians = countRankHoldersInTerritory(tid, map, 3, userId, tierByUser);
+    if (politicians >= maxPoliticians) t = Math.min(t, 2);
+  }
+  return t;
+}
+
+/**
+ * 소속별 하위 50% 일반시민 + 상위 50% 절대평가 + 인구 캡
+ */
+function recomputeAllRanks(map) {
+  const absolute = {};
+  const bottomHalf = new Set();
+
+  Object.keys(map || {}).forEach((uid) => {
+    const row = map[uid];
+    if (!row) return;
+    const level = levelFromTotalXp(row.totalXp);
+    if (level < RANK_UNLOCK_LEVEL) {
+      absolute[uid] = 0;
+      return;
+    }
+    absolute[uid] = absoluteRankTierFromStats(level, {
+      postLikes: row.receivedPostLikes,
+      commentLikes: row.receivedCommentLikes,
+      followers: row.receivedFollowers,
+    });
+  });
+
+  const byTerritory = {};
+  Object.keys(map || {}).forEach((uid) => {
+    const row = map[uid];
+    if (!row || levelFromTotalXp(row.totalXp) < RANK_UNLOCK_LEVEL) return;
+    const tid = String(row.territoryId || 'CENTRIST').trim() || 'CENTRIST';
+    if (!byTerritory[tid]) byTerritory[tid] = [];
+    byTerritory[tid].push({ uid, score: rankInfluenceScore(row) });
+  });
+
+  Object.keys(byTerritory).forEach((tid) => {
+    const list = byTerritory[tid].sort((a, b) => a.score - b.score);
+    const bottomCount = Math.floor(list.length * CITIZEN_BOTTOM_RATIO);
+    for (let i = 0; i < bottomCount; i++) bottomHalf.add(list[i].uid);
+  });
+
+  const provisional = {};
+  Object.keys(map || {}).forEach((uid) => {
+    const row = map[uid];
+    if (!row) return;
+    const level = levelFromTotalXp(row.totalXp);
+    if (level < RANK_UNLOCK_LEVEL) {
+      provisional[uid] = 0;
+      return;
+    }
+    provisional[uid] = bottomHalf.has(uid) ? 1 : absolute[uid] || 0;
+  });
+
+  Object.keys(map || {}).forEach((uid) => {
+    const row = map[uid];
+    if (!row) return;
+    row.rankTier = applyPopulationCaps(uid, row.territoryId, provisional[uid] || 0, map, provisional);
+  });
+}
+
+function resolveEffectiveRankTier(userId, state, map) {
+  const draft = Object.assign({}, state);
+  const m = Object.assign({}, map || {});
+  m[userId] = draft;
+  recomputeAllRanks(m);
+  return m[userId] ? m[userId].rankTier : 0;
+}
+
+function normalizeState(raw, userId, map) {
+  const totalXp = Math.max(0, Math.floor(Number(raw && raw.totalXp) || 0));
+  const territoryId = String((raw && raw.territoryId) || 'CENTRIST').trim() || 'CENTRIST';
+  const receivedPostLikes = normalizeLikeCount(raw && raw.receivedPostLikes);
+  const receivedCommentLikes = normalizeLikeCount(raw && raw.receivedCommentLikes);
+  const receivedFollowers = normalizeLikeCount(raw && raw.receivedFollowers);
+  const draft = {
+    totalXp,
+    territoryId,
+    receivedPostLikes,
+    receivedCommentLikes,
+    receivedFollowers,
+    rankTier: 0,
+  };
+  const m = Object.assign({}, map || {});
+  m[userId] = draft;
+  recomputeAllRanks(m);
+  return Object.freeze(m[userId] || draft);
+}
+
+function getPublicPlayerProgressionConfig() {
+  return Object.freeze({
+    maxLevel: MAX_LEVEL,
+    rankUnlockLevel: RANK_UNLOCK_LEVEL,
+    maxRankTier: MAX_RANK_TIER,
+    xpRewards: XP_REWARDS,
+    xpPerLevel: XP_PER_LEVEL,
+    levelCumulativeXp: LEVEL_CUMULATIVE_XP,
+    rankTiers: RANK_TIERS.map((r) =>
+      Object.freeze({
+        tier: r.tier,
+        labelKo: r.labelKo,
+        shortKo: r.shortKo,
+        permissions: r.permissions,
+      }),
+    ),
+    rankAbsoluteThresholds: RANK_ABSOLUTE_THRESHOLDS,
+    rankPopulationCaps: RANK_POPULATION_CAPS,
+    citizenBottomRatio: CITIZEN_BOTTOM_RATIO,
+    notesKo: [
+      '레벨 10 달성 후 랭크 해금.',
+      '소속 내 받은 좋아요 하위 50% → 일반시민.',
+      '상위 50%: 평론가 이상은 절대 기준(글·댓글 좋아요·팔로워).',
+      '정치인: 소속 인구 10% 이내, 총수: 소속당 5명 이내.',
+    ],
+  });
+}
+
+module.exports = Object.freeze({
+  MAX_LEVEL,
+  RANK_UNLOCK_LEVEL,
+  MAX_RANK_TIER,
+  XP_REWARDS,
+  XP_PER_LEVEL,
+  LEVEL_CUMULATIVE_XP,
+  RANK_TIERS,
+  RANK_ABSOLUTE_THRESHOLDS,
+  RANK_FOLLOWER_WEIGHT,
+  RANK_POPULATION_CAPS,
+  CITIZEN_BOTTOM_RATIO,
+  levelFromTotalXp,
+  xpProgressInLevel,
+  getRankTierRow,
+  rankInfluenceScore,
+  absoluteRankTierFromStats,
+  absoluteRankTierFromLikes,
+  qualifyingRankTierFromLikes,
+  recomputeAllRanks,
+  resolveEffectiveRankTier,
+  normalizeState,
+  getPublicPlayerProgressionConfig,
+});

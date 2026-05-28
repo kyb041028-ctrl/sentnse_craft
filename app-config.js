@@ -18,6 +18,7 @@
 
 const worldTerritories = require('./config/world-territories');
 const alignmentSystem = require('./config/alignment-system');
+const playerProgression = require('./config/player-progression');
 const { buildKantapbiya } = require('./config/kantapbiya');
 const signupCountries = require('./config/signup-countries');
 
@@ -394,6 +395,8 @@ function getPublicClientConfig() {
     worldTerritories: worldTerritories.getPublicWorldConfig(),
     /** 정치색 점수·자동 편입·AI 주제 채널 뼈대 (config/alignment-system.js) */
     alignmentSystem: alignmentSystem.getPublicAlignmentConfig(),
+    /** 레벨(1~30) · 경험치 · 4단계 랭크 (config/player-progression.js) */
+    playerProgression: playerProgression.getPublicPlayerProgressionConfig(),
   });
 }
 
@@ -418,6 +421,7 @@ module.exports = Object.freeze({
   // 글로 싸우는 전쟁 — 영토 / 정치색 (폴더로 분리)
   worldTerritories,
   alignmentSystem,
+  playerProgression,
 
   // 함수
   getTerritoryVisualVariables,
