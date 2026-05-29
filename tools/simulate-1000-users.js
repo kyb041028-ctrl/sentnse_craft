@@ -37,10 +37,22 @@ const rnd = mulberry32(SEED);
 
 const FACTION_UNLOCK_PCT = 40;
 const KANTA_UNLOCK_PLANET_PCT = 50;
+const KANTA_ASSIGN_HIGH_PCT = 60;
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
-const FOUR_TIER_IDS = ['CONSERVATIVE', 'CENTRIST', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
-const FREE_CATS = ['free', 'politics_free', 'money', 'society_free', 'culture', 'tech', 'daily', 'advice'];
+const FOUR_TIER_IDS = ['CONSERVATIVE', 'CENTRIST', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT'];
+const FREE_MEGA_CATS = ['all', 'affairs', 'economy', 'society', 'culture', 'tech', 'humor', 'life', 'advice'];
+const FREE_MEGA_SUBS = {
+  affairs: ['politics_free'],
+  economy: ['money'],
+  society: ['society_free'],
+  culture: ['culture'],
+  tech: ['tech'],
+  humor: ['humor'],
+  life: ['free', 'daily'],
+  advice: ['advice'],
+};
+const FREE_SUB_CATS = ['free', 'politics_free', 'money', 'society_free', 'culture', 'tech', 'daily', 'advice', 'humor'];
 const ISSUE_CATS = ['politics', 'economy', 'society', 'entertainment', 'world'];
 
 const issues = [];
@@ -70,19 +82,30 @@ function postKey(tid, stage) {
   return String(tid || 'COMMON') + '_s' + String(stage || 1);
 }
 
-function normalizePost(p) {
+function normalizePost(p, postTerritoryId) {
   if (!p.comments || !Array.isArray(p.comments)) p.comments = [];
   if (!p.reactions || typeof p.reactions !== 'object') {
     p.reactions = { likes: [], dislikes: [], planetVoters: [], empathy: [] };
   }
-  if (!p.category) p.category = 'free';
+  const tid = postTerritoryId != null && String(postTerritoryId) !== '' ? String(postTerritoryId) : 'COMMON';
+  if (isCommonSpace(tid)) {
+    if (!p.category) p.category = 'free';
+  } else {
+    try {
+      delete p.category;
+    } catch (_) {
+      p.category = undefined;
+    }
+  }
   return p;
 }
 
-function postMatchesFreeCategory(p, catId) {
-  if (!catId || catId === 'all') return true;
+function postMatchesFreeCategory(p, megaId) {
+  if (!megaId || megaId === 'all') return true;
+  const subs = FREE_MEGA_SUBS[megaId];
+  if (!subs || !subs.length) return true;
   const c = String((p && p.category) || 'free').trim() || 'free';
-  return c === catId;
+  return subs.includes(c);
 }
 
 function bucketScores(prev) {
@@ -94,7 +117,9 @@ function bucketScores(prev) {
     progressive: Number.isFinite(prev.progressive) ? prev.progressive : init.progressive,
     planetPct: Number.isFinite(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0,
     forcedTerritory:
-      prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+      prev.forcedTerritory === 'KANTAPBIYA_LEFT' ||
+      prev.forcedTerritory === 'KANTAPBIYA_CENTER' ||
+      prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
         ? prev.forcedTerritory
         : null,
   };
@@ -123,7 +148,7 @@ function isFactionTier1Unlocked(tid, pct, userId, getForced, getPlanetPct) {
   if (tid === 'CONSERVATIVE') return pct.conservative >= FACTION_UNLOCK_PCT;
   if (tid === 'CENTRIST') return pct.centrist >= FACTION_UNLOCK_PCT;
   if (tid === 'PROGRESSIVE') return pct.progressive >= FACTION_UNLOCK_PCT;
-  if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_RIGHT') {
+  if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_CENTER' || tid === 'KANTAPBIYA_RIGHT') {
     if (getForced(userId) === tid) return true;
     return getPlanetPct(userId) >= KANTA_UNLOCK_PLANET_PCT;
   }
@@ -152,6 +177,7 @@ const mapPop = {
   CENTRIST: 0,
   PROGRESSIVE: 0,
   KANTAPBIYA_LEFT: 0,
+  KANTAPBIYA_CENTER: 0,
   KANTAPBIYA_RIGHT: 0,
 };
 const followGraph = { following: {}, followers: {} };
@@ -212,7 +238,7 @@ function bumpPop(tid, delta) {
 function getPosts(tid, stage) {
   const k = postKey(tid, stage);
   if (!Array.isArray(bundle.posts[k])) return [];
-  return bundle.posts[k].map((p) => normalizePost(JSON.parse(JSON.stringify(p))));
+  return bundle.posts[k].map((p) => normalizePost(JSON.parse(JSON.stringify(p)), tid));
 }
 
 function setPosts(tid, stage, arr) {
@@ -221,15 +247,18 @@ function setPosts(tid, stage, arr) {
 
 function addPost(tid, stage, authorId, category) {
   const all = getPosts(tid, stage);
-  const post = normalizePost({
+  const raw = {
     id: `p_${++postIdSeq}_${authorId}`,
     title: `글 ${postIdSeq}`,
     body: '시뮬 본문 '.repeat(3 + Math.floor(rnd() * 20)),
-    category: category || 'free',
     authorId,
     createdAt: new Date().toISOString(),
     comments: [],
-  });
+  };
+  if (isCommonSpace(tid)) {
+    raw.category = category && FREE_SUB_CATS.includes(category) ? category : 'free';
+  }
+  const post = normalizePost(raw, tid);
   all.unshift(post);
   setPosts(tid, stage, all);
   return post;
@@ -298,10 +327,19 @@ function simulate() {
       base.progressive += rnd() * 3;
     }
     if (rnd() < 0.08) {
+      const planet = 50 + Math.floor(rnd() * 40);
+      const sc = bucketScores(base);
+      const displayPct = A.toDisplayPercent(sc);
+      let ft = 'KANTAPBIYA_CENTER';
+      if (planet >= KANTA_ASSIGN_HIGH_PCT) {
+        if (displayPct.progressive > displayPct.conservative) ft = 'KANTAPBIYA_LEFT';
+        else if (displayPct.conservative > displayPct.progressive) ft = 'KANTAPBIYA_RIGHT';
+        else ft = 'KANTAPBIYA_CENTER';
+      }
       scoresMap[u] = {
-        ...bucketScores(base),
-        planetPct: 50 + Math.floor(rnd() * 40),
-        forcedTerritory: rnd() < 0.5 ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT',
+        ...sc,
+        planetPct: planet,
+        forcedTerritory: ft,
       };
     } else {
       scoresMap[u] = bucketScores(base);
@@ -343,8 +381,8 @@ function simulate() {
       }
 
       if (rnd() < 0.35) {
-        const cat = isCommonSpace(boardTid) ? pick(FREE_CATS) : 'free';
-        if (isCommonSpace(boardTid) && !FREE_CATS.includes(cat) && cat !== 'all') {
+        const cat = isCommonSpace(boardTid) ? pick(FREE_SUB_CATS) : null;
+        if (isCommonSpace(boardTid) && cat && !FREE_SUB_CATS.includes(cat) && cat !== 'all') {
           stats.invalidCategories++;
         }
         const post = addPost(boardTid, stage, u, cat);
@@ -383,10 +421,12 @@ function simulate() {
 
   // 검증: 카테고리 필터
   const commonPosts = getPosts('COMMON', 1);
-  for (const cat of FREE_CATS) {
+  for (const cat of FREE_MEGA_CATS) {
+    if (cat === 'all') continue;
+    const subs = FREE_MEGA_SUBS[cat];
     const filtered = commonPosts.filter((p) => postMatchesFreeCategory(p, cat));
-    const bad = filtered.filter((p) => p.category !== cat && cat !== 'all');
-    if (cat !== 'all' && bad.length) warn(`카테고리 '${cat}' 필터에 불일치 ${bad.length}건`);
+    const bad = filtered.filter((p) => !subs.includes(String((p && p.category) || 'free').trim()));
+    if (bad.length) warn(`대분류 '${cat}' 필터에 불일치 ${bad.length}건`);
   }
 
   // 핫랭킹: 오늘 글만
@@ -398,12 +438,13 @@ function simulate() {
   }
 
   // 해금 통계
-  let unlocked = { CONSERVATIVE: 0, CENTRIST: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_R: 0, COMMON_only: 0 };
+  let unlocked = { CONSERVATIVE: 0, CENTRIST: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_C: 0, KANTA_R: 0, COMMON_only: 0 };
   for (let i = 0; i < USER_COUNT; i++) {
     const u = uid(i);
     const pct = getPct(u);
     const ft = getForced(u);
     if (ft === 'KANTAPBIYA_LEFT') unlocked.KANTA_L++;
+    else if (ft === 'KANTAPBIYA_CENTER') unlocked.KANTA_C++;
     else if (ft === 'KANTAPBIYA_RIGHT') unlocked.KANTA_R++;
     else if (pct.conservative >= 40 && pct.conservative >= pct.centrist && pct.conservative >= pct.progressive)
       unlocked.CONSERVATIVE++;

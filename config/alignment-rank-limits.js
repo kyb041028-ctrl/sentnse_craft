@@ -50,19 +50,20 @@ function getRankAlignmentRow(rank) {
 }
 
 /**
- * 깐따삐아 좌·우 영토: 메인 벨트와 **동일 랭크 표**를 두 축(극좌/극우)에 적용.
+ * 깐따삐아 진보·중간·보수 행성: 메인 벨트와 **동일 랭크 표**를 세 영토 축에 적용.
  * (축 이름만 다르고 maxAxisScore·perPostAxisCap 숫자는 공유)
  */
 function getKantapbiyaRankAlignmentLimits() {
   return Object.freeze({
-    poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT']),
+    poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT']),
     poleAxisLabelKo: Object.freeze({
-      KANTAPBIYA_LEFT: '깐따삐아 · 좌파 축',
-      KANTAPBIYA_RIGHT: '깐따삐아 · 우파 축',
+      KANTAPBIYA_LEFT: '깐따삐아 · 진보행성 축',
+      KANTAPBIYA_CENTER: '깐따삐아 · 중간행성 축',
+      KANTAPBIYA_RIGHT: '깐따삐아 · 보수행성 축',
     }),
     ranks: RANK_ALIGNMENT_TABLE,
     noteKo:
-      '메인 벨트(보수·진보)와 같은 랭크별 maxAxisScore·perPostAxisCap을, 좌·우 영토 성향 축에 그대로 적용한다.',
+      '메인 벨트(보수·진보)와 같은 랭크별 maxAxisScore·perPostAxisCap을, 깐따삐아 세 행성 영토 성향 축에 그대로 적용한다.',
   });
 }
 
@@ -71,12 +72,12 @@ function getPublicRankAlignmentLimits() {
     designAssumptionMau: DESIGN_ASSUMPTION_MAU,
     /** 메인 벨트: 보수·진보 축 (기존 필드명 `ranks` 유지) */
     ranks: RANK_ALIGNMENT_TABLE,
-    /** 깐따삐아: 좌·우 축 */
+    /** 깐따삐아: 진보·중간·보수 행성 축 */
     kantapbiya: getKantapbiyaRankAlignmentLimits(),
     notesKo: [
       '보수·진보를 “각각의 축”으로 둘 때: 각 축이 maxAxisScore를 넘지 못하게 클램프.',
       '한 게시물에서 작자에게 쌓이는 “그 축 합”은 perPostAxisCap을 넘지 못하게 클램프(글·댓글·반응 합산).',
-      '깐따삐아 좌·우도 동일 랭크 표를 쓴다 — territoryId가 KANTAPBIYA_LEFT/RIGHT일 때 축 클램프에 적용.',
+      '깐따삐아 세 행성도 동일 랭크 표를 쓴다 — territoryId가 KANTAPBIYA_LEFT/CENTER/RIGHT일 때 축 클램프에 적용.',
       '랭크 정의(이름·승급 조건)는 별도 랭크 테이블과 합칠 것 — 여기서는 숫자만.',
     ],
   });

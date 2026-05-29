@@ -1,7 +1,7 @@
 """
 Make near-black pixels transparent in PNGs (for overlay assets).
 
-Default targets: public/territories/mainland-belt-stage-1..6.png and kantapbiya-hero-entry.png
+Default targets: public/territories/belt-stage-1..4.png, common-space-hero.png, and kantapbiya-hero-entry.png
 
   python tools/png_black_to_transparent.py
   python tools/png_black_to_transparent.py --rgb-max 28 --soft-band 24 path/to/a.png
@@ -76,7 +76,8 @@ def main() -> int:
     if args.paths:
         paths = [Path(p).resolve() for p in args.paths]
     else:
-        paths = [root / f"mainland-belt-stage-{i}.png" for i in range(1, 7)]
+        paths = [root / f"belt-stage-{i}.png" for i in range(1, 5)]
+        paths.append(root / "common-space-hero.png")
         paths.append(root / "kantapbiya-hero-entry.png")
 
     for p in paths:

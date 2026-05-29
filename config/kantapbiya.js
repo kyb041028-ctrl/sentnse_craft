@@ -1,8 +1,8 @@
 /**
  * =============================================================================
- * 깐따삐아 — 예전 KANTAPBIYA_RULES + 영토(좌/우) 맵을 한 이름으로 묶음
+ * 깐따삐아 — 예전 KANTAPBIYA_RULES + 영토(진보·중간·보수 행성) 맵을 한 이름으로 묶음
  * =============================================================================
- * - 극단 성향 행성 + 좌·우 영토(게시판 4단계)
+ * - 극단 성향 행성 + 진보·중간·보수 행성 영토(게시판 4단계)
  * - 유배지 규칙(자동 사면 없음, 지구 귀환 티켓 가격, 내부 재축출 등)
  * 가격 숫자만 바꾸려면 app-config.js 의 PAYMENT_PRODUCTS 와 맞추면 됩니다.
  * =============================================================================
@@ -22,16 +22,21 @@ function buildKantapbiya(earthReturnTicketKrw) {
     id: 'KANTAPBIYA',
     labelKo: '깐따삐아',
 
-    /** 좌·우 영토 (각 4단계 게시판) */
+    /** 진보·중간·보수 행성 (각 4단계 게시판) */
     territory: Object.freeze({
       left: Object.freeze({
         id: 'KANTAPBIYA_LEFT',
-        labelKo: '깐따삐아 · 좌파 영토',
+        labelKo: '깐따삐아 · 진보행성',
+        forumTierCount: 4,
+      }),
+      center: Object.freeze({
+        id: 'KANTAPBIYA_CENTER',
+        labelKo: '깐따삐아 · 중간행성',
         forumTierCount: 4,
       }),
       right: Object.freeze({
         id: 'KANTAPBIYA_RIGHT',
-        labelKo: '깐따삐아 · 우파 영토',
+        labelKo: '깐따삐아 · 보수행성',
         forumTierCount: 4,
       }),
     }),
@@ -50,7 +55,7 @@ function buildKantapbiya(earthReturnTicketKrw) {
       }),
     }),
 
-    /** 메인 벨트와 동일 랭크별 성향치 상한·게시물당 캡 → 좌·우 축에 적용 */
+    /** 메인 벨트와 동일 랭크별 성향치 상한·게시물당 캡 → 세 행성 축에 적용 */
     rankAlignment: alignmentRankLimits.getKantapbiyaRankAlignmentLimits(),
   });
 }

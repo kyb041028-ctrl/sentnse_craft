@@ -186,7 +186,7 @@ const EXILE_RULES = Object.freeze({
 });
 
 /**
- * 깐따삐아 — 영토(좌/우) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
+ * 깐따삐아 — 영토(진보·중간·보수 행성) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
  */
 const KANTAPBIYA = buildKantapbiya(PAYMENT_PRODUCTS.EARTH_RETURN_TICKET.priceKrw);
 

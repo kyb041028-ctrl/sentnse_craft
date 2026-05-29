@@ -4,7 +4,7 @@
 
 - **랭크가 높을수록** 한 유저가 쌓을 수 있는 **양 극단 축 최대치(`maxAxisScore`)**를 크게 잡는다.  
   - 메인 벨트: **보수 / 진보**  
-  - 깐따삐아: **좌파 영토 / 우파 영토** (동일 숫자 표)  
+  - 깐따삐아: **진보행성 / 중간행성 / 보수행성** (동일 숫자 표)  
 - **한 게시물**에서 작자에게 들어가는 성향치(해당 축 합)는 **`perPostAxisCap`**으로 제한한다.  
 - 수치는 `config/alignment-rank-limits.js`에 상수로 들어 있으며, `/api/public-config`의 `alignmentSystem.rankAlignment`와 **`kantapbiya.rankAlignment`**에서도 내려간다.
 
@@ -28,14 +28,14 @@
 | 9 | 600,000 | 2,200 |
 | 10 | 1,000,000 | 3,000 |
 
-- **축당 최대**: 메인에서는 보수·진보를 **각각** 둘 때의 상한, 깐따삐아에서는 **좌·우**를 각각 둘 때의 상한(숫자는 동일 표).  
+- **축당 최대**: 메인에서는 보수·진보를 **각각** 둘 때의 상한, 깐따삐아에서는 **세 행성**을 각각 둘 때의 상한(숫자는 동일 표).  
 - **게시물당 캡**: 그 글에서 발생한 **좋아요·싫어요·댓글 반응 등을 합산**해 작자에게 더해지는 “해당 축” 합계의 상한.
 
 ## 깐따삐아에도 같은 랭크 표
 
-- `alignmentSystem.rankAlignment.kantapbiya` 와 `kantapbiya.rankAlignment` 에 **`poleAxisTerritoryIds`: `KANTAPBIYA_LEFT`, `KANTAPBIYA_RIGHT`** 가 들어 있다.  
+- `alignmentSystem.rankAlignment.kantapbiya` 와 `kantapbiya.rankAlignment` 에 **`poleAxisTerritoryIds`: `KANTAPBIYA_LEFT`, `KANTAPBIYA_CENTER`, `KANTAPBIYA_RIGHT`** 가 들어 있다.  
 - `ranks` 배열은 메인 벨트와 **객체 참조 동일**(중복 수치 정의 없음).  
-- 서버는 `territoryId` 가 깐따삐아 좌·우일 때도 같은 `getRankAlignmentRow` 로 클램프하면 된다.
+- 서버는 `territoryId` 가 깐따삐아 세 행성일 때도 같은 `getRankAlignmentRow` 로 클램프하면 된다.
 
 ## 서버에서 적용할 때 (개념)
 

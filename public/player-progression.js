@@ -57,8 +57,9 @@
     COMMON: '모두의 공간',
     CENTRIST: '중도 영토',
     PROGRESSIVE: '진보',
-    KANTAPBIYA_LEFT: '깐따삐아 좌',
-    KANTAPBIYA_RIGHT: '깐따삐아 우',
+    KANTAPBIYA_LEFT: '깐따삐아 진보행성',
+    KANTAPBIYA_CENTER: '깐따삐아 중간행성',
+    KANTAPBIYA_RIGHT: '깐따삐아 보수행성',
   };
 
   var LEADERBOARD_MAX = 100;
@@ -614,6 +615,20 @@
     };
   }
 
+  /** 게시물·스레드당 반응으로 작가에게 들어가는 성향치·외계치 상한 (랭크 티어, 클라이언트) */
+  var PER_POST_REACTION_CAP = [120, 200, 320, 480, 720];
+
+  function getPerPostReactionCap(rankTier) {
+    var t = Math.max(0, Math.min(4, Math.floor(Number(rankTier) || 0)));
+    return PER_POST_REACTION_CAP[t] != null ? PER_POST_REACTION_CAP[t] : 120;
+  }
+
+  function getReactionCapsForUser(userId) {
+    var st = getState(userId);
+    var c = getPerPostReactionCap(st.rankTier || 0);
+    return { align: c, planet: c };
+  }
+
   global.PlayerProgression = {
     MAX_LEVEL: MAX_LEVEL,
     LURK_UNLOCK_LEVEL: LURK_UNLOCK_LEVEL,
@@ -622,6 +637,7 @@
     XP_REWARDS: XP_REWARDS,
     RANK_ABSOLUTE: RANK_ABSOLUTE,
     getPermissionsGuideData: getPermissionsGuideData,
+    getReactionCapsForUser: getReactionCapsForUser,
     getState: getState,
     setState: setState,
     grantXp: grantXp,
