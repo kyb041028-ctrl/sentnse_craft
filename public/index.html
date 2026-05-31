@@ -63,8 +63,36 @@
     }
     .view-login__intro-inner {
       text-align: center;
-      padding: 1.5rem;
-      max-width: 22rem;
+      padding: 0.75rem 1rem 1rem;
+      width: 100%;
+      max-width: none;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+    .view-login__intro-media {
+      position: relative;
+      width: 100%;
+      max-width: min(42rem, 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.5);
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+    .view-login__intro-video {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 1;
+      pointer-events: none;
+      background: #000;
     }
     .view-login__intro-inner p {
       margin: 0;
@@ -385,7 +413,7 @@
       position: relative;
       width: 100%;
       border-radius: 14px;
-      overflow: hidden;
+      overflow: visible;
       border: 1px solid rgba(255, 255, 255, 0.12);
       min-height: min(58vh, 26rem);
       background: #0b1628;
@@ -482,6 +510,7 @@
     .territory-centrist-hero__bg {
       position: absolute;
       inset: 0;
+      border-radius: inherit;
       background-color: #0b1628;
       background-position: center;
       background-size: cover;
@@ -542,6 +571,58 @@
     .territory-faction-hit:focus-visible {
       outline: 2px solid rgba(56, 189, 248, 0.75);
       outline-offset: 3px;
+    }
+    /* 호버 설명 표시 중: 해당 영토 경계 강조 */
+    @keyframes territoryHitTwHot {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.95)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.95));
+        outline: 2px solid rgba(57, 255, 20, 0.95);
+        outline-offset: 2px;
+      }
+      50% {
+        filter: drop-shadow(0 0 22px rgba(0, 255, 204, 1)) drop-shadow(0 0 14px rgba(57, 255, 20, 0.9));
+        outline: 4px solid rgba(0, 255, 204, 0.98);
+        outline-offset: 0;
+      }
+    }
+    .territory-faction-hit.territory-faction-hit--tw-hot {
+      z-index: 9;
+      animation: territoryHitTwHot 0.38s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-faction-hit.territory-faction-hit--tw-hot {
+        animation: none;
+        outline: 3px solid rgba(57, 255, 20, 0.95);
+        outline-offset: 2px;
+        filter: drop-shadow(0 0 12px rgba(0, 255, 204, 0.75));
+      }
+    }
+    @keyframes territoryFrameTwHot {
+      0%,
+      100% {
+        box-shadow:
+          inset 0 0 0 2px rgba(57, 255, 20, 0.65),
+          0 0 0 1px rgba(0, 255, 204, 0.35),
+          0 0 18px rgba(57, 255, 20, 0.25);
+      }
+      50% {
+        box-shadow:
+          inset 0 0 0 5px rgba(0, 255, 204, 0.82),
+          0 0 0 2px rgba(57, 255, 20, 0.55),
+          0 0 32px rgba(0, 255, 204, 0.45);
+      }
+    }
+    .territory-centrist-hero__frame.territory-centrist-hero__frame--tw-hot {
+      animation: territoryFrameTwHot 0.42s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-centrist-hero__frame.territory-centrist-hero__frame--tw-hot {
+        animation: none;
+        box-shadow:
+          inset 0 0 0 3px rgba(57, 255, 20, 0.75),
+          0 0 22px rgba(0, 255, 204, 0.35);
+      }
     }
     .territory-faction-hit__img {
       display: block;
@@ -765,44 +846,162 @@
         transform: translateX(-50%);
       }
     }
+    .territory-tw-connector {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 7;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .territory-tw-connector__path {
+      fill: none;
+      stroke: rgba(57, 255, 20, 0.92);
+      stroke-width: 2.25;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 8px rgba(0, 255, 204, 0.75));
+      stroke-dasharray: 7 5;
+      animation: territoryTwConnDash 0.65s linear infinite;
+    }
+    @keyframes territoryTwConnDash {
+      to {
+        stroke-dashoffset: -24;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-tw-connector__path {
+        animation: none;
+      }
+    }
     .territory-belt-typewriter {
       position: absolute;
-      z-index: 8;
+      z-index: 10;
       left: 0;
-      top: 0;
-      max-width: min(26rem, calc(100% - 0.5rem));
-      padding: 0.2rem 0.35rem;
+      /* Do not set top:0 — with JS `bottom` for belt tips it would stretch top+bottom and pin text to the frame top. */
+      top: auto;
+      display: block;
+      box-sizing: border-box;
+      width: max-content;
+      max-width: none;
+      padding: 0.1rem 0.35rem 0;
       font-family: ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
-      font-size: 1.05rem;
-      line-height: 1.45;
-      letter-spacing: 0.04em;
-      font-weight: 600;
+      font-size: 1.35rem;
+      line-height: 1;
+      letter-spacing: 0;
+      font-weight: 700;
       color: #39ff14;
-      text-align: left;
-      white-space: pre-wrap;
-      word-break: keep-all;
+      text-align: center;
+      white-space: pre;
+      word-break: normal;
+      overflow-wrap: normal;
       pointer-events: none;
-      background: #000000;
+      background: transparent;
       border: none;
       border-radius: 0;
       box-shadow: none;
-      transform: translate(-50%, -100%);
-      margin-top: -4px;
+      transform: translateY(-100%);
+      margin-top: -2px;
+      overflow-x: visible;
+      overflow-y: visible;
+      -webkit-text-stroke: 0.4px rgba(0, 24, 18, 0.92);
+      paint-order: stroke fill;
       text-shadow:
-        0 0 6px rgba(57, 255, 20, 0.95),
-        0 0 14px rgba(0, 255, 200, 0.55);
+        0 0 1px rgba(0, 0, 0, 0.98),
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        1px 0 0 rgba(0, 32, 24, 0.9),
+        -1px 0 0 rgba(0, 32, 24, 0.9),
+        0 -1px 0 rgba(0, 32, 24, 0.88),
+        0 1px 0 rgba(0, 32, 24, 0.88),
+        0 0 10px rgba(57, 255, 20, 0.95),
+        0 0 22px rgba(0, 255, 200, 0.55);
+    }
+    /* [hidden]은 UA보다 약함 — display:block이 이기면 밑줄만 좌상단에 남음 */
+    #territory-belt-typewriter[hidden] {
+      display: none !important;
+    }
+    .territory-belt-typewriter.territory-belt-typewriter--wide {
+      text-align: center;
+      max-width: min(calc(100% - 1.5rem), 28rem);
+      overflow-x: visible;
+    }
+    .territory-belt-typewriter__wrap {
+      display: block;
+      width: max-content;
+    }
+    .territory-belt-typewriter__row {
+      display: block;
+      text-align: center;
+      unicode-bidi: isolate;
+      margin: 0 0 -0.14em;
+      padding: 0;
+      line-height: 1;
     }
     .territory-belt-typewriter__inner {
       vertical-align: baseline;
+      text-align: center;
+      unicode-bidi: plaintext;
+      display: inline;
+      line-height: 1;
+    }
+    @keyframes territoryTwUnderline {
+      0%,
+      100% {
+        opacity: 0.88;
+        transform: scaleX(0.94);
+        filter: brightness(0.95);
+      }
+      50% {
+        opacity: 1;
+        transform: scaleX(1);
+        filter: brightness(1.12);
+      }
+    }
+    .territory-belt-typewriter__underline {
+      display: block;
+      width: 100%;
+      height: 3px;
+      /* Tight stack: pull bar up into trailing line-box / caret slack. */
+      margin-top: -1.42em;
+      line-height: 0;
+      border-radius: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(57, 255, 20, 0.2) 8%,
+        #39ff14 22%,
+        #00ffcc 50%,
+        #39ff14 78%,
+        rgba(57, 255, 20, 0.2) 92%,
+        transparent 100%
+      );
+      box-shadow:
+        0 0 12px rgba(57, 255, 20, 0.85),
+        0 0 6px rgba(0, 255, 204, 0.95),
+        0 2px 4px rgba(0, 0, 0, 0.65);
+      transform-origin: 50% 50%;
+      animation: territoryTwUnderline 1.05s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-belt-typewriter__underline {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
     }
     .territory-belt-typewriter__caret {
-      display: inline-block;
-      margin-left: 2px;
+      display: inline;
+      margin-left: 1px;
+      vertical-align: bottom;
+      line-height: 0;
+      font-size: 0.88em;
       color: #00ffcc;
       font-weight: 700;
       text-shadow:
+        0 0 3px rgba(0, 0, 0, 0.75),
         0 0 6px rgba(0, 255, 204, 0.95),
-        0 0 12px rgba(57, 255, 20, 0.5);
+        0 0 14px rgba(57, 255, 20, 0.45);
       animation: territoryTypeCaret 0.72s steps(1, end) infinite;
     }
     @keyframes territoryTypeCaret {
@@ -3189,7 +3388,19 @@
   <div id="view-login" class="view-login">
     <aside class="view-login__intro" aria-label="인트로 영역">
       <div class="view-login__intro-inner">
-        <p class="muted">인트로 영상·이미지·카피를 넣을 수 있는 공간입니다. (추후 연결)</p>
+        <div class="view-login__intro-media" role="region" aria-label="로그인 인트로 영상">
+          <video
+            id="login-intro-video"
+            class="view-login__intro-video"
+            playsinline
+            muted
+            preload="auto"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <source src="/assets/login-intro/intro.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
     </aside>
     <div class="view-login__column">
@@ -3333,6 +3544,14 @@
                 </span>
               </button>
             </div>
+            <svg
+              id="territory-tw-connector"
+              class="territory-tw-connector"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path id="territory-tw-connector-path" class="territory-tw-connector__path" d="" />
+            </svg>
             <div
               id="territory-belt-typewriter"
               class="territory-belt-typewriter"
@@ -3340,8 +3559,13 @@
               role="status"
               aria-atomic="true"
             >
-              <span class="territory-belt-typewriter__inner" id="territory-belt-typewriter-inner"></span
-              ><span class="territory-belt-typewriter__caret" aria-hidden="true">▍</span>
+              <div class="territory-belt-typewriter__wrap">
+                <div class="territory-belt-typewriter__row" dir="ltr">
+                  <span class="territory-belt-typewriter__inner" id="territory-belt-typewriter-inner"></span
+                  ><span class="territory-belt-typewriter__caret" aria-hidden="true">▍</span>
+                </div>
+                <span class="territory-belt-typewriter__underline" id="territory-belt-typewriter-underline" aria-hidden="true"></span>
+              </div>
             </div>
             <p class="territory-centrist-hero__caption muted" id="territory-centrist-hero-caption" aria-live="polite"></p>
           </div>
@@ -3978,6 +4202,9 @@
         var avatar = el('avatar-dock');
         var chat = el('chat-rail');
         document.body.classList.add('sc-app-mode');
+        if (window.__scLoginIntro && typeof window.__scLoginIntro.pause === 'function') {
+          window.__scLoginIntro.pause();
+        }
         if (loginV) loginV.hidden = true;
         if (appV) appV.hidden = false;
         if (avatar) avatar.hidden = false;
@@ -4075,6 +4302,9 @@
           if (appV) appV.hidden = true;
           if (avatar) avatar.hidden = true;
           if (chat) chat.hidden = true;
+          if (window.__scLoginIntro && typeof window.__scLoginIntro.begin === 'function') {
+            window.__scLoginIntro.begin();
+          }
         },
         enterAppMain: function () {
           var mainS = el('screen-main');
@@ -4246,6 +4476,30 @@
           stayOnLogin('로그인 상태를 확인하지 못했습니다. 네트워크를 확인해 주세요.');
         }
       }
+
+      function wireLoginIntroPlayback() {
+        var v = el('login-intro-video');
+        if (!v || v.dataset.scLoginIntroWired) return;
+        v.dataset.scLoginIntroWired = '1';
+        function pause() {
+          try {
+            v.pause();
+          } catch (_) {}
+        }
+        function begin() {
+          pause();
+          try {
+            v.currentTime = 0;
+          } catch (_) {}
+          var p = v.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(function () {});
+          }
+        }
+        window.__scLoginIntro = { begin: begin, pause: pause };
+      }
+
+      wireLoginIntroPlayback();
 
       var gBtn = el('auth-guest-btn');
       if (gBtn) {
@@ -8604,19 +8858,160 @@
             }
           }
 
-          function hoverPlain(tid) {
+          function hoverPlain(kind) {
             var pop = loadMapPop();
+            if (kind === 'KANTA') {
+              var l = formatPop(pop.KANTAPBIYA_LEFT);
+              var c = formatPop(pop.KANTAPBIYA_CENTER || 0);
+              var r = formatPop(pop.KANTAPBIYA_RIGHT);
+              return (
+                '\n' +
+                '<  깐따삐아  >\n' +
+                '영토명 : 미정\n' +
+                '행성인구  : ' +
+                l +
+                ' / ' +
+                c +
+                ' / ' +
+                r +
+                ' 명'
+              );
+            }
+            if (kind === 'COMMON') {
+              return '\n' + '<  모두의공간  >\n' + '영토명 : 미정\n' + '소속인구  : ' + formatPop(pop.COMMON) + ' 명';
+            }
             var p =
-              tid === 'PROGRESSIVE' ? pop.PROGRESSIVE : tid === 'CONSERVATIVE' ? pop.CONSERVATIVE : pop.CENTRIST;
-            var st40 = stageFromPopulation(p);
-            var vis4 = beltVisualStageFromPopulation(p);
+              kind === 'PROGRESSIVE'
+                ? pop.PROGRESSIVE
+                : kind === 'CONSERVATIVE'
+                  ? pop.CONSERVATIVE
+                  : pop.CENTRIST;
             var title =
-              tid === 'PROGRESSIVE' ? '〈 진보 영토 〉' : tid === 'CONSERVATIVE' ? '〈 보수 영토 〉' : '〈 중도 영토 〉';
-            return title + '\n단계 ' + st40 + '/40  |  비주얼 ' + vis4 + '/4  |  소속 인구 ' + formatPop(p) + '명';
+              kind === 'PROGRESSIVE'
+                ? '<  진보영토  >'
+                : kind === 'CONSERVATIVE'
+                  ? '<  보수영토  >'
+                  : '<  중도영토  >';
+            return '\n' + title + '\n' + '영토명 : 미정\n' + '소속인구  : ' + formatPop(p) + ' 명';
           }
 
           var runId = 0;
           var stepTimer = null;
+          var twUnderline = el('territory-belt-typewriter-underline');
+          var connSvg = el('territory-tw-connector');
+          var connPath = el('territory-tw-connector-path');
+
+          /** Hit buttons use filter:drop-shadow; bbox includes ink overflow so use inner img for tip/connector math. */
+          function twGeoHit(btn) {
+            if (!btn || !btn.querySelector) return btn;
+            var img = btn.querySelector('.territory-faction-hit__img');
+            return img || btn.querySelector('img') || btn;
+          }
+
+          /** Non-COMMON vertical placement; must stay in sync with syncTipPlacement rAF pass. */
+          function applyTipVertical(btn, fr) {
+            if (!btn || !twEl) return;
+            var br = twGeoHit(btn).getBoundingClientRect();
+            var btnTopFr = br.top - fr.top;
+            twEl.style.marginTop = '0';
+            twEl.style.transform = 'none';
+            if (btnTopFr < 36) {
+              twEl.style.bottom = 'auto';
+              twEl.style.top = Math.round(br.bottom - fr.top + 1) + 'px';
+            } else {
+              /* More negative = underline + connector start closer to the island. */
+              var gapAboveBtn = -14;
+              twEl.style.top = 'auto';
+              twEl.style.bottom = Math.round(fr.height - btnTopFr + gapAboveBtn) + 'px';
+            }
+          }
+
+          function clearTwHot() {
+            var hot = frame.querySelectorAll('.territory-faction-hit--tw-hot');
+            for (var hi = 0; hi < hot.length; hi++) hot[hi].classList.remove('territory-faction-hit--tw-hot');
+            frame.classList.remove('territory-centrist-hero__frame--tw-hot');
+          }
+
+          function setTwHot(btn, kind) {
+            clearTwHot();
+            if (kind === 'COMMON') {
+              frame.classList.add('territory-centrist-hero__frame--tw-hot');
+            } else if (btn && btn.classList && btn.classList.contains('territory-faction-hit')) {
+              btn.classList.add('territory-faction-hit--tw-hot');
+            }
+          }
+
+          function clearConnector() {
+            if (connPath) connPath.setAttribute('d', '');
+          }
+
+          function updateConnector(btn, kind) {
+            if (!connPath || !connSvg || !twEl || twEl.hidden || !twUnderline) return;
+            var fr = frame.getBoundingClientRect();
+            if (fr.width < 8 || fr.height < 8) return;
+            var u = twUnderline.getBoundingClientRect();
+            if (u.width < 1 || u.height < 1) return;
+            var x0 = u.left + u.width / 2 - fr.left;
+            var y0 = u.bottom - fr.top;
+            var x1;
+            var y1;
+            if (kind === 'COMMON') {
+              x1 = fr.width / 2;
+              y1 = Math.min(fr.height * 0.52, fr.height - 16);
+            } else if (btn) {
+              var br = twGeoHit(btn).getBoundingClientRect();
+              x1 = br.left + br.width / 2 - fr.left;
+              if (kind === 'KANTA') {
+                /* End near bottom of planet art — shorter chord than top anchor. */
+                y1 = br.bottom - fr.top - Math.min(12, br.height * 0.06);
+              } else {
+                /* Belt: anchor upper hit so dashed segment reads shorter. */
+                y1 = br.top + Math.min(br.height * 0.2, 14) - fr.top;
+              }
+            } else {
+              return;
+            }
+            connSvg.setAttribute('viewBox', '0 0 ' + Math.round(fr.width) + ' ' + Math.round(fr.height));
+            connSvg.setAttribute('preserveAspectRatio', 'none');
+            var dy = y1 - y0;
+            var mx = (x0 + x1) / 2;
+            var my;
+            if (kind === 'COMMON') {
+              my = (y0 + y1) / 2 - Math.min(32, fr.height * 0.07);
+            } else if (dy >= 0) {
+              /* Target below underline: bow *down* so the arc does not slice through the tooltip. */
+              my = (y0 + y1) / 2 + Math.min(72, Math.max(10, dy * 0.28));
+            } else {
+              /* Target above start (KANTA): vertical bow pulls into text — bend sideways instead. */
+              var midx = (x0 + x1) / 2;
+              var midy = (y0 + y1) / 2;
+              var bendX = Math.min(130, fr.width * 0.3);
+              mx = midx + bendX * (midx > fr.width * 0.52 ? -1 : 1);
+              my = midy + Math.abs(dy) * 0.1;
+              mx = Math.max(10, Math.min(fr.width - 10, mx));
+            }
+            connPath.setAttribute(
+              'd',
+              'M ' +
+                x0.toFixed(1) +
+                ',' +
+                y0.toFixed(1) +
+                ' Q ' +
+                mx.toFixed(1) +
+                ',' +
+                my.toFixed(1) +
+                ' ' +
+                x1.toFixed(1) +
+                ',' +
+                y1.toFixed(1),
+            );
+          }
+
+          function scheduleConnector(btn, kind) {
+            window.requestAnimationFrame(function () {
+              updateConnector(btn, kind);
+            });
+          }
 
           function hideTypewriter() {
             runId++;
@@ -8624,28 +9019,61 @@
               clearTimeout(stepTimer);
               stepTimer = null;
             }
+            clearTwHot();
+            clearConnector();
             twEl.hidden = true;
             twInner.textContent = '';
+            twEl.classList.remove('territory-belt-typewriter--wide');
+            twEl.style.maxWidth = '';
+            twEl.style.left = '';
+            twEl.style.top = '';
+            twEl.style.bottom = '';
+            twEl.style.transform = '';
+            twEl.style.marginTop = '';
           }
 
-          function positionTip(btn) {
+          function positionTip(btn, kind) {
             var fr = frame.getBoundingClientRect();
-            var br = btn.getBoundingClientRect();
-            var cx = br.left + br.width / 2 - fr.left;
-            var ty = br.top - fr.top - 6;
-            twEl.style.left = Math.round(cx) + 'px';
-            twEl.style.top = Math.round(Math.max(4, ty)) + 'px';
-            if (ty < 30) {
-              twEl.style.top = Math.round(br.bottom - fr.top + 10) + 'px';
-              twEl.style.transform = 'translate(-50%, 0)';
+            if (kind === 'COMMON') {
+              twEl.style.maxWidth = Math.max(220, fr.width - 40) + 'px';
+              twEl.classList.add('territory-belt-typewriter--wide');
+              twEl.style.left = Math.round(fr.width / 2) + 'px';
+              twEl.style.bottom = '';
+              twEl.style.top = Math.round(fr.height * 0.36) + 'px';
+              twEl.style.transform = 'translate(-50%, -50%)';
               twEl.style.marginTop = '0';
-            } else {
-              twEl.style.transform = 'translate(-50%, -100%)';
-              twEl.style.marginTop = '-6px';
+              return;
             }
+            twEl.style.maxWidth = '';
+            twEl.classList.remove('territory-belt-typewriter--wide');
+            applyTipVertical(btn, fr);
+            syncTipHorizontal(btn, kind);
           }
 
-          function startTypewriter(btn, tid) {
+          function syncTipHorizontal(btn, kind) {
+            if (kind === 'COMMON' || !twEl || twEl.hidden || !btn) return;
+            window.requestAnimationFrame(function () {
+              window.requestAnimationFrame(function () {
+                if (twEl.hidden) return;
+                var fr = frame.getBoundingClientRect();
+                applyTipVertical(btn, fr);
+                var br = twGeoHit(btn).getBoundingClientRect();
+                var twr = twEl.getBoundingClientRect();
+                var fcs = window.getComputedStyle(frame);
+                var bl = parseFloat(fcs.borderLeftWidth) || 0;
+                var twW = twr.width;
+                if (twW < 2 || br.width < 2) return;
+                var pad = 6;
+                var btnCx = br.left + br.width * 0.5;
+                var leftEdge = btnCx - twW * 0.5;
+                if (leftEdge < fr.left + pad) leftEdge = fr.left + pad;
+                if (leftEdge + twW > fr.right - pad) leftEdge = fr.right - pad - twW;
+                twEl.style.left = Math.round(leftEdge - fr.left - bl) + 'px';
+              });
+            });
+          }
+
+          function startTypewriter(btn, kind) {
             resumeAudio();
             runId++;
             var myRun = runId;
@@ -8653,13 +9081,17 @@
               clearTimeout(stepTimer);
               stepTimer = null;
             }
-            var full = hoverPlain(tid);
+            var full = hoverPlain(kind);
             twInner.textContent = '';
             twEl.hidden = false;
-            positionTip(btn);
+            setTwHot(btn, kind);
+            positionTip(btn, kind);
+            scheduleConnector(btn, kind);
 
             if (reduceMotion) {
               twInner.textContent = full;
+              scheduleConnector(btn, kind);
+              syncTipHorizontal(btn, kind);
               return;
             }
 
@@ -8669,29 +9101,34 @@
               if (myRun !== runId) return;
               if (i >= chars.length) {
                 stepTimer = null;
+                scheduleConnector(btn, kind);
+                syncTipHorizontal(btn, kind);
                 return;
               }
               var ch = chars[i++];
               twInner.textContent += ch;
-              if (ch === '\n') playTypeTick('\n');
-              else if (ch !== ' ') playTypeTick(ch);
+              if (ch === '\n') {
+                playTypeTick('\n');
+                syncTipHorizontal(btn, kind);
+              } else if (ch !== ' ') playTypeTick(ch);
               else if (Math.random() < 0.3) playTypeTick(' ');
-              var delay = ch === '\n' ? 130 : 26 + Math.floor(Math.random() * 28);
+              scheduleConnector(btn, kind);
+              var delay = ch === '\n' ? 145 : 28 + Math.floor(Math.random() * 26);
               stepTimer = window.setTimeout(step, delay);
             }
             stepTimer = window.setTimeout(step, 45);
           }
 
-          function bindTw(id, tid) {
+          function bindTw(id, kind) {
             var b = el(id);
             if (!b || b.dataset.scBeltTwBound) return;
             b.dataset.scBeltTwBound = '1';
             b.addEventListener('mouseenter', function () {
-              startTypewriter(b, tid);
+              startTypewriter(b, kind);
             });
             b.addEventListener('mouseleave', hideTypewriter);
             b.addEventListener('focus', function () {
-              startTypewriter(b, tid);
+              startTypewriter(b, kind);
             });
             b.addEventListener('blur', hideTypewriter);
           }
@@ -8699,6 +9136,8 @@
           bindTw('territory-faction-progressive', 'PROGRESSIVE');
           bindTw('territory-faction-conservative', 'CONSERVATIVE');
           bindTw('territory-faction-centrist', 'CENTRIST');
+          bindTw('territory-faction-kanta', 'KANTA');
+          bindTw('territory-centrist-hero-btn', 'COMMON');
         })();
         wireFaction('territory-faction-progressive');
         wireFaction('territory-faction-centrist');
