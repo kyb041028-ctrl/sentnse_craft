@@ -54,8 +54,8 @@
   var TERRITORY_LABELS = {
     UNASSIGNED: '미편입',
     CONSERVATIVE: '보수',
-    COMMON: '모두의 공간',
-    CENTRIST: '중도 영토',
+    COMMON: '중앙광장',
+    CENTRIST: '중앙광장',
     PROGRESSIVE: '진보',
     KANTAPBIYA_LEFT: '깐따삐아 진보행성',
     KANTAPBIYA_CENTER: '깐따삐아 중간행성',
@@ -110,7 +110,7 @@
 
   function currentTerritoryId() {
     var p = global.__scPlayer;
-    return (p && p.territoryId) || 'CENTRIST';
+    return (p && p.territoryId) || 'COMMON';
   }
 
   function loadMap() {
@@ -118,7 +118,17 @@
       var raw = localStorage.getItem(LS_KEY);
       if (!raw) return {};
       var o = JSON.parse(raw);
-      return o && typeof o === 'object' ? o : {};
+      if (!o || typeof o !== 'object') return {};
+      var changed = false;
+      Object.keys(o).forEach(function (uid) {
+        var row = o[uid];
+        if (row && String(row.territoryId) === 'CENTRIST') {
+          row.territoryId = 'COMMON';
+          changed = true;
+        }
+      });
+      if (changed) saveMap(o);
+      return o;
     } catch (_) {
       return {};
     }
@@ -161,24 +171,24 @@
   }
 
   function countTerritoryMembers(territoryId, map, excludeUserId) {
-    var tid = String(territoryId || 'CENTRIST');
+    var tid = String(territoryId || 'COMMON');
     var n = 0;
     Object.keys(map).forEach(function (uid) {
       if (excludeUserId && uid === excludeUserId) return;
       var row = map[uid];
-      if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+      if (!row || String(row.territoryId || 'COMMON') !== tid) return;
       if (levelFromTotalXp(row.totalXp) >= RANK_UNLOCK_LEVEL) n += 1;
     });
     return Math.max(1, n);
   }
 
   function countRankHolders(territoryId, map, minTier, excludeUserId, tierByUser) {
-    var tid = String(territoryId || 'CENTRIST');
+    var tid = String(territoryId || 'COMMON');
     var n = 0;
     Object.keys(map).forEach(function (uid) {
       if (excludeUserId && uid === excludeUserId) return;
       var row = map[uid];
-      if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+      if (!row || String(row.territoryId || 'COMMON') !== tid) return;
       var rt =
         tierByUser && tierByUser[uid] !== undefined
           ? Math.floor(Number(tierByUser[uid]) || 0)
@@ -190,7 +200,7 @@
 
   function applyPopulationCaps(userId, territoryId, tier, map, tierByUser) {
     var t = tier;
-    var tid = String(territoryId || 'CENTRIST');
+    var tid = String(territoryId || 'COMMON');
     if (t >= 4) {
       if (countRankHolders(tid, map, 4, userId, tierByUser) >= RANK_CAPS.chiefsMaxCount) t = Math.min(t, 3);
     }
@@ -230,7 +240,7 @@
     Object.keys(map).forEach(function (uid) {
       var row = map[uid];
       if (!row || levelFromTotalXp(row.totalXp) < RANK_UNLOCK_LEVEL) return;
-      var tid = String(row.territoryId || 'CENTRIST');
+      var tid = String(row.territoryId || 'COMMON');
       if (!byTerritory[tid]) byTerritory[tid] = [];
       byTerritory[tid].push({ uid: uid, score: rankInfluenceScore(row) });
     });
@@ -266,7 +276,7 @@
     var totalXp = Math.max(0, Math.floor(Number(raw && raw.totalXp) || 0));
     var draft = {
       totalXp: totalXp,
-      territoryId: String((raw && raw.territoryId) || currentTerritoryId()).trim() || 'CENTRIST',
+      territoryId: String((raw && raw.territoryId) || currentTerritoryId()).trim() || 'COMMON',
       receivedPostLikes: normLikes(raw && raw.receivedPostLikes),
       receivedCommentLikes: normLikes(raw && raw.receivedCommentLikes),
       receivedFollowers: normLikes(raw && raw.receivedFollowers),
@@ -289,7 +299,7 @@
     var map = loadMap();
     var prev = map[id] || {};
     var merged = Object.assign({}, prev, partial || {});
-    merged.territoryId = String(merged.territoryId || currentTerritoryId()).trim() || 'CENTRIST';
+    merged.territoryId = String(merged.territoryId || currentTerritoryId()).trim() || 'COMMON';
     map[id] = normalizeState(merged, id, map);
     recomputeAllRanks(map);
     saveMap(map);
@@ -444,7 +454,7 @@
   }
 
   function territoryLabelKo(tid) {
-    var t = String(tid || 'CENTRIST').trim() || 'CENTRIST';
+    var t = String(tid || 'COMMON').trim() || 'COMMON';
     return TERRITORY_LABELS[t] || t;
   }
 
@@ -469,7 +479,7 @@
     Object.keys(map).forEach(function (userId) {
       var row = map[userId];
       if (!row) return;
-      var tid = String(row.territoryId || 'CENTRIST').trim() || 'CENTRIST';
+      var tid = String(row.territoryId || 'COMMON').trim() || 'COMMON';
       if (tidFilter && tid !== tidFilter) return;
       entries.push({
         userId: userId,

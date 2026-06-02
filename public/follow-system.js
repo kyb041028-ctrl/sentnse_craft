@@ -144,8 +144,8 @@
 
   function territoryLabel(tid) {
     var m = {
-      COMMON: '모두의 공간',
-      CENTRIST: '중도 영토',
+      COMMON: '중앙광장',
+      CENTRIST: '중앙광장',
       CONSERVATIVE: '보수',
       PROGRESSIVE: '진보',
       KANTAPBIYA_LEFT: '깐따삐아 진보행성',

@@ -165,24 +165,24 @@ function qualifyingRankTierFromLikes(level, likes) {
  * @param {string} excludeUserId
  */
 function countTerritoryMembers(territoryId, map, excludeUserId) {
-  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  const tid = String(territoryId || 'COMMON').trim() || 'COMMON';
   let n = 0;
   Object.keys(map || {}).forEach((uid) => {
     if (excludeUserId && uid === excludeUserId) return;
     const row = map[uid];
-    if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+    if (!row || String(row.territoryId || 'COMMON') !== tid) return;
     if (levelFromTotalXp(row.totalXp) >= RANK_UNLOCK_LEVEL) n += 1;
   });
   return Math.max(1, n);
 }
 
 function countRankHoldersInTerritory(territoryId, map, minTier, excludeUserId, tierByUser) {
-  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  const tid = String(territoryId || 'COMMON').trim() || 'COMMON';
   let n = 0;
   Object.keys(map || {}).forEach((uid) => {
     if (excludeUserId && uid === excludeUserId) return;
     const row = map[uid];
-    if (!row || String(row.territoryId || 'CENTRIST') !== tid) return;
+    if (!row || String(row.territoryId || 'COMMON') !== tid) return;
     const rt = Math.floor(
       Number(tierByUser && tierByUser[uid] !== undefined ? tierByUser[uid] : row.rankTier) || 0,
     );
@@ -193,7 +193,7 @@ function countRankHoldersInTerritory(territoryId, map, minTier, excludeUserId, t
 
 function applyPopulationCaps(userId, territoryId, tier, map, tierByUser) {
   let t = tier;
-  const tid = String(territoryId || 'CENTRIST').trim() || 'CENTRIST';
+  const tid = String(territoryId || 'COMMON').trim() || 'COMMON';
   if (t >= 4) {
     const chiefs = countRankHoldersInTerritory(tid, map, 4, userId, tierByUser);
     if (chiefs >= RANK_POPULATION_CAPS.chiefsMaxCount) t = Math.min(t, 3);
@@ -233,7 +233,7 @@ function recomputeAllRanks(map) {
   Object.keys(map || {}).forEach((uid) => {
     const row = map[uid];
     if (!row || levelFromTotalXp(row.totalXp) < RANK_UNLOCK_LEVEL) return;
-    const tid = String(row.territoryId || 'CENTRIST').trim() || 'CENTRIST';
+    const tid = String(row.territoryId || 'COMMON').trim() || 'COMMON';
     if (!byTerritory[tid]) byTerritory[tid] = [];
     byTerritory[tid].push({ uid, score: rankInfluenceScore(row) });
   });
@@ -273,7 +273,7 @@ function resolveEffectiveRankTier(userId, state, map) {
 
 function normalizeState(raw, userId, map) {
   const totalXp = Math.max(0, Math.floor(Number(raw && raw.totalXp) || 0));
-  const territoryId = String((raw && raw.territoryId) || 'CENTRIST').trim() || 'CENTRIST';
+  const territoryId = String((raw && raw.territoryId) || 'COMMON').trim() || 'COMMON';
   const receivedPostLikes = normalizeLikeCount(raw && raw.receivedPostLikes);
   const receivedCommentLikes = normalizeLikeCount(raw && raw.receivedCommentLikes);
   const receivedFollowers = normalizeLikeCount(raw && raw.receivedFollowers);

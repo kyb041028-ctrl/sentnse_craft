@@ -405,7 +405,7 @@
     a { color: var(--accent); }
     ul { padding-left: 1.2rem; }
 
-    /* ----- 중도 풀 배경(1~6단계 아트) + 클릭 시 게시판 ----- */
+    /* ----- 영토 맵 풀 배경(1~6단계 아트) + 클릭 시 게시판 ----- */
     .territory-centrist-hero {
       margin-top: 1rem;
     }
@@ -518,6 +518,70 @@
       pointer-events: none;
       transition: filter 0.2s ease;
     }
+    /* 중앙광장: 고원 절벽/울타리 둘레 근사(벡터 path). 픽셀에 정확히 맞추려면 common-space-hero 위에 path 트레이스 후 아래 SVG의 d만 교체. */
+    .territory-centrist-hero__common-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      overflow: visible;
+    }
+    .territory-centrist-hero__common-ring-glow {
+      fill: none;
+      stroke: rgba(200, 130, 255, 0.45);
+      stroke-width: 5;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      animation: territoryCommonRingGlow 1.45s ease-in-out infinite;
+    }
+    .territory-centrist-hero__common-ring-edge {
+      fill: none;
+      stroke: rgba(236, 215, 255, 0.95);
+      stroke-width: 2;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      animation: territoryCommonRingEdge 1.45s ease-in-out infinite;
+    }
+    @keyframes territoryCommonRingEdge {
+      0%,
+      100% {
+        stroke: rgba(175, 125, 230, 0.65);
+        opacity: 0.72;
+        filter: drop-shadow(0 0 4px rgba(120, 70, 180, 0.45));
+      }
+      50% {
+        stroke: rgba(255, 245, 255, 1);
+        opacity: 1;
+        filter: drop-shadow(0 0 12px rgba(230, 180, 255, 0.9));
+      }
+    }
+    @keyframes territoryCommonRingGlow {
+      0%,
+      100% {
+        stroke: rgba(150, 90, 200, 0.25);
+        opacity: 0.45;
+      }
+      50% {
+        stroke: rgba(230, 190, 255, 0.55);
+        opacity: 0.95;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-centrist-hero__common-ring-glow,
+      .territory-centrist-hero__common-ring-edge {
+        animation: none;
+      }
+      .territory-centrist-hero__common-ring-edge {
+        stroke: rgba(220, 185, 255, 0.92);
+        opacity: 0.9;
+      }
+      .territory-centrist-hero__common-ring-glow {
+        stroke: rgba(190, 130, 240, 0.4);
+        opacity: 0.75;
+      }
+    }
     .territory-centrist-hero__hit {
       position: absolute;
       inset: 0;
@@ -561,9 +625,6 @@
     .territory-faction-hit--belt-left:hover,
     .territory-faction-hit--belt-right:hover {
       transform: translate(-50%, -50%) scale(1.04);
-    }
-    .territory-faction-hit--belt-center:hover {
-      transform: translate(-50%, 0) scale(1.04);
     }
     .territory-faction-hit--kanta:hover {
       transform: translateX(-50%) scale(1.05);
@@ -632,7 +693,7 @@
       pointer-events: none;
       border-radius: 10px;
     }
-    /* 진보·보수: 좌우 대칭·세로 중앙 부근 / 중도: 하단 중앙(PC 스케치 기준). 깐따: 상단 중앙·행성 아래 2/3만 표시 */
+    /* 진보·보수: 좌우 대칭·세로 중앙 부근. 깐따: 상단 중앙·행성 아래 2/3만 표시 */
     .territory-faction-hit--belt {
       width: min(58%, 20.25rem);
       max-width: 20.25rem;
@@ -647,32 +708,6 @@
       left: 91%;
       top: 50%;
       transform: translate(-50%, -50%);
-    }
-    .territory-faction-hit--belt-center {
-      left: 50%;
-      top: auto;
-      bottom: max(3.35rem, 12%);
-      width: min(62%, 21.75rem);
-      max-width: 21.75rem;
-      min-width: 12rem;
-      transform: translate(-50%, 0);
-      z-index: 3;
-    }
-    .territory-faction-hit--belt-cent .territory-belt-aero {
-      background: radial-gradient(
-        ellipse at 50% 50%,
-        rgba(167, 139, 250, 0.4) 0%,
-        rgba(139, 92, 246, 0.16) 45%,
-        transparent 72%
-      );
-    }
-    .territory-faction-hit--belt-cent .territory-belt-img {
-      filter: saturate(0.82) brightness(1.07) contrast(1.02) hue-rotate(-18deg)
-        drop-shadow(0 0 14px rgba(196, 181, 253, 0.38));
-    }
-    .territory-faction-hit--belt-cent .territory-belt-civfill {
-      background: linear-gradient(90deg, #8b5cf6, #c4b5fd 55%, #ede9fe);
-      box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
     }
     .territory-belt-stack {
       position: relative;
@@ -818,14 +853,6 @@
         width: min(72%, 20.25rem);
         max-width: 20.25rem;
         min-width: 9rem;
-      }
-      .territory-faction-hit--belt-center {
-        width: min(78%, 21.75rem);
-        max-width: 21.75rem;
-        min-width: 10rem;
-        top: auto;
-        bottom: max(3rem, 10%);
-        transform: translate(-50%, 0);
       }
       .territory-faction-hit--belt-left {
         left: 8%;
@@ -1767,6 +1794,188 @@
       padding: 0.5rem;
       font-size: 0.68rem;
     }
+    /* ----- 성향 추이 미니차트(영토 맵 우상단) + 모달 ----- */
+    .sc-tendency-mini {
+      position: absolute;
+      top: 0.45rem;
+      right: 0.45rem;
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.12rem;
+      margin: 0;
+      padding: 0.28rem 0.38rem 0.32rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.82);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      color: #cbd5e1;
+      font-size: 0.58rem;
+      line-height: 1;
+      max-width: 42%;
+      pointer-events: auto;
+    }
+    .sc-tendency-mini:hover,
+    .sc-tendency-mini:focus-visible {
+      border-color: rgba(56, 189, 248, 0.55);
+      outline: none;
+    }
+    .sc-tendency-mini__label {
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #94a3b8;
+    }
+    .sc-tendency-mini__spark {
+      display: block;
+      width: 5.25rem;
+      height: 1.65rem;
+    }
+    .sc-tendency-mini__spark path {
+      fill: none;
+      stroke: url(#sc-tendency-mini-grad);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .sc-tendency-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2010;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .sc-tendency-modal[hidden] {
+      display: none;
+    }
+    .sc-tendency-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .sc-tendency-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(36rem, 100%);
+      max-height: min(88vh, 36rem);
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+    .sc-tendency-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sc-tendency-modal__head h2 {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    .sc-tendency-modal__head button {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-tendency-modal__tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      padding: 0.45rem 0.65rem 0;
+    }
+    .sc-tendency-modal__tab {
+      padding: 0.35rem 0.55rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-tendency-modal__tab.is-active {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+    }
+    .sc-tendency-modal__subtabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      padding: 0.35rem 0.65rem 0.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-tendency-modal__subtab {
+      padding: 0.28rem 0.45rem;
+      font-size: 0.62rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.15);
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-tendency-modal__subtab.is-active {
+      border-color: rgba(196, 181, 253, 0.45);
+      color: #ede9fe;
+      background: rgba(139, 92, 246, 0.15);
+    }
+    .sc-tendency-modal__hint {
+      margin: 0;
+      padding: 0.4rem 0.75rem 0;
+      font-size: 0.62rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+    .sc-tendency-modal__chart {
+      padding: 0.5rem 0.65rem 0.65rem;
+      overflow: auto;
+      flex: 1;
+    }
+    .sc-tendency-modal__svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .sc-tendency-modal__legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      padding: 0.35rem 0 0;
+      font-size: 0.62rem;
+      color: #cbd5e1;
+    }
+    .sc-tendency-modal__legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .sc-tendency-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .sc-tendency-dot--c {
+      background: #fbbf24;
+    }
+    .sc-tendency-dot--n {
+      background: #c084fc;
+    }
+    .sc-tendency-dot--p {
+      background: #38bdf8;
+    }
     .avatar-xpbar {
       display: block;
       width: 100%;
@@ -2413,7 +2622,7 @@
       opacity: 0.45;
       cursor: not-allowed;
     }
-    /* 모두의 공간: 목록은 페이지 스크롤로 자연스럽게 길어짐(내부 스크롤 창에 갇히지 않음).
+    /* 중앙광장: 목록은 페이지 스크롤로 자연스럽게 길어짐(내부 스크롤 창에 갇히지 않음).
        영토 4단계 게시판만 목록 전용 스크롤 영역(.board__list--scroll-zone)을 씀. */
     .board__list {
       list-style: none;
@@ -2561,6 +2770,77 @@
       padding: 0.25rem 1.25rem 0.55rem;
       font-size: 0.75rem;
       color: var(--muted);
+    }
+    .board__camp-affinity {
+      margin: 0 1.25rem 0.5rem;
+      padding: 0.45rem 0.55rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.45);
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+    .board__camp-affinity--compact {
+      margin: 0 1.25rem 0.45rem;
+      padding: 0.35rem 0.45rem 0.4rem;
+      font-size: 0.68rem;
+    }
+    .board__camp-affinity__cap {
+      font-weight: 600;
+      font-size: 0.74em;
+      color: #e2e8f0;
+      margin-bottom: 0.35rem;
+    }
+    .board__camp-affinity--compact .board__camp-affinity__cap {
+      font-size: 0.72em;
+      margin-bottom: 0.28rem;
+    }
+    .board__camp-affinity__row {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr 2.25rem;
+      align-items: center;
+      gap: 0.35rem 0.45rem;
+      margin-top: 0.22rem;
+    }
+    .board__camp-affinity--compact .board__camp-affinity__row {
+      grid-template-columns: 4.8rem 1fr 2rem;
+      gap: 0.28rem 0.35rem;
+    }
+    .board__camp-affinity__label {
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .board__camp-affinity__track {
+      height: 0.42rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .board__camp-affinity__fill {
+      height: 100%;
+      border-radius: 999px;
+      min-width: 0;
+      transition: width 0.25s ease;
+    }
+    .board__camp-affinity__pct {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .board__camp-affinity__empty,
+    .board__camp-affinity__hint {
+      margin: 0.15rem 0 0;
+      font-size: 0.68em;
+      line-height: 1.45;
+      color: #94a3b8;
+    }
+    .board__camp-affinity__hint {
+      margin-top: 0.4rem;
+    }
+    .board-post-detail__camp {
+      margin-top: 0.5rem;
     }
     .sc-react-bar {
       display: flex;
@@ -3069,6 +3349,85 @@
     .centrist-free-feed__empty {
       margin: 0.5rem 0 0;
     }
+    .common-territory-hot-wrap {
+      margin-bottom: 1.15rem;
+    }
+    .common-territory-hot__tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      justify-content: center;
+      margin-bottom: 0.55rem;
+    }
+    .common-territory-hot__tab {
+      padding: 0.32rem 0.55rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .common-territory-hot__tab.is-active {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.16);
+      color: #e0f2fe;
+    }
+    .common-territory-hot__columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      align-items: start;
+    }
+    @media (max-width: 520px) {
+      .common-territory-hot__columns {
+        grid-template-columns: 1fr;
+      }
+    }
+    .common-territory-hot__col {
+      margin: 0;
+      padding: 0.5rem 0.6rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+    }
+    .common-territory-hot__h {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      line-height: 1.3;
+    }
+    .common-territory-hot__list {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: #e2e8f0;
+      font-size: 0.76rem;
+    }
+    .common-territory-hot__list li {
+      margin-bottom: 0.28rem;
+    }
+    .common-territory-hot__btn {
+      display: inline;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+    .common-territory-hot__btn:hover {
+      color: #7dd3fc;
+    }
+    .common-territory-hot__empty {
+      margin: 0;
+      font-size: 0.72rem;
+    }
     .centrist-hub-wrap > .centrist-hot {
       margin-top: 1.75rem;
     }
@@ -3171,6 +3530,66 @@
     }
     .centrist-hot__empty {
       margin: 0.35rem 0 0;
+    }
+
+    .hot-opinion-ticker {
+      margin: 0 0 0.55rem;
+      padding: 0.45rem 0.55rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(34, 197, 94, 0.28);
+      background: linear-gradient(165deg, rgba(15, 23, 42, 0.92), rgba(22, 78, 99, 0.22));
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+      font-size: 0.72rem;
+      line-height: 1.45;
+      color: #d1fae5;
+    }
+    .hot-opinion-ticker--dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+    }
+    @media (max-width: 720px) {
+      .hot-opinion-ticker--dual {
+        grid-template-columns: 1fr;
+      }
+    }
+    .hot-opinion-ticker__lane {
+      padding: 0.35rem 0.4rem;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+    .hot-opinion-ticker__title {
+      font-family: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', monospace;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      color: #6ee7b7;
+      margin-bottom: 0.28rem;
+      text-transform: uppercase;
+    }
+    .hot-opinion-ticker__lane-head {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #bae6fd;
+      margin-bottom: 0.22rem;
+    }
+    .hot-opinion-ticker__line {
+      font-size: 0.68rem;
+      color: #e2e8f0;
+      margin: 0.12rem 0 0;
+      padding-left: 0.35rem;
+      border-left: 2px solid rgba(52, 211, 153, 0.45);
+    }
+    .hot-opinion-ticker__line--alert {
+      border-left-color: rgba(251, 113, 133, 0.75);
+      color: #fecdd3;
+    }
+    .hot-opinion-ticker__meta {
+      margin: 0.28rem 0 0;
+      font-size: 0.62rem;
+      color: #86efac;
+      opacity: 0.88;
     }
 
     /* ----- 오른쪽 하단 채팅 (클릭으로만 숨김·펼침, 프로필처럼 자동 X) ----- */
@@ -3441,20 +3860,56 @@
     <main class="view-app-main">
       <div id="screen-main" class="app-screen">
         <p class="muted">
-          배경 <strong>빈 곳</strong>을 누르면 <strong>모두의 공간</strong>으로 갑니다. 가운데·좌우 섬 아이콘으로
-          <strong>중도·진보·보수</strong> 영토 게시판에 들어갑니다(성향 <strong>40%</strong> 해금, 깐따 50%).
+          배경 <strong>빈 곳</strong>을 누르면 <strong>중앙광장</strong>으로 갑니다. 좌우 섬 아이콘으로
+          <strong>진보·보수</strong> 영토 게시판에 들어갑니다(성향 <strong>40%</strong> 해금, 깐따 50%).
           화면 <strong>맨 위 가운데 깐따삐아 행성</strong>을 누르면 <strong>진보·중간·보수 행성</strong> 중 하나를 고른 뒤 해당 게시판으로 이동합니다.
-          아래 배경은 중도 영토 <strong>1~4단계</strong> 비주얼입니다.
+          우측 상단 <strong>추이</strong>를 누르면 성향 변화 그래프를 볼 수 있습니다.
+          아래 배경은 맵 <strong>1~4단계</strong> 비주얼입니다.
         </p>
 
-        <section class="territory-centrist-hero" aria-label="중도 영토 배경">
+        <section class="territory-centrist-hero" aria-label="영토 맵 배경">
           <div class="territory-centrist-hero__frame">
             <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
             <button
               type="button"
+              id="sc-tendency-mini"
+              class="sc-tendency-mini"
+              aria-label="[성향변화 추이] 상세 보기"
+              title="[성향변화 추이] (클릭)"
+            >
+              <span class="sc-tendency-mini__label">추이</span>
+              <svg class="sc-tendency-mini__spark" viewBox="0 0 88 28" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="sc-tendency-mini-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#38bdf8" />
+                    <stop offset="100%" stop-color="#a5f3fc" />
+                  </linearGradient>
+                </defs>
+                <path id="sc-tendency-mini-path" d="M2,14 L86,14" />
+              </svg>
+            </button>
+            <svg
+              class="territory-centrist-hero__common-ring"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <!-- 불규칙 고원 둘레 근사(좌우 움푹·상단 울타리 라인 등). 배경 PNG는 자동 edge 추출 불가 → 트레이스 path로 교체 가능 -->
+              <path
+                class="territory-centrist-hero__common-ring-glow"
+                d="M 47.2 16.4 C 56.8 15.1 66.5 16.8 74.2 21.6 C 81.8 26.4 86.1 34.2 86.4 42.8 C 88.2 48.6 87.5 55.1 84.1 61.2 C 80.2 68.5 72.8 73.8 63.6 76.2 C 54.2 78.8 44.1 78.4 34.8 75.1 C 25.2 71.6 17.8 64.8 14.6 55.4 C 11.4 46 12.8 35.6 18.6 27.8 C 24.4 20 34.2 16.2 44.5 16.1 C 45.4 16.1 46.3 16.2 47.2 16.4 Z"
+              />
+              <path
+                class="territory-centrist-hero__common-ring-edge"
+                d="M 47.2 16.4 C 56.8 15.1 66.5 16.8 74.2 21.6 C 81.8 26.4 86.1 34.2 86.4 42.8 C 88.2 48.6 87.5 55.1 84.1 61.2 C 80.2 68.5 72.8 73.8 63.6 76.2 C 54.2 78.8 44.1 78.4 34.8 75.1 C 25.2 71.6 17.8 64.8 14.6 55.4 C 11.4 46 12.8 35.6 18.6 27.8 C 24.4 20 34.2 16.2 44.5 16.1 C 45.4 16.1 46.3 16.2 47.2 16.4 Z"
+              />
+            </svg>
+            <button
+              type="button"
               class="territory-centrist-hero__hit zone--clickable"
               id="territory-centrist-hero-btn"
-              aria-label="모두의 공간(COMMON) 게시판으로 이동"
+              aria-label="중앙광장(COMMON) 게시판으로 이동"
             ></button>
             <div class="territory-centrist-hero__faction-layer" id="territory-faction-overlay-root">
               <button
@@ -3494,29 +3949,6 @@
                   />
                   <span class="territory-belt-civtrack" aria-hidden="true"
                     ><span class="territory-belt-civfill" id="territory-belt-civfill-p"></span
-                  ></span>
-                </span>
-              </button>
-              <button
-                type="button"
-                class="territory-faction-hit territory-faction-hit--belt territory-faction-hit--belt-center territory-faction-hit--belt-cent zone--clickable"
-                id="territory-faction-centrist"
-                aria-label="중도 영토 게시판으로 이동"
-              >
-                <span class="territory-belt-stack">
-                  <span class="territory-belt-aero" aria-hidden="true"></span>
-                  <span class="territory-belt-underglow" aria-hidden="true"></span>
-                  <img
-                    class="territory-faction-hit__img territory-belt-img"
-                    id="territory-faction-centrist-img"
-                    src="/territories/belt-stage-1.png"
-                    alt=""
-                    width="320"
-                    height="320"
-                    decoding="async"
-                  />
-                  <span class="territory-belt-civtrack" aria-hidden="true"
-                    ><span class="territory-belt-civfill" id="territory-belt-civfill-m"></span
                   ></span>
                 </span>
               </button>
@@ -3612,9 +4044,9 @@
         <section class="card board" id="board-section" aria-labelledby="board-title">
           <div class="board__head">
             <div>
-              <h2 id="board-title">모두의 공간 · 자유 게시판</h2>
+              <h2 id="board-title">중앙광장 · 자유 게시판</h2>
               <p class="muted" id="board-title-desc">
-                모두의 공간은 <strong>전원 이용</strong> · 영토 게시판은
+                중앙광장은 <strong>전원 이용</strong> · 영토 게시판은
                 <strong>1단계 40%</strong> · <strong>2단계 60%</strong>(깐따: 외계인 50% + 사람 60%) · 3·4단계 추후 공개입니다.
               </p>
             </div>
@@ -3718,6 +4150,7 @@
               이 영토 · 현재 단계에서 오늘 작성된 글 기준(공감·댓글·본문 길이)입니다. 제목을 누르면
               <strong>본문 전용 화면</strong>으로 이동합니다.
             </p>
+            <div id="board-faction-hot-opinion" class="hot-opinion-ticker" aria-live="polite"></div>
             <ol id="board-faction-hot-list" class="centrist-hot__list"></ol>
             <p id="board-faction-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
           </section>
@@ -3725,7 +4158,7 @@
           <div id="board-faction-locked" class="board__locked" hidden>
             <p class="board__locked-title">이 영토 게시판은 아직 해금되지 않았습니다</p>
             <p class="board__locked-text">
-              <strong>모두의 공간</strong>에서 글·댓글·반응으로 성향이 쌓이면 해당 영토
+              <strong>중앙광장</strong>에서 글·댓글·반응으로 성향이 쌓이면 해당 영토
               <strong>40%</strong>(깐따삐아는 외계인 성향 <strong>50%</strong>)에 도달할 때
               <strong>1단계</strong>가 열립니다. <strong>Lv.3</strong>이면 중립이어도
               <strong>1단계 눈팅(읽기)</strong>만 가능합니다.
@@ -3748,6 +4181,42 @@
           </div>
         </section>
         <div id="centrist-hub-wrap" class="centrist-hub-wrap" hidden>
+          <div id="common-territory-hot-wrap" class="common-territory-hot-wrap card" style="padding: 0.65rem 0.75rem">
+            <div
+              class="common-territory-hot__tabs"
+              role="tablist"
+              aria-label="진보·보수 영토 1단계 핫글 기간"
+            >
+              <button
+                type="button"
+                class="common-territory-hot__tab is-active"
+                data-common-hot-period="day"
+                role="tab"
+                aria-selected="true"
+              >
+                일간
+              </button>
+              <button type="button" class="common-territory-hot__tab" data-common-hot-period="week" role="tab" aria-selected="false">
+                주간
+              </button>
+              <button type="button" class="common-territory-hot__tab" data-common-hot-period="month" role="tab" aria-selected="false">
+                월간
+              </button>
+            </div>
+            <div id="common-territory-hot-opinion" class="hot-opinion-ticker hot-opinion-ticker--dual" aria-live="polite"></div>
+            <div class="common-territory-hot__columns">
+              <section class="common-territory-hot__col" aria-labelledby="common-hot-prog-title">
+                <h3 id="common-hot-prog-title" class="common-territory-hot__h">진보 영토 1단계 · 핫 TOP3</h3>
+                <ol id="common-hot-prog-list" class="common-territory-hot__list"></ol>
+                <p id="common-hot-prog-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
+              </section>
+              <section class="common-territory-hot__col" aria-labelledby="common-hot-con-title">
+                <h3 id="common-hot-con-title" class="common-territory-hot__h">보수 영토 1단계 · 핫 TOP3</h3>
+                <ol id="common-hot-con-list" class="common-territory-hot__list"></ol>
+                <p id="common-hot-con-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
+              </section>
+            </div>
+          </div>
           <div class="centrist-free-write-strip">
             <p class="centrist-free-write-strip__lead muted">
               자유 게시판 글은 <strong>위쪽 카드</strong> 전체 목록(제목만 표시 · 제목을 누르면 본문 전용 화면)과, 아래 데일리·최신글·핫에
@@ -3756,7 +4225,7 @@
             <button type="button" id="centrist-open-write" class="centrist-open-write">자유글 글쓰기</button>
           </div>
           <section class="card centrist-main-issue" aria-labelledby="centrist-issue-title">
-            <h2 id="centrist-issue-title" class="centrist-main-issue__h">모두의 공간 · 데일리 이슈 · 오늘</h2>
+            <h2 id="centrist-issue-title" class="centrist-main-issue__h">중앙광장 · 데일리 이슈 · 오늘</h2>
             <p class="centrist-main-issue__label" style="margin: 0 0 0.5rem">
               <strong>위쪽 카드</strong>에서 대분류·전체 목록을 고르고, 여기서는
               <strong>정치 · 경제 · 사회 · 연예 · 세계</strong> 다섯 분야 탭으로 데일리 이슈가 바뀝니다. 그 아래
@@ -3788,11 +4257,12 @@
             </div>
           </section>
           <section class="card centrist-hot" aria-labelledby="centrist-hot-title">
-            <h2 id="centrist-hot-title" class="centrist-hot__h">모두의 공간 · 오늘 핫한 자유글 (1~5위)</h2>
+            <h2 id="centrist-hot-title" class="centrist-hot__h">중앙광장 · 오늘 핫한 자유글 (1~5위)</h2>
             <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.75rem">
               오늘 작성된 글 중 <strong>공감·댓글·본문 길이</strong> 등으로 점수를 매깁니다. 제목을 누르면
               <strong>본문 전용 화면</strong>으로 이동합니다.
             </p>
+            <div id="centrist-hot-opinion" class="hot-opinion-ticker" aria-live="polite"></div>
             <ol id="centrist-hot-list" class="centrist-hot__list"></ol>
             <p id="centrist-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
           </section>
@@ -4152,11 +4622,44 @@
     </div>
   </div>
 
+  <div id="sc-tendency-modal" class="sc-tendency-modal" hidden aria-hidden="true">
+    <div id="sc-tendency-modal-backdrop" class="sc-tendency-modal__backdrop"></div>
+    <div class="sc-tendency-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sc-tendency-modal-title">
+      <div class="sc-tendency-modal__head">
+        <h2 id="sc-tendency-modal-title">[성향변화 추이]</h2>
+        <button type="button" id="sc-tendency-modal-close">닫기</button>
+      </div>
+      <div class="sc-tendency-modal__tabs" role="tablist" aria-label="집계 단위">
+        <button type="button" class="sc-tendency-modal__tab is-active" data-period="day" role="tab" aria-selected="true">
+          일간
+        </button>
+        <button type="button" class="sc-tendency-modal__tab" data-period="week" role="tab" aria-selected="false">
+          주간
+        </button>
+        <button type="button" class="sc-tendency-modal__tab" data-period="month" role="tab" aria-selected="false">
+          월간
+        </button>
+      </div>
+      <div class="sc-tendency-modal__subtabs" role="tablist" aria-label="연령대">
+        <button type="button" class="sc-tendency-modal__subtab is-active" data-age="all" role="tab" aria-selected="true">
+          전체(나)
+        </button>
+        <button type="button" class="sc-tendency-modal__subtab" data-age="20" role="tab" aria-selected="false">20대</button>
+        <button type="button" class="sc-tendency-modal__subtab" data-age="30" role="tab" aria-selected="false">30대</button>
+        <button type="button" class="sc-tendency-modal__subtab" data-age="40" role="tab" aria-selected="false">40대</button>
+        <button type="button" class="sc-tendency-modal__subtab" data-age="50" role="tab" aria-selected="false">50대+</button>
+      </div>
+      <p id="sc-tendency-modal-agehint" class="sc-tendency-modal__hint muted"></p>
+      <div id="sc-tendency-modal-chart" class="sc-tendency-modal__chart"></div>
+    </div>
+  </div>
+
   <script src="/alignment-scoring.js"></script>
   <script src="/player-progression.js"></script>
   <script src="/permissions-guide.js"></script>
   <script src="/follow-system.js"></script>
   <script src="/rank-leaderboard.js"></script>
+  <script src="/tendency-trends-ui.js"></script>
   <script>
     (function () {
       var AUTH_KEY = 'sc_sb_auth_session';
@@ -4894,7 +5397,6 @@
         var allowed = [
           'COMMON',
           'CONSERVATIVE',
-          'CENTRIST',
           'PROGRESSIVE',
           'KANTAPBIYA_LEFT',
           'KANTAPBIYA_CENTER',
@@ -4911,7 +5413,7 @@
         setMeta(
           'guest_demo',
           '정치 성향 없음 (미분류)',
-          'COMMON · 모두의 공간',
+          'COMMON · 중앙광장',
           '랭크 · 레벨 5 달성 후 해금',
           null,
         );
@@ -4954,7 +5456,7 @@
           }
           var u = j.user || {};
           var id = u.email || u.id || '—';
-          setMeta(id, '정치 성향 없음 (미분류)', 'COMMON · 모두의 공간', '랭크 · 레벨 5 달성 후 해금', null);
+          setMeta(id, '정치 성향 없음 (미분류)', 'COMMON · 중앙광장', '랭크 · 레벨 5 달성 후 해금', null);
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
           if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
@@ -4988,7 +5490,7 @@
         window.__scPlayer || {
           userId: 'guest_demo',
           territoryId: 'COMMON',
-          affiliationDisplay: 'COMMON · 모두의 공간',
+          affiliationDisplay: 'COMMON · 중앙광장',
         };
 
       var collapsed = false;
@@ -5194,9 +5696,9 @@
       var ALIEN_WARN_MSG =
         '당신은 외계인일 가능성이 보입니다. 외계인 성향치 50%가 되면 깐따삐아 행성에 속하게 되며, 지구에서의 활동은 제한됩니다.';
       var KANTA_BLIND_MSG = '외계인의 언어입니다. 지구인은 읽을 수 없습니다';
-      var MAIN_BELT_FOUR_TIER_IDS = ['CONSERVATIVE', 'CENTRIST', 'PROGRESSIVE'];
+      var MAIN_BELT_FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE'];
       var KANTA_TERRITORY_IDS = ['KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT'];
-      /** 데모 시드 등: 깐따 3행성 포함. UI상 4단계 스트립·핫랭 등은 메인 벨트만(isFourTier). */
+      /** 데모 시드 등: 깐따 3행성 포함. UI상 4단계 스트립·핫랭 등은 보수·진보 벨트 + 깐따(isFourTier). */
       var FOUR_TIER_IDS = MAIN_BELT_FOUR_TIER_IDS.concat(KANTA_TERRITORY_IDS);
       var ALL_TERRITORY_IDS = FOUR_TIER_IDS.slice();
       var FREE_SUBCATEGORY_DEFS = [
@@ -5210,7 +5712,7 @@
         { id: 'advice', label: '고민·상담', mega: 'advice' },
         { id: 'humor', label: '유머', mega: 'humor' },
       ];
-      /** 모두의 공간 자유글 — 상단 탭(대분류). 글에는 세부 id(위)가 그대로 저장됩니다. */
+      /** 중앙광장 자유글 — 상단 탭(대분류). 글에는 세부 id(위)가 그대로 저장됩니다. */
       var FREE_MEGA_DEFS = [
         { id: 'all', label: '전체', subIds: null },
         { id: 'affairs', label: '시사·정치', subIds: ['politics_free'] },
@@ -5223,6 +5725,11 @@
         { id: 'advice', label: '고민·상담', subIds: ['advice'] },
       ];
       var FREE_CATEGORY_TAB_KEY = 'sc_common_free_mega_tab_v1';
+      var COMMON_TERRITORY_HOT_TAB_KEY = 'sc_common_territory_hot_period_v1';
+      /** 핫랭킹 여론 이동(로컬 스냅샷 비교) */
+      var HOT_OPINION_LOG_KEY = 'sc_hot_opinion_snap_log_v1';
+      var HOT_OPINION_SNAP_MIN_INTERVAL_MS = 75 * 1000;
+      var HOT_OPINION_COMPARE_MIN_AGE_MS = 50 * 60 * 1000;
       /** sessionStorage 비가용 시에도 대분류 탭·목록 필터가 동작하도록 저장 */
       var __scCommonMegaTabRaw = 'all';
       var COMMON_FREE_FEED_MAX = 30;
@@ -5444,6 +5951,7 @@
       var elLocked = document.getElementById('board-locked');
       var elBoardTitle = document.getElementById('board-title');
       var elCentristHub = document.getElementById('centrist-hub-wrap');
+      var elCommonTerritoryHotWrap = document.getElementById('common-territory-hot-wrap');
       var elCentristTabs = document.getElementById('centrist-category-tabs');
       var elCentristPanel = document.getElementById('centrist-issues-panel');
       var elCentristHotList = document.getElementById('centrist-hot-list');
@@ -5451,6 +5959,9 @@
       var elFactionHotPanel = document.getElementById('board-faction-hot-panel');
       var elFactionHotList = document.getElementById('board-faction-hot-list');
       var elFactionHotEmpty = document.getElementById('board-faction-hot-empty');
+      var elCentristHotOpinion = document.getElementById('centrist-hot-opinion');
+      var elFactionHotOpinion = document.getElementById('board-faction-hot-opinion');
+      var elCommonTerritoryHotOpinion = document.getElementById('common-territory-hot-opinion');
       var elCentristFreeFeedTabs = document.getElementById('centrist-free-feed-tabs');
       var elCentristFreeFeedList = document.getElementById('centrist-free-feed-list');
       var elCentristFreeFeedEmpty = document.getElementById('centrist-free-feed-empty');
@@ -5486,7 +5997,6 @@
       var VALID_BOARD_TERRITORY_IDS = {
         COMMON: 1,
         CONSERVATIVE: 1,
-        CENTRIST: 1,
         PROGRESSIVE: 1,
         KANTAPBIYA_LEFT: 1,
         KANTAPBIYA_CENTER: 1,
@@ -5494,6 +6004,7 @@
       };
       function normalizeBoardTerritoryId(tid) {
         var v = tid != null && String(tid).trim() !== '' ? String(tid).trim() : 'COMMON';
+        if (v === 'CENTRIST') return 'COMMON';
         return VALID_BOARD_TERRITORY_IDS[v] ? v : 'COMMON';
       }
 
@@ -5550,7 +6061,6 @@
       function factionAxisPct(tid, pct) {
         if (!pct) return 0;
         if (tid === 'CONSERVATIVE') return pct.conservative;
-        if (tid === 'CENTRIST') return pct.centrist;
         if (tid === 'PROGRESSIVE') return pct.progressive;
         return 0;
       }
@@ -6244,10 +6754,50 @@
         elCentristPanel.setAttribute('role', 'tabpanel');
         elCentristPanel.setAttribute('aria-labelledby', 'centrist-tab-' + activeId);
         renderCentristFreeFeed();
+        renderCommonTerritoryHotStrip();
       }
 
       function isPostToday(iso, dayKey) {
         return String(iso || '').slice(0, 10) === dayKey;
+      }
+
+      function getCommonHotPeriod() {
+        try {
+          var v = sessionStorage.getItem(COMMON_TERRITORY_HOT_TAB_KEY);
+          if (v === 'week' || v === 'month' || v === 'day') return v;
+        } catch (_) {}
+        return 'day';
+      }
+
+      function setCommonHotPeriod(p) {
+        var v = p === 'week' || p === 'month' ? p : 'day';
+        try {
+          sessionStorage.setItem(COMMON_TERRITORY_HOT_TAB_KEY, v);
+        } catch (_) {}
+      }
+
+      function startOfWeekMonMs() {
+        var now = new Date();
+        var wd = (now.getDay() + 6) % 7;
+        var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - wd);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime();
+      }
+
+      function startOfMonthMs() {
+        var now = new Date();
+        var d = new Date(now.getFullYear(), now.getMonth(), 1);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime();
+      }
+
+      function postInHotWindow(iso, period) {
+        var t = new Date(iso || 0).getTime();
+        if (!isFinite(t)) return false;
+        if (period === 'day') return isPostToday(iso, calendarDayKey());
+        if (period === 'week') return t >= startOfWeekMonMs();
+        if (period === 'month') return t >= startOfMonthMs();
+        return false;
       }
 
       function loadGrowthContribRoot() {
@@ -6296,7 +6846,6 @@
         var allowed = {
           COMMON: 1,
           CONSERVATIVE: 1,
-          CENTRIST: 1,
           PROGRESSIVE: 1,
           KANTAPBIYA_LEFT: 1,
           KANTAPBIYA_CENTER: 1,
@@ -6470,6 +7019,69 @@
           li.appendChild(btn);
           elCentristHotList.appendChild(li);
         });
+        try {
+          renderHotOpinionTickerFill(
+            elCentristHotOpinion,
+            'COMMON_HOT_HUB',
+            top,
+            'COMMON',
+            null,
+          );
+        } catch (e) {
+          console.warn('[hot-opinion] centrist hub', e);
+        }
+      }
+
+      function renderCommonTerritoryHotStrip() {
+        var root = elCommonTerritoryHotWrap;
+        if (!root) return;
+        if (!isCommonHubVisible()) return;
+        var period = getCommonHotPeriod();
+        var tabs = root.querySelectorAll('[data-common-hot-period]');
+        for (var ti = 0; ti < tabs.length; ti++) {
+          var b = tabs[ti];
+          var on = b.getAttribute('data-common-hot-period') === period;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        renderCommonHotColumn('PROGRESSIVE', 'common-hot-prog-list', 'common-hot-prog-empty', period);
+        renderCommonHotColumn('CONSERVATIVE', 'common-hot-con-list', 'common-hot-con-empty', period);
+        try {
+          renderCommonTerritoryHotOpinionStrip();
+        } catch (e) {
+          console.warn('[hot-opinion] common strip', e);
+        }
+      }
+
+      function renderCommonHotColumn(tid, listId, emptyId, period) {
+        var listEl = document.getElementById(listId);
+        var emptyEl = document.getElementById(emptyId);
+        if (!listEl) return;
+        listEl.textContent = '';
+        var posts = getCommonHotTopPosts(tid, period, 3);
+        var top = posts;
+        if (emptyEl) emptyEl.hidden = top.length > 0;
+        for (var i = 0; i < top.length; i++) {
+          var p = top[i];
+          var li = document.createElement('li');
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'common-territory-hot__btn';
+          btn.textContent =
+            i +
+            1 +
+            '위 · ' +
+            (shouldBlindKantaOnEarthBoard(p.authorId, tid) ? KANTA_BLIND_MSG : p.title || '(제목 없음)');
+          (function (postId, territoryId) {
+            btn.addEventListener('click', function () {
+              if (typeof window.__scBoardNavigateToPost === 'function') {
+                window.__scBoardNavigateToPost(territoryId, 1, postId);
+              }
+            });
+          })(p.id, tid);
+          li.appendChild(btn);
+          listEl.appendChild(li);
+        }
       }
 
       function renderFactionHotRanking() {
@@ -6480,6 +7092,7 @@
           isFourTier(currentTerritory) && !isFactionTier1Unlocked(currentTerritory) && !lurkS1;
         if (!isFourTier(currentTerritory) || !isBoardReadable() || factionLocked) {
           if (elFactionHotEmpty) elFactionHotEmpty.hidden = true;
+          if (elFactionHotOpinion) elFactionHotOpinion.textContent = '';
           return;
         }
         var dayKey = calendarDayKey();
@@ -6514,6 +7127,17 @@
           li.appendChild(btn);
           elFactionHotList.appendChild(li);
         });
+        try {
+          renderHotOpinionTickerFill(
+            elFactionHotOpinion,
+            'FACTION_HOT:' + tid + ':s' + st,
+            top,
+            tid,
+            null,
+          );
+        } catch (e) {
+          console.warn('[hot-opinion] faction', e);
+        }
       }
 
       function isCommonPostNewBadge(iso) {
@@ -6597,17 +7221,18 @@
       }
 
       function territoryShortLabel(tid) {
+        var t = String(tid || '');
+        if (t === 'CENTRIST') return '중앙광장';
         var m = {
           UNASSIGNED: '미편입',
-          COMMON: '모두의 공간',
+          COMMON: '중앙광장',
           CONSERVATIVE: '보수',
-          CENTRIST: '중도 영토',
           PROGRESSIVE: '진보',
           KANTAPBIYA_LEFT: '깐따삐아 진보행성',
           KANTAPBIYA_CENTER: '깐따삐아 중간행성',
           KANTAPBIYA_RIGHT: '깐따삐아 보수행성',
         };
-        return m[tid] || tid;
+        return m[t] || t;
       }
 
       function postKey(tid, stage) {
@@ -6648,15 +7273,11 @@
           }
           var b = loadBundle();
           var kCommon = postKey('COMMON', 1);
-          var kCentrist = postKey('CENTRIST', 1);
           if (!Array.isArray(b.posts[kCommon]) || b.posts[kCommon].length === 0) {
             b.posts[kCommon] = arr.map(function (p) {
               if (p && !p.category) p.category = 'free';
               return p;
             });
-            saveBundle(b);
-          } else if (!Array.isArray(b.posts[kCentrist]) || b.posts[kCentrist].length === 0) {
-            b.posts[kCentrist] = arr;
             saveBundle(b);
           }
           localStorage.removeItem(LEGACY_KEY);
@@ -6754,6 +7375,185 @@
         return bucketScores(readUserBucket(id));
       }
 
+      /** 진보·보수 2극 UI용: 중도 성향은 양쪽에 반반 가중 */
+      function campPolarWeights(userId) {
+        var u = getScoresForUser(userId);
+        var p = Math.max(0, +u.progressive || 0);
+        var c = Math.max(0, +u.conservative || 0);
+        var z = Math.max(0, +u.centrist || 0);
+        var t = p + c + z;
+        if (t < 1e-12) return { wP: 0.5, wC: 0.5 };
+        p /= t;
+        c /= t;
+        z /= t;
+        return { wP: p + z * 0.5, wC: c + z * 0.5 };
+      }
+
+      function postHasExplicitReactionSignals(post, boardTerritoryId) {
+        normalizePost(post, boardTerritoryId);
+        function anyOnReactions(r) {
+          if (!r || typeof r !== 'object') return false;
+          if (isKantaTerritory(boardTerritoryId)) {
+            return Array.isArray(r.empathy) && r.empathy.length > 0;
+          }
+          return (
+            (Array.isArray(r.likes) && r.likes.length > 0) ||
+            (Array.isArray(r.dislikes) && r.dislikes.length > 0) ||
+            (Array.isArray(r.empathy) && r.empathy.length > 0) ||
+            (Array.isArray(r.planetVoters) && r.planetVoters.length > 0)
+          );
+        }
+        if (anyOnReactions(post.reactions)) return true;
+        var cs = post.comments || [];
+        for (var i = 0; i < cs.length; i++) {
+          normalizeComment(cs[i]);
+          if (anyOnReactions(cs[i].reactions)) return true;
+        }
+        return false;
+      }
+
+      function accumulateReactionsForCampAffinity(reactions, boardTerritoryId, out) {
+        var empOnly = isKantaTerritory(boardTerritoryId);
+        if (!reactions || typeof reactions !== 'object') return;
+        var E = reactions.empathy,
+          L = reactions.likes,
+          D = reactions.dislikes,
+          Pv = reactions.planetVoters;
+        function loop(arr, fn) {
+          if (!Array.isArray(arr)) return;
+          for (var i = 0; i < arr.length; i++) fn(String(arr[i] || '').trim());
+        }
+        if (empOnly) {
+          loop(E, function (id) {
+            if (!id) return;
+            var w = campPolarWeights(id);
+            out.posP += w.wP;
+            out.posC += w.wC;
+          });
+          return;
+        }
+        loop(L, function (id) {
+          if (!id) return;
+          var w = campPolarWeights(id);
+          out.posP += w.wP;
+          out.posC += w.wC;
+        });
+        loop(D, function (id) {
+          if (!id) return;
+          var w = campPolarWeights(id);
+          out.negP += w.wP;
+          out.negC += w.wC;
+        });
+        var emW = 0.48;
+        loop(E, function (id) {
+          if (!id) return;
+          var w = campPolarWeights(id);
+          out.posP += w.wP * emW;
+          out.posC += w.wC * emW;
+        });
+        var plW = 0.22;
+        loop(Pv, function (id) {
+          if (!id) return;
+          var w = campPolarWeights(id);
+          out.posP += w.wP * plW;
+          out.posC += w.wC * plW;
+        });
+      }
+
+      /**
+       * 글·전체 댓글 트리의 반응(좋아요·싫어요·공감·행성)과 댓글 참여(가중)를
+       * 참여자별 저장 성향(local)으로 가중해 진보·보수 각각의 '호감도'(긍정 비율)를 추정합니다.
+       */
+      function computePostCampAffinityBreakdown(post, boardTerritoryId) {
+        normalizePost(post, boardTerritoryId);
+        var out = { posP: 0, posC: 0, negP: 0, negC: 0 };
+        accumulateReactionsForCampAffinity(post.reactions, boardTerritoryId, out);
+        var comments = post.comments || [];
+        for (var ci = 0; ci < comments.length; ci++) {
+          var com = comments[ci];
+          normalizeComment(com);
+          var aid = String(com.authorId || '').trim();
+          if (aid) {
+            var cw = campPolarWeights(aid);
+            var bonus = 0.32;
+            out.posP += cw.wP * bonus;
+            out.posC += cw.wC * bonus;
+          }
+          accumulateReactionsForCampAffinity(com.reactions, boardTerritoryId, out);
+        }
+        var mass = out.posP + out.posC + out.negP + out.negC;
+        var denomP = out.posP + out.negP;
+        var denomC = out.posC + out.negC;
+        var progPct = denomP < 1e-4 ? null : Math.round((100 * out.posP) / denomP);
+        var consPct = denomC < 1e-4 ? null : Math.round((100 * out.posC) / denomC);
+        var explicit = postHasExplicitReactionSignals(post, boardTerritoryId);
+        return {
+          progPct: progPct,
+          consPct: consPct,
+          mass: mass,
+          hasData: explicit && mass >= 0.08,
+        };
+      }
+
+      function buildCampAffinityPanel(bd, opts) {
+        opts = opts || {};
+        var compact = !!opts.compact;
+        var wrap = document.createElement('div');
+        wrap.className = 'board__camp-affinity' + (compact ? ' board__camp-affinity--compact' : '');
+        wrap.setAttribute('aria-label', '진영별 반응 추정');
+
+        var cap = document.createElement('div');
+        cap.className = 'board__camp-affinity__cap';
+        cap.textContent = '진영별 반응';
+        wrap.appendChild(cap);
+
+        if (!bd || !bd.hasData) {
+          var m = document.createElement('p');
+          m.className = 'board__camp-affinity__empty muted';
+          m.textContent =
+            '좋아요·싫어요·공감 등 반응이 있으면, 참여자 성향 기준 진보·보수 호감도 추정치가 표시됩니다.';
+          wrap.appendChild(m);
+          return wrap;
+        }
+
+        function row(label, pct, grad) {
+          var r = document.createElement('div');
+          r.className = 'board__camp-affinity__row';
+          var lab = document.createElement('span');
+          lab.className = 'board__camp-affinity__label';
+          lab.textContent = label;
+          var baro = document.createElement('div');
+          baro.className = 'board__camp-affinity__track';
+          var fill = document.createElement('div');
+          fill.className = 'board__camp-affinity__fill';
+          var n = pct == null || isNaN(pct) ? 0 : Math.max(0, Math.min(100, pct));
+          fill.style.width = n + '%';
+          fill.style.background = grad;
+          baro.appendChild(fill);
+          var num = document.createElement('span');
+          num.className = 'board__camp-affinity__pct';
+          num.textContent = n + '%';
+          r.appendChild(lab);
+          r.appendChild(baro);
+          r.appendChild(num);
+          return r;
+        }
+
+        var pp = bd.progPct == null ? 0 : bd.progPct;
+        var cp = bd.consPct == null ? 0 : bd.consPct;
+        wrap.appendChild(row('진보 호감도', pp, 'linear-gradient(90deg,#38bdf8,#0ea5e9)'));
+        wrap.appendChild(row('보수 호감도', cp, 'linear-gradient(90deg,#fb7185,#e11d48)'));
+
+        if (!compact) {
+          var hint = document.createElement('p');
+          hint.className = 'board__camp-affinity__hint muted';
+          hint.textContent =
+            '글·댓글의 반응에 참여한 계정의 저장 성향(local)으로 가중한 추정치이며, 실제 서비스에서는 서버 집계와 다를 수 있습니다.';
+          wrap.appendChild(hint);
+        }
+        return wrap;
+      }
+
       function setScoresForUser(userId, scores) {
         var id = String(userId || '').trim() || 'guest';
         var map = loadScoresMap();
@@ -6804,6 +7604,271 @@
         if (ft === 'KANTAPBIYA_RIGHT') return '보수';
         if (ft === 'KANTAPBIYA_CENTER') return '중간';
         return '';
+      }
+
+      /** 댓글·인기댓글 분리용: 작성자를 진보 / 보수 / 중립(중도 우세)으로 분류 */
+      function getCommentAuthorFactionTag(authorId) {
+        var id = String(authorId || '').trim();
+        if (!id) return 'NEUTRAL';
+        var ft = getForcedTerritory(id);
+        if (ft === 'KANTAPBIYA_LEFT') return 'PROGRESSIVE';
+        if (ft === 'KANTAPBIYA_RIGHT') return 'CONSERVATIVE';
+        if (ft === 'KANTAPBIYA_CENTER') return 'NEUTRAL';
+        var u = getScoresForUser(id);
+        var p = Math.max(0, +u.progressive || 0);
+        var c = Math.max(0, +u.conservative || 0);
+        var z = Math.max(0, +u.centrist || 0);
+        var t = p + c + z || 1;
+        p /= t;
+        c /= t;
+        z /= t;
+        if (z >= p - 0.04 && z >= c - 0.04 && Math.abs(p - c) < 0.12) return 'NEUTRAL';
+        if (p > c) return 'PROGRESSIVE';
+        if (c > p) return 'CONSERVATIVE';
+        return 'NEUTRAL';
+      }
+
+      function bumpFactionReactionCount(territoryId, reactions, out) {
+        if (!reactions || typeof reactions !== 'object') return;
+        function bump(uid) {
+          var id = String(uid || '').trim();
+          if (!id) return;
+          out.tot++;
+          var tag = getCommentAuthorFactionTag(id);
+          if (tag === 'NEUTRAL') out.neu++;
+          else if (tag === 'PROGRESSIVE') out.prog++;
+          else out.cons++;
+        }
+        if (isKantaTerritory(territoryId)) {
+          (reactions.empathy || []).forEach(bump);
+          return;
+        }
+        (reactions.likes || []).forEach(bump);
+        (reactions.dislikes || []).forEach(bump);
+        (reactions.empathy || []).forEach(bump);
+        (reactions.planetVoters || []).forEach(bump);
+      }
+
+      function countReactionFactionEventsOnPost(post, territoryId) {
+        normalizePost(post, territoryId);
+        var out = { neu: 0, prog: 0, cons: 0, tot: 0 };
+        bumpFactionReactionCount(territoryId, post.reactions, out);
+        var cs = post.comments || [];
+        for (var i = 0; i < cs.length; i++) {
+          normalizeComment(cs[i]);
+          bumpFactionReactionCount(territoryId, cs[i].reactions, out);
+        }
+        return out;
+      }
+
+      function aggregateHotOpinionMetrics(posts, territoryId) {
+        if (!posts || !posts.length) return null;
+        var sumP = 0;
+        var sumC = 0;
+        var nbd = 0;
+        var neu = 0;
+        var tot = 0;
+        for (var i = 0; i < posts.length; i++) {
+          var bd = computePostCampAffinityBreakdown(posts[i], territoryId);
+          if (bd.hasData && bd.progPct != null && bd.consPct != null) {
+            sumP += bd.progPct;
+            sumC += bd.consPct;
+            nbd++;
+          }
+          var ct = countReactionFactionEventsOnPost(posts[i], territoryId);
+          neu += ct.neu;
+          tot += ct.tot;
+        }
+        return {
+          avgProg: nbd ? sumP / nbd : null,
+          avgCons: nbd ? sumC / nbd : null,
+          neuShare: tot > 0 ? (100 * neu) / tot : null,
+          nPosts: posts.length,
+          nBreakdown: nbd,
+          reactTot: tot,
+        };
+      }
+
+      function loadHotOpinionLog() {
+        try {
+          var raw = localStorage.getItem(HOT_OPINION_LOG_KEY);
+          var a = raw ? JSON.parse(raw) : [];
+          return Array.isArray(a) ? a : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function saveHotOpinionLog(arr) {
+        try {
+          while (arr.length > 320) arr.shift();
+          localStorage.setItem(HOT_OPINION_LOG_KEY, JSON.stringify(arr));
+        } catch (e) {
+          console.warn('[hot-opinion] save failed', e);
+        }
+      }
+
+      function maybeRecordHotOpinionSnapshot(scope, metrics) {
+        if (!metrics) return;
+        if ((metrics.nBreakdown || 0) < 1 && (metrics.reactTot || 0) < 4) return;
+        var log = loadHotOpinionLog();
+        var now = Date.now();
+        for (var i = log.length - 1; i >= 0; i--) {
+          if (log[i].scope === scope && now - log[i].ts < HOT_OPINION_SNAP_MIN_INTERVAL_MS) return;
+        }
+        log.push({
+          scope: scope,
+          ts: now,
+          avgProg: metrics.avgProg,
+          avgCons: metrics.avgCons,
+          neuShare: metrics.neuShare,
+          nPosts: metrics.nPosts,
+          nBreakdown: metrics.nBreakdown,
+          reactTot: metrics.reactTot,
+        });
+        saveHotOpinionLog(log);
+      }
+
+      function findHotOpinionPastSnapshot(scope, minAgeMs) {
+        var cutoff = Date.now() - (minAgeMs || HOT_OPINION_COMPARE_MIN_AGE_MS);
+        var log = loadHotOpinionLog();
+        var best = null;
+        for (var i = 0; i < log.length; i++) {
+          var e = log[i];
+          if (e.scope !== scope) continue;
+          if (e.ts > cutoff) continue;
+          if (!best || e.ts > best.ts) best = e;
+        }
+        return best;
+      }
+
+      function renderHotOpinionTickerFill(el, scope, posts, territoryId, laneLabel) {
+        if (!el) return;
+        el.textContent = '';
+        var head = document.createElement('div');
+        head.className = 'hot-opinion-ticker__title';
+        head.textContent = '[RTS] 실시간 여론 이동';
+        el.appendChild(head);
+        if (laneLabel) {
+          var lh = document.createElement('div');
+          lh.className = 'hot-opinion-ticker__lane-head';
+          lh.textContent = laneLabel;
+          el.appendChild(lh);
+        }
+        if (!posts || !posts.length) {
+          var emp = document.createElement('p');
+          emp.className = 'hot-opinion-ticker__line';
+          emp.textContent = '표시할 핫글이 없습니다.';
+          el.appendChild(emp);
+          return;
+        }
+        var top = aggregateHotOpinionMetrics(posts, territoryId);
+        maybeRecordHotOpinionSnapshot(scope, top);
+        var past = findHotOpinionPastSnapshot(scope, HOT_OPINION_COMPARE_MIN_AGE_MS);
+
+        if (top.avgProg != null && top.avgCons != null) {
+          var cur = document.createElement('div');
+          cur.className = 'hot-opinion-ticker__line';
+          cur.textContent =
+            '현재 전선(핫글 추정): 진보 ~' +
+            Math.round(top.avgProg) +
+            '% · 보수 ~' +
+            Math.round(top.avgCons) +
+            '%';
+          el.appendChild(cur);
+        }
+
+        if (past && top.avgCons != null && past.avgCons != null) {
+          var dc = Math.round(top.avgCons - past.avgCons);
+          if (Math.abs(dc) >= 1) {
+            var ln = document.createElement('div');
+            ln.className = 'hot-opinion-ticker__line';
+            ln.textContent =
+              '약 1시간 전 관측 대비 보수 호감 ' + (dc > 0 ? '+' : '') + dc + '%p';
+            el.appendChild(ln);
+          }
+        }
+        if (past && top.avgProg != null && past.avgProg != null) {
+          var dp = Math.round(top.avgProg - past.avgProg);
+          if (Math.abs(dp) >= 1) {
+            var ln2 = document.createElement('div');
+            ln2.className = 'hot-opinion-ticker__line';
+            ln2.textContent = '동일 구간 진보 호감 ' + (dp > 0 ? '+' : '') + dp + '%p';
+            el.appendChild(ln2);
+          }
+        }
+        if (past && top.neuShare != null && past.neuShare != null) {
+          var dn = Math.round((top.neuShare - past.neuShare) * 10) / 10;
+          if (dn <= -1.5) {
+            var ln3 = document.createElement('div');
+            ln3.className = 'hot-opinion-ticker__line hot-opinion-ticker__line--alert';
+            ln3.textContent =
+              '중도층 이탈 증가 · 중립 반응 비중 ▼ ' + Math.abs(dn) + '%p';
+            el.appendChild(ln3);
+          } else if (dn >= 1.5) {
+            var ln4 = document.createElement('div');
+            ln4.className = 'hot-opinion-ticker__line';
+            ln4.textContent = '중도층 유입 · 중립 반응 비중 ▲ ' + dn + '%p';
+            el.appendChild(ln4);
+          }
+        }
+        if (!past) {
+          var fog = document.createElement('div');
+          fog.className = 'hot-opinion-ticker__meta';
+          fog.textContent =
+            '전장 안개: 로컬에 ' +
+            Math.round(HOT_OPINION_COMPARE_MIN_AGE_MS / 60000) +
+            '분 이상 관측이 쌓이면 변화량이 표시됩니다.';
+          el.appendChild(fog);
+        }
+
+        var foot = document.createElement('div');
+        foot.className = 'hot-opinion-ticker__meta';
+        foot.textContent = '로컬 저장 성향 기반 추정 · 실제 서비스와 다를 수 있음';
+        el.appendChild(foot);
+      }
+
+      function getCommonHotTopPosts(tid, period, limit) {
+        var posts = getPosts(tid, 1).filter(function (p) {
+          return postInHotWindow(p.createdAt, period);
+        });
+        posts.sort(function (a, b) {
+          var ds = hotScore(b, tid) - hotScore(a, tid);
+          if (ds !== 0) return ds;
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        });
+        var lim = limit != null ? limit : 3;
+        return posts.slice(0, lim);
+      }
+
+      function renderCommonTerritoryHotOpinionStrip() {
+        var el = elCommonTerritoryHotOpinion || document.getElementById('common-territory-hot-opinion');
+        if (!el || !isCommonHubVisible()) return;
+        el.className = 'hot-opinion-ticker hot-opinion-ticker--dual';
+        el.textContent = '';
+        var period = getCommonHotPeriod();
+        var topP = getCommonHotTopPosts('PROGRESSIVE', period, 3);
+        var topC = getCommonHotTopPosts('CONSERVATIVE', period, 3);
+        var laneP = document.createElement('div');
+        laneP.className = 'hot-opinion-ticker__lane';
+        renderHotOpinionTickerFill(
+          laneP,
+          'COMMON_STRIP:PROGRESSIVE:' + period,
+          topP,
+          'PROGRESSIVE',
+          '진보 1단 핫 TOP3',
+        );
+        var laneC = document.createElement('div');
+        laneC.className = 'hot-opinion-ticker__lane';
+        renderHotOpinionTickerFill(
+          laneC,
+          'COMMON_STRIP:CONSERVATIVE:' + period,
+          topC,
+          'CONSERVATIVE',
+          '보수 1단 핫 TOP3',
+        );
+        el.appendChild(laneP);
+        el.appendChild(laneC);
       }
 
       function authorReactionCaps(authorId) {
@@ -6899,7 +7964,7 @@
           alert(
             '외계인 성향치가 50%에 도달해 깐따삐아 ' +
               kantaPlanetLabelKo(ft) +
-              '행성에 소속됩니다. 지구(모두의 공간·일반 영토) 활동은 제한됩니다.',
+              '행성에 소속됩니다. 지구(중앙광장·일반 영토) 활동은 제한됩니다.',
           );
         }
       }
@@ -6907,9 +7972,8 @@
       function pickAffiliationFromPct(pct, userId) {
         var ft = getForcedTerritory(userId);
         if (ft) return { tid: ft, label: KANTA_AFFIL_LABELS[ft] || ft };
-        if (!pct || pct.none) return { tid: 'COMMON', label: 'COMMON · 모두의 공간' };
+        if (!pct || pct.none) return { tid: 'COMMON', label: 'COMMON · 중앙광장' };
         var c = pct.conservative;
-        var n = pct.centrist;
         var pr = pct.progressive;
         var poles = [];
         if (c >= FACTION_UNLOCK_PCT) poles.push({ tid: 'CONSERVATIVE', label: 'CONSERVATIVE · 보수', val: c });
@@ -6923,8 +7987,7 @@
           });
           return poles[0];
         }
-        if (n >= FACTION_UNLOCK_PCT) return { tid: 'CENTRIST', label: 'CENTRIST · 중도 영토' };
-        return { tid: 'COMMON', label: 'COMMON · 모두의 공간' };
+        return { tid: 'COMMON', label: 'COMMON · 중앙광장' };
       }
 
       function applyStoredForceToPlayer() {
@@ -7131,9 +8194,9 @@
           normalizePost(
             {
               id: 'seed_COMMON_welcome',
-              title: '[모두의 공간] 자유 게시판에 오신 것을 환영합니다',
+              title: '[중앙광장] 자유 게시판에 오신 것을 환영합니다',
               body:
-                '처음에는 모두의 공간에서 글을 쓰고, 정치 성향이 40%에 도달하면 보수·중도·진보·깐따삐아 영토 1단계 게시판이 열립니다.\n\n' +
+                '처음에는 중앙광장에서 글을 쓰고, 정치 성향이 40%에 도달하면 보수·중도·진보·깐따삐아 영토 1단계 게시판이 열립니다.\n\n' +
                 '· 아래 「대분류」 탭으로 묶음을 고른 뒤 글 목록을 볼 수 있습니다. 글쓰기 시에는 세부 분야를 골라 저장합니다.\n' +
                 '· 데일리 이슈는 위에서 분야 탭을 고른 뒤, 해당 분야 카드 4개 중에서 참여할 수 있습니다.',
               category: 'free',
@@ -7150,7 +8213,7 @@
       function demoCommonBody(idx) {
         var n = idx + 1;
         return (
-          '【모두의 공간 · 데모 본문 #' +
+          '【중앙광장 · 데모 본문 #' +
           n +
           '】\n\n' +
           '새로고침할 때마다 이 데모 글들이 다시 채워져 목록이 길어졌을 때의 화면을 바로 볼 수 있습니다. ' +
@@ -7397,6 +8460,41 @@
         );
       }
 
+      function topRootCommentsForFaction(roots, factionTag, limit) {
+        var arr = roots.filter(function (c) {
+          return getCommentAuthorFactionTag(c.authorId) === factionTag;
+        });
+        arr.sort(function (a, b) {
+          var sb = commentReactionBestScore(b) - commentReactionBestScore(a);
+          if (sb !== 0) return sb;
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        });
+        return arr.slice(0, limit || 3);
+      }
+
+      function appendDetailFactionCommentBlock(root, ctx, title, roots, factionTag) {
+        var h = document.createElement('h2');
+        h.className = 'board-post-detail__section-title';
+        h.textContent = title;
+        root.appendChild(h);
+        var wrap = document.createElement('div');
+        wrap.className = 'board__comment-list';
+        var picks = topRootCommentsForFaction(roots, factionTag, 3);
+        if (picks.length === 0) {
+          var emp = document.createElement('p');
+          emp.className = 'muted';
+          emp.style.fontSize = '0.82rem';
+          emp.textContent = '아직 해당 분류에서 상위 댓글이 없습니다.';
+          wrap.appendChild(emp);
+        } else {
+          picks.forEach(function (c) {
+            renderThreadedCommentNode(ctx, c, 0, wrap, { forceExpandReplies: true });
+          });
+        }
+        root.appendChild(wrap);
+        return picks;
+      }
+
       function closePostDetail() {
         window.__scActivePostDetailId = null;
         var pd = document.getElementById('screen-post-detail');
@@ -7543,6 +8641,17 @@
         reactOuter.appendChild(bar);
         root.appendChild(reactOuter);
 
+        try {
+          var campBox = buildCampAffinityPanel(
+            computePostCampAffinityBreakdown(post, currentTerritory),
+            { compact: false },
+          );
+          campBox.classList.add('board-post-detail__camp');
+          root.appendChild(campBox);
+        } catch (e) {
+          console.warn('[board] camp affinity detail', e);
+        }
+
         var roots = post.comments
           .filter(function (x) {
             return !x.parentId;
@@ -7550,18 +8659,6 @@
           .sort(function (a, b) {
             return new Date(a.createdAt) - new Date(b.createdAt);
           });
-
-        var ranked = roots.slice().sort(function (a, b) {
-          var sb = commentReactionBestScore(b) - commentReactionBestScore(a);
-          if (sb !== 0) return sb;
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        });
-        var best = ranked.slice(0, 3);
-        var bestIds = {};
-        for (var bi = 0; bi < best.length; bi++) bestIds[best[bi].id] = true;
-        var rest = roots.filter(function (x) {
-          return !bestIds[x.id];
-        });
 
         var ctx = {
           postId: post.id,
@@ -7576,27 +8673,32 @@
           },
         };
 
-        var hBest = document.createElement('h2');
-        hBest.className = 'board-post-detail__section-title';
-        hBest.textContent = isKantaTerritory(currentTerritory)
-          ? '베스트 댓글 (공감 수 상위 3)'
-          : '베스트 댓글 (공감·좋아요·싫어요 합 상위 3 · 외계인 표시는 순위 제외)';
-        root.appendChild(hBest);
+        var bestIds = {};
 
-        var bestWrap = document.createElement('div');
-        bestWrap.className = 'board__comment-list';
-        if (best.length === 0) {
-          var empB = document.createElement('p');
-          empB.className = 'muted';
-          empB.style.fontSize = '0.82rem';
-          empB.textContent = '아직 댓글이 없습니다.';
-          bestWrap.appendChild(empB);
-        } else {
-          best.forEach(function (c) {
-            renderThreadedCommentNode(ctx, c, 0, bestWrap, { forceExpandReplies: true });
-          });
-        }
-        root.appendChild(bestWrap);
+        var hBestIntro = document.createElement('h2');
+        hBestIntro.className = 'board-post-detail__section-title';
+        hBestIntro.textContent = isKantaTerritory(currentTerritory)
+          ? '인기 댓글 (진영별 · 공감 기준)'
+          : '인기 댓글 (진영별 · 공감·좋아요·싫어요 합 기준)';
+        root.appendChild(hBestIntro);
+
+        var bp = appendDetailFactionCommentBlock(root, ctx, '진보 인기댓글 (상위 3)', roots, 'PROGRESSIVE');
+        var bc = appendDetailFactionCommentBlock(root, ctx, '보수 인기댓글 (상위 3)', roots, 'CONSERVATIVE');
+        var bn = appendDetailFactionCommentBlock(root, ctx, '중립 인기댓글 (상위 3)', roots, 'NEUTRAL');
+
+        bp.forEach(function (c) {
+          bestIds[c.id] = true;
+        });
+        bc.forEach(function (c) {
+          bestIds[c.id] = true;
+        });
+        bn.forEach(function (c) {
+          bestIds[c.id] = true;
+        });
+
+        var rest = roots.filter(function (x) {
+          return !bestIds[x.id];
+        });
 
         var hRest = document.createElement('h2');
         hRest.className = 'board-post-detail__section-title';
@@ -8037,6 +9139,15 @@
 
         li.appendChild(hdr);
         li.appendChild(reactRow);
+        try {
+          li.appendChild(
+            buildCampAffinityPanel(computePostCampAffinityBreakdown(p, currentTerritory), {
+              compact: true,
+            }),
+          );
+        } catch (e) {
+          console.warn('[board] camp affinity', e);
+        }
         return li;
       }
 
@@ -8084,6 +9195,7 @@
         }
         if (isCommonSpace(currentTerritory) && isBoardUnlocked()) {
           renderCentristHotRanking();
+          renderCommonTerritoryHotStrip();
           renderCentristFreeFeed();
         }
         if (isFourTier(currentTerritory) && isBoardReadable()) {
@@ -8196,7 +9308,7 @@
 
         if (elBoardTitle) {
           if (isCommonSpace(currentTerritory)) {
-            elBoardTitle.textContent = '모두의 공간 · 자유 게시판';
+            elBoardTitle.textContent = '중앙광장 · 자유 게시판';
           } else if (isFourTier(currentTerritory)) {
             elBoardTitle.textContent =
               territoryShortLabel(currentTerritory) + ' · ' + currentStage + '단계 게시판';
@@ -8361,7 +9473,7 @@
                   ' 눈팅(읽기)으로 열려 있습니다. 글쓰기는 성향 40% 해금(깐따는 외계인 50%) 후 가능합니다.',
               );
             } else {
-              alert('이 영토는 성향이 40%에 도달해야 1단계에서 글을 쓸 수 있습니다. 먼저 모두의 공간에서 활동해 보세요.');
+              alert('이 영토는 성향이 40%에 도달해야 1단계에서 글을 쓸 수 있습니다. 먼저 중앙광장에서 활동해 보세요.');
             }
           } else if (currentStage === 2) {
             if (isKantaTerritory(currentTerritory)) {
@@ -8569,9 +9681,26 @@
           window.__scDockSetAlienBar(getPlanetPct(uidStr));
         }
         if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
+        if (typeof window.__scTendencyTrendsOnAlignmentRefresh === 'function') window.__scTendencyTrendsOnAlignmentRefresh();
       };
 
       window.__scApplyStoredKantaAffiliation = applyStoredForceToPlayer;
+
+      (function bindCommonTerritoryHotTabs() {
+        var root = elCommonTerritoryHotWrap;
+        if (!root || root.dataset.scCommonHotTabsBound) return;
+        root.dataset.scCommonHotTabsBound = '1';
+        var btns = root.querySelectorAll('[data-common-hot-period]');
+        for (var i = 0; i < btns.length; i++) {
+          (function (btn) {
+            btn.addEventListener('click', function () {
+              var p = btn.getAttribute('data-common-hot-period') || 'day';
+              setCommonHotPeriod(p);
+              renderCommonTerritoryHotStrip();
+            });
+          })(btns[i]);
+        }
+      })();
 
       migrateLegacy();
       seedAllTerritories();
@@ -8675,7 +9804,7 @@
         } catch (_) {}
       }
 
-      /** 인구 단계(1~40) → 벨트 공용 비주얼 4단계(동일 PNG: 진보·보수·중도·중도 히어로 배경) */
+      /** 인구 단계(1~40) → 벨트 공용 비주얼 4단계(동일 PNG: 진보·보수) */
       function beltVisualStageFromPopulation(p) {
         var st = stageFromPopulation(p);
         return Math.min(4, Math.max(1, Math.ceil((st * 4) / 40)));
@@ -8701,26 +9830,20 @@
         var cap = el('territory-centrist-hero-caption');
         if (!layer) return;
         var pop = loadMapPop();
-        var st = stageFromPopulation(pop.CENTRIST);
-        /* 모두의 공간(빈 곳 클릭) 진입용 전경 — 벨트 4단계 썸네일과 별도 고정 이미지 */
+        /* 중앙광장(빈 곳 클릭) 진입용 전경 — 벨트 4단계 썸네일과 별도 고정 이미지 */
         layer.style.backgroundImage = "url('/territories/common-space-hero.png')";
 
         var artP = beltVisualStageFromPopulation(pop.PROGRESSIVE);
         var artC = beltVisualStageFromPopulation(pop.CONSERVATIVE);
-        var artM = beltVisualStageFromPopulation(pop.CENTRIST);
         var imgP = el('territory-faction-progressive-img');
         var imgC = el('territory-faction-conservative-img');
-        var imgM = el('territory-faction-centrist-img');
         if (imgP) imgP.src = '/territories/belt-stage-' + artP + '.png';
         if (imgC) imgC.src = '/territories/belt-stage-' + artC + '.png';
-        if (imgM) imgM.src = '/territories/belt-stage-' + artM + '.png';
 
         var fillP = el('territory-belt-civfill-p');
         var fillC = el('territory-belt-civfill-c');
-        var fillM = el('territory-belt-civfill-m');
         if (fillP) fillP.style.width = (100 * artP) / 4 + '%';
         if (fillC) fillC.style.width = (100 * artC) / 4 + '%';
-        if (fillM) fillM.style.width = (100 * artM) / 4 + '%';
 
         var kBtn = el('territory-faction-kanta');
         if (kBtn) {
@@ -8730,13 +9853,7 @@
         if (cap) {
           var kt2 = kantapbiyaTargetFromPop(pop);
           cap.textContent =
-            '중도 · 인구 ' +
-            pop.CENTRIST +
-            '명 · 단계 ' +
-            st +
-            '/40 · 빈 곳 → 모두의 공간 · 가운데 ' +
-            artM +
-            '/4 중도 · 좌 ' +
+            '빈 곳 → 중앙광장 · 좌 ' +
             artP +
             '/4 진보 · 우 ' +
             artC +
@@ -8766,14 +9883,7 @@
           b.dataset.scFactionBound = '1';
           b.addEventListener('click', function (ev) {
             ev.stopPropagation();
-            var tid =
-              id === 'territory-faction-progressive'
-                ? 'PROGRESSIVE'
-                : id === 'territory-faction-conservative'
-                  ? 'CONSERVATIVE'
-                  : id === 'territory-faction-centrist'
-                    ? 'CENTRIST'
-                    : null;
+            var tid = id === 'territory-faction-progressive' ? 'PROGRESSIVE' : 'CONSERVATIVE';
             if (tid && window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(tid);
           });
         }
@@ -8878,20 +9988,10 @@
               );
             }
             if (kind === 'COMMON') {
-              return '\n' + '<  모두의공간  >\n' + '영토명 : 미정\n' + '소속인구  : ' + formatPop(pop.COMMON) + ' 명';
+              return '\n' + '<  중앙광장  >\n' + '영토명 : 미정\n' + '소속인구  : ' + formatPop(pop.COMMON) + ' 명';
             }
-            var p =
-              kind === 'PROGRESSIVE'
-                ? pop.PROGRESSIVE
-                : kind === 'CONSERVATIVE'
-                  ? pop.CONSERVATIVE
-                  : pop.CENTRIST;
-            var title =
-              kind === 'PROGRESSIVE'
-                ? '<  진보영토  >'
-                : kind === 'CONSERVATIVE'
-                  ? '<  보수영토  >'
-                  : '<  중도영토  >';
+            var p = kind === 'PROGRESSIVE' ? pop.PROGRESSIVE : pop.CONSERVATIVE;
+            var title = kind === 'PROGRESSIVE' ? '<  진보영토  >' : '<  보수영토  >';
             return '\n' + title + '\n' + '영토명 : 미정\n' + '소속인구  : ' + formatPop(p) + ' 명';
           }
 
@@ -9135,12 +10235,10 @@
 
           bindTw('territory-faction-progressive', 'PROGRESSIVE');
           bindTw('territory-faction-conservative', 'CONSERVATIVE');
-          bindTw('territory-faction-centrist', 'CENTRIST');
           bindTw('territory-faction-kanta', 'KANTA');
           bindTw('territory-centrist-hero-btn', 'COMMON');
         })();
         wireFaction('territory-faction-progressive');
-        wireFaction('territory-faction-centrist');
         wireFaction('territory-faction-conservative');
       }
 
@@ -9155,7 +10253,6 @@
           var o = loadMapPop();
           if (patch && typeof patch === 'object') {
             if (patch.CONSERVATIVE != null) o.CONSERVATIVE = clampPop(patch.CONSERVATIVE);
-            if (patch.CENTRIST != null) o.CENTRIST = clampPop(patch.CENTRIST);
             if (patch.PROGRESSIVE != null) o.PROGRESSIVE = clampPop(patch.PROGRESSIVE);
             if (patch.KANTAPBIYA_LEFT != null) o.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
             if (patch.KANTAPBIYA_CENTER != null) o.KANTAPBIYA_CENTER = clampPop(patch.KANTAPBIYA_CENTER);
@@ -9201,6 +10298,7 @@
         bindCentristHero();
         bindKantaPlanetPicker();
         applyCentristHeroArt();
+        if (typeof window.__scTendencyTrendsInit === 'function') window.__scTendencyTrendsInit();
       }
 
       if (document.readyState === 'loading') {

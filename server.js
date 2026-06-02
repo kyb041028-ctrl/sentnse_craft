@@ -402,7 +402,6 @@ const CHAT_MAX_PER_ROOM = 400;
 const CHAT_TERRITORY_IDS = new Set([
   'COMMON',
   'CONSERVATIVE',
-  'CENTRIST',
   'PROGRESSIVE',
   'KANTAPBIYA_LEFT',
   'KANTAPBIYA_CENTER',
@@ -458,7 +457,7 @@ async function chatResolveUserId(req) {
 
 /**
  * GET /api/chat/messages?room=global&afterId=0
- * GET /api/chat/messages?room=territory&territoryId=CENTRIST&afterId=0
+ * GET /api/chat/messages?room=territory&territoryId=CONSERVATIVE&afterId=0
  */
 app.get('/api/chat/messages', async (req, res) => {
   try {

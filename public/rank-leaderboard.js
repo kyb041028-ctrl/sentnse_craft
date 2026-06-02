@@ -52,7 +52,7 @@
 
     var uid = meId();
     var standings = prog.getMyStandings(uid);
-    var tid = standings.territoryId || 'CENTRIST';
+    var tid = standings.territoryId || 'COMMON';
     var board =
       currentMode === MODE_TERRITORY ? prog.getLeaderboard(tid) : prog.getLeaderboard(null);
 

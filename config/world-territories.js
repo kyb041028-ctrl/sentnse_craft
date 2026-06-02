@@ -9,7 +9,7 @@
 
 'use strict';
 
-/** 메인 벨트 3구역 (보수 — 중도 — 진보) */
+/** 메인 벨트(보수·진보) + 중앙광장(COMMON). 중도(CENTRIST) 전용 게시판은 없음. */
 const MAIN_BELT = Object.freeze({
   CONSERVATIVE: {
     id: 'CONSERVATIVE',
@@ -19,14 +19,9 @@ const MAIN_BELT = Object.freeze({
   },
   COMMON: {
     id: 'COMMON',
-    labelKo: '모두의 공간',
-    /** 공용 광장 — 데일리 이슈·자유게시판. 영토 소속·4단계와 별도 */
+    labelKo: '중앙광장',
+    /** 중앙광장 — 데일리 이슈·자유게시판. 영토 소속·4단계와 별도 */
     forumTierCount: 0,
-  },
-  CENTRIST: {
-    id: 'CENTRIST',
-    labelKo: '중도 영토',
-    forumTierCount: 4,
   },
   PROGRESSIVE: {
     id: 'PROGRESSIVE',

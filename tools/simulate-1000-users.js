@@ -40,7 +40,7 @@ const KANTA_UNLOCK_PLANET_PCT = 50;
 const KANTA_ASSIGN_HIGH_PCT = 60;
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
-const FOUR_TIER_IDS = ['CONSERVATIVE', 'CENTRIST', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT'];
+const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT'];
 const FREE_MEGA_CATS = ['all', 'affairs', 'economy', 'society', 'culture', 'tech', 'humor', 'life', 'advice'];
 const FREE_MEGA_SUBS = {
   affairs: ['politics_free'],
@@ -129,7 +129,7 @@ function pickAffiliationFromPct(pct, userId, getForced) {
   const ft = getForced(userId);
   if (ft) return { tid: ft };
   if (!pct) return { tid: 'COMMON' };
-  const { conservative: c, centrist: n, progressive: pr } = pct;
+  const { conservative: c, progressive: pr } = pct;
   const poles = [];
   if (c >= FACTION_UNLOCK_PCT) poles.push({ tid: 'CONSERVATIVE', val: c });
   if (pr >= FACTION_UNLOCK_PCT) poles.push({ tid: 'PROGRESSIVE', val: pr });
@@ -137,7 +137,6 @@ function pickAffiliationFromPct(pct, userId, getForced) {
     poles.sort((a, b) => b.val - a.val || (a.tid === 'CONSERVATIVE' ? -1 : 1));
     return { tid: poles[0].tid };
   }
-  if (n >= FACTION_UNLOCK_PCT) return { tid: 'CENTRIST' };
   return { tid: 'COMMON' };
 }
 
@@ -146,7 +145,6 @@ function isFactionTier1Unlocked(tid, pct, userId, getForced, getPlanetPct) {
   if (!isFourTier(tid)) return true;
   if (!pct) return false;
   if (tid === 'CONSERVATIVE') return pct.conservative >= FACTION_UNLOCK_PCT;
-  if (tid === 'CENTRIST') return pct.centrist >= FACTION_UNLOCK_PCT;
   if (tid === 'PROGRESSIVE') return pct.progressive >= FACTION_UNLOCK_PCT;
   if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_CENTER' || tid === 'KANTAPBIYA_RIGHT') {
     if (getForced(userId) === tid) return true;
@@ -174,7 +172,6 @@ const bundle = { posts: {} };
 const mapPop = {
   COMMON: 0,
   CONSERVATIVE: 0,
-  CENTRIST: 0,
   PROGRESSIVE: 0,
   KANTAPBIYA_LEFT: 0,
   KANTAPBIYA_CENTER: 0,
@@ -438,7 +435,7 @@ function simulate() {
   }
 
   // 해금 통계
-  let unlocked = { CONSERVATIVE: 0, CENTRIST: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_C: 0, KANTA_R: 0, COMMON_only: 0 };
+  let unlocked = { CONSERVATIVE: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_C: 0, KANTA_R: 0, COMMON_only: 0 };
   for (let i = 0; i < USER_COUNT; i++) {
     const u = uid(i);
     const pct = getPct(u);
@@ -450,8 +447,6 @@ function simulate() {
       unlocked.CONSERVATIVE++;
     else if (pct.progressive >= 40 && pct.progressive >= pct.centrist && pct.progressive >= pct.conservative)
       unlocked.PROGRESSIVE++;
-    else if (pct.centrist >= 40 && pct.centrist >= pct.conservative && pct.centrist >= pct.progressive)
-      unlocked.CENTRIST++;
     else unlocked.COMMON_only++;
   }
 

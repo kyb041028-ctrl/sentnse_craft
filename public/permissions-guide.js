@@ -54,7 +54,7 @@
       var cum = d.levelCumulativeXp[lv - 1] || 0;
       var need = d.xpPerLevel[lv - 1] || 0;
       var perks = [];
-      if (lv === 1) perks.push('모두의 공간 글·댓글·반응');
+      if (lv === 1) perks.push('중앙광장 글·댓글·반응');
       if (lv < (d.lurkUnlockLevel || 3)) perks.push('영토 게시판은 성향 해금 필요');
       if (lv === (d.lurkUnlockLevel || 3)) {
         perks.push('다른 영토 1단계 눈팅(읽기만, 중립이어도)');
@@ -160,13 +160,13 @@
     return (
       '<section class="perm-guide__section">' +
       '<h3 class="perm-guide__h">게시판 · 성향</h3>' +
-      '<p class="perm-guide__lead">모두의 공간은 누구나 이용합니다. 영토 게시판은 <strong>성향(또는 외계인 %)</strong>으로 단계가 열립니다.</p>' +
+      '<p class="perm-guide__lead">중앙광장은 누구나 이용합니다. 영토 게시판은 <strong>성향(또는 외계인 %)</strong>으로 단계가 열립니다.</p>' +
       '<table class="perm-guide__table"><thead><tr><th>구역</th><th>읽기</th><th>글·댓글·반응</th></tr></thead><tbody>' +
-      '<tr><td><strong>모두의 공간</strong></td><td>전원</td><td>전원 (1단계)</td></tr>' +
-      '<tr><td><strong>보수·중도·진보</strong> 1단계</td><td>Lv.' +
+      '<tr><td><strong>중앙광장</strong></td><td>전원</td><td>전원 (1단계)</td></tr>' +
+      '<tr><td><strong>보수·진보</strong> 1단계</td><td>Lv.' +
       lurkLv +
       ' 눈팅 또는 해당 축 40%+</td><td>해당 축 40%+</td></tr>' +
-      '<tr><td><strong>보수·중도·진보</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
+      '<tr><td><strong>보수·진보</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
       '<tr><td><strong>깐따삐아</strong> 1단계</td><td>Lv.' +
       lurkLv +
       ' 눈팅 또는 외계인 50%+</td><td>외계인 50%+</td></tr>' +
@@ -186,12 +186,12 @@
       '<h4 class="perm-guide__subh">성향 표시 (사람)</h4>' +
       '<ul class="perm-guide__list">' +
       '<li>프로필에는 <strong>보수−진보 격차</strong>만 표시: 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
-      '<li>영토 해금·소속은 내부 3축(보수·중도·진보) %로 계산됩니다.</li>' +
+      '<li>영토 해금·소속은 보수·진보 두 게시판 축과 중도(균형) %를 함께 봅니다. 두 축 모두 40% 미만이면 중앙광장 소속입니다.</li>' +
       '<li>공감은 성향에 영향 없음. 엄지 좋아요/싫어요만 성향 시뮬에 반영.</li>' +
       '</ul>' +
       '<h4 class="perm-guide__subh">깐따삐아 소속 시</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>지구(모두의 공간·일반 영토)에 쓴 글·댓글은 블라인드 + 「외계인의 언어입니다」 안내.</li>' +
+      '<li>지구(중앙광장·일반 영토)에 쓴 글·댓글은 블라인드 + 「외계인의 언어입니다」 안내.</li>' +
       '<li>깐따 영토 안에서는 정상적으로 읽고 쓸 수 있습니다.</li>' +
       '</ul></section>'
     );
