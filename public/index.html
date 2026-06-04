@@ -36,6 +36,10 @@
     .zone--clickable:hover {
       filter: brightness(1.08);
     }
+    /* 영토 맵: 투명 히트 박스가 아니라 PNG 실루엣만 보이게 — 버튼에는 filter 금지 */
+    .territory-faction-hit.zone--clickable:hover {
+      filter: none;
+    }
     .zone--clickable:focus {
       outline: 2px solid rgba(56, 189, 248, 0.65);
       outline-offset: 2px;
@@ -518,7 +522,25 @@
       pointer-events: none;
       transition: filter 0.2s ease;
     }
-    /* 중앙광장: 고원 절벽/울타리 둘레 근사(벡터 path). 픽셀에 정확히 맞추려면 common-space-hero 위에 path 트레이스 후 아래 SVG의 d만 교체. */
+    /* 섬 RTS 맵: cover는 창 비율·브라우저마다 잘림이 달라짐 → 전체가 보이도록 contain + 세로 여유 */
+    .territory-centrist-hero__frame--island-map .territory-centrist-hero__bg {
+      background-size: contain;
+      background-position: center center;
+    }
+    .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+      min-height: min(56vh, 24rem);
+    }
+    @media (min-width: 640px) {
+      .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+        min-height: min(62vh, 32rem);
+      }
+    }
+    @media (min-width: 960px) {
+      .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+        min-height: min(72vh, 48rem);
+      }
+    }
+    /* 중앙광장: 고원 절벽/울타리 둘레 근사(벡터 path). 픽셀에 정확히 맞추려면 common-space-hero 위에 path 트레이스 후 아래 SVG의 d만 교체 가능 */
     .territory-centrist-hero__common-ring {
       position: absolute;
       inset: 0;
@@ -527,6 +549,13 @@
       pointer-events: none;
       z-index: 2;
       overflow: visible;
+    }
+    /* 신규 섬 맵: 구 고원 둘레 링·타입라이터 연결선은 좌표 재맞춤 전까지 숨김(보류) */
+    .territory-centrist-hero__frame--island-map .territory-centrist-hero__common-ring {
+      display: none;
+    }
+    .territory-centrist-hero__frame--island-map .territory-tw-connector {
+      display: none;
     }
     .territory-centrist-hero__common-ring-glow {
       fill: none;
@@ -582,29 +611,174 @@
         opacity: 0.75;
       }
     }
-    .territory-centrist-hero__hit {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      border-radius: inherit;
-      background: transparent;
-      cursor: pointer;
-    }
-    .territory-centrist-hero__frame:has(.territory-centrist-hero__hit:hover) .territory-centrist-hero__bg,
-    .territory-centrist-hero__frame:has(.territory-centrist-hero__hit:focus-visible) .territory-centrist-hero__bg {
-      filter: brightness(1.06);
-    }
-    .territory-centrist-hero__hit:hover {
-      background: rgba(255, 255, 255, 0.035);
-    }
     .territory-centrist-hero__faction-layer {
       position: absolute;
       inset: 0;
       z-index: 4;
       pointer-events: none;
+    }
+    /* 폴리곤 좌표 = 맵 PNG(contain으로 붙은 영역) 기준 0~100. 래퍼가 그 영역에 맞춰짐 — territory-hit-zones.json */
+    .territory-hit-zones-wrap {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    .territory-hit-zones-wrap .territory-hit-zones-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+    }
+    .territory-hit-zones-svg.territory-hit-zones-svg--active {
+      display: block;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__hit {
+      pointer-events: visiblePainted;
+      cursor: pointer;
+      stroke: none;
+      fill: rgba(0, 0, 0, 0.02);
+    }
+    .territory-hit-zones-svg .territory-hit-zone__hit:focus {
+      outline: none;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__hit:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.85);
+      outline-offset: 2px;
+    }
+    /* 호버: 외곽선(line) + 경계 안쪽만 번짐(glow, SVG filter · 바깥으로는 새지 않음) */
+    .territory-hit-zones-svg .territory-hit-zone__glow {
+      fill: #ffffff;
+      stroke: none;
+      pointer-events: none;
+      opacity: 0;
+      animation: none;
+      transition: opacity 0.18s ease;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__glow--prog {
+      filter: url(#sc-territory-inner-prog);
+    }
+    .territory-hit-zones-svg .territory-hit-zone__glow--con {
+      filter: url(#sc-territory-inner-con);
+    }
+    .territory-hit-zones-svg .territory-hit-zone__glow--plaza {
+      filter: url(#sc-territory-inner-plaza);
+    }
+    .territory-hit-zones-svg .territory-hit-zone__line {
+      fill: none;
+      pointer-events: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-width: 1.65;
+      vector-effect: non-scaling-stroke;
+      opacity: 0;
+      animation: none;
+      transition: opacity 0.18s ease;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__line--prog {
+      stroke: #38bdf8;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__line--con {
+      stroke: #fb7185;
+    }
+    .territory-hit-zones-svg .territory-hit-zone__line--plaza {
+      stroke: #34d399;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--prog,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--prog,
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--prog,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--prog {
+      opacity: 1;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--prog,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--prog {
+      animation: territoryHitZoneInnerPulse 0.52s ease-in-out infinite;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--prog,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--prog {
+      animation: territoryHitZoneLinePulse 0.52s ease-in-out infinite;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--con,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--con,
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--con,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--con {
+      opacity: 1;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--con,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--con {
+      animation: territoryHitZoneInnerPulse 0.52s ease-in-out infinite;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--con,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--con {
+      animation: territoryHitZoneLinePulse 0.52s ease-in-out infinite;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--plaza,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--plaza,
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--plaza,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--plaza {
+      opacity: 1;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--plaza,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--plaza {
+      animation: territoryHitZoneInnerPulse 0.52s ease-in-out infinite;
+    }
+    .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--plaza,
+    .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--plaza {
+      animation: territoryHitZoneLinePulse 0.52s ease-in-out infinite;
+    }
+    @keyframes territoryHitZoneInnerPulse {
+      0%,
+      100% {
+        opacity: 0.38;
+      }
+      50% {
+        opacity: 0.95;
+      }
+    }
+    @keyframes territoryHitZoneLinePulse {
+      0%,
+      100% {
+        stroke-opacity: 0.58;
+      }
+      50% {
+        stroke-opacity: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-hit-zones-svg .territory-hit-zone__glow--prog,
+      .territory-hit-zones-svg .territory-hit-zone__glow--con,
+      .territory-hit-zones-svg .territory-hit-zone__glow--plaza,
+      .territory-hit-zones-svg .territory-hit-zone__line--prog,
+      .territory-hit-zones-svg .territory-hit-zone__line--con,
+      .territory-hit-zones-svg .territory-hit-zone__line--plaza {
+        transition: none;
+      }
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--prog,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--prog,
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--con,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--con,
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__glow--plaza,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__glow--plaza {
+        animation: none;
+        opacity: 0.72;
+      }
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--prog,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--prog,
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--con,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--con,
+      .territory-hit-zones-svg .territory-hit-zone:hover .territory-hit-zone__line--plaza,
+      .territory-hit-zones-svg .territory-hit-zone:focus-within .territory-hit-zone__line--plaza {
+        animation: none;
+        opacity: 1;
+        stroke-opacity: 1;
+      }
     }
     .territory-faction-hit {
       position: absolute;
@@ -616,74 +790,134 @@
       line-height: 0;
       pointer-events: auto;
       border-radius: 12px;
-      transition: transform 0.18s ease, filter 0.18s ease;
-      filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.5));
     }
-    .territory-faction-hit:hover {
-      filter: drop-shadow(0 7px 20px rgba(0, 0, 0, 0.58));
+    /* 호버 시 살짝 커지는 것은 이미지에만 (버튼 사각 영역은 움직이지 않음) */
+    .territory-faction-hit--belt-left:hover .territory-belt-img,
+    .territory-faction-hit--belt-right:hover .territory-belt-img {
+      transform: scale(1.04);
     }
-    .territory-faction-hit--belt-left:hover,
-    .territory-faction-hit--belt-right:hover {
-      transform: translate(-50%, -50%) scale(1.04);
+    @keyframes territoryKantaBlackAura {
+      0%,
+      100% {
+        filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.58)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))
+          drop-shadow(0 0 24px rgba(0, 0, 0, 0.32));
+      }
+      50% {
+        filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.78)) drop-shadow(0 0 18px rgba(0, 0, 0, 0.88))
+          drop-shadow(0 0 38px rgba(0, 0, 0, 0.52)) drop-shadow(0 0 56px rgba(15, 15, 22, 0.38));
+      }
     }
-    .territory-faction-hit--kanta:hover {
-      transform: translateX(-50%) scale(1.05);
+    .territory-faction-hit--kanta:hover .territory-kanta-img,
+    .territory-faction-hit.territory-faction-hit--tw-hot.territory-faction-hit--kanta .territory-kanta-img {
+      transform: scale(1.05);
+      animation: territoryKantaBlackAura 0.4s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .territory-faction-hit--kanta:hover .territory-kanta-img,
+      .territory-faction-hit.territory-faction-hit--tw-hot.territory-faction-hit--kanta .territory-kanta-img {
+        animation: none;
+        filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.72)) drop-shadow(0 0 14px rgba(0, 0, 0, 0.62))
+          drop-shadow(0 0 34px rgba(0, 0, 0, 0.4));
+      }
+    }
+    /* 중앙광장: 기본맵 가운데 · 호버 강조는 광장 PNG(img)에만 */
+    .territory-plaza-hit {
+      left: 50%;
+      top: 56%;
+      transform: translate(-50%, -50%);
+      width: min(44%, 21rem);
+      max-width: 21rem;
+      min-width: 9.5rem;
+      z-index: 7;
+      border-radius: 14px;
+    }
+    .territory-plaza-hit:hover .territory-faction-hit__img {
+      transform: scale(1.04);
+    }
+    .territory-plaza-hit:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.75);
+      outline-offset: 3px;
+    }
+    .territory-plaza-hit .territory-faction-hit__img {
+      border-radius: 12px;
+    }
+    @media (max-width: 520px) {
+      .territory-plaza-hit {
+        width: min(52%, 17.5rem);
+        max-width: 17.5rem;
+        min-width: 8rem;
+        top: 58%;
+      }
     }
     .territory-faction-hit:focus-visible {
       outline: 2px solid rgba(56, 189, 248, 0.75);
       outline-offset: 3px;
     }
-    /* 호버 설명 표시 중: 해당 영토 경계 강조 */
-    @keyframes territoryHitTwHot {
-      0%,
-      100% {
-        filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.95)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.95));
-        outline: 2px solid rgba(57, 255, 20, 0.95);
-        outline-offset: 2px;
-      }
-      50% {
-        filter: drop-shadow(0 0 22px rgba(0, 255, 204, 1)) drop-shadow(0 0 14px rgba(57, 255, 20, 0.9));
-        outline: 4px solid rgba(0, 255, 204, 0.98);
-        outline-offset: 0;
-      }
+    /* territory-layout.json 에 height 가 있으면: 편집기 박스와 같이 영역 안에 그림을 contain */
+    .territory-faction-hit[data-sc-layout-boxed='1'] {
+      overflow: hidden;
+      box-sizing: border-box;
     }
+    .territory-faction-hit--belt[data-sc-layout-boxed='1'] .territory-belt-stack {
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .territory-faction-hit--belt[data-sc-layout-boxed='1'] .territory-belt-img {
+      flex: 0 1 auto;
+      width: auto;
+      max-width: 100%;
+      max-height: calc(100% - 0.55rem);
+      object-fit: contain;
+      object-position: center bottom;
+    }
+    .territory-faction-hit--belt[data-sc-layout-boxed='1'] .territory-belt-civtrack {
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+    .territory-plaza-hit[data-sc-layout-boxed='1'] .territory-faction-hit__img {
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      height: auto;
+      margin: 0 auto;
+      display: block;
+      object-fit: contain;
+    }
+    .territory-faction-hit--kanta[data-sc-layout-boxed='1'] {
+      display: block;
+      padding: 0;
+    }
+    .territory-faction-hit--kanta[data-sc-layout-boxed='1'] .territory-kanta-clip {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: unset;
+    }
+    .territory-faction-hit--kanta[data-sc-layout-boxed='1'] .territory-kanta-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center top;
+      border-radius: 0 0 12px 12px;
+    }
+    /* 타입라이터 호버 시 벨트·광장 이미지 번쩍임 제거 (깐따는 검은 아우라만 유지 · 영토 경계는 SVG) */
     .territory-faction-hit.territory-faction-hit--tw-hot {
       z-index: 9;
-      animation: territoryHitTwHot 0.38s ease-in-out infinite;
     }
-    @media (prefers-reduced-motion: reduce) {
-      .territory-faction-hit.territory-faction-hit--tw-hot {
-        animation: none;
-        outline: 3px solid rgba(57, 255, 20, 0.95);
-        outline-offset: 2px;
-        filter: drop-shadow(0 0 12px rgba(0, 255, 204, 0.75));
-      }
-    }
-    @keyframes territoryFrameTwHot {
-      0%,
-      100% {
-        box-shadow:
-          inset 0 0 0 2px rgba(57, 255, 20, 0.65),
-          0 0 0 1px rgba(0, 255, 204, 0.35),
-          0 0 18px rgba(57, 255, 20, 0.25);
-      }
-      50% {
-        box-shadow:
-          inset 0 0 0 5px rgba(0, 255, 204, 0.82),
-          0 0 0 2px rgba(57, 255, 20, 0.55),
-          0 0 32px rgba(0, 255, 204, 0.45);
-      }
-    }
-    .territory-centrist-hero__frame.territory-centrist-hero__frame--tw-hot {
-      animation: territoryFrameTwHot 0.42s ease-in-out infinite;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .territory-centrist-hero__frame.territory-centrist-hero__frame--tw-hot {
-        animation: none;
-        box-shadow:
-          inset 0 0 0 3px rgba(57, 255, 20, 0.75),
-          0 0 22px rgba(0, 255, 204, 0.35);
-      }
+    .territory-faction-hit.territory-faction-hit--tw-hot.territory-faction-hit--belt-prog .territory-belt-img,
+    .territory-faction-hit.territory-faction-hit--tw-hot.territory-faction-hit--belt-con .territory-belt-img,
+    .territory-faction-hit.territory-faction-hit--tw-hot:not(.territory-faction-hit--belt):not(.territory-faction-hit--kanta) .territory-faction-hit__img {
+      animation: none;
     }
     .territory-faction-hit__img {
       display: block;
@@ -692,8 +926,11 @@
       vertical-align: top;
       pointer-events: none;
       border-radius: 10px;
+      transform-origin: center center;
+      transition: transform 0.18s ease, filter 0.18s ease;
+      filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.5));
     }
-    /* 진보·보수: 좌우 대칭·세로 중앙 부근. 깐따: 상단 중앙·행성 아래 2/3만 표시 */
+    /* 진보(좌·극좌 축)·보수(우·극우 축): 좌우 대칭·세로 중앙 부근. 깐따: 상단 중앙·행성 아래 2/3만 표시 */
     .territory-faction-hit--belt {
       width: min(58%, 20.25rem);
       max-width: 20.25rem;
@@ -713,25 +950,6 @@
       position: relative;
       display: block;
       line-height: 0;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .territory-belt-stack {
-        animation: territoryBeltFloat 4.5s ease-in-out infinite;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .territory-belt-stack {
-        animation: none;
-      }
-    }
-    @keyframes territoryBeltFloat {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-6px);
-      }
     }
     .territory-belt-aero {
       position: absolute;
@@ -799,7 +1017,7 @@
       pointer-events: none;
       background-color: rgba(15, 23, 42, 0.55);
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
-      background-size: calc(100% / 4) 100%;
+      background-size: calc(100% / 6) 100%;
       background-repeat: repeat-x;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
       overflow: hidden;
@@ -3860,15 +4078,20 @@
     <main class="view-app-main">
       <div id="screen-main" class="app-screen">
         <p class="muted">
-          배경 <strong>빈 곳</strong>을 누르면 <strong>중앙광장</strong>으로 갑니다. 좌우 섬 아이콘으로
-          <strong>진보·보수</strong> 영토 게시판에 들어갑니다(성향 <strong>40%</strong> 해금, 깐따 50%).
-          화면 <strong>맨 위 가운데 깐따삐아 행성</strong>을 누르면 <strong>진보·중간·보수 행성</strong> 중 하나를 고른 뒤 해당 게시판으로 이동합니다.
+          이 화면에서 <strong>극좌·좌파 축</strong>은 <strong>왼쪽 진보</strong> 영토, <strong>극우·우파 축</strong>은
+          <strong>오른쪽 보수</strong> 영토에 맞춰 두었습니다(가운데는 중앙광장·중도 성향 무대).
+          가운데 <strong>중앙광장 광장 이미지</strong>를 누르면 <strong>중앙광장</strong> 게시판으로 갑니다. 좌우 아이콘으로
+          <strong>진보·보수</strong> 게시판에 들어갑니다(성향 <strong>40%</strong> 해금, 깐따 50%).
+          <strong>맨 위 가운데 깐따삐아</strong>를 누르면 <strong>진보·중간·보수 행성</strong> 중 하나를 고른 뒤 해당 게시판으로 이동합니다.
           우측 상단 <strong>추이</strong>를 누르면 성향 변화 그래프를 볼 수 있습니다.
-          아래 배경은 맵 <strong>1~4단계</strong> 비주얼입니다.
+          배경은 <strong>신규 섬 맵</strong> 이미지입니다. 진보·중앙·보수·깐따삐아를 잇는 <strong>연결선 UI는 보류</strong> 중입니다.
+          <strong>클릭 경계(폴리곤)</strong>는 <code>territories/territory-hit-zones.json</code> 에서 조정하며,
+          좌표는 <strong>맵 PNG가 contain으로 붙은 영역만</strong> 기준 0~100% 입니다(검은 여백 제외).
+          <a href="/tools/territory-hit-zone-editor.html">히트 경계 편집기</a>도 동일 기준입니다. (벨트·광장 PNG는 <code>territory-layout.json</code> )
         </p>
 
         <section class="territory-centrist-hero" aria-label="영토 맵 배경">
-          <div class="territory-centrist-hero__frame">
+          <div class="territory-centrist-hero__frame territory-centrist-hero__frame--island-map">
             <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
             <button
               type="button"
@@ -3905,12 +4128,6 @@
                 d="M 47.2 16.4 C 56.8 15.1 66.5 16.8 74.2 21.6 C 81.8 26.4 86.1 34.2 86.4 42.8 C 88.2 48.6 87.5 55.1 84.1 61.2 C 80.2 68.5 72.8 73.8 63.6 76.2 C 54.2 78.8 44.1 78.4 34.8 75.1 C 25.2 71.6 17.8 64.8 14.6 55.4 C 11.4 46 12.8 35.6 18.6 27.8 C 24.4 20 34.2 16.2 44.5 16.1 C 45.4 16.1 46.3 16.2 47.2 16.4 Z"
               />
             </svg>
-            <button
-              type="button"
-              class="territory-centrist-hero__hit zone--clickable"
-              id="territory-centrist-hero-btn"
-              aria-label="중앙광장(COMMON) 게시판으로 이동"
-            ></button>
             <div class="territory-centrist-hero__faction-layer" id="territory-faction-overlay-root">
               <button
                 type="button"
@@ -3933,7 +4150,7 @@
                 type="button"
                 class="territory-faction-hit territory-faction-hit--belt territory-faction-hit--belt-left territory-faction-hit--belt-prog zone--clickable"
                 id="territory-faction-progressive"
-                aria-label="진보 게시판으로 이동"
+                aria-label="진보(좌·극좌 축) 게시판으로 이동"
               >
                 <span class="territory-belt-stack">
                   <span class="territory-belt-aero" aria-hidden="true"></span>
@@ -3941,7 +4158,7 @@
                   <img
                     class="territory-faction-hit__img territory-belt-img"
                     id="territory-faction-progressive-img"
-                    src="/territories/belt-stage-1.png"
+                    src="/territories/conservative-stage-1.png"
                     alt=""
                     width="320"
                     height="320"
@@ -3956,7 +4173,7 @@
                 type="button"
                 class="territory-faction-hit territory-faction-hit--belt territory-faction-hit--belt-right territory-faction-hit--belt-con zone--clickable"
                 id="territory-faction-conservative"
-                aria-label="보수 게시판으로 이동"
+                aria-label="보수(우·극우 축) 게시판으로 이동"
               >
                 <span class="territory-belt-stack">
                   <span class="territory-belt-aero" aria-hidden="true"></span>
@@ -3964,7 +4181,7 @@
                   <img
                     class="territory-faction-hit__img territory-belt-img"
                     id="territory-faction-conservative-img"
-                    src="/territories/belt-stage-1.png"
+                    src="/territories/progressive-stage-1.png"
                     alt=""
                     width="320"
                     height="320"
@@ -3975,6 +4192,87 @@
                   ></span>
                 </span>
               </button>
+              <button
+                type="button"
+                class="territory-faction-hit territory-plaza-hit zone--clickable"
+                id="territory-common-plaza-btn"
+                aria-label="중앙광장(COMMON) 게시판으로 이동"
+              >
+                <img
+                  class="territory-faction-hit__img"
+                  id="territory-common-plaza-img"
+                  src="/territories/common-plaza-stage-1.png"
+                  alt=""
+                  width="360"
+                  height="360"
+                  decoding="async"
+                />
+              </button>
+            </div>
+            <div id="territory-hit-zones-wrap" class="territory-hit-zones-wrap">
+              <svg
+                id="territory-hit-zones"
+                class="territory-hit-zones-svg"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                width="100%"
+                height="100%"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <defs>
+                  <!-- 알파 블러를 영역 안으로만 자르고 색 입힘 → 바깥 글로우 없음 -->
+                  <filter
+                    id="sc-territory-inner-prog"
+                    x="-45%"
+                    y="-45%"
+                    width="190%"
+                    height="190%"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.8" result="blur" />
+                    <feComposite in="blur" in2="SourceAlpha" operator="in" result="innerBlur" />
+                    <feFlood flood-color="#38bdf8" flood-opacity="0.78" result="c" />
+                    <feComposite in="c" in2="innerBlur" operator="in" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                    </feMerge>
+                  </filter>
+                  <filter
+                    id="sc-territory-inner-con"
+                    x="-45%"
+                    y="-45%"
+                    width="190%"
+                    height="190%"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.8" result="blur" />
+                    <feComposite in="blur" in2="SourceAlpha" operator="in" result="innerBlur" />
+                    <feFlood flood-color="#fb7185" flood-opacity="0.78" result="c" />
+                    <feComposite in="c" in2="innerBlur" operator="in" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                    </feMerge>
+                  </filter>
+                  <filter
+                    id="sc-territory-inner-plaza"
+                    x="-45%"
+                    y="-45%"
+                    width="190%"
+                    height="190%"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.8" result="blur" />
+                    <feComposite in="blur" in2="SourceAlpha" operator="in" result="innerBlur" />
+                    <feFlood flood-color="#34d399" flood-opacity="0.78" result="c" />
+                    <feComposite in="c" in2="innerBlur" operator="in" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <g id="territory-hit-zones-root"></g>
+              </svg>
             </div>
             <svg
               id="territory-tw-connector"
@@ -4817,6 +5115,12 @@
           if (mainS) mainS.hidden = false;
           bindAppNavigation();
           if (window.__scRefreshBeltTerritoryArt) window.__scRefreshBeltTerritoryArt();
+          /* 영토 맵이 숨겨진 채로 부팅될 수 있어, 메인 진입 시 layout.json 다시 적용 */
+          if (typeof window.__scReloadTerritoryLayout === 'function') window.__scReloadTerritoryLayout();
+          if (typeof window.__scReloadTerritoryHitZones === 'function') window.__scReloadTerritoryHitZones();
+          requestAnimationFrame(function () {
+            if (typeof window.__scSyncTerritoryHitZonesFit === 'function') window.__scSyncTerritoryHitZonesFit();
+          });
         },
         goGuide: function () {
           var guideS = el('screen-guide');
@@ -9738,6 +10042,7 @@
         return x;
       }
 
+      /* 1~40 발전 단계. P<=0 은 "미집계"로 보고 1단계로 취급 → 벨트·광장 PNG도 항상 1단계부터 시작 */
       function stageFromPopulation(p) {
         var P = clampPop(p);
         if (P <= 0) return 1;
@@ -9752,15 +10057,17 @@
           var raw = localStorage.getItem(MAP_POP_KEY);
           if (raw) {
             var o = JSON.parse(raw);
-            return {
-              COMMON: clampPop(o.COMMON),
-              CONSERVATIVE: clampPop(o.CONSERVATIVE),
-              CENTRIST: clampPop(o.CENTRIST),
-              PROGRESSIVE: clampPop(o.PROGRESSIVE),
-              KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
-              KANTAPBIYA_CENTER: clampPop(o.KANTAPBIYA_CENTER),
-              KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
-            };
+            if (o && typeof o === 'object') {
+              return {
+                COMMON: clampPop(o.COMMON),
+                CONSERVATIVE: clampPop(o.CONSERVATIVE),
+                CENTRIST: clampPop(o.CENTRIST),
+                PROGRESSIVE: clampPop(o.PROGRESSIVE),
+                KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
+                KANTAPBIYA_CENTER: clampPop(o.KANTAPBIYA_CENTER),
+                KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
+              };
+            }
           }
         } catch (_) {}
         var out = {
@@ -9804,8 +10111,14 @@
         } catch (_) {}
       }
 
-      /** 인구 단계(1~40) → 벨트 공용 비주얼 4단계(동일 PNG: 진보·보수) */
+      /** 인구 단계 st(1~40) → 진보·보수 벨트 PNG 1~6. st=1 → ceil(6/40)=1 */
       function beltVisualStageFromPopulation(p) {
+        var st = stageFromPopulation(p);
+        return Math.min(6, Math.max(1, Math.ceil((st * 6) / 40)));
+      }
+
+      /** 중앙광장: st(1~40) → 광장 PNG 1~4. st=1 → ceil(4/40)=1 (5·6 에셋은 추후) */
+      function commonPlazaVisualStageFromPopulation(p) {
         var st = stageFromPopulation(p);
         return Math.min(4, Math.max(1, Math.ceil((st * 4) / 40)));
       }
@@ -9830,20 +10143,24 @@
         var cap = el('territory-centrist-hero-caption');
         if (!layer) return;
         var pop = loadMapPop();
-        /* 중앙광장(빈 곳 클릭) 진입용 전경 — 벨트 4단계 썸네일과 별도 고정 이미지 */
-        layer.style.backgroundImage = "url('/territories/common-space-hero.png')";
+        /* 중앙광장(빈 곳 클릭) 진입용 전경 — 신규 섬 RTS 맵(구 common-space-hero 보류 시 /territories/common-space-hero.png) */
+        layer.style.backgroundImage = "url('/assets/territory-island-hero.png')";
 
         var artP = beltVisualStageFromPopulation(pop.PROGRESSIVE);
         var artC = beltVisualStageFromPopulation(pop.CONSERVATIVE);
+        var artPlaza = commonPlazaVisualStageFromPopulation(pop.COMMON);
         var imgP = el('territory-faction-progressive-img');
         var imgC = el('territory-faction-conservative-img');
-        if (imgP) imgP.src = '/territories/belt-stage-' + artP + '.png';
-        if (imgC) imgC.src = '/territories/belt-stage-' + artC + '.png';
+        var imgPlaza = el('territory-common-plaza-img');
+        /* 디스크 파일명이 실제 진보/보수 작화와 반대로 들어가 있어 교차 로드 */
+        if (imgP) imgP.src = '/territories/conservative-stage-' + artP + '.png';
+        if (imgC) imgC.src = '/territories/progressive-stage-' + artC + '.png';
+        if (imgPlaza) imgPlaza.src = '/territories/common-plaza-stage-' + artPlaza + '.png';
 
         var fillP = el('territory-belt-civfill-p');
         var fillC = el('territory-belt-civfill-c');
-        if (fillP) fillP.style.width = (100 * artP) / 4 + '%';
-        if (fillC) fillC.style.width = (100 * artC) / 4 + '%';
+        if (fillP) fillP.style.width = (100 * artP) / 6 + '%';
+        if (fillC) fillC.style.width = (100 * artC) / 6 + '%';
 
         var kBtn = el('territory-faction-kanta');
         if (kBtn) {
@@ -9853,11 +10170,13 @@
         if (cap) {
           var kt2 = kantapbiyaTargetFromPop(pop);
           cap.textContent =
-            '빈 곳 → 중앙광장 · 좌 ' +
+            '가운데 광장 ' +
+            artPlaza +
+            '/4 · 좌 ' +
             artP +
-            '/4 진보 · 우 ' +
+            '/6 진보 · 우 ' +
             artC +
-            '/4 보수 · 상단 깐따 → ' +
+            '/6 보수 · 상단 깐따 → ' +
             kantapbiyaWinnerLabelKo(kt2) +
             ' (진보 ' +
             pop.KANTAPBIYA_LEFT +
@@ -9867,13 +10186,15 @@
             pop.KANTAPBIYA_RIGHT +
             ')';
         }
+        if (typeof window.__scSyncTerritoryHitZonesFit === 'function') window.__scSyncTerritoryHitZonesFit();
       }
 
       function bindCentristHero() {
-        var btn = el('territory-centrist-hero-btn');
+        var btn = el('territory-common-plaza-btn');
         if (!btn || btn.dataset.scCentristBound) return;
         btn.dataset.scCentristBound = '1';
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function (ev) {
+          ev.stopPropagation();
           if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard('COMMON');
         });
 
@@ -10034,9 +10355,7 @@
 
           function setTwHot(btn, kind) {
             clearTwHot();
-            if (kind === 'COMMON') {
-              frame.classList.add('territory-centrist-hero__frame--tw-hot');
-            } else if (btn && btn.classList && btn.classList.contains('territory-faction-hit')) {
+            if (btn && btn.classList && btn.classList.contains('territory-faction-hit')) {
               btn.classList.add('territory-faction-hit--tw-hot');
             }
           }
@@ -10047,6 +10366,10 @@
 
           function updateConnector(btn, kind) {
             if (!connPath || !connSvg || !twEl || twEl.hidden || !twUnderline) return;
+            if (frame && frame.classList && frame.classList.contains('territory-centrist-hero__frame--island-map')) {
+              clearConnector();
+              return;
+            }
             var fr = frame.getBoundingClientRect();
             if (fr.width < 8 || fr.height < 8) return;
             var u = twUnderline.getBoundingClientRect();
@@ -10219,6 +10542,21 @@
             stepTimer = window.setTimeout(step, 45);
           }
 
+          window.__scTerritoryTwHooks = {
+            startForKind: function (kind) {
+              var ids = {
+                PROGRESSIVE: 'territory-faction-progressive',
+                CONSERVATIVE: 'territory-faction-conservative',
+                COMMON: 'territory-common-plaza-btn',
+              };
+              var bid = ids[kind];
+              if (!bid) return;
+              var b = el(bid);
+              if (b) startTypewriter(b, kind);
+            },
+            hide: hideTypewriter,
+          };
+
           function bindTw(id, kind) {
             var b = el(id);
             if (!b || b.dataset.scBeltTwBound) return;
@@ -10236,7 +10574,7 @@
           bindTw('territory-faction-progressive', 'PROGRESSIVE');
           bindTw('territory-faction-conservative', 'CONSERVATIVE');
           bindTw('territory-faction-kanta', 'KANTA');
-          bindTw('territory-centrist-hero-btn', 'COMMON');
+          bindTw('territory-common-plaza-btn', 'COMMON');
         })();
         wireFaction('territory-faction-progressive');
         wireFaction('territory-faction-conservative');
@@ -10265,6 +10603,275 @@
         },
         stageFromCount: stageFromPopulation,
       };
+
+      var TERRITORY_LAYOUT_IDS = [
+        'territory-faction-progressive',
+        'territory-faction-conservative',
+        'territory-faction-kanta',
+        'territory-common-plaza-btn',
+      ];
+      var TERRITORY_LAYOUT_STYLE_KEYS = [
+        'left',
+        'top',
+        'width',
+        'height',
+        'max-width',
+        'min-width',
+        'max-height',
+        'min-height',
+        'transform',
+        'z-index',
+        'border-radius',
+      ];
+
+      function clearTerritoryLayoutOverrides() {
+        for (var ii = 0; ii < TERRITORY_LAYOUT_IDS.length; ii++) {
+          var n = el(TERRITORY_LAYOUT_IDS[ii]);
+          if (!n) continue;
+          n.removeAttribute('data-sc-layout-boxed');
+          for (var pj = 0; pj < TERRITORY_LAYOUT_STYLE_KEYS.length; pj++) {
+            n.style.removeProperty(TERRITORY_LAYOUT_STYLE_KEYS[pj]);
+          }
+        }
+      }
+
+      function applyTerritoryLayoutOverrides(j) {
+        clearTerritoryLayoutOverrides();
+        var layers = j && j.layers;
+        if (!layers || typeof layers !== 'object') return;
+        var ids = {
+          progressive: 'territory-faction-progressive',
+          conservative: 'territory-faction-conservative',
+          kanta: 'territory-faction-kanta',
+          plaza: 'territory-common-plaza-btn',
+        };
+        var propMap = {
+          left: 'left',
+          top: 'top',
+          width: 'width',
+          height: 'height',
+          maxWidth: 'max-width',
+          minWidth: 'min-width',
+          maxHeight: 'max-height',
+          minHeight: 'min-height',
+          transform: 'transform',
+          zIndex: 'z-index',
+          borderRadius: 'border-radius',
+        };
+        Object.keys(ids).forEach(function (key) {
+          var data = layers[key];
+          if (!data || typeof data !== 'object') return;
+          var node = el(ids[key]);
+          if (!node) return;
+          Object.keys(propMap).forEach(function (camel) {
+            if (data[camel] == null) return;
+            var val = String(data[camel]).trim();
+            if (val === '') return;
+            node.style.setProperty(propMap[camel], val);
+          });
+          var hval = data.height != null ? String(data.height).trim() : '';
+          if (hval) node.setAttribute('data-sc-layout-boxed', '1');
+          else node.removeAttribute('data-sc-layout-boxed');
+        });
+      }
+
+      function loadTerritoryLayoutOverrides() {
+        var url = '/territories/territory-layout.json?cb=' + String(Date.now());
+        return fetch(url, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('layout');
+            return r.json();
+          })
+          .then(function (j) {
+            applyTerritoryLayoutOverrides(j);
+          })
+          .catch(function () {
+            clearTerritoryLayoutOverrides();
+          });
+      }
+
+      window.__scReloadTerritoryLayout = function () {
+        return loadTerritoryLayoutOverrides().then(function () {
+          applyCentristHeroArt();
+        });
+      };
+
+      var SC_ISLAND_HERO_URL = '/assets/territory-island-hero.png';
+
+      function scEnsureIslandHeroNatural(cb) {
+        if (window.__scIslandHeroNat && window.__scIslandHeroNat.w > 0) {
+          cb(window.__scIslandHeroNat);
+          return;
+        }
+        var im = new Image();
+        im.onload = function () {
+          window.__scIslandHeroNat = {
+            w: im.naturalWidth || 1,
+            h: im.naturalHeight || 1,
+          };
+          cb(window.__scIslandHeroNat);
+        };
+        im.onerror = function () {
+          window.__scIslandHeroNat = { w: 16, h: 9 };
+          cb(window.__scIslandHeroNat);
+        };
+        im.src = SC_ISLAND_HERO_URL;
+      }
+
+      function scContainBoxPct(frameEl, natW, natH) {
+        var w = frameEl.clientWidth;
+        var h = frameEl.clientHeight;
+        if (w < 2 || h < 2 || !natW || !natH) {
+          return { leftPct: 0, topPct: 0, widthPct: 100, heightPct: 100 };
+        }
+        var scale = Math.min(w / natW, h / natH);
+        var dw = natW * scale;
+        var dh = natH * scale;
+        var ox = (w - dw) * 0.5;
+        var oy = (h - dh) * 0.5;
+        return {
+          leftPct: (ox / w) * 100,
+          topPct: (oy / h) * 100,
+          widthPct: (dw / w) * 100,
+          heightPct: (dh / h) * 100,
+        };
+      }
+
+      function syncTerritoryHitZonesFit() {
+        var wrap = el('territory-hit-zones-wrap');
+        var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
+        if (!wrap || !frame) return;
+        scEnsureIslandHeroNatural(function (nat) {
+          var b = scContainBoxPct(frame, nat.w, nat.h);
+          wrap.style.left = b.leftPct + '%';
+          wrap.style.top = b.topPct + '%';
+          wrap.style.width = b.widthPct + '%';
+          wrap.style.height = b.heightPct + '%';
+        });
+      }
+      window.__scSyncTerritoryHitZonesFit = syncTerritoryHitZonesFit;
+
+      function initScTerritoryHitZonesFitObservers() {
+        var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
+        if (!frame || frame.dataset.scHitzonesFitRo) return;
+        frame.dataset.scHitzonesFitRo = '1';
+        if (typeof ResizeObserver !== 'undefined') {
+          var ro = new ResizeObserver(function () {
+            syncTerritoryHitZonesFit();
+          });
+          ro.observe(frame);
+        }
+        window.addEventListener('resize', function () {
+          syncTerritoryHitZonesFit();
+        });
+        syncTerritoryHitZonesFit();
+      }
+
+      function territoryHitZonesPolygonD(pts) {
+        if (!pts || pts.length < 3) return '';
+        var d = 'M ' + Number(pts[0][0]).toFixed(3) + ' ' + Number(pts[0][1]).toFixed(3);
+        for (var i = 1; i < pts.length; i++) {
+          d += ' L ' + Number(pts[i][0]).toFixed(3) + ' ' + Number(pts[i][1]).toFixed(3);
+        }
+        return d + ' Z';
+      }
+
+      function applyTerritoryHitZones(j) {
+        var svg = el('territory-hit-zones');
+        var root = el('territory-hit-zones-root');
+        if (!svg || !root) return;
+        while (root.firstChild) root.removeChild(root.firstChild);
+        svg.classList.remove('territory-hit-zones-svg--active');
+        var zones = j && j.zones && typeof j.zones === 'object' ? j.zones : null;
+        if (!zones) {
+          if (typeof window.__scSyncTerritoryHitZonesFit === 'function') window.__scSyncTerritoryHitZonesFit();
+          return;
+        }
+        var defs = [
+          { key: 'progressive', kind: 'PROGRESSIVE', edge: 'prog', aria: '진보 영토 영역' },
+          { key: 'conservative', kind: 'CONSERVATIVE', edge: 'con', aria: '보수 영토 영역' },
+          { key: 'plaza', kind: 'COMMON', edge: 'plaza', aria: '중앙광장 영역' },
+        ];
+        var any = false;
+        for (var di = 0; di < defs.length; di++) {
+          var def = defs[di];
+          var z = zones[def.key];
+          var pts = z && z.points;
+          if (!pts || !pts.length || pts.length < 3) continue;
+          var d = territoryHitZonesPolygonD(pts);
+          if (!d) continue;
+          any = true;
+          var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('class', 'territory-hit-zone territory-hit-zone--' + def.edge);
+
+          var hitPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          hitPath.setAttribute('class', 'territory-hit-zone__hit');
+          hitPath.setAttribute('d', d);
+          hitPath.setAttribute('tabindex', '0');
+          hitPath.setAttribute('role', 'button');
+          hitPath.setAttribute('aria-label', def.aria);
+
+          var glowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          glowPath.setAttribute('class', 'territory-hit-zone__glow territory-hit-zone__glow--' + def.edge);
+          glowPath.setAttribute('d', d);
+
+          var linePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          linePath.setAttribute('class', 'territory-hit-zone__line territory-hit-zone__line--' + def.edge);
+          linePath.setAttribute('d', d);
+
+          (function (boardKind) {
+            hitPath.addEventListener('click', function (ev) {
+              ev.stopPropagation();
+              if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(boardKind);
+            });
+            hitPath.addEventListener('mouseenter', function () {
+              if (window.__scTerritoryTwHooks && window.__scTerritoryTwHooks.startForKind)
+                window.__scTerritoryTwHooks.startForKind(boardKind);
+            });
+            hitPath.addEventListener('mouseleave', function () {
+              if (window.__scTerritoryTwHooks && window.__scTerritoryTwHooks.hide)
+                window.__scTerritoryTwHooks.hide();
+            });
+            hitPath.addEventListener('focus', function () {
+              if (window.__scTerritoryTwHooks && window.__scTerritoryTwHooks.startForKind)
+                window.__scTerritoryTwHooks.startForKind(boardKind);
+            });
+            hitPath.addEventListener('blur', function () {
+              if (window.__scTerritoryTwHooks && window.__scTerritoryTwHooks.hide)
+                window.__scTerritoryTwHooks.hide();
+            });
+            hitPath.addEventListener('keydown', function (ev) {
+              if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault();
+                if (window.__scApp && window.__scApp.goBoard) window.__scApp.goBoard(boardKind);
+              }
+            });
+          })(def.kind);
+
+          g.appendChild(hitPath);
+          g.appendChild(glowPath);
+          g.appendChild(linePath);
+          root.appendChild(g);
+        }
+        if (any) svg.classList.add('territory-hit-zones-svg--active');
+        if (typeof window.__scSyncTerritoryHitZonesFit === 'function') window.__scSyncTerritoryHitZonesFit();
+      }
+
+      function loadTerritoryHitZones() {
+        var url = '/territories/territory-hit-zones.json?cb=' + String(Date.now());
+        return fetch(url, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('hitzones');
+            return r.json();
+          })
+          .then(function (j) {
+            applyTerritoryHitZones(j);
+          })
+          .catch(function () {
+            applyTerritoryHitZones(null);
+          });
+      }
+      window.__scReloadTerritoryHitZones = loadTerritoryHitZones;
 
       function bindKantaPlanetPicker() {
         var root = el('kanta-planet-picker');
@@ -10297,8 +10904,14 @@
       function bootMap() {
         bindCentristHero();
         bindKantaPlanetPicker();
-        applyCentristHeroArt();
-        if (typeof window.__scTendencyTrendsInit === 'function') window.__scTendencyTrendsInit();
+        initScTerritoryHitZonesFitObservers();
+        Promise.all([
+          loadTerritoryLayoutOverrides().catch(function () {}),
+          loadTerritoryHitZones().catch(function () {}),
+        ]).then(function () {
+          applyCentristHeroArt();
+          if (typeof window.__scTendencyTrendsInit === 'function') window.__scTendencyTrendsInit();
+        });
       }
 
       if (document.readyState === 'loading') {

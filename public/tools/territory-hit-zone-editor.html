@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영토 히트 경계 편집기 — Sentence Craft</title>
+  <style>
+    :root { --bg: #0b1020; --text: #e8eefc; --muted: #94a3b8; --accent: #38bdf8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1rem 1rem 2rem; font-family: system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+    p { margin: 0.35rem 0; color: var(--muted); font-size: 0.88rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; margin: 0.75rem 0; }
+    label { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 0.2rem; }
+    select, textarea {
+      font: inherit; font-size: 0.86rem; padding: 0.35rem 0.5rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.35); color: var(--text);
+    }
+    textarea { width: 100%; min-height: 12rem; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    button {
+      font: inherit; font-size: 0.84rem; font-weight: 600; padding: 0.45rem 0.85rem; border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.12); color: #e0f2fe; cursor: pointer;
+    }
+    button.secondary { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.25); color: #cbd5e1; }
+    #preview-wrap { max-width: min(96rem, calc(100vw - 2rem)); margin: 1rem auto; padding: 0 1rem; }
+    @media (min-width: 960px) {
+      #preview-wrap { max-width: min(108rem, calc(100vw - 1.5rem)); padding: 0 0.75rem; }
+    }
+    #frame {
+      position: relative; width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);
+      min-height: min(56vh, 24rem); background: #0b1628 center / contain no-repeat url("/assets/territory-island-hero.png");
+      overflow: hidden; touch-action: none; cursor: crosshair;
+    }
+    @media (min-width: 640px) { #frame { min-height: min(62vh, 32rem); } }
+    @media (min-width: 960px) { #frame { min-height: min(72vh, 48rem); } }
+    /* 메인과 동일: contain으로 실제 그려지는 맵 사각형 위에만 SVG(좌표 0~100 = 이 박스 기준) */
+    .hit-fit-wrap {
+      position: absolute; z-index: 2; pointer-events: none;
+      left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box;
+    }
+    #overlay-svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    #overlay-svg .hit-preview {
+      pointer-events: none; fill: rgba(56, 189, 248, 0.12); stroke: rgba(56, 189, 248, 0.85); stroke-width: 0.35;
+      vector-effect: non-scaling-stroke;
+    }
+    #overlay-svg .hit-preview--con { fill: rgba(251, 191, 36, 0.12); stroke: rgba(253, 224, 71, 0.9); }
+    #overlay-svg .hit-preview--plaza { fill: rgba(167, 139, 250, 0.14); stroke: rgba(196, 181, 253, 0.92); }
+    /* 순서대로 찍은 꼭짓점 연결 (실선) */
+    #overlay-svg .poly-chain {
+      pointer-events: none; fill: none; stroke: rgba(224, 242, 254, 0.92); stroke-width: 0.42;
+      stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+    }
+    #overlay-svg .poly-chain--con { stroke: rgba(254, 243, 199, 0.95); }
+    #overlay-svg .poly-chain--plaza { stroke: rgba(237, 233, 254, 0.95); }
+    /* 마지막 점 → 첫 점 (닫힘 미리보기, 점선) */
+    #overlay-svg .poly-close-hint {
+      pointer-events: none; fill: none; stroke: rgba(57, 255, 20, 0.82); stroke-width: 0.32;
+      stroke-dasharray: 0.9 0.55; stroke-linecap: round; vector-effect: non-scaling-stroke;
+    }
+    #overlay-svg .pt-handle {
+      pointer-events: auto; cursor: grab; fill: rgba(15, 23, 42, 0.92); stroke: #38bdf8; stroke-width: 0.22;
+    }
+    #overlay-svg .pt-handle--start {
+      stroke: rgba(57, 255, 20, 0.95); stroke-width: 0.28;
+    }
+    #overlay-svg .pt-handle:active { cursor: grabbing; }
+    code { font-size: 0.82em; background: rgba(0,0,0,0.35); padding: 0.1em 0.35em; border-radius: 4px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <h1>영토 히트 경계 편집기</h1>
+  <p>
+    <strong>저장:</strong> 아래 JSON을 <code>public/territories/territory-hit-zones.json</code> 에 덮어쓰세요.
+    좌표는 <strong>맵 PNG가 contain으로 붙은 영역만</strong> 기준 <strong>0~100</strong> (검은 여백 제외) — 메인과 동일합니다.
+  </p>
+  <p>
+    벨트·광장 <strong>그림 위치·크기</strong>는 <code>territory-layout.json</code> + <a href="/tools/territory-layout-editor.html">레이아웃 편집기</a>이고,
+    여기서는 <strong>진보 / 보수 / 중앙광장</strong>만 <strong>클릭·번쩍 경계(다각형)</strong>를 잡습니다. (깐따는 제외)
+  </p>
+  <p>
+    <strong>그리기:</strong> 맵을 <strong>클릭할 때마다 꼭짓점이 순서대로</strong> 생기고, <strong>이전 점과 실선</strong>으로 이어집니다.
+    점이 세 개 이상이면 <strong>마지막 점에서 첫 점까지</strong> <strong>녹색 점선</strong>으로 닫힘 미리보기가 보입니다.
+    첫 점 근처(초록 큰 점 주변)를 <strong>맵 빈 곳에서</strong> 다시 클릭하면 새 점 없이 닫힘만 확인합니다. 점은 드래그로 옮길 수 있습니다.
+  </p>
+  <p><a href="/">← 메인</a></p>
+
+  <div class="row">
+    <div>
+      <label for="selLayer">편집 구역</label>
+      <select id="selLayer">
+        <option value="progressive">진보</option>
+        <option value="conservative">보수</option>
+        <option value="plaza">중앙광장</option>
+      </select>
+    </div>
+    <button type="button" id="btnUndo">마지막 점 취소</button>
+    <button type="button" id="btnClear">이 구역 비우기</button>
+    <button type="button" class="secondary" id="btnSnapRect">현재 구역 → 직사각형 4점</button>
+  </div>
+
+  <div id="preview-wrap">
+    <div id="frame" aria-label="맵 — 클릭해 순서대로 꼭짓점 연결, 첫 점 재클릭으로 닫힘 확인">
+      <div id="hit-fit-wrap" class="hit-fit-wrap">
+        <svg id="overlay-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path id="pathFill" class="hit-preview" d="" />
+          <path id="pathCloseHint" class="poly-close-hint" d="" />
+          <path id="pathChain" class="poly-chain" d="" />
+          <g id="handles"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="btnLoadFile">JSON 불러오기</button>
+    <input id="fileJson" type="file" accept=".json,application/json" hidden />
+    <button type="button" id="btnFetch">hit-zones.json 다시 읽기</button>
+    <button type="button" class="secondary" id="btnReset">기본 사각형</button>
+  </div>
+  <div class="row">
+    <button type="button" id="btnExport">아래에 JSON 반영</button>
+    <button type="button" id="btnDownload">territory-hit-zones.json 다운로드</button>
+    <button type="button" class="secondary" id="btnCopy">클립보드 복사</button>
+  </div>
+  <label for="outJson">JSON (이 내용을 territory-hit-zones.json 에만 저장)</label>
+  <textarea id="outJson" spellcheck="false"></textarea>
+
+  <script>
+(function () {
+  var KEYS = ['progressive', 'conservative', 'plaza'];
+  var ISLAND_URL = '/assets/territory-island-hero.png';
+  var DEFAULT_POLYGONS = {
+    progressive: [
+      [9.48, 17], [8.34, 20.26], [7.37, 21.73], [11.35, 24.66], [9.47, 27.32], [6.09, 26.79], [4.81, 29.85], [7.44, 30.52],
+      [3.46, 35.31], [3.76, 38.51], [6.16, 39.44], [5.41, 41.44], [9.69, 42.64], [12.4, 44.24], [6.69, 49.92], [5.26, 53.69],
+      [3.69, 55.42], [1.58, 58.62], [4.59, 61.82], [7.07, 62.35], [4.51, 65.55], [11.87, 64.35], [10.22, 67.54], [7.82, 69.68],
+      [7.89, 72.21], [7.07, 74.6], [4.36, 75.4], [2.78, 77.8], [2.48, 82.2], [4.59, 84.73], [7.44, 83.39], [8.87, 83.53],
+      [11.12, 85.39], [6.16, 89.92], [7.07, 91.12], [11.8, 86.32], [13.07, 86.99], [13.83, 85.93], [10.45, 82.33], [11.05, 79.53],
+      [15.55, 80.06], [19.08, 79.27], [20.51, 81.93], [21.49, 83.13], [19.46, 88.86], [20.74, 91.79], [24.19, 91.79], [30.05, 89.12],
+      [31.78, 91.25], [36.25, 85.73], [38.46, 79.93], [35.68, 71.81], [31.63, 69.94], [28.47, 70.74], [30.43, 67.01], [30.65, 63.02],
+      [33.2, 59.02], [35.68, 56.62], [36.28, 52.36], [38.91, 49.83], [39.89, 45.17], [42.14, 39.57], [41.02, 36.38], [42.82, 34.25],
+      [39.44, 31.05], [43.42, 26.66], [42.37, 23.86], [43.95, 21.99], [42.07, 19.86], [43.57, 18.4], [40.42, 15.47], [38.16, 15.2],
+      [36.21, 11.61], [34.48, 12.67], [33.51, 11.87], [31.4, 11.34], [28.62, 7.61], [26.29, 12.14], [23.67, 14.27], [21.04, 14.27],
+      [18.33, 14.27], [12.47, 16.13],
+    ],
+    conservative: [
+      [59, 22], [56.41, 19.2], [61.6, 15.07], [65.95, 11.07], [66.55, 12], [68.66, 9.21], [70.01, 7.21], [72.26, 10.01],
+      [74.07, 12.14], [77.07, 13.6], [78.95, 14], [83, 12.4], [87.06, 17.6], [90.59, 21.06], [88.94, 22.66], [89.39, 24.26],
+      [90.89, 23.59], [91.49, 25.46], [95.4, 27.99], [96.67, 31.45], [96.22, 33.85], [94.65, 37.84], [92.92, 39.04], [94.8, 40.37],
+      [94.65, 42.37], [96.45, 43.44], [98.25, 48.37], [97.43, 50.63], [95.4, 51.83], [94.8, 54.23], [93.44, 56.36], [96.07, 60.75],
+      [95.55, 64.61], [92.39, 66.48], [92.84, 69.14], [94.05, 70.74], [98.55, 74.47], [97.58, 76.07], [93.14, 73.01], [91.94, 72.74],
+      [90.37, 73.67], [91.12, 77.13], [94.2, 80.73], [98.03, 83.53], [98.03, 85.93], [95.77, 88.06], [94.5, 88.32], [96.07, 85.66],
+      [94.87, 84.99], [92.69, 86.59], [90.89, 86.19], [92.84, 83.26], [90.74, 81.13], [87.89, 84.33], [84.73, 87.79], [82.33, 87.79],
+      [81.28, 86.46], [79.55, 87.26], [77.75, 88.99], [76.69, 87.26], [74.37, 87.26], [73.24, 88.59], [72.56, 89.92], [73.92, 92.58],
+      [73.24, 94.72], [70.01, 92.19], [69.26, 93.52], [66.78, 93.38], [65.58, 89.12], [63.4, 88.32], [62.5, 85.79], [60.7, 83.93],
+      [60.47, 79.53], [60.25, 75.14], [61.15, 70.48], [61.6, 68.08], [64.45, 64.88], [66.33, 64.75], [67.46, 63.28], [65.13, 60.22],
+      [64.45, 56.76], [66.4, 54.36], [65.5, 50.23], [63.78, 48.1], [60.25, 46.37], [60.02, 43.84], [58.29, 39.84], [59.79, 36.38],
+      [60.7, 32.92], [63.17, 31.58], [63.63, 29.99], [60.7, 29.99], [59.12, 28.65], [57.77, 26.79],
+    ],
+    plaza: [
+      [46.08, 42.41], [43.04, 44.64], [41.02, 47.83], [39.97, 51.43], [39.44, 55.96], [37.04, 58.62], [35.16, 61.42], [33.43, 63.55],
+      [34.86, 66.48], [37.19, 64.88], [39.36, 65.55], [38.31, 69.94], [39.51, 73.41], [41.54, 76.74], [41.99, 79.13], [40.34, 84.06],
+      [38.31, 87.79], [39.36, 90.45], [41.69, 89.65], [43.72, 92.05], [43.72, 95.51], [46.42, 96.98], [48.98, 93.92], [52.43, 90.59],
+      [55.06, 87.92], [55.21, 84.59], [59.34, 83.26], [59.12, 78.6], [57.84, 76.74], [56.64, 75.27], [58.44, 70.48], [59.72, 65.68],
+      [61, 62.35], [62.5, 60.22], [61.15, 57.02], [60.7, 52.23], [62.5, 49.96], [59.94, 47.3], [57.32, 43.97], [55.21, 41.57],
+      [50.33, 40.91],
+    ],
+  };
+  var state = { progressive: [], conservative: [], plaza: [] };
+  function resetStateToDefault() {
+    KEYS.forEach(function (k) {
+      state[k] = DEFAULT_POLYGONS[k].map(function (p) {
+        return [p[0], p[1]];
+      });
+    });
+  }
+  resetStateToDefault();
+
+  var frame = document.getElementById('frame');
+  var hitFit = document.getElementById('hit-fit-wrap');
+  var svg = document.getElementById('overlay-svg');
+  var pathFill = document.getElementById('pathFill');
+  var pathCloseHint = document.getElementById('pathCloseHint');
+  var pathChain = document.getElementById('pathChain');
+  var handles = document.getElementById('handles');
+  var selLayer = document.getElementById('selLayer');
+  var outJson = document.getElementById('outJson');
+
+  function clamp(v, a, b) {
+    return Math.max(a, Math.min(b, v));
+  }
+
+  var natCache = null;
+  var lastFit = { leftPct: 0, topPct: 0, widthPct: 100, heightPct: 100 };
+
+  function ensureNat(cb) {
+    if (natCache && natCache.w > 0) {
+      cb(natCache);
+      return;
+    }
+    var im = new Image();
+    im.onload = function () {
+      natCache = { w: im.naturalWidth || 1, h: im.naturalHeight || 1 };
+      cb(natCache);
+    };
+    im.onerror = function () {
+      natCache = { w: 16, h: 9 };
+      cb(natCache);
+    };
+    im.src = ISLAND_URL;
+  }
+
+  function containPct(boxW, boxH, nw, nh) {
+    if (boxW < 2 || boxH < 2 || !nw || !nh) {
+      return { leftPct: 0, topPct: 0, widthPct: 100, heightPct: 100 };
+    }
+    var sc = Math.min(boxW / nw, boxH / nh);
+    var dw = nw * sc;
+    var dh = nh * sc;
+    var ox = (boxW - dw) * 0.5;
+    var oy = (boxH - dh) * 0.5;
+    return {
+      leftPct: (ox / boxW) * 100,
+      topPct: (oy / boxH) * 100,
+      widthPct: (dw / boxW) * 100,
+      heightPct: (dh / boxH) * 100,
+    };
+  }
+
+  function syncEditorHitFit() {
+    if (!hitFit || !frame) return;
+    ensureNat(function (nat) {
+      var w = frame.clientWidth;
+      var h = frame.clientHeight;
+      lastFit = containPct(w, h, nat.w, nat.h);
+      hitFit.style.left = lastFit.leftPct + '%';
+      hitFit.style.top = lastFit.topPct + '%';
+      hitFit.style.width = lastFit.widthPct + '%';
+      hitFit.style.height = lastFit.heightPct + '%';
+      paint();
+    });
+  }
+
+  /** 맵 이미지(contain 박스) 기준 0~100 */
+  function clientToNorm(clientX, clientY) {
+    var r = frame.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return null;
+    var fx = ((clientX - r.left) / r.width) * 100;
+    var fy = ((clientY - r.top) / r.height) * 100;
+    var wp = lastFit.widthPct > 0.01 ? lastFit.widthPct : 100;
+    var hp = lastFit.heightPct > 0.01 ? lastFit.heightPct : 100;
+    var ix = ((fx - lastFit.leftPct) / wp) * 100;
+    var iy = ((fy - lastFit.topPct) / hp) * 100;
+    return [clamp(ix, 0, 100), clamp(iy, 0, 100)];
+  }
+
+  function polygonD(pts, close) {
+    if (!pts || pts.length < 1) return '';
+    var d = 'M ' + pts[0][0].toFixed(3) + ' ' + pts[0][1].toFixed(3);
+    for (var i = 1; i < pts.length; i++) {
+      d += ' L ' + pts[i][0].toFixed(3) + ' ' + pts[i][1].toFixed(3);
+    }
+    if (close && pts.length >= 3) d += ' Z';
+    return d;
+  }
+
+  function previewClass() {
+    var k = selLayer.value;
+    if (k === 'conservative') return 'hit-preview hit-preview--con';
+    if (k === 'plaza') return 'hit-preview hit-preview--plaza';
+    return 'hit-preview';
+  }
+
+  function chainClass() {
+    var k = selLayer.value;
+    if (k === 'conservative') return 'poly-chain poly-chain--con';
+    if (k === 'plaza') return 'poly-chain poly-chain--plaza';
+    return 'poly-chain';
+  }
+
+  function paint() {
+    var k = selLayer.value;
+    var pts = state[k] || [];
+    pathFill.setAttribute('class', previewClass());
+    pathChain.setAttribute('class', chainClass());
+    if (pts.length >= 3) {
+      pathFill.setAttribute('d', polygonD(pts, true));
+      pathFill.removeAttribute('hidden');
+    } else {
+      pathFill.setAttribute('d', '');
+      pathFill.setAttribute('hidden', 'hidden');
+    }
+    if (pts.length >= 2) {
+      pathChain.setAttribute('d', polygonD(pts, false));
+      pathChain.removeAttribute('hidden');
+    } else {
+      pathChain.setAttribute('d', '');
+      pathChain.setAttribute('hidden', 'hidden');
+    }
+    if (pts.length >= 3) {
+      var a = pts[pts.length - 1];
+      var b = pts[0];
+      pathCloseHint.setAttribute('d', 'M ' + a[0].toFixed(3) + ' ' + a[1].toFixed(3) + ' L ' + b[0].toFixed(3) + ' ' + b[1].toFixed(3));
+      pathCloseHint.removeAttribute('hidden');
+    } else {
+      pathCloseHint.setAttribute('d', '');
+      pathCloseHint.setAttribute('hidden', 'hidden');
+    }
+    while (handles.firstChild) handles.removeChild(handles.firstChild);
+    for (var i = 0; i < pts.length; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('class', i === 0 ? 'pt-handle pt-handle--start' : 'pt-handle');
+      c.setAttribute('data-i', String(i));
+      c.setAttribute('cx', String(pts[i][0]));
+      c.setAttribute('cy', String(pts[i][1]));
+      c.setAttribute('r', i === 0 ? '1.05' : '0.85');
+      handles.appendChild(c);
+    }
+  }
+
+  function toJson() {
+    var zones = {};
+    KEYS.forEach(function (k) {
+      var pts = state[k];
+      if (pts && pts.length >= 3) {
+        zones[k] = {
+          points: pts.map(function (p) {
+            return [Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100];
+          }),
+        };
+      }
+    });
+    return {
+      version: 1,
+      comment: 'territory-hit-zone-editor',
+      viewBox: '0 0 100 100',
+      zones: zones,
+    };
+  }
+
+  function syncTextarea() {
+    outJson.value = JSON.stringify(toJson(), null, 2);
+  }
+
+  function applyImported(j) {
+    if (!j || !j.zones) return;
+    KEYS.forEach(function (k) {
+      var z = j.zones[k];
+      var pts = z && z.points;
+      if (pts && pts.length >= 3) {
+        state[k] = pts.map(function (p) {
+          return [Number(p[0]), Number(p[1])];
+        });
+      }
+    });
+    paint();
+    syncTextarea();
+  }
+
+  selLayer.addEventListener('change', function () {
+    paint();
+  });
+
+  function dist2(ax, ay, bx, by) {
+    var dx = ax - bx;
+    var dy = ay - by;
+    return dx * dx + dy * dy;
+  }
+
+  /** 첫 점 근처(뷰박스 약 3단위) 클릭 시 닫힘만 — 새 꼭짓점 추가 안 함 */
+  var SNAP_CLOSE_R2 = 3 * 3;
+
+  frame.addEventListener('click', function (ev) {
+    if (ev.target.closest && ev.target.closest('.pt-handle')) return;
+    var k = selLayer.value;
+    var pts = state[k];
+    var p = clientToNorm(ev.clientX, ev.clientY);
+    if (!p) return;
+    if (pts.length >= 3 && dist2(p[0], p[1], pts[0][0], pts[0][1]) <= SNAP_CLOSE_R2) {
+      paint();
+      syncTextarea();
+      return;
+    }
+    pts.push(p);
+    paint();
+    syncTextarea();
+  });
+
+  var dragIdx = -1;
+  svg.addEventListener('pointerdown', function (ev) {
+    var t = ev.target;
+    if (!t || !t.classList || !t.classList.contains('pt-handle')) return;
+    dragIdx = parseInt(t.getAttribute('data-i'), 10);
+    if (isNaN(dragIdx)) return;
+    ev.preventDefault();
+    try {
+      t.setPointerCapture(ev.pointerId);
+    } catch (_) {}
+  });
+  svg.addEventListener('pointermove', function (ev) {
+    if (dragIdx < 0) return;
+    var p = clientToNorm(ev.clientX, ev.clientY);
+    if (!p) return;
+    var k = selLayer.value;
+    if (state[k][dragIdx]) {
+      state[k][dragIdx][0] = p[0];
+      state[k][dragIdx][1] = p[1];
+    }
+    paint();
+    syncTextarea();
+  });
+  svg.addEventListener('pointerup', function () {
+    dragIdx = -1;
+  });
+  svg.addEventListener('pointercancel', function () {
+    dragIdx = -1;
+  });
+
+  document.getElementById('btnUndo').addEventListener('click', function () {
+    var k = selLayer.value;
+    state[k].pop();
+    paint();
+    syncTextarea();
+  });
+  document.getElementById('btnClear').addEventListener('click', function () {
+    var k = selLayer.value;
+    state[k] = [];
+    paint();
+    syncTextarea();
+  });
+  document.getElementById('btnSnapRect').addEventListener('click', function () {
+    var k = selLayer.value;
+    var pts = state[k];
+    if (!pts || pts.length < 2) return;
+    var minX = 100, minY = 100, maxX = 0, maxY = 0;
+    for (var i = 0; i < pts.length; i++) {
+      minX = Math.min(minX, pts[i][0]);
+      minY = Math.min(minY, pts[i][1]);
+      maxX = Math.max(maxX, pts[i][0]);
+      maxY = Math.max(maxY, pts[i][1]);
+    }
+    state[k] = [
+      [minX, minY],
+      [maxX, minY],
+      [maxX, maxY],
+      [minX, maxY],
+    ];
+    paint();
+    syncTextarea();
+  });
+
+  document.getElementById('btnExport').addEventListener('click', syncTextarea);
+  document.getElementById('btnDownload').addEventListener('click', function () {
+    syncTextarea();
+    var blob = new Blob([outJson.value], { type: 'application/json;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'territory-hit-zones.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('btnCopy').addEventListener('click', function () {
+    syncTextarea();
+    navigator.clipboard.writeText(outJson.value).catch(function () {
+      alert('클립보드 복사에 실패했습니다.');
+    });
+  });
+  document.getElementById('btnReset').addEventListener('click', function () {
+    resetStateToDefault();
+    paint();
+    syncTextarea();
+  });
+
+  document.getElementById('btnLoadFile').addEventListener('click', function () {
+    document.getElementById('fileJson').click();
+  });
+  document.getElementById('fileJson').addEventListener('change', function () {
+    var f = this.files && this.files[0];
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        applyImported(JSON.parse(String(rd.result || '{}')));
+      } catch (e) {
+        alert('JSON 파싱 실패');
+      }
+    };
+    rd.readAsText(f, 'utf-8');
+    this.value = '';
+  });
+  document.getElementById('btnFetch').addEventListener('click', function () {
+    fetch('/territories/territory-hit-zones.json?cb=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('fetch');
+        return r.json();
+      })
+      .then(applyImported)
+      .catch(function () {
+        alert('불러오기 실패');
+      });
+  });
+
+  window.addEventListener('resize', function () {
+    syncEditorHitFit();
+  });
+  if (typeof ResizeObserver !== 'undefined' && frame) {
+    var ro = new ResizeObserver(function () {
+      syncEditorHitFit();
+    });
+    ro.observe(frame);
+  }
+  syncEditorHitFit();
+  syncTextarea();
+})();
+  </script>
+</body>
+</html>

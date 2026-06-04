@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영토 레이아웃 편집기 — Sentence Craft</title>
+  <style>
+    :root { --bg: #0b1020; --text: #e8eefc; --muted: #94a3b8; --accent: #38bdf8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1rem 1rem 2rem; font-family: system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+    p { margin: 0.35rem 0; color: var(--muted); font-size: 0.88rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; margin: 0.75rem 0; }
+    label { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 0.2rem; }
+    input[type="text"], select, textarea {
+      font: inherit; font-size: 0.86rem; padding: 0.35rem 0.5rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.35); color: var(--text);
+    }
+    textarea { width: 100%; min-height: 12rem; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    button {
+      font: inherit; font-size: 0.84rem; font-weight: 600; padding: 0.45rem 0.85rem; border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.12); color: #e0f2fe; cursor: pointer;
+    }
+    button.secondary { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.25); color: #cbd5e1; }
+    #preview-wrap {
+      max-width: min(96rem, calc(100vw - 2rem)); margin: 1rem auto; padding: 0 1rem;
+    }
+    @media (min-width: 960px) {
+      #preview-wrap { max-width: min(108rem, calc(100vw - 1.5rem)); padding: 0 0.75rem; }
+    }
+    #frame {
+      position: relative; width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);
+      min-height: min(56vh, 24rem); background: #0b1628 center / contain no-repeat url("/assets/territory-island-hero.png");
+      overflow: hidden; touch-action: none;
+    }
+    @media (min-width: 640px) { #frame { min-height: min(62vh, 32rem); } }
+    @media (min-width: 960px) { #frame { min-height: min(72vh, 48rem); } }
+    .layer-box {
+      position: absolute; border: 2px dashed rgba(57, 255, 20, 0.75); background: transparent; cursor: grab;
+      min-width: 48px; min-height: 48px; overflow: hidden;
+    }
+    .layer-box.is-selected { border-color: #38bdf8; border-style: solid; box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35); z-index: 20; }
+    .layer-preview-img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center;
+      pointer-events: none; user-select: none; -webkit-user-drag: none; z-index: 0;
+    }
+    /* 메인(index) 깐따 박스와 동일: contain + 상단 정렬 (세로 가운데면 맵에서 더 아래로 보임) */
+    .layer-box[data-layer='kanta'] .layer-preview-img {
+      object-position: center top;
+    }
+    .layer-box .label {
+      position: absolute; left: 0; top: 0; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.35rem;
+      background: rgba(0,0,0,0.65); color: #a7f3d0; pointer-events: none; z-index: 2;
+    }
+    .resize-se {
+      position: absolute; right: -6px; bottom: -6px; width: 14px; height: 14px;
+      background: rgba(57, 255, 20, 0.9); border-radius: 3px; cursor: nwse-resize; z-index: 2;
+    }
+    .resize-s {
+      position: absolute; left: 50%; bottom: -6px; width: 22px; height: 12px; transform: translateX(-50%);
+      background: rgba(57, 255, 20, 0.75); border-radius: 3px; cursor: ns-resize; z-index: 2;
+    }
+    code { font-size: 0.82em; background: rgba(0,0,0,0.35); padding: 0.1em 0.35em; border-radius: 4px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <h1>영토 레이아웃 편집기</h1>
+  <p>
+    <strong>저장 주의:</strong> JSON은 반드시 <code>public/territories/territory-layout.json</code> 만 덮어쓰세요.
+    이 HTML 파일에 붙여넣으면 편집기가 깨집니다.
+    <strong>클릭 경계(폴리곤)</strong>는 <a href="/tools/territory-hit-zone-editor.html">히트 경계 편집기</a> → <code>territory-hit-zones.json</code> 입니다.
+  </p>
+  <p>미리보기 = 메인과 같은 맵 <code>contain</code>·프레임 높이 규칙. 드래그 / 오른쪽 아래(대각) / 아래 가운데(세로)로 조절.</p>
+  <p><a href="/">← 메인</a></p>
+
+  <div class="row">
+    <div>
+      <label for="selLayer">편집 레이어</label>
+      <select id="selLayer">
+        <option value="progressive">진보 (좌)</option>
+        <option value="conservative">보수 (우)</option>
+        <option value="kanta">깐따</option>
+        <option value="plaza">중앙광장</option>
+      </select>
+    </div>
+    <div>
+      <label for="inpAnchor">앵커</label>
+      <select id="inpAnchor">
+        <option value="center">중심 translate(-50%,-50%)</option>
+        <option value="topCenter">상단 translateX(-50%)</option>
+        <option value="none">없음</option>
+      </select>
+    </div>
+    <div><label for="inpMaxW">maxWidth</label><input id="inpMaxW" type="text" style="width:7rem" /></div>
+    <div><label for="inpMinW">minWidth</label><input id="inpMinW" type="text" style="width:7rem" /></div>
+    <div><label for="inpZ">z-index</label><input id="inpZ" type="text" style="width:4rem" /></div>
+    <div><label for="inpBr">border-radius</label><input id="inpBr" type="text" style="width:5rem" /></div>
+  </div>
+
+  <div id="preview-wrap">
+    <div id="frame" aria-label="맵 미리보기">
+      <div class="layer-box" data-layer="progressive">
+        <img class="layer-preview-img" src="/territories/conservative-stage-1.png" alt="" decoding="async" />
+        <span class="label">진보</span><span class="resize-s"></span><span class="resize-se"></span>
+      </div>
+      <div class="layer-box" data-layer="conservative">
+        <img class="layer-preview-img" src="/territories/progressive-stage-1.png" alt="" decoding="async" />
+        <span class="label">보수</span><span class="resize-s"></span><span class="resize-se"></span>
+      </div>
+      <div class="layer-box" data-layer="kanta">
+        <img class="layer-preview-img" src="/territories/kantapbiya-hero-entry.png" alt="" decoding="async" />
+        <span class="label">깐따</span><span class="resize-s"></span><span class="resize-se"></span>
+      </div>
+      <div class="layer-box" data-layer="plaza">
+        <img class="layer-preview-img" src="/territories/common-plaza-stage-1.png" alt="" decoding="async" />
+        <span class="label">광장</span><span class="resize-s"></span><span class="resize-se"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="btnLoadFile">JSON 불러오기</button>
+    <input id="fileJson" type="file" accept=".json,application/json" hidden />
+    <button type="button" id="btnFetch">layout.json 다시 읽기</button>
+    <button type="button" class="secondary" id="btnReset">기본값</button>
+  </div>
+  <div class="row">
+    <button type="button" id="btnExport">아래에 JSON 반영</button>
+    <button type="button" id="btnDownload">territory-layout.json 다운로드</button>
+    <button type="button" class="secondary" id="btnCopy">클립보드 복사</button>
+  </div>
+  <label for="outJson">JSON (이 내용을 territory-layout.json 에만 저장)</label>
+  <textarea id="outJson" spellcheck="false"></textarea>
+
+  <script>
+(function () {
+  var KEYS = ['progressive', 'conservative', 'kanta', 'plaza'];
+  var LABELS = { progressive: '진보', conservative: '보수', kanta: '깐따', plaza: '광장' };
+  var DEFAULT_STATE = {
+    progressive: { cx: 0.09, cy: 0.5, halfW: 0.14, halfH: 0.22, anchor: 'center', maxWidth: '20.25rem', minWidth: '11.55rem', zIndex: '', borderRadius: '' },
+    conservative: { cx: 0.91, cy: 0.5, halfW: 0.14, halfH: 0.22, anchor: 'center', maxWidth: '20.25rem', minWidth: '11.55rem', zIndex: '', borderRadius: '' },
+    kanta: { cx: 0.493, cy: 0.1955, halfW: 0.1232, halfH: 0.22045, anchor: 'topCenter', maxWidth: '19rem', minWidth: '10.5rem', zIndex: '6', borderRadius: '' },
+    plaza: { cx: 0.505, cy: 0.5413, halfW: 0.1876, halfH: 0.356, anchor: 'center', maxWidth: '22.5rem', minWidth: '10.5rem', zIndex: '7', borderRadius: '14px' }
+  };
+  var state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  var frame = document.getElementById('frame');
+  var selLayer = document.getElementById('selLayer');
+  var inpAnchor = document.getElementById('inpAnchor');
+  var inpMaxW = document.getElementById('inpMaxW');
+  var inpMinW = document.getElementById('inpMinW');
+  var inpZ = document.getElementById('inpZ');
+  var inpBr = document.getElementById('inpBr');
+  var outJson = document.getElementById('outJson');
+
+  function transformForAnchor(a) {
+    if (a === 'center') return 'translate(-50%, -50%)';
+    if (a === 'topCenter') return 'translateX(-50%)';
+    return 'none';
+  }
+  function stateToLayersJson() {
+    var layers = {};
+    KEYS.forEach(function (k) {
+      var s = state[k];
+      var W = frame.clientWidth, H = frame.clientHeight;
+      if (W < 8 || H < 8) return;
+      var leftPct, topPct;
+      if (s.anchor === 'center') { leftPct = s.cx * 100; topPct = s.cy * 100; }
+      else if (s.anchor === 'topCenter') { leftPct = s.cx * 100; topPct = (s.cy - s.halfH) * 100; }
+      else { leftPct = (s.cx - s.halfW) * 100; topPct = (s.cy - s.halfH) * 100; }
+      var wPct = s.halfW * 2 * 100, hPct = s.halfH * 2 * 100;
+      var o = {
+        left: leftPct.toFixed(2) + '%', top: Math.max(0, topPct).toFixed(2) + '%',
+        width: wPct.toFixed(2) + '%', height: hPct.toFixed(2) + '%', transform: transformForAnchor(s.anchor)
+      };
+      if (s.maxWidth) o.maxWidth = s.maxWidth;
+      if (s.minWidth) o.minWidth = s.minWidth;
+      if (s.zIndex) o.zIndex = s.zIndex;
+      if (s.borderRadius) o.borderRadius = s.borderRadius;
+      layers[k] = o;
+    });
+    return { version: 1, comment: 'territory-layout-editor', layers: layers };
+  }
+  function syncTextarea() { outJson.value = JSON.stringify(stateToLayersJson(), null, 2); }
+  function syncFormFromState(k) {
+    var s = state[k];
+    inpAnchor.value = s.anchor === 'topCenter' ? 'topCenter' : s.anchor === 'none' ? 'none' : 'center';
+    inpMaxW.value = s.maxWidth || ''; inpMinW.value = s.minWidth || ''; inpZ.value = s.zIndex || ''; inpBr.value = s.borderRadius || '';
+  }
+  function rectFromState(k) {
+    var s = state[k], W = frame.clientWidth, H = frame.clientHeight;
+    var w = s.halfW * 2 * W, h = s.halfH * 2 * H, cx = s.cx * W, cy = s.cy * H;
+    return { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
+  }
+  function stateFromRect(k, left, top, width, height) {
+    var W = frame.clientWidth, H = frame.clientHeight;
+    if (W < 8 || H < 8) return;
+    var s = state[k];
+    width = Math.max(40, width); height = Math.max(40, height);
+    s.halfW = width / (2 * W); s.halfH = height / (2 * H);
+    s.cx = (left + width / 2) / W; s.cy = (top + height / 2) / H;
+  }
+  function paint() {
+    KEYS.forEach(function (k) {
+      var box = frame.querySelector('.layer-box[data-layer="' + k + '"]');
+      if (!box) return;
+      var r = rectFromState(k);
+      box.style.left = r.left + 'px'; box.style.top = r.top + 'px';
+      box.style.width = r.width + 'px'; box.style.height = r.height + 'px';
+      box.querySelector('.label').textContent = LABELS[k];
+    });
+    syncTextarea();
+  }
+  function parsePercentAny(v) {
+    if (v == null || v === '') return NaN;
+    var s = String(v).trim();
+    if (s === '0') return 0;
+    var m = s.match(/([\d.]+)\s*%/);
+    return m ? parseFloat(m[1]) / 100 : NaN;
+  }
+  function parseWidthFrac(L) {
+    var w = NaN;
+    if (typeof L.width === 'string') {
+      var mm = L.width.match(/([\d.]+)\s*%/g);
+      if (mm && mm.length) w = parseFloat(mm[0]) / 100;
+    }
+    if (isNaN(w) || w <= 0) w = 0.26;
+    return Math.min(1, w);
+  }
+  function applyImportedLayers(layers) {
+    if (!layers || typeof layers !== 'object') return;
+    var W = frame.clientWidth, H = frame.clientHeight;
+    if (W < 8 || H < 8) return;
+    KEYS.forEach(function (k) {
+      var L = layers[k];
+      if (!L || typeof L !== 'object') return;
+      var tr = String(L.transform || '').replace(/\s+/g, '');
+      var anchor = 'center';
+      if (tr.indexOf('translateX(-50%)') !== -1 && tr.indexOf('translateY') === -1) anchor = 'topCenter';
+      else if (!tr || tr === 'none') anchor = 'none';
+      var wfrac = parseWidthFrac(L);
+      var hfull = parsePercentAny(L.height);
+      if (isNaN(hfull)) hfull = Math.min(0.48, wfrac * (W / H) * 0.62);
+      var lx = parsePercentAny(L.left), ty = parsePercentAny(L.top);
+      if (isNaN(lx)) lx = 0.5; if (isNaN(ty)) ty = 0.5;
+      state[k].halfW = wfrac / 2; state[k].halfH = hfull / 2; state[k].anchor = anchor;
+      if (anchor === 'center') { state[k].cx = lx; state[k].cy = ty; }
+      else if (anchor === 'topCenter') { state[k].cx = lx; state[k].cy = ty + hfull / 2; }
+      else { state[k].cx = lx + wfrac / 2; state[k].cy = ty + hfull / 2; }
+      if (L.maxWidth) state[k].maxWidth = L.maxWidth;
+      if (L.minWidth) state[k].minWidth = L.minWidth;
+      if (L.zIndex != null && L.zIndex !== '') state[k].zIndex = String(L.zIndex);
+      if (L.borderRadius) state[k].borderRadius = L.borderRadius;
+    });
+    paint();
+  }
+  function importFullJson(obj) {
+    if (obj && obj.layers) applyImportedLayers(obj.layers);
+  }
+
+  var drag = null;
+  frame.addEventListener('pointerdown', function (ev) {
+    var handleSE = ev.target.closest('.resize-se');
+    var handleS = ev.target.closest('.resize-s');
+    var box = ev.target.closest('.layer-box');
+    if (!box) return;
+    var layer = box.getAttribute('data-layer');
+    if (handleSE) drag = { mode: 'resize', layer: layer, startX: ev.clientX, startY: ev.clientY, start: rectFromState(layer) };
+    else if (handleS) drag = { mode: 'resize-s', layer: layer, startX: ev.clientX, startY: ev.clientY, start: rectFromState(layer) };
+    else if (!handleSE && !handleS) drag = { mode: 'move', layer: layer, startX: ev.clientX, startY: ev.clientY, start: rectFromState(layer) };
+    if (drag) {
+      frame.setPointerCapture(ev.pointerId);
+      selLayer.value = drag.layer;
+      document.querySelectorAll('.layer-box').forEach(function (b) { b.classList.toggle('is-selected', b === box); });
+      syncFormFromState(drag.layer);
+      ev.preventDefault();
+    }
+  });
+  frame.addEventListener('pointermove', function (ev) {
+    if (!drag) return;
+    var dx = ev.clientX - drag.startX, dy = ev.clientY - drag.startY, r = drag.start;
+    if (drag.mode === 'move') stateFromRect(drag.layer, r.left + dx, r.top + dy, r.width, r.height);
+    else if (drag.mode === 'resize-s') stateFromRect(drag.layer, r.left, r.top, r.width, r.height + dy);
+    else stateFromRect(drag.layer, r.left, r.top, r.width + dx, r.height + dy);
+    paint();
+    document.querySelectorAll('.layer-box').forEach(function (b) {
+      b.classList.toggle('is-selected', b.getAttribute('data-layer') === drag.layer);
+    });
+  });
+  function endDrag(ev) {
+    if (drag && frame.hasPointerCapture(ev.pointerId)) frame.releasePointerCapture(ev.pointerId);
+    drag = null;
+  }
+  frame.addEventListener('pointerup', endDrag);
+  frame.addEventListener('pointercancel', endDrag);
+
+  selLayer.addEventListener('change', function () {
+    var k = selLayer.value; syncFormFromState(k);
+    document.querySelectorAll('.layer-box').forEach(function (b) { b.classList.toggle('is-selected', b.getAttribute('data-layer') === k); });
+  });
+  function commitForm() {
+    var k = selLayer.value, s = state[k];
+    s.anchor = inpAnchor.value === 'topCenter' ? 'topCenter' : inpAnchor.value === 'none' ? 'none' : 'center';
+    s.maxWidth = inpMaxW.value.trim(); s.minWidth = inpMinW.value.trim();
+    s.zIndex = inpZ.value.trim(); s.borderRadius = inpBr.value.trim();
+    paint();
+  }
+  ['change'].forEach(function (ev) {
+    inpAnchor.addEventListener(ev, commitForm);
+    inpMaxW.addEventListener(ev, commitForm);
+    inpMinW.addEventListener(ev, commitForm);
+    inpZ.addEventListener(ev, commitForm);
+    inpBr.addEventListener(ev, commitForm);
+  });
+
+  document.getElementById('btnExport').addEventListener('click', syncTextarea);
+  document.getElementById('btnDownload').addEventListener('click', function () {
+    syncTextarea();
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([outJson.value], { type: 'application/json' }));
+    a.download = 'territory-layout.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('btnCopy').addEventListener('click', function () {
+    syncTextarea();
+    navigator.clipboard.writeText(outJson.value).catch(function () { alert('복사 실패'); });
+  });
+  document.getElementById('btnReset').addEventListener('click', function () {
+    state = JSON.parse(JSON.stringify(DEFAULT_STATE)); syncFormFromState(selLayer.value); paint();
+  });
+  document.getElementById('btnLoadFile').addEventListener('click', function () { document.getElementById('fileJson').click(); });
+  document.getElementById('fileJson').addEventListener('change', function (ev) {
+    var f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try { importFullJson(JSON.parse(String(r.result || '{}'))); syncFormFromState(selLayer.value); } catch (e) { alert('JSON 오류'); }
+    };
+    r.readAsText(f); ev.target.value = '';
+  });
+  document.getElementById('btnFetch').addEventListener('click', function () {
+    fetch('/territories/territory-layout.json?cb=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { importFullJson(j); syncFormFromState(selLayer.value); })
+      .catch(function () { alert('불러오기 실패 — npm start 후 /territories/ 경로 확인'); });
+  });
+  outJson.addEventListener('change', function () {
+    try { importFullJson(JSON.parse(outJson.value || '{}')); } catch (_) {}
+  });
+  window.addEventListener('resize', function () { paint(); });
+  fetch('/territories/territory-layout.json?cb=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { importFullJson(j); })
+    .catch(function () {})
+    .then(function () { paint(); syncFormFromState(selLayer.value); });
+})();
+  </script>
+</body>
+</html>

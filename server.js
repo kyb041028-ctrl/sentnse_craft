@@ -581,7 +581,16 @@ app.post('/api/demo/validate-comment', (req, res) => {
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  express.static(path.join(__dirname, 'public'), {
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('territory-layout.json') || filePath.endsWith('territory-hit-zones.json')) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+      }
+    },
+  }),
+);
 
 // -----------------------------------------------------------------------------
 // 404
