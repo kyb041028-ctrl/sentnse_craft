@@ -37,10 +37,9 @@ const rnd = mulberry32(SEED);
 
 const FACTION_UNLOCK_PCT = 40;
 const KANTA_UNLOCK_PLANET_PCT = 50;
-const KANTA_ASSIGN_HIGH_PCT = 60;
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
-const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT'];
+const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
 const FREE_MEGA_CATS = ['all', 'affairs', 'economy', 'society', 'culture', 'tech', 'humor', 'life', 'advice'];
 const FREE_MEGA_SUBS = {
   affairs: ['politics_free'],
@@ -117,9 +116,7 @@ function bucketScores(prev) {
     progressive: Number.isFinite(prev.progressive) ? prev.progressive : init.progressive,
     planetPct: Number.isFinite(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0,
     forcedTerritory:
-      prev.forcedTerritory === 'KANTAPBIYA_LEFT' ||
-      prev.forcedTerritory === 'KANTAPBIYA_CENTER' ||
-      prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+      prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
         ? prev.forcedTerritory
         : null,
   };
@@ -146,9 +143,11 @@ function isFactionTier1Unlocked(tid, pct, userId, getForced, getPlanetPct) {
   if (!pct) return false;
   if (tid === 'CONSERVATIVE') return pct.conservative >= FACTION_UNLOCK_PCT;
   if (tid === 'PROGRESSIVE') return pct.progressive >= FACTION_UNLOCK_PCT;
-  if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_CENTER' || tid === 'KANTAPBIYA_RIGHT') {
-    if (getForced(userId) === tid) return true;
-    return getPlanetPct(userId) >= KANTA_UNLOCK_PLANET_PCT;
+  if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_RIGHT') {
+    if (getPlanetPct(userId) < KANTA_UNLOCK_PLANET_PCT) return false;
+    const home = getForced(userId);
+    if (!home) return false;
+    return home === tid;
   }
   return false;
 }
@@ -174,7 +173,6 @@ const mapPop = {
   CONSERVATIVE: 0,
   PROGRESSIVE: 0,
   KANTAPBIYA_LEFT: 0,
-  KANTAPBIYA_CENTER: 0,
   KANTAPBIYA_RIGHT: 0,
 };
 const followGraph = { following: {}, followers: {} };
@@ -326,13 +324,8 @@ function simulate() {
     if (rnd() < 0.08) {
       const planet = 50 + Math.floor(rnd() * 40);
       const sc = bucketScores(base);
-      const displayPct = A.toDisplayPercent(sc);
-      let ft = 'KANTAPBIYA_CENTER';
-      if (planet >= KANTA_ASSIGN_HIGH_PCT) {
-        if (displayPct.progressive > displayPct.conservative) ft = 'KANTAPBIYA_LEFT';
-        else if (displayPct.conservative > displayPct.progressive) ft = 'KANTAPBIYA_RIGHT';
-        else ft = 'KANTAPBIYA_CENTER';
-      }
+      const unit = A.unit3(sc);
+      const ft = unit.progressive >= unit.conservative ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
       scoresMap[u] = {
         ...sc,
         planetPct: planet,
@@ -435,13 +428,12 @@ function simulate() {
   }
 
   // 해금 통계
-  let unlocked = { CONSERVATIVE: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_C: 0, KANTA_R: 0, COMMON_only: 0 };
+  let unlocked = { CONSERVATIVE: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_R: 0, COMMON_only: 0 };
   for (let i = 0; i < USER_COUNT; i++) {
     const u = uid(i);
     const pct = getPct(u);
     const ft = getForced(u);
     if (ft === 'KANTAPBIYA_LEFT') unlocked.KANTA_L++;
-    else if (ft === 'KANTAPBIYA_CENTER') unlocked.KANTA_C++;
     else if (ft === 'KANTAPBIYA_RIGHT') unlocked.KANTA_R++;
     else if (pct.conservative >= 40 && pct.conservative >= pct.centrist && pct.conservative >= pct.progressive)
       unlocked.CONSERVATIVE++;

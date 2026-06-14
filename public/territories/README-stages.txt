@@ -1,18 +1,14 @@
-진보·보수·중앙광장 맵 썸네일
+영토 맵 — 단일 일러스트 + 네 구역 히트존 (2026)
 
-초기 표시: `loadMapPop()` 에서 인구가 없거나 0이면 `stageFromPopulation` 이 1단계로 간주되며,
-벨트 비주얼 1~6·광장 1~4 모두 **1단계 PNG**가 나옵니다. (로컬에 `sc_map_pop_v1` 등으로 누적 인구가
-저장돼 있으면 그 값에 따라 단계가 올라갑니다.)
+**화면에 쓰는 이미지(한 장):** `public/assets/territory-zones-unified.png`  
+- `applyCentristHeroArt()` 가 `#territory-centrist-hero-bg` 배경으로 `contain` 표시합니다.  
+- 예전 `territory-island-hero.png`, `territory-bulletin-unified.png`, `kantapbiya-planet.png` 는 메인 경로에서 사용하지 않습니다.
 
-**영토 버튼 위치·크기:** `territories/territory-layout.json` 만 수정하세요. **`public/tools/territory-layout-editor.html` 에 JSON을 붙여넣으면 편집기가 깨집니다.**  
-**진보·보수·중앙광장 클릭 경계(폴리곤):** `territories/territory-hit-zones.json` — 좌표는 **맵 PNG(contain 영역) 기준 0~100%**(프레임 여백 제외). 편집은 `/tools/territory-hit-zone-editor.html` (메인은 부팅·메인 탭 진입 시 둘 다 다시 읽음).
-메인은 부팅 시 + **메인 탭으로 들어올 때마다** 이 JSON을 다시 읽습니다. 크롬에서 안 바뀌면 강력 새로고침(Ctrl+Shift+R) 또는 서버 재시작 후 확인하세요.
+**클릭 구역(진보 · 중앙광장 · 보수 · 외계행성):** `public/territories/territory-hit-zones.json`  
+- 좌표는 맵 PNG가 **contain** 으로 그려지는 사각형 기준 **0~100%** (프레임 레터박스 제외).  
+- 편집: `/tools/territory-hit-zone-editor.html` → 저장 후 `territory-hit-zones.json` 덮어쓰기.  
+- **진보** → `goBoard('PROGRESSIVE')` · **중앙광장** → `goBoard('COMMON')` · **보수** → `goBoard('CONSERVATIVE')` · **외계행성** → 행성 선택 모달.
 
-- progressive-stage-1.png … progressive-stage-6.png — 디스크상 파일명(우측 보수 벨트에 표시)
-- conservative-stage-1.png … conservative-stage-6.png — 디스크상 파일명(좌측 진보 벨트에 표시)
-  (에셋이 파일명과 반대로 들어가 있어 index.html 에서 교차 로드함)
-- common-plaza-stage-1.png … common-plaza-stage-4.png — 맵 가운데 중앙광장 (1~4만 사용, 5·6은 추후)
+**레이아웃 JSON:** `territory-layout.json` 은 `layers: {}` 로 비워 두었습니다(오버레이 박스 없음).
 
-검은 배경 투명 처리: `python tools/png_black_to_transparent.py --rgb-max 32 --soft-band 18 public/territories/<파일들>` 재실행.
-
-레거시: belt-stage-1~4.png, common-space-hero.png 는 예전 에셋.
+메인은 부팅 시 + 메인 탭 진입 시 히트존·레이아웃 JSON을 다시 읽습니다.

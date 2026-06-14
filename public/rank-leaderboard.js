@@ -1,5 +1,5 @@
 /**
- * 센텐스크래프트 — 전체/소속 랭킹 보기 (1~100위)
+ * 센텐스크래프트 — 전체/소속 명성 순위 (1~100위)
  */
 (function (global) {
   'use strict';
@@ -59,8 +59,8 @@
     if (titleEl) {
       titleEl.textContent =
         currentMode === MODE_TERRITORY
-          ? '소속별 랭킹 · ' + prog.territoryLabelKo(tid)
-          : '전체 랭킹 (소속 무관)';
+          ? '소속별 명성 순위 · ' + prog.territoryLabelKo(tid)
+          : '전체 명성 순위 (소속 무관)';
     }
 
     if (myEl) {
@@ -70,7 +70,7 @@
           (standings.territoryRank != null
             ? standings.territoryRank + '위 / ' + standings.territoryTotal + '명'
             : '—') +
-          ' · 점수 ' +
+          ' · 명성 ' +
           standings.score.toLocaleString('ko-KR') +
           ' · 팔로워 ' +
           standings.followers.toLocaleString('ko-KR') +
@@ -81,7 +81,7 @@
           (standings.globalRank != null
             ? standings.globalRank + '위 / ' + standings.globalTotal + '명'
             : '—') +
-          ' · 점수 ' +
+          ' · 명성 ' +
           standings.score.toLocaleString('ko-KR') +
           ' · 팔로워 ' +
           standings.followers.toLocaleString('ko-KR') +
@@ -117,7 +117,7 @@
         row.level +
         '</span>' +
         '<span class="sc-rank-modal__sub">' +
-        '점수 ' +
+        '명성 ' +
         row.score.toLocaleString('ko-KR') +
         ' · ' +
         escapeHtml(row.territoryLabel) +
@@ -150,14 +150,15 @@
   }
 
   function initUi() {
-    var btnOpen = document.getElementById('avatar-btn-rankings');
+    var btnMapRank = document.getElementById('sc-map-tab-ranking');
     var btnClose = document.getElementById('sc-rank-modal-close');
     var backdrop = document.getElementById('sc-rank-modal-backdrop');
     var modal = document.getElementById('sc-rank-modal');
     var tabs = document.querySelectorAll('.sc-rank-modal__tab');
 
-    if (btnOpen) {
-      btnOpen.addEventListener('click', function () {
+    if (btnMapRank) {
+      btnMapRank.addEventListener('click', function (ev) {
+        ev.preventDefault();
         openModal();
       });
     }

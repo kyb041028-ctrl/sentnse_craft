@@ -2,7 +2,7 @@
  * =============================================================================
  * 랭크별 성향치 상한 + 단일 게시물 누적 상한
  * =============================================================================
- * - **메인 벨트(보수·진보)** 축과 **깐따삐아(좌·우)** 축에 같은 랭크 표를 적용한다.
+ * - **메인 벨트(보수·진보)** 축과 **외계행성(좌·우)** 축에 같은 랭크 표를 적용한다.
  * - 설계 가정: 동시에 활동하는 유저 대략 **10만 명** 규모에서도 숫자가 포화되지 않게
  *   “축당 최대치”는 랭크가 오를수록 크게 벌려 둠.
  * - 한 게시물에서 작자에게 들어가는 성향치는 **게시물당 캡**으로 제한 (다계정·끌올 방지).
@@ -17,7 +17,7 @@
  * @property {number} rank                 1 = 최저 랭크
  * @property {string} labelKo            표기용 (나중에 랭크 테이블과 합치기)
  * @property {number} maxAxisScore       해당 구역에서 쓰는 **양 극단 축** 각각의 **최대 누적치**
- *                                       (메인: 보수·진보 / 깐따삐아: 좌·우)
+ *                                       (메인: 보수·진보 / 외계행성: 좌·우)
  * @property {number} perPostAxisCap     **한 게시물**에서 해당 축으로 작자에게 더해질 수 있는 **최대 합계**
  */
 
@@ -50,20 +50,19 @@ function getRankAlignmentRow(rank) {
 }
 
 /**
- * 깐따삐아 진보·중간·보수 행성: 메인 벨트와 **동일 랭크 표**를 세 영토 축에 적용.
+ * 외계행성 진보·보수 행성: 메인 벨트와 **동일 랭크 표**를 두 영토 축에 적용.
  * (축 이름만 다르고 maxAxisScore·perPostAxisCap 숫자는 공유)
  */
 function getKantapbiyaRankAlignmentLimits() {
   return Object.freeze({
-    poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_CENTER', 'KANTAPBIYA_RIGHT']),
+    poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT']),
     poleAxisLabelKo: Object.freeze({
-      KANTAPBIYA_LEFT: '깐따삐아 · 진보행성 축',
-      KANTAPBIYA_CENTER: '깐따삐아 · 중간행성 축',
-      KANTAPBIYA_RIGHT: '깐따삐아 · 보수행성 축',
+      KANTAPBIYA_LEFT: '외계행성 · 진보행성 축',
+      KANTAPBIYA_RIGHT: '외계행성 · 보수행성 축',
     }),
     ranks: RANK_ALIGNMENT_TABLE,
     noteKo:
-      '메인 벨트(보수·진보)와 같은 랭크별 maxAxisScore·perPostAxisCap을, 깐따삐아 세 행성 영토 성향 축에 그대로 적용한다.',
+      '메인 벨트(보수·진보)와 같은 랭크별 maxAxisScore·perPostAxisCap을, 외계행성 두 행성 영토 성향 축에 그대로 적용한다.',
   });
 }
 
@@ -72,12 +71,12 @@ function getPublicRankAlignmentLimits() {
     designAssumptionMau: DESIGN_ASSUMPTION_MAU,
     /** 메인 벨트: 보수·진보 축 (기존 필드명 `ranks` 유지) */
     ranks: RANK_ALIGNMENT_TABLE,
-    /** 깐따삐아: 진보·중간·보수 행성 축 */
+    /** 외계행성: 진보·보수 행성 축 */
     kantapbiya: getKantapbiyaRankAlignmentLimits(),
     notesKo: [
       '보수·진보를 “각각의 축”으로 둘 때: 각 축이 maxAxisScore를 넘지 못하게 클램프.',
       '한 게시물에서 작자에게 쌓이는 “그 축 합”은 perPostAxisCap을 넘지 못하게 클램프(글·댓글·반응 합산).',
-      '깐따삐아 세 행성도 동일 랭크 표를 쓴다 — territoryId가 KANTAPBIYA_LEFT/CENTER/RIGHT일 때 축 클램프에 적용.',
+      '외계행성 두 행성도 동일 랭크 표를 쓴다 — territoryId가 KANTAPBIYA_LEFT/RIGHT일 때 축 클램프에 적용.',
       '랭크 정의(이름·승급 조건)는 별도 랭크 테이블과 합칠 것 — 여기서는 숫자만.',
     ],
   });

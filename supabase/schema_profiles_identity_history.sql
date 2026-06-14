@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     - app-config.js의 IDENTITY_HISTORY.statusCodes와 맞춥니다.
       - CITIZEN: 일반 시민 땅
       - EXILED: 축출(일반)
-      - KANTAPBIYA_RESIDENT: 깐따삐아 유배지
+      - KANTAPBIYA_RESIDENT: 외계행성 유배지
       - OUTLANDER_SPY: (선택) 외지인 첩자 상태를 ‘상시 신분’으로 관리하고 싶을 때 사용
         ※ 실제 서비스에서는 “타국 글쓰기 순간에만 잠깐 붙는 플래그”로 둘 수도 있어서,
            이 컬럼 대신 게시글 메타데이터로만 관리할지는 기획에 따라 조정하면 됩니다.

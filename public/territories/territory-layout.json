@@ -1,45 +1,6 @@
 {
-  "version": 1,
-  "comment": "territory-layout-editor",
-  "layers": {
-    "progressive": {
-      "left": "31.68%",
-      "top": "42.86%",
-      "width": "16.57%",
-      "height": "41.45%",
-      "transform": "translate(-50%, -50%)",
-      "maxWidth": "20.25rem",
-      "minWidth": "11.55rem"
-    },
-    "conservative": {
-      "left": "74.20%",
-      "top": "47.30%",
-      "width": "18.85%",
-      "height": "46.19%",
-      "transform": "translate(-50%, -50%)",
-      "maxWidth": "20.25rem",
-      "minWidth": "11.55rem"
-    },
-    "kanta": {
-      "left": "49.29%",
-      "top": "-2.50%",
-      "width": "24.64%",
-      "height": "44.09%",
-      "transform": "translateX(-50%)",
-      "maxWidth": "19rem",
-      "minWidth": "10.5rem",
-      "zIndex": "6"
-    },
-    "plaza": {
-      "left": "50.50%",
-      "top": "54.13%",
-      "width": "37.52%",
-      "height": "71.20%",
-      "transform": "translate(-50%, -50%)",
-      "maxWidth": "22.5rem",
-      "minWidth": "10.5rem",
-      "zIndex": "7",
-      "borderRadius": "14px"
-    }
-  }
+  "version": 2,
+  "coordinateSpace": "mapContain",
+  "comment": "영토는 단일 PNG(contain 전체). 오버레이 레이어 없음 — 경계는 territory-hit-zones.json 만 사용.",
+  "layers": {}
 }

@@ -1,13 +1,11 @@
 /**
  * =============================================================================
- * 유저 레벨(1~5) · 경험치 · 4단계 랭크(5레벨 이후, 받은 좋아요 절대평가)
+ * 유저 레벨(1~5) · 경험치 · 명성·등급(Lv4 이후, 받은 좋아요 절대 기준)
  * =============================================================================
  * - 레벨 1~5: 글·댓글 작성으로 totalXp
  * - 3레벨: 타 영토 1단계 눈팅(읽기)
- * - 5레벨: 랭크 해금
- * - 소속 내 받은 좋아요 **하위 50%** → 일반시민
- * - 상위 50%: 평론가·정치인·총수 (절대 기준 + 인구 캡)
- * - 정치인: 소속(영토) 인구의 10% 이내 / 총수: 소속당 최대 5명
+ * - 4레벨: 랭크(명성 등급) 해금 — 절대 기준 + 영토 인구 캡만 적용(상대 하위 컷 없음)
+ * - 대표: 소속(영토) 인구의 10% 이내 / 지도자: 소속당 최대 5명
  * =============================================================================
  */
 
@@ -16,7 +14,7 @@
 const MAX_LEVEL = 5;
 const LURK_UNLOCK_LEVEL = 3;
 const MAX_RANK_TIER = 4;
-const RANK_UNLOCK_LEVEL = 5;
+const RANK_UNLOCK_LEVEL = 4;
 
 const XP_REWARDS = Object.freeze({
   post_write: 25,
@@ -41,12 +39,12 @@ const LEVEL_CUMULATIVE_XP = buildCumulativeThresholds();
 
 /** 절대평가 — 받은 좋아요·팔로워 (타인만 집계) */
 const RANK_ABSOLUTE_THRESHOLDS = Object.freeze({
-  2: Object.freeze({ postLikes: 3, commentLikes: 2, followers: 2, labelKo: '평론가' }),
-  3: Object.freeze({ postLikes: 15, commentLikes: 8, followers: 8, labelKo: '정치인' }),
-  4: Object.freeze({ postLikes: 40, commentLikes: 20, followers: 20, labelKo: '총수' }),
+  2: Object.freeze({ postLikes: 3, commentLikes: 2, followers: 2, labelKo: '논객' }),
+  3: Object.freeze({ postLikes: 15, commentLikes: 8, followers: 8, labelKo: '대표' }),
+  4: Object.freeze({ postLikes: 40, commentLikes: 20, followers: 20, labelKo: '지도자' }),
 });
 
-/** 랭크 영향력: 팔로워 1명 가중치 */
+/** 랭크 명성 점수: 팔로워 1명 가중치 */
 const RANK_FOLLOWER_WEIGHT = 5;
 
 /** 소속(영토) 인구 대비 상한 */
@@ -55,14 +53,11 @@ const RANK_POPULATION_CAPS = Object.freeze({
   chiefsMaxCount: 5,
 });
 
-/** 소속 내 랭크 대상자 중 하위 N% → 일반시민 (0.5 = 50%) */
-const CITIZEN_BOTTOM_RATIO = 0.5;
-
 const RANK_TIERS = Object.freeze([
-  { tier: 1, labelKo: '일반시민', shortKo: '일반시민', permissions: Object.freeze({}) },
-  { tier: 2, labelKo: '평론가', shortKo: '평론가', permissions: Object.freeze({}) },
-  { tier: 3, labelKo: '정치인', shortKo: '정치인', permissions: Object.freeze({}) },
-  { tier: 4, labelKo: '총수', shortKo: '총수', permissions: Object.freeze({}) },
+  { tier: 1, labelKo: '시민', shortKo: '시민', permissions: Object.freeze({}) },
+  { tier: 2, labelKo: '논객', shortKo: '논객', permissions: Object.freeze({}) },
+  { tier: 3, labelKo: '대표', shortKo: '대표', permissions: Object.freeze({}) },
+  { tier: 4, labelKo: '지도자', shortKo: '지도자', permissions: Object.freeze({}) },
 ]);
 
 function levelFromTotalXp(totalXp) {
@@ -116,8 +111,8 @@ function normalizeLikeCount(n) {
   return Math.max(0, Math.floor(Number(n) || 0));
 }
 
-/** 랭크 정렬용 영향력 (받은 좋아요 + 팔로워) */
-function rankInfluenceScore(state) {
+/** 랭크 정렬용 명성 점수 (받은 좋아요 + 팔로워) */
+function rankReputationScore(state) {
   const post = normalizeLikeCount(state.receivedPostLikes);
   const comment = normalizeLikeCount(state.receivedCommentLikes);
   const followers = normalizeLikeCount(state.receivedFollowers);
@@ -125,7 +120,7 @@ function rankInfluenceScore(state) {
 }
 
 /**
- * 절대 기준만으로 달성 가능한 최고 랭크 (0=미달, 2~4, 인구·하위50% 미적용)
+ * 절대 기준만으로 달성 가능한 최고 명성 등급 (0=미달, 2~4, 인구·하위50% 미적용)
  */
 function meetsAbsoluteThreshold(tier, stats) {
   const th = RANK_ABSOLUTE_THRESHOLDS[tier];
@@ -208,11 +203,10 @@ function applyPopulationCaps(userId, territoryId, tier, map, tierByUser) {
 }
 
 /**
- * 소속별 하위 50% 일반시민 + 상위 50% 절대평가 + 인구 캡
+ * 절대 기준 + 인구 캡만 적용 (상대평가 하위 컷 없음)
  */
 function recomputeAllRanks(map) {
   const absolute = {};
-  const bottomHalf = new Set();
 
   Object.keys(map || {}).forEach((uid) => {
     const row = map[uid];
@@ -229,21 +223,6 @@ function recomputeAllRanks(map) {
     });
   });
 
-  const byTerritory = {};
-  Object.keys(map || {}).forEach((uid) => {
-    const row = map[uid];
-    if (!row || levelFromTotalXp(row.totalXp) < RANK_UNLOCK_LEVEL) return;
-    const tid = String(row.territoryId || 'COMMON').trim() || 'COMMON';
-    if (!byTerritory[tid]) byTerritory[tid] = [];
-    byTerritory[tid].push({ uid, score: rankInfluenceScore(row) });
-  });
-
-  Object.keys(byTerritory).forEach((tid) => {
-    const list = byTerritory[tid].sort((a, b) => a.score - b.score);
-    const bottomCount = Math.floor(list.length * CITIZEN_BOTTOM_RATIO);
-    for (let i = 0; i < bottomCount; i++) bottomHalf.add(list[i].uid);
-  });
-
   const provisional = {};
   Object.keys(map || {}).forEach((uid) => {
     const row = map[uid];
@@ -253,7 +232,7 @@ function recomputeAllRanks(map) {
       provisional[uid] = 0;
       return;
     }
-    provisional[uid] = bottomHalf.has(uid) ? 1 : absolute[uid] || 0;
+    provisional[uid] = absolute[uid] || 0;
   });
 
   Object.keys(map || {}).forEach((uid) => {
@@ -310,12 +289,10 @@ function getPublicPlayerProgressionConfig() {
     ),
     rankAbsoluteThresholds: RANK_ABSOLUTE_THRESHOLDS,
     rankPopulationCaps: RANK_POPULATION_CAPS,
-    citizenBottomRatio: CITIZEN_BOTTOM_RATIO,
     notesKo: [
-      '레벨 3: 타 영토 1단계 눈팅(읽기). 레벨 5: 랭크 해금.',
-      '소속 내 받은 좋아요 하위 50% → 일반시민.',
-      '상위 50%: 평론가 이상은 절대 기준(글·댓글 좋아요·팔로워).',
-      '정치인: 소속 인구 10% 이내, 총수: 소속당 5명 이내.',
+      '레벨 3: 타 영토 1단계 눈팅(읽기). 레벨 4: 명성 등급·집계 해금.',
+      '명성 등급은 받은 좋아요·팔로워 절대 기준 + 영토 인구 캡만 적용합니다.',
+      '대표: 소속 인구 10% 이내, 지도자: 소속당 5명 이내.',
     ],
   });
 }
@@ -332,11 +309,10 @@ module.exports = Object.freeze({
   RANK_ABSOLUTE_THRESHOLDS,
   RANK_FOLLOWER_WEIGHT,
   RANK_POPULATION_CAPS,
-  CITIZEN_BOTTOM_RATIO,
   levelFromTotalXp,
   xpProgressInLevel,
   getRankTierRow,
-  rankInfluenceScore,
+  rankReputationScore,
   absoluteRankTierFromStats,
   absoluteRankTierFromLikes,
   qualifyingRankTierFromLikes,

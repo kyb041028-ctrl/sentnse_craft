@@ -1,5 +1,7 @@
 /**
- * 센텐스크래프트 — 레벨(1~5) · 경험치 · 랭크(받은 좋아요 절대평가, localStorage)
+ * 센텐스크래프트 — 레벨(1~5) · 경험치 · 명성·등급(localStorage)
+ *
+ * 철학: 레벨=활동 경험, 명성 등급=받은 반응 기반(권력 계급 아님). 상대평가 하위 컷 없음.
  */
 (function (global) {
   'use strict';
@@ -7,7 +9,7 @@
   var LS_KEY = 'sc_player_progression_v1';
   var MAX_LEVEL = 5;
   var LURK_UNLOCK_LEVEL = 3;
-  var RANK_UNLOCK_LEVEL = 5;
+  var RANK_UNLOCK_LEVEL = 4;
   var MAX_RANK_TIER = 4;
 
   var XP_REWARDS = {
@@ -41,14 +43,11 @@
     chiefsMaxCount: 5,
   };
 
-  /** 소속 내 랭크 대상자 하위 50% → 일반시민 */
-  var CITIZEN_BOTTOM_RATIO = 0.5;
-
   var RANK_TIERS = [
-    { tier: 1, labelKo: '일반시민', shortKo: '일반시민' },
-    { tier: 2, labelKo: '평론가', shortKo: '평론가' },
-    { tier: 3, labelKo: '정치인', shortKo: '정치인' },
-    { tier: 4, labelKo: '총수', shortKo: '총수' },
+    { tier: 1, labelKo: '시민', shortKo: '시민' },
+    { tier: 2, labelKo: '논객', shortKo: '논객' },
+    { tier: 3, labelKo: '대표', shortKo: '대표' },
+    { tier: 4, labelKo: '지도자', shortKo: '지도자' },
   ];
 
   var TERRITORY_LABELS = {
@@ -57,9 +56,8 @@
     COMMON: '중앙광장',
     CENTRIST: '중앙광장',
     PROGRESSIVE: '진보',
-    KANTAPBIYA_LEFT: '깐따삐아 진보행성',
-    KANTAPBIYA_CENTER: '깐따삐아 중간행성',
-    KANTAPBIYA_RIGHT: '깐따삐아 보수행성',
+    KANTAPBIYA_LEFT: '외계행성 · 진보행성',
+    KANTAPBIYA_RIGHT: '외계행성 · 보수행성',
   };
 
   var LEADERBOARD_MAX = 100;
@@ -144,7 +142,7 @@
     }
   }
 
-  function rankInfluenceScore(row) {
+  function rankReputationScore(row) {
     return (
       normLikes(row.receivedPostLikes) +
       normLikes(row.receivedCommentLikes) * 2 +
@@ -214,12 +212,6 @@
 
   function recomputeAllRanks(map) {
     var absolute = {};
-    var bottomHalf = {};
-
-    function inBottom(uid) {
-      return Object.prototype.hasOwnProperty.call(bottomHalf, uid);
-    }
-
     Object.keys(map).forEach(function (uid) {
       var row = map[uid];
       if (!row) return;
@@ -236,23 +228,6 @@
       );
     });
 
-    var byTerritory = {};
-    Object.keys(map).forEach(function (uid) {
-      var row = map[uid];
-      if (!row || levelFromTotalXp(row.totalXp) < RANK_UNLOCK_LEVEL) return;
-      var tid = String(row.territoryId || 'COMMON');
-      if (!byTerritory[tid]) byTerritory[tid] = [];
-      byTerritory[tid].push({ uid: uid, score: rankInfluenceScore(row) });
-    });
-
-    Object.keys(byTerritory).forEach(function (tid) {
-      var list = byTerritory[tid].sort(function (a, b) {
-        return a.score - b.score;
-      });
-      var bottomCount = Math.floor(list.length * CITIZEN_BOTTOM_RATIO);
-      for (var i = 0; i < bottomCount; i++) bottomHalf[list[i].uid] = true;
-    });
-
     var provisional = {};
     Object.keys(map).forEach(function (uid) {
       var row = map[uid];
@@ -262,7 +237,7 @@
         provisional[uid] = 0;
         return;
       }
-      provisional[uid] = inBottom(uid) ? 1 : absolute[uid] || 0;
+      provisional[uid] = absolute[uid] || 0;
     });
 
     Object.keys(map).forEach(function (uid) {
@@ -379,12 +354,11 @@
 
   function rankProgressHint(level, postLikes, commentLikes, followers, effectiveTier) {
     if (level < RANK_UNLOCK_LEVEL) return '';
-    if (effectiveTier === 1) return ' · 소속 하위 50%';
     var qual = absoluteRankTierFromStats(level, postLikes, commentLikes, followers);
     var base = effectiveTier > 0 ? effectiveTier : qual;
-    var nextTier = Math.min(MAX_RANK_TIER, base + 1);
-    if (nextTier < 2 || nextTier > MAX_RANK_TIER) return '';
     if (base >= MAX_RANK_TIER) return '';
+    var nextTier = base < 2 ? 2 : base + 1;
+    if (nextTier < 2 || nextTier > MAX_RANK_TIER) return '';
     var th = RANK_ABSOLUTE[nextTier];
     if (!th) return '';
     return (
@@ -412,10 +386,10 @@
     var rankUnlocked = level >= RANK_UNLOCK_LEVEL;
     var rankLabel;
     if (!rankUnlocked) {
-      rankLabel = '랭크 · 레벨 ' + RANK_UNLOCK_LEVEL + ' 달성 후 해금';
+      rankLabel = '명성 · 레벨 ' + RANK_UNLOCK_LEVEL + ' 달성 후 해금';
     } else if (st.rankTier === 1) {
       rankLabel =
-        '일반시민' +
+        '시민' +
         rankProgressHint(level, st.receivedPostLikes, st.receivedCommentLikes, st.receivedFollowers, st.rankTier);
     } else if (st.rankTier >= 2) {
       rankLabel =
@@ -423,11 +397,15 @@
         rankProgressHint(level, st.receivedPostLikes, st.receivedCommentLikes, st.receivedFollowers, st.rankTier);
     } else {
       rankLabel =
-        '상위 50% · 평론가 미달' +
+        '명성 · 논객 조건 미달' +
         rankProgressHint(level, st.receivedPostLikes, st.receivedCommentLikes, st.receivedFollowers, st.rankTier);
     }
     rankLabel = formatRankWithAffiliation(rankLabel);
-    var rankRow = rankUnlocked && st.rankTier >= 1 ? getRankTierRow(st.rankTier) : null;
+    var rankShortOut = null;
+    if (rankUnlocked) {
+      if (st.rankTier >= 1) rankShortOut = getRankTierRow(st.rankTier).shortKo;
+      else if (st.rankTier === 0) rankShortOut = '참여 중';
+    }
     var xpLegend = prog.isMaxLevel
       ? 'MAX · 누적 ' + st.totalXp.toLocaleString('ko-KR') + ' XP'
       : prog.current.toLocaleString('ko-KR') +
@@ -443,7 +421,7 @@
       rankTier: st.rankTier,
       rankUnlocked: rankUnlocked,
       rankLabel: rankLabel,
-      rankShort: rankRow ? rankRow.shortKo : null,
+      rankShort: rankShortOut,
       receivedPostLikes: st.receivedPostLikes,
       receivedCommentLikes: st.receivedCommentLikes,
       receivedFollowers: st.receivedFollowers,
@@ -461,9 +439,9 @@
   function rankTitleShort(row) {
     var level = levelFromTotalXp(row.totalXp);
     if (level < RANK_UNLOCK_LEVEL) return '레벨 ' + level;
-    if (row.rankTier === 1) return '일반시민';
+    if (row.rankTier === 1) return '시민';
     if (row.rankTier >= 2) return getRankTierRow(row.rankTier).shortKo;
-    return '평론가 미달';
+    return '논객 미달';
   }
 
   function loadAllStatesMap() {
@@ -483,7 +461,7 @@
       if (tidFilter && tid !== tidFilter) return;
       entries.push({
         userId: userId,
-        score: rankInfluenceScore(row),
+        score: rankReputationScore(row),
         level: levelFromTotalXp(row.totalXp),
         rankTier: row.rankTier,
         rankTitle: rankTitleShort(row),
@@ -556,7 +534,7 @@
       standings.territoryRank != null
         ? '소속(' + standings.territoryLabel + ') ' + standings.territoryRank + '위 / ' + standings.territoryTotal + '명'
         : '소속 집계 없음';
-    return g + ' · ' + t + ' · 점수 ' + standings.score.toLocaleString('ko-KR');
+    return g + ' · ' + t + ' · 명성 ' + standings.score.toLocaleString('ko-KR');
   }
 
   function refreshAvatarDock() {
@@ -566,8 +544,7 @@
     var elXpLegend = document.getElementById('avatar-xpbar-legend');
     var elRank = document.getElementById('avatar-meta-rank');
     var elFollowers = document.getElementById('avatar-meta-followers');
-    var elStandings = document.getElementById('avatar-meta-standings');
-    if (!elLevel && !elRank) return;
+    if (!elLevel) return;
 
     var uid = (global.__scPlayer && global.__scPlayer.userId) || 'guest';
     setState(uid, { territoryId: currentTerritoryId() });
@@ -585,9 +562,6 @@
     if (elFollowers) {
       elFollowers.textContent = standings.followers.toLocaleString('ko-KR') + '명';
     }
-    if (elStandings) {
-      elStandings.textContent = formatStandingsLine(standings);
-    }
 
     if (global.__scPlayer) {
       global.__scPlayer.level = d.level;
@@ -600,7 +574,7 @@
       global.__scPlayer.receivedFollowers = d.receivedFollowers;
       global.__scPlayer.globalRank = standings.globalRank;
       global.__scPlayer.territoryRank = standings.territoryRank;
-      global.__scPlayer.influenceScore = standings.score;
+      global.__scPlayer.reputationScore = standings.score;
     }
     if (typeof global.__scRefreshBoardView === 'function') {
       global.__scRefreshBoardView();
@@ -620,12 +594,11 @@
       }),
       rankAbsolute: Object.assign({}, RANK_ABSOLUTE),
       rankCaps: Object.assign({}, RANK_CAPS),
-      citizenBottomRatio: CITIZEN_BOTTOM_RATIO,
       rankFollowerWeight: RANK_FOLLOWER_WEIGHT,
     };
   }
 
-  /** 게시물·스레드당 반응으로 작가에게 들어가는 성향치·외계치 상한 (랭크 티어, 클라이언트) */
+  /** 게시물·스레드당 반응으로 작가에게 들어가는 성향치·외계치 상한 (명성 등급 티어, 클라이언트) */
   var PER_POST_REACTION_CAP = [120, 200, 320, 480, 720];
 
   function getPerPostReactionCap(rankTier) {
@@ -655,7 +628,7 @@
     setFollowerCount: setFollowerCount,
     getDisplay: getDisplay,
     refreshAvatarDock: refreshAvatarDock,
-    rankInfluenceScore: rankInfluenceScore,
+    rankReputationScore: rankReputationScore,
     territoryLabelKo: territoryLabelKo,
     rankTitleShort: rankTitleShort,
     getLeaderboard: getLeaderboard,

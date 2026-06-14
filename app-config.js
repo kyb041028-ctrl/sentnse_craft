@@ -123,7 +123,7 @@ const SUBSCRIPTION_BONUS = Object.freeze({
  * 결제 상품(가격) 및 “이월” 규칙
  * - 월 구독권: 4,900원
  * - 특종 직언권(단품 500원): 영구 이월(리셋으로 사라지지 않음)
- * - 지구 귀환 티켓: 3,000원 (깐따삐아 귀환 등에 사용)
+ * - 지구 귀환 티켓: 3,000원 (외계행성 귀환 등에 사용)
  */
 const PAYMENT_PRODUCTS = Object.freeze({
   /** 월 구독권 */
@@ -147,7 +147,7 @@ const PAYMENT_PRODUCTS = Object.freeze({
     key: 'EARTH_RETURN_TICKET',
     nameKo: '지구 귀환 티켓',
     priceKrw: 3000,
-    /** 깐따삐아 탈출 수단 중 하나(정책과 연동) */
+    /** 외계행성 탈출 수단 중 하나(정책과 연동) */
     usedForKantapbiyaReturn: true,
   },
 });
@@ -168,7 +168,7 @@ const PAYMENT_METHODS = Object.freeze({
 });
 
 // -----------------------------------------------------------------------------
-// 4) 정치/축출, 깐따삐아(유배지), 신분 이력, 문패 칭호 매핑
+// 4) 정치/축출, 외계행성(유배지), 신분 이력, 문패 칭호 매핑
 // -----------------------------------------------------------------------------
 /**
  * 일반 축출(반대 진영 등에서 싫어요/신고 누적)
@@ -186,7 +186,7 @@ const EXILE_RULES = Object.freeze({
 });
 
 /**
- * 깐따삐아 — 영토(진보·중간·보수 행성) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
+ * 외계행성 — 영토(진보·보수 행성) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
  */
 const KANTAPBIYA = buildKantapbiya(PAYMENT_PRODUCTS.EARTH_RETURN_TICKET.priceKrw);
 
@@ -251,7 +251,7 @@ const TITLE_BADGE_MAP = Object.freeze({
   },
   KANTAPBIYA: {
     key: 'KANTAPBIYA',
-    titleKo: '깐따삐아 유배자',
+    titleKo: '외계행성 유배자',
     flavorKo: '자동 사면은 없다',
   },
   RETURNED: {
@@ -383,7 +383,7 @@ function getPublicClientConfig() {
     paymentProducts: PAYMENT_PRODUCTS,
     paymentMethods: PAYMENT_METHODS,
     exileRules: EXILE_RULES,
-    /** 깐따삐아 — 영토(좌/우) + 유배 규칙 (한 덩어리) */
+    /** 외계행성 — 영토(좌/우) + 유배 규칙 (한 덩어리) */
     kantapbiya: KANTAPBIYA,
     titleBadgeMap: TITLE_BADGE_MAP,
     identityHistory: {
@@ -395,7 +395,7 @@ function getPublicClientConfig() {
     worldTerritories: worldTerritories.getPublicWorldConfig(),
     /** 정치색 점수·자동 편입·AI 주제 채널 뼈대 (config/alignment-system.js) */
     alignmentSystem: alignmentSystem.getPublicAlignmentConfig(),
-    /** 레벨(1~30) · 경험치 · 4단계 랭크 (config/player-progression.js) */
+    /** 레벨(1~5) · 경험치 · 명성·등급 (config/player-progression.js) */
     playerProgression: playerProgression.getPublicPlayerProgressionConfig(),
   });
 }

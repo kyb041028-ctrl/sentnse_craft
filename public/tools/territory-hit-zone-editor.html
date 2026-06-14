@@ -17,6 +17,12 @@
       border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.35); color: var(--text);
     }
     textarea { width: 100%; min-height: 12rem; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      accent-color: #38bdf8;
+      cursor: pointer;
+    }
     button {
       font: inherit; font-size: 0.84rem; font-weight: 600; padding: 0.45rem 0.85rem; border-radius: 8px;
       border: 1px solid rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.12); color: #e0f2fe; cursor: pointer;
@@ -28,11 +34,19 @@
     }
     #frame {
       position: relative; width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);
-      min-height: min(56vh, 24rem); background: #0b1628 center / contain no-repeat url("/assets/territory-island-hero.png");
+      min-height: min(72vh, 32rem);
       overflow: hidden; touch-action: none; cursor: crosshair;
+      background-color: #0b1628;
+      background-position: center center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: none;
     }
-    @media (min-width: 640px) { #frame { min-height: min(62vh, 32rem); } }
-    @media (min-width: 960px) { #frame { min-height: min(72vh, 48rem); } }
+    #frame.layout-editor--show-island-bg {
+      background-image: url("/assets/territory-zones-unified.png");
+    }
+    @media (min-width: 640px) { #frame { min-height: min(78vh, 44rem); } }
+    @media (min-width: 960px) { #frame { min-height: min(84vh, 58rem); } }
     /* 메인과 동일: contain으로 실제 그려지는 맵 사각형 위에만 SVG(좌표 0~100 = 이 박스 기준) */
     .hit-fit-wrap {
       position: absolute; z-index: 2; pointer-events: none;
@@ -48,6 +62,7 @@
     }
     #overlay-svg .hit-preview--con { fill: rgba(251, 191, 36, 0.12); stroke: rgba(253, 224, 71, 0.9); }
     #overlay-svg .hit-preview--plaza { fill: rgba(167, 139, 250, 0.14); stroke: rgba(196, 181, 253, 0.92); }
+    #overlay-svg .hit-preview--kanta { fill: rgba(52, 211, 153, 0.12); stroke: rgba(45, 212, 191, 0.88); }
     /* 순서대로 찍은 꼭짓점 연결 (실선) */
     #overlay-svg .poly-chain {
       pointer-events: none; fill: none; stroke: rgba(224, 242, 254, 0.92); stroke-width: 0.42;
@@ -55,6 +70,7 @@
     }
     #overlay-svg .poly-chain--con { stroke: rgba(254, 243, 199, 0.95); }
     #overlay-svg .poly-chain--plaza { stroke: rgba(237, 233, 254, 0.95); }
+    #overlay-svg .poly-chain--kanta { stroke: rgba(204, 251, 241, 0.95); }
     /* 마지막 점 → 첫 점 (닫힘 미리보기, 점선) */
     #overlay-svg .poly-close-hint {
       pointer-events: none; fill: none; stroke: rgba(57, 255, 20, 0.82); stroke-width: 0.32;
@@ -69,32 +85,53 @@
     #overlay-svg .pt-handle:active { cursor: grabbing; }
     code { font-size: 0.82em; background: rgba(0,0,0,0.35); padding: 0.1em 0.35em; border-radius: 4px; }
     a { color: var(--accent); }
+    .steps {
+      margin: 0.75rem 0 0; padding: 0.75rem 1rem; border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(56, 189, 248, 0.08);
+      font-size: 0.88rem; color: var(--text);
+    }
+    .steps ol { margin: 0.4rem 0 0; padding-left: 1.25rem; }
+    .steps li { margin: 0.35rem 0; color: var(--muted); }
+    .steps strong { color: var(--text); }
   </style>
 </head>
 <body>
   <h1>영토 히트 경계 편집기</h1>
+  <div class="steps" role="region" aria-label="사용 순서">
+    <strong>마우스로 경계 그리기</strong>
+    <ol>
+      <li>위에서 <strong>편집 구역</strong>(진보·보수·중앙광장·외계행성)을 고릅니다.</li>
+      <li>아래 맵에서 <strong>클릭할 때마다 꼭짓점</strong>이 생기고, 이전 점과 <strong>실선</strong>으로 이어집니다.</li>
+      <li>점이 세 개 이상이면 <strong>녹색 점선</strong>으로 닫힘 미리보기가 보입니다. <strong>첫 점(큰 초록 테두리)</strong> 근처를 다시 클릭하면 닫힌 폴리곤으로 확정됩니다.</li>
+      <li>꼭짓점은 <strong>드래그</strong>로 옮길 수 있고, <strong>마지막 점 취소</strong>로 되돌릴 수 있습니다.</li>
+      <li>JSON을 반영한 뒤 <code>territory-hit-zones.json</code>에 저장하세요.</li>
+    </ol>
+  </div>
   <p>
     <strong>저장:</strong> 아래 JSON을 <code>public/territories/territory-hit-zones.json</code> 에 덮어쓰세요.
-    좌표는 <strong>맵 PNG가 contain으로 붙은 영역만</strong> 기준 <strong>0~100</strong> (검은 여백 제외) — 메인과 동일합니다.
+    좌표는 <strong>영토 단일 PNG</strong>(<code>territory-zones-unified.png</code>)가 contain으로 붙은 영역만 기준 <strong>0~100</strong> (검은 여백 제외) — 메인과 동일합니다.
   </p>
   <p>
-    벨트·광장 <strong>그림 위치·크기</strong>는 <code>territory-layout.json</code> + <a href="/tools/territory-layout-editor.html">레이아웃 편집기</a>이고,
-    여기서는 <strong>진보 / 보수 / 중앙광장</strong>만 <strong>클릭·번쩍 경계(다각형)</strong>를 잡습니다. (깐따는 제외)
+    <strong>통합 게시판·외계행성</strong>의 위치·크기는 <code>territory-layout.json</code> +
+    <a href="/tools/territory-layout-editor.html">레이아웃 편집기</a>입니다.
   </p>
-  <p>
-    <strong>그리기:</strong> 맵을 <strong>클릭할 때마다 꼭짓점이 순서대로</strong> 생기고, <strong>이전 점과 실선</strong>으로 이어집니다.
-    점이 세 개 이상이면 <strong>마지막 점에서 첫 점까지</strong> <strong>녹색 점선</strong>으로 닫힘 미리보기가 보입니다.
-    첫 점 근처(초록 큰 점 주변)를 <strong>맵 빈 곳에서</strong> 다시 클릭하면 새 점 없이 닫힘만 확인합니다. 점은 드래그로 옮길 수 있습니다.
-  </p>
-  <p><a href="/">← 메인</a></p>
+  <p><a href="/">← 메인</a> · <a href="/tools/index.html">편집 도구 목록</a></p>
+
+  <div class="row" style="align-items: center">
+    <label style="display: flex; align-items: center; gap: 0.45rem; cursor: pointer; margin: 0; color: var(--text); font-size: 0.88rem">
+      <input type="checkbox" id="chkShowIslandBg" />
+      <span>배경 일러스트(단일 영토 PNG) 표시</span>
+    </label>
+  </div>
 
   <div class="row">
     <div>
       <label for="selLayer">편집 구역</label>
       <select id="selLayer">
-        <option value="progressive">진보</option>
-        <option value="conservative">보수</option>
+        <option value="progressive">진보 진영</option>
+        <option value="conservative">보수 진영</option>
         <option value="plaza">중앙광장</option>
+        <option value="kantapbiya">외계행성</option>
       </select>
     </div>
     <button type="button" id="btnUndo">마지막 점 취소</button>
@@ -131,46 +168,37 @@
 
   <script>
 (function () {
-  var KEYS = ['progressive', 'conservative', 'plaza'];
-  var ISLAND_URL = '/assets/territory-island-hero.png';
+  var KEYS = ['progressive', 'conservative', 'plaza', 'kantapbiya'];
+  var MAP_URL = '/assets/territory-zones-unified.png';
   var DEFAULT_POLYGONS = {
+    kantapbiya: [
+      [37, 0],
+      [63, 0],
+      [63, 23],
+      [37, 23],
+    ],
     progressive: [
-      [9.48, 17], [8.34, 20.26], [7.37, 21.73], [11.35, 24.66], [9.47, 27.32], [6.09, 26.79], [4.81, 29.85], [7.44, 30.52],
-      [3.46, 35.31], [3.76, 38.51], [6.16, 39.44], [5.41, 41.44], [9.69, 42.64], [12.4, 44.24], [6.69, 49.92], [5.26, 53.69],
-      [3.69, 55.42], [1.58, 58.62], [4.59, 61.82], [7.07, 62.35], [4.51, 65.55], [11.87, 64.35], [10.22, 67.54], [7.82, 69.68],
-      [7.89, 72.21], [7.07, 74.6], [4.36, 75.4], [2.78, 77.8], [2.48, 82.2], [4.59, 84.73], [7.44, 83.39], [8.87, 83.53],
-      [11.12, 85.39], [6.16, 89.92], [7.07, 91.12], [11.8, 86.32], [13.07, 86.99], [13.83, 85.93], [10.45, 82.33], [11.05, 79.53],
-      [15.55, 80.06], [19.08, 79.27], [20.51, 81.93], [21.49, 83.13], [19.46, 88.86], [20.74, 91.79], [24.19, 91.79], [30.05, 89.12],
-      [31.78, 91.25], [36.25, 85.73], [38.46, 79.93], [35.68, 71.81], [31.63, 69.94], [28.47, 70.74], [30.43, 67.01], [30.65, 63.02],
-      [33.2, 59.02], [35.68, 56.62], [36.28, 52.36], [38.91, 49.83], [39.89, 45.17], [42.14, 39.57], [41.02, 36.38], [42.82, 34.25],
-      [39.44, 31.05], [43.42, 26.66], [42.37, 23.86], [43.95, 21.99], [42.07, 19.86], [43.57, 18.4], [40.42, 15.47], [38.16, 15.2],
-      [36.21, 11.61], [34.48, 12.67], [33.51, 11.87], [31.4, 11.34], [28.62, 7.61], [26.29, 12.14], [23.67, 14.27], [21.04, 14.27],
-      [18.33, 14.27], [12.47, 16.13],
+      [0, 0],
+      [36, 0],
+      [36, 23],
+      [47, 53],
+      [0, 53],
     ],
     conservative: [
-      [59, 22], [56.41, 19.2], [61.6, 15.07], [65.95, 11.07], [66.55, 12], [68.66, 9.21], [70.01, 7.21], [72.26, 10.01],
-      [74.07, 12.14], [77.07, 13.6], [78.95, 14], [83, 12.4], [87.06, 17.6], [90.59, 21.06], [88.94, 22.66], [89.39, 24.26],
-      [90.89, 23.59], [91.49, 25.46], [95.4, 27.99], [96.67, 31.45], [96.22, 33.85], [94.65, 37.84], [92.92, 39.04], [94.8, 40.37],
-      [94.65, 42.37], [96.45, 43.44], [98.25, 48.37], [97.43, 50.63], [95.4, 51.83], [94.8, 54.23], [93.44, 56.36], [96.07, 60.75],
-      [95.55, 64.61], [92.39, 66.48], [92.84, 69.14], [94.05, 70.74], [98.55, 74.47], [97.58, 76.07], [93.14, 73.01], [91.94, 72.74],
-      [90.37, 73.67], [91.12, 77.13], [94.2, 80.73], [98.03, 83.53], [98.03, 85.93], [95.77, 88.06], [94.5, 88.32], [96.07, 85.66],
-      [94.87, 84.99], [92.69, 86.59], [90.89, 86.19], [92.84, 83.26], [90.74, 81.13], [87.89, 84.33], [84.73, 87.79], [82.33, 87.79],
-      [81.28, 86.46], [79.55, 87.26], [77.75, 88.99], [76.69, 87.26], [74.37, 87.26], [73.24, 88.59], [72.56, 89.92], [73.92, 92.58],
-      [73.24, 94.72], [70.01, 92.19], [69.26, 93.52], [66.78, 93.38], [65.58, 89.12], [63.4, 88.32], [62.5, 85.79], [60.7, 83.93],
-      [60.47, 79.53], [60.25, 75.14], [61.15, 70.48], [61.6, 68.08], [64.45, 64.88], [66.33, 64.75], [67.46, 63.28], [65.13, 60.22],
-      [64.45, 56.76], [66.4, 54.36], [65.5, 50.23], [63.78, 48.1], [60.25, 46.37], [60.02, 43.84], [58.29, 39.84], [59.79, 36.38],
-      [60.7, 32.92], [63.17, 31.58], [63.63, 29.99], [60.7, 29.99], [59.12, 28.65], [57.77, 26.79],
+      [64, 0],
+      [100, 0],
+      [100, 53],
+      [53, 53],
+      [64, 23],
     ],
     plaza: [
-      [46.08, 42.41], [43.04, 44.64], [41.02, 47.83], [39.97, 51.43], [39.44, 55.96], [37.04, 58.62], [35.16, 61.42], [33.43, 63.55],
-      [34.86, 66.48], [37.19, 64.88], [39.36, 65.55], [38.31, 69.94], [39.51, 73.41], [41.54, 76.74], [41.99, 79.13], [40.34, 84.06],
-      [38.31, 87.79], [39.36, 90.45], [41.69, 89.65], [43.72, 92.05], [43.72, 95.51], [46.42, 96.98], [48.98, 93.92], [52.43, 90.59],
-      [55.06, 87.92], [55.21, 84.59], [59.34, 83.26], [59.12, 78.6], [57.84, 76.74], [56.64, 75.27], [58.44, 70.48], [59.72, 65.68],
-      [61, 62.35], [62.5, 60.22], [61.15, 57.02], [60.7, 52.23], [62.5, 49.96], [59.94, 47.3], [57.32, 43.97], [55.21, 41.57],
-      [50.33, 40.91],
+      [3, 46],
+      [97, 46],
+      [99, 100],
+      [1, 100],
     ],
   };
-  var state = { progressive: [], conservative: [], plaza: [] };
+  var state = { progressive: [], conservative: [], plaza: [], kantapbiya: [] };
   function resetStateToDefault() {
     KEYS.forEach(function (k) {
       state[k] = DEFAULT_POLYGONS[k].map(function (p) {
@@ -211,7 +239,7 @@
       natCache = { w: 16, h: 9 };
       cb(natCache);
     };
-    im.src = ISLAND_URL;
+    im.src = MAP_URL;
   }
 
   function containPct(boxW, boxH, nw, nh) {
@@ -245,6 +273,29 @@
     });
   }
 
+  var chkShowIslandBg = document.getElementById('chkShowIslandBg');
+  var LS_ISLAND_BG = 'scTerritoryEditorShowIslandBg';
+  function applyIslandBgVisibility() {
+    if (!frame || !chkShowIslandBg) return;
+    frame.classList.toggle('layout-editor--show-island-bg', chkShowIslandBg.checked);
+    try {
+      localStorage.setItem(LS_ISLAND_BG, chkShowIslandBg.checked ? '1' : '0');
+    } catch (_) {}
+  }
+  if (chkShowIslandBg && frame) {
+    try {
+      var v = localStorage.getItem(LS_ISLAND_BG);
+      chkShowIslandBg.checked = v !== '0';
+    } catch (_) {
+      chkShowIslandBg.checked = true;
+    }
+    chkShowIslandBg.addEventListener('change', function () {
+      applyIslandBgVisibility();
+      syncEditorHitFit();
+    });
+    applyIslandBgVisibility();
+  }
+
   /** 맵 이미지(contain 박스) 기준 0~100 */
   function clientToNorm(clientX, clientY) {
     var r = frame.getBoundingClientRect();
@@ -272,6 +323,7 @@
     var k = selLayer.value;
     if (k === 'conservative') return 'hit-preview hit-preview--con';
     if (k === 'plaza') return 'hit-preview hit-preview--plaza';
+    if (k === 'kantapbiya') return 'hit-preview hit-preview--kanta';
     return 'hit-preview';
   }
 
@@ -279,6 +331,7 @@
     var k = selLayer.value;
     if (k === 'conservative') return 'poly-chain poly-chain--con';
     if (k === 'plaza') return 'poly-chain poly-chain--plaza';
+    if (k === 'kantapbiya') return 'poly-chain poly-chain--kanta';
     return 'poly-chain';
   }
 

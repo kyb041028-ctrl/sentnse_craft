@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영토 편집 도구 — Sentence Craft</title>
+  <style>
+    :root { --bg: #0b1020; --text: #e8eefc; --muted: #94a3b8; --accent: #38bdf8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1.5rem; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; max-width: 40rem; }
+    h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+    p { color: var(--muted); margin: 0.5rem 0; font-size: 0.92rem; }
+    ul { padding-left: 1.2rem; margin: 1rem 0; }
+    li { margin: 0.65rem 0; }
+    a { color: var(--accent); font-weight: 600; word-break: break-all; }
+    a:hover { text-decoration: underline; }
+    code { font-size: 0.85em; background: rgba(0,0,0,0.35); padding: 0.15em 0.4em; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>영토 맵 편집 도구</h1>
+  <p>서버가 떠 있는 주소 기준으로 아래 링크를 사용하세요. (로컬 예: <code>http://localhost:3000</code>) 영토는 <strong>한 장 PNG + 히트존 JSON</strong>으로 나뉩니다. 히트존 편집기에서 배경 미리보기를 끄면(<code>localStorage</code> 키 <code>scTerritoryEditorShowIslandBg</code>=<code>0</code>) 어두운 바탕만 보입니다.</p>
+  <ul>
+    <li>
+      <a href="/tools/territory-layout-editor.html">영토 레이아웃 안내</a><br />
+      <span style="color: var(--muted); font-size: 0.82rem; font-weight: 400">단일 PNG 경로·히트존 편집기 링크 (박스 레이아웃 없음)</span>
+    </li>
+    <li>
+      <a href="/tools/territory-hit-zone-editor.html">마우스로 경계 찍기 — 히트존 편집기</a><br />
+      <span style="color: var(--muted); font-size: 0.82rem; font-weight: 400">맵을 클릭해 꼭짓점을 순서대로 이어 폴리곤을 만듭니다. 점은 드래그로 이동. 저장: <code>territories/territory-hit-zones.json</code></span>
+    </li>
+    <li><a href="/">← 메인 앱</a></li>
+  </ul>
+</body>
+</html>

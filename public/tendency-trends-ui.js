@@ -65,7 +65,7 @@
 
   function bucketScores(prev) {
     var A = global.AlignmentScoring;
-    var init = A ? A.initialScores() : { conservative: 4, centrist: 4, progressive: 4 };
+    var init = A ? A.initialScores() : { conservative: 12, centrist: 12, progressive: 12 };
     if (!prev || typeof prev !== 'object') return init;
     return {
       conservative:
@@ -325,36 +325,12 @@
     });
   }
 
-  function sparkPoints(series) {
-    var xs = series.length ? series : [{ conservative: 33, centrist: 34, progressive: 33 }];
-    var vals = xs.map(function (p) {
-      return p.progressive - p.conservative;
-    });
-    var w = 88;
-    var h = 28;
-    var pad = 2;
-    var min = -48;
-    var max = 48;
-    var n = vals.length;
-    var pts = [];
-    for (var i = 0; i < n; i++) {
-      var v = Math.max(min, Math.min(max, vals[i]));
-      var x = pad + (i * (w - pad * 2)) / Math.max(1, n - 1);
-      var y = pad + ((max - v) / (max - min)) * (h - pad * 2);
-      pts.push(x.toFixed(1) + ',' + y.toFixed(1));
-    }
-    return { d: 'M' + pts.join(' L'), w: w, h: h };
-  }
-
   function refreshMini() {
     var btn = el('sc-tendency-mini');
-    var path = el('sc-tendency-mini-path');
-    if (!btn || !path) return;
+    if (!btn) return;
     ensureTwoWeekWindow();
     var series = sliceLastDays(getDailySeries(uid()), 21);
-    var sp = sparkPoints(series);
-    path.setAttribute('d', sp.d);
-    btn.setAttribute('title', '[성향변화 추이] 최근 ' + series.length + '일 (클릭)');
+    btn.setAttribute('title', '통계 · 성향 변화 추이 — 최근 ' + series.length + '일 (클릭)');
   }
 
   function esc(s) {

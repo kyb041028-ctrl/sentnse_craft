@@ -1,12 +1,12 @@
 /**
- * 레벨·랭크·게시판 권한 안내 (상단 탭 화면)
+ * 레벨·명성·게시판 권한 안내 (상단 탭 화면)
  */
 (function (global) {
   'use strict';
 
   var SUB_TABS = [
     { id: 'level', label: '레벨' },
-    { id: 'rank', label: '랭크' },
+    { id: 'rank', label: '명성' },
     { id: 'board', label: '게시판·성향' },
   ];
 
@@ -28,15 +28,15 @@
     return {
       maxLevel: 5,
       lurkUnlockLevel: 3,
-      rankUnlockLevel: 5,
+      rankUnlockLevel: 4,
       xpRewards: { post_write: 25, board_comment: 12, issue_comment: 10 },
       xpPerLevel: [40, 50, 60, 70, 80],
       levelCumulativeXp: [0, 40, 90, 150, 220, 300],
       rankTiers: [
-        { tier: 1, labelKo: '일반시민' },
-        { tier: 2, labelKo: '평론가' },
-        { tier: 3, labelKo: '정치인' },
-        { tier: 4, labelKo: '총수' },
+        { tier: 1, labelKo: '시민' },
+        { tier: 2, labelKo: '논객' },
+        { tier: 3, labelKo: '대표' },
+        { tier: 4, labelKo: '지도자' },
       ],
       rankAbsolute: {
         2: { postLikes: 3, commentLikes: 2, followers: 2 },
@@ -44,7 +44,6 @@
         4: { postLikes: 40, commentLikes: 20, followers: 20 },
       },
       rankCaps: { politicianMaxRatio: 0.1, chiefsMaxCount: 5 },
-      citizenBottomRatio: 0.5,
     };
   }
 
@@ -60,7 +59,7 @@
         perks.push('다른 영토 1단계 눈팅(읽기만, 중립이어도)');
       }
       if (lv === d.rankUnlockLevel) {
-        perks.push('랭크(일반시민~) 표시·집계 시작');
+        perks.push('명성 등급 표시·집계 시작');
       }
       rows +=
         '<tr><td>Lv.' +
@@ -82,7 +81,7 @@
       (d.lurkUnlockLevel || 3) +
       '</strong>에 타 영토 눈팅, <strong>Lv.' +
       d.rankUnlockLevel +
-      '</strong>에 랭크가 열립니다.</p>' +
+      '</strong>에 <strong>명성 등급·집계</strong>가 열립니다.</p>' +
       '<table class="perm-guide__table"><thead><tr><th>레벨</th><th>이번 단계 XP</th><th>누적 XP</th><th>주요 권한</th></tr></thead><tbody>' +
       rows +
       '</tbody></table>' +
@@ -96,7 +95,7 @@
       '<li>데일리 이슈 댓글: <strong>+' +
       d.xpRewards.issue_comment +
       ' XP</strong></li>' +
-      '<li>받은 좋아요는 레벨이 아니라 <strong>랭크 승급</strong>에 반영됩니다.</li>' +
+      '<li>받은 좋아요는 레벨이 아니라 <strong>명성 등급</strong>에 반영됩니다.</li>' +
       '</ul></section>'
     );
   }
@@ -127,29 +126,26 @@
       );
     }
     var capPct = Math.round((d.rankCaps.politicianMaxRatio || 0.1) * 100);
-    var bottomPct = Math.round((d.citizenBottomRatio || 0.5) * 100);
     return (
       '<section class="perm-guide__section">' +
-      '<h3 class="perm-guide__h">랭크 (Lv.' +
+      '<h3 class="perm-guide__h">명성·등급 (Lv.' +
       d.rankUnlockLevel +
       ' 이후)</h3>' +
-      '<p class="perm-guide__lead">랭크는 <strong>받은 좋아요·팔로워</strong> 절대 기준과, 같은 영토 안 <strong>영향력 순위</strong>로 정해집니다. 프로필에 표시됩니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>랭크</th><th>절대 조건 (동시 충족)</th><th>비고</th></tr></thead><tbody>' +
-      rowTier(
-        1,
-        '일반시민',
-        '승급 조건 미달이거나, 영토 내 영향력 하위 ' + bottomPct + '%',
-      ) +
-      rowTier(2, '평론가', '위 조건 충족 시 자동 승급 후보') +
-      rowTier(3, '정치인', '영토당 최대 약 ' + capPct + '% 인원') +
-      rowTier(4, '총수', '영토당 최대 ' + (d.rankCaps.chiefsMaxCount || 5) + '명') +
+      '<p class="perm-guide__lead"><strong>명성 등급</strong>(논객~지도자)은 <strong>받은 좋아요·팔로워 절대 기준</strong>과 <strong>영토당 인구 캡</strong>으로 정해집니다. 소속 내 순위로 등급을 깎지 않습니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>명성 등급</th><th>절대 조건 (동시 충족)</th><th>비고</th></tr></thead><tbody>' +
+      '<tr><td><strong>참여 중</strong></td><td>—</td><td>Lv.' +
+      d.rankUnlockLevel +
+      '+ 이고 논객 수치 미달(티어 0). 자동 강등 없음.</td></tr>' +
+      rowTier(2, '논객', '위 조건 충족 시 부여(인구 캡으로 한 단계 낮아질 수 있음)') +
+      rowTier(3, '대표', '영토당 최대 약 ' + capPct + '% 인원') +
+      rowTier(4, '지도자', '영토당 최대 ' + (d.rankCaps.chiefsMaxCount || 5) + '명') +
       '</tbody></table>' +
       '<ul class="perm-guide__list">' +
-      '<li>영향력 = 받은 글 좋아요 + 댓글 좋아요×2 + 팔로워×' +
+      '<li>리더보드 정렬용 명성 = 받은 글 좋아요 + 댓글 좋아요×2 + 팔로워×' +
       (d.rankFollowerWeight || 5) +
-      ' (대략)</li>' +
-      '<li>정치인·총수 자리가 꽉 차면 한 단계 낮은 랭크로 조정될 수 있습니다.</li>' +
-      '<li>랭크는 <strong>게시판 해금</strong>과 별개입니다. 영토 1단계 글쓰기는 성향 %가 필요합니다.</li>' +
+      ' (등급 결정과 별개로 참고용)</li>' +
+      '<li>대표·지도자 자리가 꽉 차면 한 단계 낮은 등급으로 조정될 수 있습니다.</li>' +
+      '<li>명성·등급은 <strong>게시판 해금</strong>과 별개입니다. 영토 1단계 글쓰기는 성향 %가 필요합니다.</li>' +
       '</ul></section>'
     );
   }
@@ -167,10 +163,10 @@
       lurkLv +
       ' 눈팅 또는 해당 축 40%+</td><td>해당 축 40%+</td></tr>' +
       '<tr><td><strong>보수·진보</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
-      '<tr><td><strong>깐따삐아</strong> 1단계</td><td>Lv.' +
+      '<tr><td><strong>외계행성</strong> 1단계</td><td>Lv.' +
       lurkLv +
       ' 눈팅 또는 외계인 50%+</td><td>외계인 50%+</td></tr>' +
-      '<tr><td><strong>깐따삐아</strong> 2단계</td><td>외계인 50% + 사람 축 60%+</td><td>동일</td></tr>' +
+      '<tr><td><strong>외계행성</strong> 2단계</td><td>외계인 50% + 사람 축 60%+</td><td>동일</td></tr>' +
       '<tr><td><strong>3·4단계</strong> (전 영토)</td><td colspan="2">추후 공개</td></tr>' +
       '</tbody></table>' +
       '<h4 class="perm-guide__subh">Lv.' +
@@ -189,10 +185,10 @@
       '<li>영토 해금·소속은 보수·진보 두 게시판 축과 중도(균형) %를 함께 봅니다. 두 축 모두 40% 미만이면 중앙광장 소속입니다.</li>' +
       '<li>공감은 성향에 영향 없음. 엄지 좋아요/싫어요만 성향 시뮬에 반영.</li>' +
       '</ul>' +
-      '<h4 class="perm-guide__subh">깐따삐아 소속 시</h4>' +
+      '<h4 class="perm-guide__subh">외계행성 소속 시</h4>' +
       '<ul class="perm-guide__list">' +
       '<li>지구(중앙광장·일반 영토)에 쓴 글·댓글은 블라인드 + 「외계인의 언어입니다」 안내.</li>' +
-      '<li>깐따 영토 안에서는 정상적으로 읽고 쓸 수 있습니다.</li>' +
+      '<li>외계행성 안에서는 정상적으로 읽고 쓸 수 있습니다.</li>' +
       '</ul></section>'
     );
   }

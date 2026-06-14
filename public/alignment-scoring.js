@@ -10,14 +10,16 @@
  * 4) 내 글에 남이 반응하면 작성자(나): 반응자 성향 방향으로 (+) / 반대로 (−)
  *    - 좋아요: 반응자 단위벡터 방향으로 가산
  *    - 싫어요: 반응자 단위벡터 반대로 가산(빼기)
+ * 5) 게시판 스크립트(index.html)에서 싫어요는 사람 축 델타를 추가로 약하게(DISLIKE_ALIGN_SCALE) 하고,
+ *    planetPct(외계인·사회 과열) 쪽 가중은 좋아요보다 크게 둔다.
  */
 (function (global) {
   var EPS = 1e-6;
   var MIN_AXIS = 0.5;
-  var W_REACTOR_LIKE = 2.4;
-  var W_REACTOR_DISLIKE = -1.1;
-  var W_AUTHOR_LIKE = 2.8;
-  var W_AUTHOR_DISLIKE = -2.0;
+  var W_REACTOR_LIKE = 2.0;
+  var W_REACTOR_DISLIKE = -0.6;
+  var W_AUTHOR_LIKE = 1.0;
+  var W_AUTHOR_DISLIKE = -0.6;
 
   function clampAxis(x) {
     var n = Number(x);
@@ -26,7 +28,7 @@
   }
 
   function initialScores() {
-    return { conservative: 4, centrist: 4, progressive: 4 };
+    return { conservative: 12, centrist: 12, progressive: 12 };
   }
 
   /** L1 정규화 → 단위(합=1) */
