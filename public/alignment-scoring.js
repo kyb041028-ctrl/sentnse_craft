@@ -7,6 +7,7 @@
  * 3) 타인 글에 좋아요/싫어요를 누른 사람(반응자): 작성자 성향의 "맞은 꼭짓점 반대편"으로 밀린다.
  *    - 좋아요: 반대 방향으로 더 크게 (+)
  *    - 싫어요: 같은 반대축에서 되돌림(−) — 상반 축을 유지하되 약하게
+ *    (게시판 스크립트에서 타인 반응 가중은 PEER_SOCIAL_PRESSURE_SCALE로 추가로 낮출 수 있음.)
  * 4) 내 글에 남이 반응하면 작성자(나): 반응자 성향 방향으로 (+) / 반대로 (−)
  *    - 좋아요: 반응자 단위벡터 방향으로 가산
  *    - 싫어요: 반응자 단위벡터 반대로 가산(빼기)
@@ -187,6 +188,63 @@
     return { conservative: 50 - half, centrist: 0, progressive: 50 + half };
   }
 
+  /** 콘텐츠 lean(합≈1) 정규화 — UI에 쓰지 말 것 */
+  function normalizeContentLean(lean) {
+    var c = Math.max(0, Number(lean && lean.conservative) || 0);
+    var n = Math.max(0, Number(lean && lean.centrist) || 0);
+    var p = Math.max(0, Number(lean && lean.progressive) || 0);
+    var t = c + n + p;
+    if (t < EPS) return { conservative: 1 / 3, centrist: 1 / 3, progressive: 1 / 3 };
+    return { conservative: c / t, centrist: n / t, progressive: p / t };
+  }
+
+  function isValidContentLean(lean) {
+    if (!lean || typeof lean !== 'object') return false;
+    var u = normalizeContentLean(lean);
+    return isFinite(u.conservative + u.centrist + u.progressive);
+  }
+
+  /** 데일리 이슈: 역할(type) → 내부 가치 벡터(UI·라벨 비노출). AI/카드는 type+label만; lean은 항상 여기서 연결 */
+  var DAILY_ISSUE_ROLE_LEAN = {
+    progressive: { progressive: 0.7, centrist: 0.2, conservative: 0.1 },
+    centrist: { progressive: 0.25, centrist: 0.5, conservative: 0.25 },
+    conservative: { progressive: 0.1, centrist: 0.2, conservative: 0.7 },
+    unsure: { progressive: 0.2, centrist: 0.6, conservative: 0.2 },
+  };
+
+  function leanForDailyIssueRoleType(role) {
+    var raw = DAILY_ISSUE_ROLE_LEAN[String(role || '').trim()];
+    if (!raw) return null;
+    return normalizeContentLean(raw);
+  }
+
+  /**
+   * 콘텐츠 lean의 "반대" 분포 — 비공감·싫어요 시 축 이동용.
+   * (1 - u_i) 후 정규화: 보수 우세 이슈에서 반대 태도는 진보·중도 쪽 상대 가중이 커짐.
+   */
+  function oppositeContentLeanForDisagree(lean) {
+    var u = normalizeContentLean(lean);
+    var floor = 0.05;
+    var c = Math.max(floor, 1 - u.conservative);
+    var n = Math.max(floor, 1 - u.centrist);
+    var p = Math.max(floor, 1 - u.progressive);
+    return normalizeContentLean({ conservative: c, centrist: n, progressive: p });
+  }
+
+  /**
+   * 데일리 이슈 등 "콘텐츠 중력" — raw 축 점수에 가산. mult는 설계상 매우 작게(예: 0.03).
+   * 소비자(클릭한 유저) 축만 미세 이동시키는 용도.
+   */
+  function deltaContentGravityRaw(lean, mult) {
+    var u = normalizeContentLean(lean);
+    var m = Number(mult) || 0;
+    return {
+      conservative: m * u.conservative,
+      centrist: m * u.centrist,
+      progressive: m * u.progressive,
+    };
+  }
+
   global.AlignmentScoring = {
     EPS: EPS,
     MIN_AXIS: MIN_AXIS,
@@ -203,5 +261,11 @@
     leanBarWidths: leanBarWidths,
     tendencyLabelFromPercent: tendencyLabelFromPercent,
     tendencyLegendFromPercent: tendencyLegendFromPercent,
+    normalizeContentLean: normalizeContentLean,
+    isValidContentLean: isValidContentLean,
+    DAILY_ISSUE_ROLE_LEAN: DAILY_ISSUE_ROLE_LEAN,
+    leanForDailyIssueRoleType: leanForDailyIssueRoleType,
+    oppositeContentLeanForDisagree: oppositeContentLeanForDisagree,
+    deltaContentGravityRaw: deltaContentGravityRaw,
   };
 })(typeof window !== 'undefined' ? window : this);

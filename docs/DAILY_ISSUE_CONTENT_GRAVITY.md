@@ -1,0 +1,61 @@
+# 데일리 이슈 · 질문 → 관점 선택 → 토론 — 구현 요약
+
+다른 도구/AI와 상의용. 구현 위치: **`public/index.html`** (게시판 스크립트), **`public/alignment-scoring.js`**.
+
+역할 기반 생성·프롬프트 계약은 **`docs/DAILY_ISSUE_AI_ROLE_GENERATION.md`** 참고.
+
+## 철학
+
+- **질문 = 가치 충돌 무대**: 이슈마다 `topic` / `aiQuestion`(화면 질문) + 카드 성격용 내부 `issue.lean`(UI 비표시, 풀 메타).
+- **선택 = 관점(1순위)**: 네 가지 `choices`는 각각 `type`(`progressive` | `centrist` | `conservative` | `unsure`) + `label`만 유저에게 노출. **성향 이동은 고른 `type`에 매핑된 벡터**로만 계산 — 댓글 본문을 진영으로 판별하지 않음.
+- **댓글 = 토론·활동·XP**: 작성 시 **관점 선택 필수**. 본문 앞에 `[선택 라벨]`만 표시. **댓글 텍스트로 축을 움직이지 않음.**
+- **공감·좋아요·싫어요 = 2순위**: 이슈 `issue.lean`(동조) / 반대 분포 — **같은 카드에서 관점을 먼저 선택한 뒤에만** 사용 가능.
+- **체류·스레드 열기 = 3순위(매우 약함)**: 이슈 `issue.lean`에 미세 가중.
+- **관점 버튼 순서**: 렌더마다 **무작위 셔플** — 슬롯으로 역할을 유추하기 어렵게 함.
+
+## 데이터 모델
+
+- `localStorage` **번들 키**: `sc_centrist_daily_issue_v4` (`CENTRIST_ISSUE_KEY`)
+- **레거시**: `sc_centrist_daily_issue_v3`가 있으면 같은 날짜면 자동으로 v4로 마이그레이션(`choices` 보강 후 v4 저장, v3 삭제).
+- 이슈 객체:
+
+```text
+topic, aiQuestion, lean, meta, choices[], comments[], choiceGenVersion?
+```
+
+- `choices[]` 항목: `{ type, id, label, lean }`
+  - `type` / `id`: 역할 키(내부·저장용). UI에는 **라벨만**.
+  - `lean`: **항상** `AlignmentScoring.leanForDailyIssueRoleType(type)` 결과로 덮어씀(저장/로드 시 `hydrateDailyIssueChoiceleans`). AI가 lean을 넣어도 무시됨.
+  - **라벨 정화**: 로드 시 `label`에 진보·보수·중도·진영 등이 섞여 있으면(레거시 번들·AI 실수) 역할별 안전 문구(`DEFAULT_DAILY_ISSUE_ROLE_LABELS`)로 자동 교체 후 `localStorage`에 다시 저장. 입장(`sc_daily_issue_stance_v1`)·댓글 표시는 가능하면 현재 선택지 라벨을 사용.
+  - **`choiceGenVersion`**: 자동 생성 관점 문구 규칙 버전(`DAILY_ISSUE_CHOICE_GEN_VERSION`). 올리면 예전 단일 템플릿만 재생성하고, 풀에서 넣은 수기 `choices`는 버전만 맞추고 문구는 유지.
+- 풀 항목(`CENTRIST_THEME_POOLS`)에 `choices`를 넣으면 `isValidIssueRoleChoicesShape` 통과 시 그대로 사용(이후 hydrate). 없으면 **분야·제목·질문 해시로 역할별 문장 풀에서 한 줄씩 골라** `{T}`·`{Q}` 앵커를 채움(`buildContextualRoleChoicesForPick`).
+
+## 관점 선택 저장 (클라이언트)
+
+- 키: `sc_daily_issue_stance_v1`
+- 구조: `{ byUser: { [userId]: { [compoundKey]: { choiceId, label, at } } } } }`
+- `compoundKey` = `calendarDayKey() + '|' + categoryId + '|' + issueId`
+- `choiceId`는 역할 키 문자열(`progressive` 등)과 동일하게 저장.
+
+## 소비 이벤트 · 가중치 (본인만, 데일리 이슈)
+
+| 우선순위 | 이벤트 | mult / 비고 |
+|----------|--------|-------------|
+| 1 | **관점 선택** | `CONTENT_LEAN_MULT_CHOICE_SELECT` (**0.12**) × 선택지 `lean`. 변경 시 이전 선택만큼 되돌린 뒤 새 선택 적용. |
+| 2 | 공감 / 좋아요 | `CONTENT_LEAN_MULT_EMPATHY_LIKE` (0.2) — 이슈 `lean` |
+| 2 | 싫어요 | 동일 mult — `oppositeContentLeanForDisagree(issue.lean)` |
+| 3 | 스레드 열기 | `CONTENT_LEAN_MULT_CLICK` (0.005) |
+| 3 | 체류 20초 / 60초 | `0.01` / `0.015` |
+| 4 | 댓글 작성 | **축 이동 없음** |
+
+- 하루 가중치 합 상한: `ALIGN_CONTENT_GRAVITY_DAILY_MAX`, 키 `sc_align_content_gravity_v1`.
+- `clampAlignmentDeltaForDailyPctCap` 유지.
+
+## API (`alignment-scoring.js`)
+
+- `normalizeContentLean`, `isValidContentLean`, `oppositeContentLeanForDisagree`, `deltaContentGravityRaw`
+- `DAILY_ISSUE_ROLE_LEAN`, `leanForDailyIssueRoleType` — 역할 → 내부 3축 분포
+
+## 질문 품질(기획)
+
+- 가치 충돌형·유보 선택지를 기본 포함 — 극단 찬반만 강요하지 않도록 카피 조정 가능(`CENTRIST_THEME_POOLS` 또는 AI JSON).

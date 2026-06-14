@@ -142,6 +142,19 @@
     }
   }
 
+  /** 게스트 입장 등: 로컬 데모 계정 행만 제거 */
+  function clearProgressForUsers(ids) {
+    var map = loadMap();
+    var changed = false;
+    (ids || []).forEach(function (raw) {
+      var k = String(raw || '').trim();
+      if (!k || map[k] == null) return;
+      delete map[k];
+      changed = true;
+    });
+    if (changed) saveMap(map);
+  }
+
   function rankReputationScore(row) {
     return (
       normLikes(row.receivedPostLikes) +
@@ -637,6 +650,7 @@
     LEADERBOARD_MAX: LEADERBOARD_MAX,
     findPlacement: findPlacement,
     buildSortedEntries: buildSortedEntries,
+    clearProgressForUsers: clearProgressForUsers,
   };
 
   global.__scRefreshProgressionUI = refreshAvatarDock;

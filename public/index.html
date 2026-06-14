@@ -2932,6 +2932,42 @@
       gap: 0.35rem;
       margin: 0.5rem 0 0.85rem;
     }
+    .centrist-daily-edition-bar {
+      margin: 0 0 0.75rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: rgba(56, 189, 248, 0.06);
+    }
+    .centrist-daily-edition-bar__inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.65rem;
+    }
+    .centrist-daily-edition-bar__label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin: 0;
+    }
+    .centrist-daily-edition-bar__select {
+      flex: 1 1 12rem;
+      min-width: 0;
+      max-width: 100%;
+      font: inherit;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.35);
+      color: #f1f5f9;
+    }
+    .centrist-daily-edition-bar__note {
+      margin: 0.45rem 0 0;
+      font-size: 0.68rem;
+      line-height: 1.45;
+    }
     .centrist-free-feed {
       margin-top: 1.15rem;
       padding-top: 1rem;
@@ -3150,6 +3186,12 @@
       border: 1px solid rgba(56, 189, 248, 0.22);
       background: rgba(56, 189, 248, 0.06);
     }
+    .centrist-issue-card__source {
+      margin: 0 0 0.45rem;
+      font-size: 0.65rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
     .centrist-issue-card__thread-hint {
       margin: 0 0 0.35rem;
       font-size: 0.68rem;
@@ -3161,6 +3203,42 @@
       overflow: auto;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding-top: 0.45rem;
+    }
+    .board__issue-choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0 0 0.45rem;
+    }
+    .board__issue-choice-btn {
+      flex: 1 1 42%;
+      min-width: 8rem;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.45);
+      color: #e2e8f0;
+      cursor: pointer;
+      text-align: left;
+    }
+    .board__issue-choice-btn:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .board__issue-choice-btn.is-selected {
+      border-color: rgba(52, 211, 153, 0.65);
+      background: rgba(16, 185, 129, 0.12);
+    }
+    .board__issue-stance-note {
+      font-size: 0.68rem;
+      margin: 0 0 0.5rem;
+      line-height: 1.4;
+    }
+    .board__issue-react-gate {
+      font-size: 0.65rem;
+      margin: 0 0 0.25rem;
     }
     .centrist-issue-comment {
       font-size: 0.82rem;
@@ -3852,13 +3930,17 @@
             <button type="button" id="centrist-open-write" class="centrist-open-write">자유글 글쓰기</button>
           </div>
           <section class="card centrist-main-issue" aria-labelledby="centrist-issue-title">
-            <h2 id="centrist-issue-title" class="centrist-main-issue__h">중앙광장 · 데일리 이슈 · 오늘</h2>
+            <h2 id="centrist-issue-title" class="centrist-main-issue__h">중앙광장 · 데일리 이슈 · 최신</h2>
             <p class="centrist-main-issue__label" style="margin: 0 0 0.5rem">
               <strong>위쪽 카드</strong>에서 대분류·전체 목록을 고르고, 여기서는
-              <strong>정치 · 경제 · 사회 · 연예 · 세계</strong> 다섯 분야 탭으로 데일리 이슈가 바뀝니다. 그 아래
+              <strong>정치 · 경제 · 사회 · 연예 · 세계</strong> 다섯 분야 탭으로 데일리 이슈가 바뀝니다. 질문은
+              <strong>가치 충돌형</strong>(자유 vs 안전, 복지 vs 재정 등)을 지향하고, 진영 비난·선동형은 피합니다. 카드마다
+              <strong>네 가지 관점</strong> 중 하나를 고르면(화면에는 라벨만 표시) 그 선택이 내부 성향 벡터에 아주 천천히
+              누적됩니다. <strong>댓글·답글</strong>은 토론·활동용이며, 본문만으로 진영을 판별하지 않습니다. 그 아래
               <strong>자유게시판 대분류</strong> 탭으로 최신 글(최대 30개)을 같은 대분류 기준으로 봅니다. 핫 랭킹·전체 목록과
-              대분류 선택이 연동됩니다. (베타: 데일리 질문은 날짜·분야별 풀에서 자동 선정)
+              대분류 선택이 연동됩니다. 열람·체류·공감은 부차적이며 미세한 가중만 있습니다. (베타: 날짜·분야별 풀에서 자동 선정)
             </p>
+            <div id="centrist-daily-edition-bar" class="centrist-daily-edition-bar" aria-live="polite"></div>
             <div
               id="centrist-category-tabs"
               class="centrist-category-tabs board__stage-tabs"
@@ -4613,6 +4695,30 @@
           try {
             sessionStorage.setItem(GUEST_KEY, '1');
           } catch (_) {}
+          if (typeof window.__scResetLocalStateForGuestEntry === 'function') {
+            window.__scResetLocalStateForGuestEntry();
+          }
+          if (typeof window.__scDockSetMeta === 'function') {
+            window.__scDockSetMeta(
+              'guest_demo',
+              '정치 성향 없음 (미분류)',
+              'COMMON · 중앙광장',
+              '명성 · 레벨 4 달성 후 해금',
+              null,
+            );
+          }
+          if (typeof window.__scApplyStoredKantaAffiliation === 'function') {
+            window.__scApplyStoredKantaAffiliation();
+          }
+          if (typeof window.__scRefreshAlignmentUI === 'function') {
+            window.__scRefreshAlignmentUI();
+          }
+          if (typeof window.__scRefreshProgressionUI === 'function') {
+            window.__scRefreshProgressionUI();
+          }
+          if (typeof window.__scRefreshBoardView === 'function') {
+            window.__scRefreshBoardView();
+          }
           refreshAuthUi();
         });
       }
@@ -5292,6 +5398,17 @@
       var DISLIKE_RECV_PLANET_DELTA = 3;
       /** 싫어요 alignment 델타 추가 스케일(applyReactionScoresWithMult 내에서 적용) */
       var DISLIKE_ALIGN_SCALE = 0.4;
+      /** 타인 글 반응으로 오가는 정치 이동(상호 평가) — 콘텐츠 중력 대비 ~30% 체감 */
+      var PEER_SOCIAL_PRESSURE_SCALE = 0.33;
+      /** 데일리 이슈 콘텐츠 소비 → 본인 축 미세 이동 (lean 가중치에 곱함, 하루 합 상한 별도) */
+      var CONTENT_LEAN_MULT_CLICK = 0.005;
+      var CONTENT_LEAN_MULT_DWELL_20 = 0.01;
+      var CONTENT_LEAN_MULT_DWELL_60 = 0.015;
+      var CONTENT_LEAN_MULT_EMPATHY_LIKE = 0.2;
+      /** 데일리 이슈: 역할(type) 선택 → 내부 lean은 AlignmentScoring.leanForDailyIssueRoleType만 사용 (소량 누적) */
+      var CONTENT_LEAN_MULT_CHOICE_SELECT = 0.12;
+      var ALIGN_CONTENT_GRAVITY_KEY = 'sc_align_content_gravity_v1';
+      var ALIGN_CONTENT_GRAVITY_DAILY_MAX = 0.65;
       /** 반응으로 인한 표시 % 변화: 축당 하루 기준선 대비 최대 ±(이 값) */
       var ALIGN_DAILY_CAP_KEY = 'sc_align_daily_pct_cap_v1';
       var ALIGN_DAILY_PCT_PER_AXIS = 5;
@@ -5354,7 +5471,18 @@
         KANTAPBIYA_LEFT: 'KANTAPBIYA_LEFT · 외계행성 · 진보행성',
         KANTAPBIYA_RIGHT: 'KANTAPBIYA_RIGHT · 외계행성 · 보수행성',
       };
-      var CENTRIST_ISSUE_KEY = 'sc_centrist_daily_issue_v2';
+      var CENTRIST_ISSUE_KEY_LEGACY_V3 = 'sc_centrist_daily_issue_v3';
+      var CENTRIST_ISSUE_KEY_LEGACY_V4 = 'sc_centrist_daily_issue_v4';
+      var CENTRIST_ISSUE_KEY = 'sc_centrist_daily_issue_v5';
+      var DAILY_ISSUE_STANCE_KEY = 'sc_daily_issue_stance_v1';
+      /** 관점 라벨 생성 규칙 버전 — 올리면 기존 자동 문구 재생성(역할 type·lean은 동일) */
+      var DAILY_ISSUE_CHOICE_GEN_VERSION = 4;
+      var DAILY_ISSUE_HISTORY_KEY = 'sc_centrist_daily_issue_history_v1';
+      var CENTRIST_DAILY_HUB_VIEW_KEY = 'centrist_daily_hub_view_v1';
+      var CENTRIST_DAILY_ARCHIVE_SLOT_KEY = 'centrist_daily_archive_slot_v1';
+      /** 베타: true면 서울 달력 기준 오늘의 저녁(18시)판만 사용. false면 06·18시 슬롯 자동. */
+      var FORCE_DAILY_ISSUE_PM_EDITION = true;
+      var DAILY_ISSUE_BUNDLE_VERSION = 5;
       var CENTRIST_TAB_KEY = 'sc_centrist_issue_tab_v1';
       var CENTRIST_ISSUES_PER_CATEGORY = 4;
       var CENTRIST_CATEGORY_DEFS = [
@@ -5364,176 +5492,226 @@
         { id: 'entertainment', label: '연예' },
         { id: 'world', label: '세계' },
       ];
-      /** 분야별 질문 풀 — 날짜·분야 해시로 하루 4개를 고름 */
+      /** 분야별 출처 안내(풀 항목에 source 없을 때 기본 표기) */
+      var CENTRIST_CATEGORY_SOURCE_DEFAULTS = {
+        politics: { source: '연합뉴스·국회·정부 브리핑 요지', url: 'https://www.yna.co.kr' },
+        economy: { source: '한국은행·통계청·주요 언론 경제면 요지', url: 'https://www.bok.kr' },
+        society: { source: '연합뉴스·지자체·공공기관 보도 요지', url: 'https://www.yna.co.kr' },
+        entertainment: { source: '연합뉴스·방송사·업계 공식 발표 요지', url: 'https://www.yna.co.kr' },
+        world: { source: 'BBC·AP·연합 국제면 요지', url: 'https://www.bbc.com/news' },
+      };
+      /** 분야별 질문 풀 — 슬롯·분야 해시로 4개를 고름. source는 카드에 간단 표기. */
       var CENTRIST_THEME_POOLS = {
         politics: [
           {
-            topic: '공약과 현실, 무엇을 기준으로 정치인을 평가할까요?',
-            question: '한 번의 선거에서 ‘지켜질 가능성’과 ‘방향의 선명함’ 중 무엇을 더 중시하시나요? 이유는?',
+            topic: '국회 원구성·교섭단체 협상 지연',
+            question:
+              '원구성 협상이 길어지며 법안 처리 일정이 밀릴 때, 무엇을 더 우선해야 한다고 보시나요? ‘민생·현안 법안을 먼저 통과시키는 속도’와 ‘위원회 구성·절차를 충분히 맞추는 것’ 중 어디에 무게를 두시겠어요?',
+            lean: { progressive: 0.38, centrist: 0.4, conservative: 0.22 },
+            meta: { generatedBy: 'static' },
           },
           {
-            topic: '여야 대립이 격해질 때, 시민의 역할은 무엇일까요?',
-            question: '뉴스·SNS에서 ‘우리 편만’ 보이기 쉬운데, 스스로 균형을 잡기 위해 하는 습관이 있다면?',
+            topic: '지방선거 이후 지역 공약 이행 점검',
+            question:
+              '지방선거에서 나온 공약이 실제로 이행되는지 볼 때, 시민이 가장 먼저 확인해야 한다고 생각하는 지표는 무엇인가요? (예: 예산 반영, 추진 일정 공개, 이해관계자 의견 수렴 등)',
           },
           {
-            topic: '지방선거·지역 정치, 관심을 어떻게 이어갈까요?',
-            question: '전국 이슈 말고, 내 동네 정책에서 바로 바뀌었으면 하는 한 가지는?',
+            topic: '국정감사·국회 국감, 증인·자료 요구 범위',
+            question:
+              '국정감사에서 증인 채택·자료 요구 범위를 두고 여야가 대립할 때, ‘국민의 알 권리·감시’를 더 넓혀야 한다고 보시나요, ‘수사·재판·영업 비밀 보호’ 쪽을 더 지켜야 한다고 보시나요?',
           },
           {
-            topic: '청문회·감사, 투명성은 어디까지가 적당할까요?',
-            question: '국민 알 권리와 수사·재판의 공정 사이, 당신이 그을 선은 어디 쯤인가요?',
+            topic: '당원·근거리 경선 vs 일반 여론 반영',
+            question:
+              '정당의 대표·공천을 고를 때, ‘당원·권리당원 비중이 큰 경선’이 더 공정하다고 보시나요, ‘일반 유권자 여론이 더 반영되는 절차’가 더 공정하다고 보시나요?',
           },
           {
-            topic: '정당 민주주의, ‘소속감’과 ‘비판’을 같이 가져갈 수 있을까요?',
-            question: '같은 정당 지지자라도 의견이 갈릴 때, 대화를 이어가기 위한 한 마디 멘트를 적어 본다면?',
+            topic: '정부 조직개편·부처 통폐합안',
+            question:
+              '정부 조직개편이 발표될 때 찬반을 가를 때, 무엇을 먼저 두시겠어요? ‘국민 체감 행정 서비스 개선’과 ‘재정·인력·업무 연속성의 현실성’ 중 어느 쪽을 더 중시하시나요?',
           },
           {
-            topic: '시민참여 예산·청원, 실효를 높이려면 무엇이 필요할까요?',
-            question: '참여형 정책에 기대하는 점과, 지금 구조에서 아쉬운 점을 각각 한 줄씩?',
+            topic: '청년 정치 참여·연령 다양성 확대 논의',
+            question:
+              '청년층의 정치 참여를 늘리려는 제도를 논할 때, ‘할당·배려형 쿼터’가 더 바람직하다고 보시나요, ‘공개 경쟁·경력 기준’이 더 바람직하다고 보시나요?',
           },
           {
-            topic: '언론·정치권 관계, 건강한 거리감이란?',
-            question: '‘감시’와 ‘협력(브리핑)’ 사이에서 시민이 주목해야 할 신호 한 가지는?',
+            topic: '정치권·언론 브리핑·배경설명 자료',
+            question:
+              '정책·정치 보도가 브리핑과 배경 설명에 의존하는 부분이 클 때, 이를 ‘시민 이해에 필요한 협력’으로 보나요, ‘감시 대상을 줄이는 위험’으로 더 크게 보나요?',
           },
           {
-            topic: '정치 혐오를 줄이기 위해 개인이 할 수 있는 작은 행동은?',
-            question: '온라인에서 상대를 인간으로 보게 만든 경험이 있다면 간단히?',
+            topic: '야당의 필리버스터(무제한 토론) 동원',
+            question:
+              '야당이 법안 처리를 지연시키기 위해 필리버스터를 쓰는 상황을 볼 때, 이를 ‘소수 의견을 드러내는 정당한 수단’으로 보시나요, ‘국회 기능을 마비에 가깝게 만든다’고 보시나요?',
           },
         ],
         economy: [
           {
-            topic: '물가·금리, 체감과 지표가 다를 때 무엇을 더 믿을까요?',
-            question: '지금 내 주변에서 가장 체감되는 ‘비싸짐’은 무엇이며, 그에 정책이 어떻게 반영되면 좋겠나요?',
+            topic: '물가·금리 보도와 체감 물가 괴리',
+            question:
+              '뉴스의 물가·금리 지표와 내 주변 장바구니 체감이 다를 때, 정책 판단에 무엇을 더 믿어야 한다고 보시나요? ‘지표를 우선’해야 한다고 보시나요, ‘체감을 우선’해야 한다고 보시나요?',
           },
           {
-            topic: 'AI와 일자리 — 대체가 아니라 ‘협업’이 될 수 있을까요?',
-            question: '당신의 일(또는 공부) 영역에서 AI를 도입한다면, 반드시 사람이 맡아야 한다고 생각하는 부분은 어디인가요?',
+            topic: '기업·공공기관의 업무용 AI 도입',
+            question:
+              '경제 보도에서 다루는 ‘AI로 인한 업무 방식 변화’를 볼 때, 무엇을 먼저 지켜야 한다고 보시나요? ‘생산성·비용 절감’과 ‘일자리·책임 소재의 투명성’ 중 어디에 무게를 두시겠어요?',
           },
           {
-            topic: '가계부채·주식·코인, ‘투자’와 ‘도박’의 경계는?',
-            question: '주변에 경고해 주고 싶은 ‘한 번 빠지기 쉬운 심리’가 있다면?',
+            topic: '가계부채·고수익 투자 광고 논란',
+            question:
+              '가계부채와 고수익을 내세운 투자 광고가 함께 보도될 때, 국가·금융당국의 개입은 어디까지가 적당하다고 보시나요? ‘경고·설명 의무 강화’가 우선이라고 보시나요, ‘판매 자체 제한’까지 가야 한다고 보시나요?',
           },
           {
-            topic: '소상공인·플랫폼 수수료, 공정한 룰을 어떻게 짤까요?',
-            question: '플랫폼이 없으면 매출이 줄고, 있으면 수수료 부담 — 중도적 타협안을 한 문장으로?',
+            topic: '배달앱 수수료·소상공인 단가',
+            question:
+              '배달 플랫폼 수수료와 자영업자 마진 문제가 제기될 때, ‘플랫폼 수수료 상한’과 ‘소비자 배달비 부담’ 중 무엇을 더 먼저 손봐야 한다고 보시나요?',
           },
           {
-            topic: '무역·공급망, ‘자국 우선’과 ‘상호 이익’의 균형은?',
-            question: '소비자로서 가격과 윤리(노동·환경)가 충돌할 때 당신의 우선순위는?',
+            topic: '수출·공급망 병목·교역 제한',
+            question:
+              '수출과 공급망 보도에서 ‘자국 산업 보호’와 ‘다자 무역·개방’이 충돌할 때, 우리 경제에 더 이로운 쪽은 어느 쪽에 가깝다고 보시나요?',
           },
           {
-            topic: '부동산·전세, 세대 간 기대치 차이를 어떻게 좁힐까요?',
-            question: '‘내 집 마련’의 정의가 바뀌어야 한다면, 어떤 방향이 현실적이라고 보시나요?',
+            topic: '전세·월세 분쟁·임대차 시장 이슈',
+            question:
+              '전세·월세 분쟁이 잇따라 보도될 때, ‘임차인 보호 강화’와 ‘임대인 예측 가능성·재산권’ 중 무엇을 더 우선해야 한다고 보시나요?',
           },
           {
-            topic: '복지 확대 vs 재정 건전성, 중도는 ‘둘 다’를 어떻게 말할 수 있을까요?',
-            question: '‘당장 필요한 안전망’과 ‘미래 세대 부담’ 사이에서, 오늘 한 줄로 남기고 싶은 입장은?',
+            topic: '복지 예산 확대 vs 국가채무·건전재정',
+            question:
+              '복지 확대와 국가채무·건전재정이 같은 판에서 논의될 때, 당신이 ‘지금 이 시점’에서 더 먼저 지키고 싶은 축은 무엇인가요? ‘당장의 안전망’입니까, ‘미래 부담의 상한’입니까?',
           },
           {
-            topic: '기후·에너지 전환 비용, 누가 어떤 순서로 부담해야 할까요?',
-            question: '‘모두를 위한 전환’이 가능하다면, 가장 먼저 지켜져야 한다고 보는 원칙 한 가지는?',
+            topic: '전기료·탄소중립 이행 비용 부담',
+            question:
+              '전기료·탄소중립 비용이 뉴스에서 거론될 때, 부담을 나누는 방식으로 ‘대기업·다소비층 우선’이 타당하다고 보시나요, ‘전 국민 균등 분담’이 타당하다고 보시나요?',
           },
         ],
         society: [
           {
-            topic: '지역·세대 갈등, 뉴스 속 당사자가 아닌 우리는 무엇을 할 수 있을까요?',
-            question: '같은 사안이라도 사람마다 다른 반응이 나오는 이유를 한 문장으로 정리해 본다면?',
+            topic: '수도권 집중·지역 소멸 관련 보도',
+            question:
+              '수도권 집중과 지역 소멸이 같은 날짜의 사회면에서 함께 다뤄질 때, 정책 우선순위로 무엇을 더 올려야 한다고 보시나요? ‘수도권 주거·교통 비용 완화’와 ‘지역 일자리·이전 기업 유인’ 중 어디에 무게를 두시겠어요?',
           },
           {
-            topic: '청년 주거·일자리, ‘기회’의 기준은 공정과 효율 중 어디에 가까워야 할까요?',
-            question: '지금 사회에서 ‘한 번의 실수로 회복하기 어려운 구조’라고 느끼는 지점이 있다면 구체적으로?',
+            topic: '청년 주거 지원·전월세 대책',
+            question:
+              '청년 주거 지원이나 전월세 대책이 발표될 때, ‘현금·바우처 직접 지원’과 ‘공급 확대(임대주택·건설 규제 완화)’ 중 무엇이 더 빨리 체감된다고 보시나요?',
           },
           {
-            topic: '표현의 자유 vs 혐오·가짜뉴스, 선은 어디에 그을 수 있을까요?',
-            question: '법보다 먼저, 커뮤니티(온·오프라인) 안에서 지키고 싶은 최소한의 규칙을 제안한다면?',
+            topic: '혐오 표현·가짜뉴스와 표현의 자유',
+            question:
+              '혐오 표현·가짜뉴스 보도와 표현의 자유가 충돌할 때, ‘형사·행정 제재 강화’와 ‘시민·플랫폼 자율 규범’ 중 무엇을 더 먼저 믿어야 한다고 보시나요?',
           },
           {
-            topic: '교통·도시 계획, ‘편의’와 ‘소음·환경’ 충돌을 어떻게 조정할까요?',
-            question: '내 동네에서 바꾸고 싶은 규칙(또는 관행)이 있다면, 찬반을 나누기 전에 먼저 합의해야 할 사실은?',
+            topic: '재개발·재건축·이주 대책',
+            question:
+              '재개발·재건축 뉴스에서 ‘사업 속도’와 ‘세입자·상인 보상’이 대립할 때, 당신이 현장이라면 무엇을 더 지키라고 요구하시겠어요?',
           },
           {
-            topic: '디지털 격차, ‘접속’이 아니라 ‘활용’까지 포함해야 할까요?',
-            question: '비슷한 기기를 써도 결과가 달라지는 경험을 본 적이 있다면, 그 차이를 줄이기 위한 작은 제안은?',
+            topic: '온라인 수업·행정의 디지털 격차',
+            question:
+              '온라인 수업·민원이 늘면서 디지털 격차가 보도될 때, ‘접속 장비·요금 지원’과 ‘대면 창구·대리 민원 유지’ 중 무엇을 공공이 더 책임져야 한다고 보시나요?',
           },
           {
-            topic: '돌봄·양육, 공적 지원과 가족 책임의 경계는?',
-            question: '‘모두가 돌봄에 참여한다’는 말을 실제 제도로 옮긴다면 가장 먼저 손볼 곳은?',
+            topic: '저출산·육아휴직·돌봄 공백',
+            question:
+              '저출산과 돌봄 공백이 같은 흐름으로 다뤄질 때, ‘세금으로 돌봄 서비스 확대’와 ‘가족·민간 돌봄 인정·지원’ 중 어디에 더 투자해야 한다고 보시나요?',
           },
           {
-            topic: '학교·입시, 경쟁을 줄이면 동시에 무엇을 채워야 할까요?',
-            question: '학생·학부모 입장에서 ‘공정’의 정의를 한 문장으로 써 본다면?',
+            topic: '입시·내신·학폭 논란',
+            question:
+              '입시·내신·학교폭력이 연달아 이슈가 될 때, ‘경쟁 구조 완화(평가 완화)’와 ‘기준의 투명·공정 강화’ 중 무엇을 먼저 손봐야 한다고 보시나요?',
           },
           {
-            topic: '장애·이주민·소수자 권리, 다수의 불편과 어떻게 조율할까요?',
-            question: '‘함께 사는 법’을 논할 때, 먼저 확인해야 할 사실(데이터) 한 가지를 꼽는다면?',
+            topic: '이주민·소수자 차별 논의',
+            question:
+              '이주민·소수자 관련 사건이 사회면에 오를 때, ‘다수의 안전·질서’와 ‘차별 없는 절차·권리 보장’이 충돌한다면, 무엇을 법과 정책이 먼저 보장해야 한다고 보시나요?',
           },
         ],
         entertainment: [
           {
-            topic: '연예·스포츠 스캔들 보도, 공익과 사생활의 선은?',
-            question: '‘알 권리’라고 불리기엔 과한 기사를 본 적이 있다면, 그 기준을 한 줄로?',
+            topic: '연예인 사생활·스캔들 보도',
+            question:
+              '연예인 사생활이나 스캔들이 헤드라인일 때, 언론이 ‘알 권리’로 취급할 수 있는 선은 어디까지라고 보시나요? ‘공적 인물의 도덕’까지 포함이라고 보시나요, ‘직무·법 위반 사실’ 정도로 제한해야 한다고 보시나요?',
           },
           {
-            topic: 'OTT·쇼츠가 여가를 바꾸는 속도, 긍정과 우려는?',
-            question: '하루 시청 시간을 스스로 관리한다면, 지키고 싶은 규칙 한 가지는?',
+            topic: 'OTT·쇼츠 이용 시간·알고리즘',
+            question:
+              'OTT·쇼츠가 여가를 바꾼다는 보도를 볼 때, ‘이용 시간 상한·알고리즘 규제’와 ‘성인의 자율 선택’ 중 무엇을 법으로 더 건드려야 한다고 보시나요?',
           },
           {
-            topic: '팬덤 문화, 응원과 공격 사이에서 무엇이 바뀌어야 할까요?',
-            question: '좋아하는 스타·팀을 응원하면서도 지키고 싶은 ‘온라인 예절’을 적어 본다면?',
+            topic: '팬덤 커뮤니티 악플·트롤링',
+            question:
+              '팬덤 사이의 악플·트롤링이 이슈가 될 때, ‘플랫폼 실명·계정 정지’와 ‘형사 고소·손배’ 중 무엇이 더 효과적으로 갈등을 줄인다고 보시나요?',
           },
           {
-            topic: 'AI 생성 콘텐츠, 저작권·출처 표시는 어떻게 할까요?',
-            question: '창작자와 소비자 중 누구에게 먼저 설명 의무가 있다고 보시나요?',
+            topic: 'AI 합성 영상·가수 음색 합성',
+            question:
+              'AI로 만든 연예·음원 콘텐츠가 유통될 때, ‘창작자·원저작 동의·출처 표시’를 법으로 강제해야 한다고 보시나요, ‘시장·업계 자율 가이드’로 충분하다고 보시나요?',
           },
           {
-            topic: '리얼리티·예능 편집, ‘진실’과 ‘재미’의 타협점은?',
-            question: '시청자로서 ‘이건 선 넘었다’고 느낀 편집이나 연출이 있다면?',
+            topic: '리얼리티·예능 편집 논란',
+            question:
+              '예능 편집이 왜곡 논란에 휩싸일 때, ‘방송사 사후 설명·정정’이면 충분하다고 보시나요, ‘방송 전 당사자 확인 절차’까지 의무화해야 한다고 보시나요?',
           },
           {
-            topic: '아이돌·배우 노동 환경, 팬이 바꿀 수 있는 부분은?',
-            question: '산업 구조는 크지만, 개인이 할 수 있는 지지(또는 거부) 행동 한 가지는?',
+            topic: '기획사·방송사 근로·계약 논란',
+            question:
+              '연예기획사·제작사의 근로 계약이 보도될 때, ‘표준계약서·노조 보장’을 산업 전체에 강제해야 한다고 보시나요, ‘개별 협상에 맡기되 분쟁 시 구제’가 더 낫다고 보시나요?',
           },
           {
-            topic: '게임·웹툰 규제, 청소년 보호와 표현의 자유는?',
-            question: '‘연령 표시’와 ‘실질적 통제’ 중 무엇이 더 효과적이라고 보시나요?',
+            topic: '게임·웹툰 청소년 이용 제한',
+            question:
+              '게임·웹툰 청소년 보호 논의가 나올 때, ‘연령 표시·시간 제한’과 ‘부모 동의·가정 내 통제’ 중 무엇을 국가가 더 강하게 책임져야 한다고 보시나요?',
           },
           {
-            topic: '스포츠 도핑·승부 조작, 신뢰를 회복하려면?',
-            question: '팬으로서 다시 믿기 시작하는 신호(제도·문화) 한 가지를 꼽는다면?',
+            topic: '스포츠 도핑·판정·승부 의혹',
+            question:
+              '도핑 적발이나 판정 논란이 스포츠면을 채울 때, ‘국제기준에 맞춘 제재 강화’와 ‘선수·협회 자율 청렴’ 중 무엇이 팬 신뢰를 더 회복한다고 보시나요?',
           },
         ],
         world: [
           {
-            topic: '외교·안보 이슈, 시민이 알아야 할 정보의 한계는 어디까지일까요?',
-            question: '공개되지 않는 정보 때문에 불안할 때, 시민으로서 가장 합리적인 행동 한 가지는 무엇이라고 보시나요?',
+            topic: '비공개 외교·안보 정보',
+            question:
+              '외교·안보에서 비공개 정보가 많다는 보도를 볼 때, 시민은 ‘공개 요구·감시’에 더 힘을 실어야 한다고 보시나요, ‘국가 판단 존중’에 더 무게를 두어야 한다고 보시나요?',
           },
           {
-            topic: '난민·이주, 인도주의와 국경 통제의 균형은?',
-            question: '‘우리 동네’ 관점과 ‘국제 연대’ 관점이 충돌할 때, 당신이 먼저 묻고 싶은 질문은?',
+            topic: '난민·이주 정책·국내 수용',
+            question:
+              '난민·이주 정책이 국제뉴스와 국내 여론에서 동시에 다뤄질 때, ‘인도적 수용 확대’와 ‘국경·심사 절차 강화’ 중 무엇을 이 시점의 우리나라가 더 우선해야 한다고 보시나요?',
           },
           {
-            topic: '기후 협상·탄소세, 선진국과 개도국의 책임을 어떻게 나눌까요?',
-            question: '개인 소비(비행·배달)를 줄이는 것과 제도 변화, 어느 쪽에 더 기대하시나요?',
+            topic: '기후 협상·탄소국경조정·개도국',
+            question:
+              '기후 협상과 탄소국경조정이 보도될 때, ‘선진국이 비용·기술을 더 부담’해야 한다고 보시나요, ‘모든 국가가 동일한 속도로 감축’해야 한다고 보시나요?',
           },
           {
-            topic: '미·중 패권 경쟁, 중소국 시민은 무엇을 보면 될까요?',
-            question: '뉴스 헤드라인만으로는 부족할 때, 스스로 깊이 파보는 주제를 하나 고른다면?',
+            topic: '미·중 패권 경쟁·반도체·안보',
+            question:
+              '미·중 패권 경쟁이 반도체·안보 뉴스로 이어질 때, 중소국 시민으로 ‘경제 이익(수출·투자)’과 ‘안보 동맹’이 충돌하면 무엇을 더 먼저 지키라고 보시나요?',
           },
           {
-            topic: '국제 원조·개발 협력, 효과를 어떻게 판단할까요?',
-            question: '‘도움이 된다’는 말을 믿기 전에 확인하고 싶은 지표나 사례가 있다면?',
+            topic: '국제 원조·개발 협력 효과',
+            question:
+              '국제 원조·개발 협력의 효과가 논란이 될 때, ‘투명한 성과 지표 공개’와 ‘현지 주민·시민사회 참여’ 중 무엇이 없으면 원조를 줄여야 한다고 보시나요?',
           },
           {
-            topic: '전쟁·분쟁 보도, 연민 피로를 넘기 위한 시청 태도는?',
-            question: '멀리 있는 일에 지속적으로 관심을 갖되, 멘탈을 지키는 나만의 방법이 있다면?',
+            topic: '전쟁·분쟁 지역 뉴스 소비',
+            question:
+              '전쟁·분쟁 보도가 이어질 때, 시청자로서 ‘지속 보도를 끝까지 챙겨 보는 것’과 ‘정보 과부하를 줄이는 것’ 중 무엇이 더 시민으로서 책임 있다고 보시나요?',
           },
           {
-            topic: '글로벌 공급망, 윤리적 소비가 실효가 있을까요?',
-            question: '라벨을 읽거나 기업 캠페인을 피하는 등, 실천 수준에서 하고 있는 것이 있다면?',
+            topic: '글로벌 공급망·윤리적 소비',
+            question:
+              '글로벌 공급망과 노동·환경 이슈가 같이 보도될 때, ‘개인의 불매·라벨 확인’이 실효가 있다고 보시나요, ‘국가·다자 규범이 먼저 바뀌어야 한다’고 보시나요?',
           },
           {
-            topic: '국제기구·다자주의의 한계를 어떻게 보완할까요?',
-            question: '‘국제 규범’이 잘 안 통할 때, 시민사회가 할 수 있는 역할을 한 줄로?',
+            topic: '국제기구·다자주의 역할 축소',
+            question:
+              '국제기구의 한계가 부각될 때, ‘기구 개혁·예산 확대’가 답이라고 보시나요, ‘지역 동맹·소다자 협력으로 보완’이 답이라고 보시나요?',
           },
         ],
       };
@@ -5964,12 +6142,575 @@
         return y + '-' + m + '-' + day;
       }
 
+      /** 서울 달력 Y-M-D (Asia/Seoul) */
+      function seoulYmdFromDate(d) {
+        return new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Seoul',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(d || new Date());
+      }
+
+      function seoulHourFromDate(d) {
+        var parts = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Seoul',
+          hour: '2-digit',
+          hour12: false,
+        }).formatToParts(d || new Date());
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].type === 'hour') return parseInt(parts[i].value, 10);
+        }
+        return 12;
+      }
+
+      /**
+       * 데일리 이슈 슬롯: am = 당일 06:00~18:00 미만, pm = 18:00~익일 06:00 미만(전날 저녁판 유지).
+       * FORCE_DAILY_ISSUE_PM_EDITION 이면 항상 '오늘 저녁판'(베타).
+       */
+      function getDailyIssueSlotDescriptor(now) {
+        now = now || new Date();
+        if (FORCE_DAILY_ISSUE_PM_EDITION) {
+          var ymd0 = seoulYmdFromDate(now);
+          return {
+            slotId: ymd0 + '-pm',
+            period: 'pm',
+            label: ymd0.replace(/-/g, '.') + ' 저녁 6시 선별(베타)',
+            seoulYmd: ymd0,
+          };
+        }
+        var ymd = seoulYmdFromDate(now);
+        var h = seoulHourFromDate(now);
+        if (h >= 6 && h < 18) {
+          return {
+            slotId: ymd + '-am',
+            period: 'am',
+            label: ymd.replace(/-/g, '.') + ' 아침 6시 선별',
+            seoulYmd: ymd,
+          };
+        }
+        if (h >= 18) {
+          return {
+            slotId: ymd + '-pm',
+            period: 'pm',
+            label: ymd.replace(/-/g, '.') + ' 저녁 6시 선별',
+            seoulYmd: ymd,
+          };
+        }
+        var probe = new Date(now.getTime());
+        var ymdPrev = ymd;
+        for (var s = 1; s <= 4; s++) {
+          probe = new Date(probe.getTime() - 6 * 3600 * 1000);
+          var y2 = seoulYmdFromDate(probe);
+          if (y2 !== ymd) {
+            ymdPrev = y2;
+            break;
+          }
+        }
+        return {
+          slotId: ymdPrev + '-pm',
+          period: 'pm',
+          label: ymdPrev.replace(/-/g, '.') + ' 저녁 6시 선별(진행중)',
+          seoulYmd: ymdPrev,
+        };
+      }
+
+      function loadDailyIssueHistoryRoot() {
+        try {
+          var raw = localStorage.getItem(DAILY_ISSUE_HISTORY_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          return o && typeof o === 'object' && Array.isArray(o.entries) ? o : { entries: [] };
+        } catch (_) {
+          return { entries: [] };
+        }
+      }
+
+      function saveDailyIssueHistoryRoot(root) {
+        try {
+          localStorage.setItem(DAILY_ISSUE_HISTORY_KEY, JSON.stringify(root));
+        } catch (e) {
+          console.warn('[daily issue history]', e);
+        }
+      }
+
+      function appendDailyIssueHistoryEntry(bundle) {
+        if (!bundle || !bundle.slotKey || !bundle.categories) return;
+        var root = loadDailyIssueHistoryRoot();
+        var ent = {
+          slotKey: bundle.slotKey,
+          slotLabel: bundle.slotLabel || bundle.slotKey,
+          savedAt: new Date().toISOString(),
+          bundle: bundle,
+        };
+        var next = [ent];
+        for (var i = 0; i < root.entries.length; i++) {
+          if (root.entries[i].slotKey !== ent.slotKey) next.push(root.entries[i]);
+        }
+        if (next.length > 36) next = next.slice(0, 36);
+        root.entries = next;
+        saveDailyIssueHistoryRoot(root);
+      }
+
+      function getCentristHubViewMode() {
+        try {
+          var v = sessionStorage.getItem(CENTRIST_DAILY_HUB_VIEW_KEY);
+          return v === 'archive' ? 'archive' : 'live';
+        } catch (_) {
+          return 'live';
+        }
+      }
+
+      function setCentristHubViewMode(mode) {
+        try {
+          sessionStorage.setItem(CENTRIST_DAILY_HUB_VIEW_KEY, mode === 'archive' ? 'archive' : 'live');
+        } catch (_) {}
+      }
+
+      function getCentristArchiveSlotKey() {
+        try {
+          return String(sessionStorage.getItem(CENTRIST_DAILY_ARCHIVE_SLOT_KEY) || '').trim();
+        } catch (_) {
+          return '';
+        }
+      }
+
+      function setCentristArchiveSlotKey(slotKey) {
+        try {
+          sessionStorage.setItem(CENTRIST_DAILY_ARCHIVE_SLOT_KEY, slotKey || '');
+        } catch (_) {}
+      }
+
+      function findDailyIssueHistoryBundle(slotKey) {
+        if (!slotKey) return null;
+        var root = loadDailyIssueHistoryRoot();
+        for (var i = 0; i < root.entries.length; i++) {
+          if (root.entries[i].slotKey === slotKey) return root.entries[i].bundle;
+        }
+        return null;
+      }
+
+      var __centristHubDisplayBundle = null;
+
       function hashDayString(s) {
         var h = 0;
         for (var i = 0; i < s.length; i++) {
           h = (h * 31 + s.charCodeAt(i)) | 0;
         }
         return Math.abs(h);
+      }
+
+      /** 데일리 이슈 lean 추론 시 분야별 약한 사전(가치 충돌형·UI 비표시) */
+      var CATEGORY_LEAN_PRIORS = {
+        politics: { progressive: 0.36, centrist: 0.34, conservative: 0.3 },
+        economy: { progressive: 0.38, centrist: 0.34, conservative: 0.28 },
+        society: { progressive: 0.37, centrist: 0.36, conservative: 0.27 },
+        entertainment: { progressive: 0.35, centrist: 0.38, conservative: 0.27 },
+        world: { progressive: 0.34, centrist: 0.36, conservative: 0.3 },
+      };
+
+      function inferLeanForDailyIssue(catId, topic, question, slotKey, idx) {
+        var base = CATEGORY_LEAN_PRIORS[catId] || { progressive: 1 / 3, centrist: 1 / 3, conservative: 1 / 3 };
+        var h = hashDayString(String(slotKey) + '|' + catId + '|' + String(topic) + '|' + String(question) + '|' + idx) >>> 0;
+        var j = (h % 1000) / 1000;
+        var k = (((h / 1000) | 0) % 1000) / 1000;
+        var prog = Math.max(0.08, Math.min(0.72, base.progressive + (j - 0.5) * 0.14));
+        var cons = Math.max(0.08, Math.min(0.72, base.conservative + (k - 0.5) * 0.14));
+        var cen = Math.max(0.12, 1 - prog - cons);
+        var s = prog + cen + cons;
+        return { progressive: prog / s, centrist: cen / s, conservative: cons / s };
+      }
+
+      /**
+       * 풀 항목에 lean이 있으면 정규화해 사용, 없으면 topic/question·날짜로 결정론적 추론.
+       * meta.generatedBy: static | static-inferred | ai (후속 연결용)
+       */
+      function normalizeIssueLeanOnPick(pick, catId, slotKey, idx) {
+        var A = window.AlignmentScoring;
+        if (A && typeof A.isValidContentLean === 'function' && pick && A.isValidContentLean(pick.lean)) {
+          return {
+            lean: A.normalizeContentLean(pick.lean),
+            meta: pick.meta && typeof pick.meta === 'object' ? pick.meta : { generatedBy: 'static' },
+          };
+        }
+        return {
+          lean: inferLeanForDailyIssue(catId, pick.topic, pick.question, slotKey, idx),
+          meta: pick.meta && typeof pick.meta === 'object' ? pick.meta : { generatedBy: 'static-inferred' },
+        };
+      }
+
+      function dailyIssueStanceCompoundKey(slotKey, catId, issueId) {
+        var sk = String(slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        return sk + '|' + String(catId || '') + '|' + String(issueId || '');
+      }
+
+      function loadDailyIssueStanceRoot() {
+        try {
+          var raw = localStorage.getItem(DAILY_ISSUE_STANCE_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          return o && typeof o === 'object' && o.byUser && typeof o.byUser === 'object' ? o : { byUser: {} };
+        } catch (_) {
+          return { byUser: {} };
+        }
+      }
+
+      function saveDailyIssueStanceRoot(root) {
+        try {
+          localStorage.setItem(DAILY_ISSUE_STANCE_KEY, JSON.stringify(root));
+        } catch (e) {
+          console.warn('[centrist issue stance]', e);
+        }
+      }
+
+      function getDailyIssueStance(userId, catId, issueId, slotKey) {
+        var uid = String(userId || '').trim();
+        if (!uid) return null;
+        var sk = String(slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        var k = dailyIssueStanceCompoundKey(sk, catId, issueId);
+        var u = loadDailyIssueStanceRoot().byUser[uid];
+        if (!u || typeof u !== 'object') return null;
+        var row = u[k];
+        if (!row || typeof row !== 'object' || !row.choiceId) return null;
+        return { choiceId: String(row.choiceId), label: String(row.label || '') };
+      }
+
+      function setDailyIssueStance(userId, catId, issueId, choiceId, label, slotKey) {
+        var uid = String(userId || '').trim();
+        if (!uid) return;
+        var sk = String(slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        var k = dailyIssueStanceCompoundKey(sk, catId, issueId);
+        var root = loadDailyIssueStanceRoot();
+        if (!root.byUser[uid]) root.byUser[uid] = {};
+        root.byUser[uid][k] = {
+          choiceId: String(choiceId || ''),
+          label: String(label || ''),
+          at: new Date().toISOString(),
+        };
+        saveDailyIssueStanceRoot(root);
+      }
+
+      function shuffleArrayCopy(arr) {
+        var a = (arr || []).slice();
+        for (var si = a.length - 1; si > 0; si--) {
+          var rj = Math.floor(Math.random() * (si + 1));
+          var t = a[si];
+          a[si] = a[rj];
+          a[rj] = t;
+        }
+        return a;
+      }
+
+      function hydrateDailyIssueChoiceleans(choices) {
+        var A = window.AlignmentScoring;
+        if (!A || typeof A.leanForDailyIssueRoleType !== 'function') return;
+        (choices || []).forEach(function (ch) {
+          if (!ch || typeof ch !== 'object') return;
+          var typ = String(ch.type || ch.id || '').trim();
+          ch.type = typ;
+          ch.id = typ;
+          var L = A.leanForDailyIssueRoleType(typ);
+          if (L) ch.lean = L;
+        });
+      }
+
+      /** 유저 화면용: 진영 단어·스펙트럼 비교 문구 금지. (내부 type 키는 그대로 둠) */
+      var DEFAULT_DAILY_ISSUE_ROLE_LABELS = {
+        progressive: '지원·안전망 확대를 더 우선한다고 본다',
+        centrist: '속도와 균형을 함께 맞추는 접근이 필요하다',
+        conservative: '재정·지속 가능성·안정을 함께 짚어야 한다',
+        unsure: '정보가 더 필요하다 · 조금 더 지켜보겠다',
+      };
+
+      function dailyIssueChoiceLabelExposesFactionWords(label) {
+        var s = String(label || '');
+        if (!s.trim()) return true;
+        if (/진보|보수|중도|좌파|우파|진영|극좌|극우/.test(s)) return true;
+        if (/쪽에\s*더\s*가깝|에\s*더\s*가깝다/.test(s)) return true;
+        if (/progressive|conservative|centrist|left\s*wing|right\s*wing/i.test(s)) return true;
+        return false;
+      }
+
+      /** 레거시 번들·AI 실수로 진영어가 섞인 라벨만 역할별 안전 문구로 교체 */
+      function repairDailyIssuePublicChoiceLabels(choices) {
+        if (!Array.isArray(choices)) return false;
+        var changed = false;
+        for (var i = 0; i < choices.length; i++) {
+          var ch = choices[i];
+          if (!ch || typeof ch !== 'object') continue;
+          var typ = String(ch.type || ch.id || '').trim();
+          var safe = DEFAULT_DAILY_ISSUE_ROLE_LABELS[typ];
+          if (!safe) continue;
+          if (dailyIssueChoiceLabelExposesFactionWords(ch.label)) {
+            ch.label = safe;
+            changed = true;
+          }
+        }
+        return changed;
+      }
+
+      function resolveDailyIssueStanceDisplayLabel(issue, stance) {
+        if (!stance) return '';
+        var ch = findDailyIssueChoiceById(issue, stance.choiceId);
+        return ch && String(ch.label || '').trim() ? String(ch.label) : String(stance.label || '');
+      }
+
+      function syncDailyIssueStanceLabelsFromBundle(bundle) {
+        var dk = String((bundle && (bundle.slotKey || bundle.dayKey)) || '');
+        if (!dk || !bundle.categories) return;
+        var root = loadDailyIssueStanceRoot();
+        var dirty = false;
+        var byUser = root.byUser || {};
+        Object.keys(byUser).forEach(function (uid) {
+          var u = byUser[uid];
+          if (!u || typeof u !== 'object') return;
+          Object.keys(u).forEach(function (compound) {
+            if (compound.indexOf(dk + '|') !== 0) return;
+            var tail = compound.slice(dk.length + 1);
+            var p = tail.indexOf('|');
+            if (p < 0) return;
+            var catId = tail.slice(0, p);
+            var issueId = tail.slice(p + 1);
+            var block = bundle.categories[catId];
+            if (!block || !Array.isArray(block.issues)) return;
+            var issue = null;
+            for (var ii = 0; ii < block.issues.length; ii++) {
+              if (block.issues[ii].id === issueId) {
+                issue = block.issues[ii];
+                break;
+              }
+            }
+            if (!issue) return;
+            var row = u[compound];
+            if (!row || !row.choiceId) return;
+            var ch = findDailyIssueChoiceById(issue, row.choiceId);
+            if (ch && String(ch.label || '').trim() && row.label !== ch.label) {
+              row.label = ch.label;
+              dirty = true;
+            }
+          });
+        });
+        if (dirty) saveDailyIssueStanceRoot(root);
+      }
+
+      /** AI/풀: type+label만. lean은 저장 시 항상 역할표로 덮어씀(문장 판별 금지). */
+      function isValidIssueRoleChoicesShape(choices) {
+        if (!Array.isArray(choices) || choices.length !== 4) return false;
+        var need = { progressive: 0, centrist: 0, conservative: 0, unsure: 0 };
+        for (var i = 0; i < choices.length; i++) {
+          var ch = choices[i];
+          if (!ch || typeof ch !== 'object') return false;
+          var typ = String(ch.type || ch.id || '').trim();
+          if (!Object.prototype.hasOwnProperty.call(need, typ)) return false;
+          if (!String(ch.label || '').trim()) return false;
+          need[typ]++;
+        }
+        return (
+          need.progressive === 1 &&
+          need.centrist === 1 &&
+          need.conservative === 1 &&
+          need.unsure === 1
+        );
+      }
+
+      function isValidIssueChoices(choices) {
+        if (!isValidIssueRoleChoicesShape(choices)) return false;
+        var A = window.AlignmentScoring;
+        if (!A || typeof A.leanForDailyIssueRoleType !== 'function' || typeof A.isValidContentLean !== 'function') return false;
+        for (var j = 0; j < choices.length; j++) {
+          var typ = String(choices[j].type || choices[j].id || '').trim();
+          var L = A.leanForDailyIssueRoleType(typ);
+          if (!L || !A.isValidContentLean(L)) return false;
+        }
+        return true;
+      }
+
+      function dailyIssueSanitizeAnchorFragment(s) {
+        return String(s || '')
+          .replace(/\s+/g, ' ')
+          .replace(/[「」『』]/g, '')
+          .trim();
+      }
+
+      /** 앵커 질문 문장만으로 해시(관점 라벨에는 질문 본문을 붙이지 않음) */
+      var DAILY_ISSUE_PROGRESSIVE_Q_TEMPLATES = [
+        '공익·권리·지원 축을 조금 더 앞에 두는 쪽이 맞다고 본다',
+        '공적인 책임과 배려가 넓어지는 방향을 먼저 살피는 편이 맞다',
+        '완충·구제 장치를 우선 두고 손실을 줄이는 쪽을 고른다',
+        '접근성·형평을 조금 더 두는 시나리오를 우선한다',
+        '권리 보장·공개 범위를 조금 넓혀 보는 편이 낫다',
+        '손실이 나는 사람을 먼저 줄이는 쪽을 고르려 한다',
+        '제도 안쪽의 지원·완화책을 조금 더 두껍게 두는 편이 맞다고 본다',
+        '체감적 불공정을 줄이는 축을 먼저 점검하겠다',
+        '예방·교육·상담 같은 부수 대책을 함께 깔아야 한다고 본다',
+        '공적 논의와 소수 보호를 앞에 두는 편이 낫다',
+      ];
+      var DAILY_ISSUE_CENTRIST_Q_TEMPLATES = [
+        '한쪽 결론보다 사실·검증·단계적 시행을 함께 두는 접근이 필요하다',
+        '급한 단정보다 조건·감사·재검토 루프를 곁들이는 편이 낫다',
+        '범위를 나누고 단계별 합의를 쌓는 쪽이 현실적이다',
+        '속도·안전·비용 세 축을 동시에 보며 절충안을 찾아야 한다',
+        '선행 조건과 한계·면책을 먼저 밝히는 편이 안전하다',
+        '작은 실험·시범 뒤 확대하는 식의 설계가 필요하다',
+        '기준·지표·감독을 함께 정리해야 한다',
+        '투명성과 비밀 유지 범위를 거버넌스 차원에서 함께 설계해야 한다',
+        '이해관계자별 인센티브가 달라 중재 규칙을 먼저 만드는 편이 낫다',
+        '리스크가 큰 부분만 일시 완화하고 나머지는 순차 적용하겠다',
+      ];
+      var DAILY_ISSUE_CONSERVATIVE_Q_TEMPLATES = [
+        '예외·누수를 줄이고 재정·질서·지속 가능성을 함께 짚는 편이 낫다',
+        '비용·역효과·감독 장치를 먼저 확보해야 한다고 본다',
+        '남용 방지·책임 소재를 앞에 두는 편이 안전하다',
+        '우선순위를 줄이고 집중하는 편이 낫다',
+        '제도가 비대해지지 않도록 최소 충분선을 먼저 지키겠다',
+        '억제·규벌·일관 적용에 무게를 두고 천천히 가는 편이 낫다',
+        '신중한 가정과 시나리오 분석을 먼저 하겠다',
+        '도덕적 해이를 줄이는 장치를 먼저 마련해야 한다',
+        '실행 가능한 최소 세트로 시작해 검증 후 확장하는 편이 낫다',
+        '경계를 분명히 짚어 무한 확장을 막아야 한다',
+      ];
+      var DAILY_ISSUE_UNSURE_Q_TEMPLATES = [
+        '아직 판단하기 어렵다 · 조금 더 지켜보고 싶다',
+        '사실을 더 모은 뒤에 말하겠다',
+        '정보가 더 필요하다 · 성급한 결론은 피하고 싶다',
+        '전제가 다른 해석도 가능해 당장은 유보하겠다',
+      ];
+
+      /** 풀에 choices가 없을 때: 앵커 질문(aiQuestion)만으로 해시해 문장 풀에서 조합(라벨에 질문 인용 없음) */
+      function buildContextualRoleChoicesForPick(pick, catId) {
+        var rawQ = dailyIssueSanitizeAnchorFragment((pick && pick.question) || '');
+        var seed = hashDayString(String(catId || '') + '\n' + rawQ) >>> 0;
+        function pickStr(arr, salt) {
+          var u = (seed + (salt | 0) * 7919) >>> 0;
+          return arr[u % arr.length];
+        }
+        var rows = [
+          { type: 'progressive', label: pickStr(DAILY_ISSUE_PROGRESSIVE_Q_TEMPLATES, 11) },
+          { type: 'centrist', label: pickStr(DAILY_ISSUE_CENTRIST_Q_TEMPLATES, 13) },
+          { type: 'conservative', label: pickStr(DAILY_ISSUE_CONSERVATIVE_Q_TEMPLATES, 17) },
+          { type: 'unsure', label: pickStr(DAILY_ISSUE_UNSURE_Q_TEMPLATES, 19) },
+        ];
+        hydrateDailyIssueChoiceleans(rows);
+        return rows;
+      }
+
+      function buildContextualRoleChoicesForIssue(issue, catId) {
+        var pick = {
+          topic: issue && issue.topic,
+          question: issue && (issue.aiQuestion != null ? issue.aiQuestion : issue.question),
+        };
+        return buildContextualRoleChoicesForPick(pick, catId);
+      }
+
+      /** 예전 번들: 네 칸이 모두 전역 기본 문구일 때만 이슈 맞춤으로 교체 */
+      function issueHasOnlyStockDefaultRoleLabels(issue) {
+        if (!issue || !isValidIssueRoleChoicesShape(issue.choices)) return false;
+        var d = DEFAULT_DAILY_ISSUE_ROLE_LABELS;
+        var alts = {
+          progressive: [d.progressive],
+          centrist: [d.centrist],
+          conservative: [d.conservative, '재정·지속 가능성·안정성을 함께 짚어야 한다'],
+          unsure: [
+            d.unsure,
+            '아직 판단하기 어렵다 - 더 지켜보겠다',
+            '아직 판단하기 어렵다 · 더 지켜보겠다',
+          ],
+        };
+        for (var i = 0; i < issue.choices.length; i++) {
+          var ch = issue.choices[i];
+          var typ = String(ch.type || ch.id || '').trim();
+          var lab = String(ch.label || '').trim();
+          var list = alts[typ];
+          if (!list || list.indexOf(lab) < 0) return false;
+        }
+        return true;
+      }
+
+      /** v1 자동 문구: 제목만 바꿔 끼우던 4문장 — v2 풀 조합으로 교체 대상 */
+      function issueMatchesOldSingleContextualTemplate(issue) {
+        if (!issue || !isValidIssueRoleChoicesShape(issue.choices)) return false;
+        var suf = {
+          progressive: /에 대해 공익·권리 보장·지원을 조금 더 넓히는 쪽을 우선한다고 본다$/,
+          centrist: /는 사실 확인과 절차를 먼저 밟고, 속도와 부작용·비용을 함께 맞출 필요가 있다$/,
+          conservative: /에선 예외·누수를 줄이고 재정·질서·지속 가능성을 함께 짚는 편이 낫다$/,
+          unsure: /는 아직 판단하기 어렵다 · 조금 더 지켜보고 싶다$/,
+        };
+        for (var i = 0; i < issue.choices.length; i++) {
+          var ch = issue.choices[i];
+          var typ = String(ch.type || ch.id || '').trim();
+          var re = suf[typ];
+          if (!re || !re.test(String(ch.label || ''))) return false;
+        }
+        return true;
+      }
+
+      function buildDefaultRoleChoicesForDailyIssue() {
+        return buildContextualRoleChoicesForPick({ topic: '오늘 주제', question: '' }, 'politics');
+      }
+
+      function ensureIssueChoices(issue, catId, dayKey, idx) {
+        if (!issue) return false;
+        if (!isValidIssueRoleChoicesShape(issue.choices)) {
+          issue.choices = buildContextualRoleChoicesForIssue(issue, catId);
+          issue.choiceGenVersion = DAILY_ISSUE_CHOICE_GEN_VERSION;
+          return true;
+        }
+        if (issueHasOnlyStockDefaultRoleLabels(issue)) {
+          issue.choices = buildContextualRoleChoicesForIssue(issue, catId);
+          issue.choiceGenVersion = DAILY_ISSUE_CHOICE_GEN_VERSION;
+          return true;
+        }
+        if (!issue.choiceGenVersion || issue.choiceGenVersion < DAILY_ISSUE_CHOICE_GEN_VERSION) {
+          if (issueMatchesOldSingleContextualTemplate(issue)) {
+            issue.choices = buildContextualRoleChoicesForIssue(issue, catId);
+            issue.choiceGenVersion = DAILY_ISSUE_CHOICE_GEN_VERSION;
+            return true;
+          }
+          issue.choiceGenVersion = DAILY_ISSUE_CHOICE_GEN_VERSION;
+        }
+        hydrateDailyIssueChoiceleans(issue.choices);
+        return repairDailyIssuePublicChoiceLabels(issue.choices);
+      }
+
+      function findDailyIssueChoiceById(issue, choiceId) {
+        if (!issue || !Array.isArray(issue.choices)) return null;
+        var id = String(choiceId || '').trim();
+        for (var i = 0; i < issue.choices.length; i++) {
+          var ch = issue.choices[i];
+          if (String(ch.id) === id || String(ch.type) === id) return ch;
+        }
+        return null;
+      }
+
+      function normalizeBundleIssueChoices(bundle) {
+        if (!bundle || !bundle.categories) return false;
+        var changed = false;
+        Object.keys(bundle.categories).forEach(function (cid) {
+          var block = bundle.categories[cid];
+          if (!block || !Array.isArray(block.issues)) return;
+          block.issues.forEach(function (iss, ix) {
+            if (ensureIssueChoices(iss, cid, bundle.dayKey, ix)) changed = true;
+          });
+        });
+        return changed;
+      }
+
+      function migrateCentristBundleV3ToV4(bundle) {
+        if (!bundle || bundle.version !== 3 || !bundle.categories) return false;
+        normalizeBundleIssueChoices(bundle);
+        var sd = getDailyIssueSlotDescriptor();
+        bundle.version = DAILY_ISSUE_BUNDLE_VERSION;
+        bundle.slotKey = sd.slotId;
+        bundle.slotLabel = sd.label + ' (v3→v5)';
+        bundle.dayKey = sd.slotId;
+        return true;
+      }
+
+      function applyDailyIssueChoiceGravityDelta(userId, issue, prevChoiceId, nextChoice) {
+        var mult = CONTENT_LEAN_MULT_CHOICE_SELECT;
+        if (prevChoiceId && issue) {
+          var prevCh = findDailyIssueChoiceById(issue, prevChoiceId);
+          if (prevCh && prevCh.lean) tryApplyContentGravityDelta(userId, prevCh.lean, -mult);
+        }
+        if (nextChoice && nextChoice.lean) tryApplyContentGravityDelta(userId, nextChoice.lean, mult);
       }
 
       function getActiveCentristCategoryId() {
@@ -5988,10 +6729,10 @@
         } catch (_) {}
       }
 
-      function pickThemesForCategory(dayKey, catId, n) {
+      function pickThemesForCategory(slotKey, catId, n) {
         var pool = CENTRIST_THEME_POOLS[catId] || [];
         if (!pool.length) return [];
-        var seed = hashDayString(dayKey + '|' + catId) >>> 0;
+        var seed = hashDayString(String(slotKey || '') + '|' + catId) >>> 0;
         function rnd() {
           seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
           return seed / 4294967296;
@@ -6009,27 +6750,59 @@
         return out;
       }
 
-      function buildFreshCentristBundle(dayKey) {
+      function buildFreshCentristBundle(slotDesc) {
+        var slotId = slotDesc && slotDesc.slotId ? slotDesc.slotId : seoulYmdFromDate(new Date()) + '-pm';
+        var slotLabel = (slotDesc && slotDesc.label) || slotId;
         var categories = {};
         for (var c = 0; c < CENTRIST_CATEGORY_DEFS.length; c++) {
           var def = CENTRIST_CATEGORY_DEFS[c];
-          var picks = pickThemesForCategory(dayKey, def.id, CENTRIST_ISSUES_PER_CATEGORY);
+          var picks = pickThemesForCategory(slotId, def.id, CENTRIST_ISSUES_PER_CATEGORY);
           var issues = [];
+          var srcDef = CENTRIST_CATEGORY_SOURCE_DEFAULTS[def.id] || { source: '공신력 있는 언론·기관 요지', url: '' };
           for (var i = 0; i < picks.length; i++) {
+            var merged = normalizeIssueLeanOnPick(picks[i], def.id, slotId, i);
+            var A = window.AlignmentScoring;
+            var chArr;
+            if (A && picks[i].choices && isValidIssueRoleChoicesShape(picks[i].choices)) {
+              chArr = picks[i].choices.map(function (x) {
+                var typ = String(x.type || x.id || '').trim();
+                return { type: typ, id: typ, label: String(x.label || '').trim() };
+              });
+              hydrateDailyIssueChoiceleans(chArr);
+            } else {
+              chArr = buildContextualRoleChoicesForPick(picks[i], def.id);
+            }
+            var sn = String(picks[i].source || srcDef.source || '').trim();
+            var su = String(picks[i].sourceUrl || srcDef.url || '').trim();
+            var sourceNote = su ? sn + ' · ' + su : sn;
             issues.push({
               id: def.id + '_' + i,
               topic: picks[i].topic,
               aiQuestion: picks[i].question,
+              lean: merged.lean,
+              meta: merged.meta,
+              choices: chArr,
               comments: [],
+              choiceGenVersion: DAILY_ISSUE_CHOICE_GEN_VERSION,
+              slotKey: slotId,
+              sourceNote: sourceNote,
             });
           }
           categories[def.id] = { issues: issues };
         }
-        return { version: 2, dayKey: dayKey, categories: categories };
+        return {
+          version: DAILY_ISSUE_BUNDLE_VERSION,
+          slotKey: slotId,
+          slotLabel: slotLabel,
+          dayKey: slotId,
+          categories: categories,
+        };
       }
 
-      function isValidCentristBundle(o, dayKey) {
-        if (!o || o.version !== 2 || o.dayKey !== dayKey || !o.categories) return false;
+      function isValidCentristBundle(o, slotId) {
+        if (!o || o.version !== DAILY_ISSUE_BUNDLE_VERSION || !o.slotKey || !o.categories) return false;
+        if (String(o.slotKey) !== String(slotId)) return false;
+        var A = window.AlignmentScoring;
         for (var i = 0; i < CENTRIST_CATEGORY_DEFS.length; i++) {
           var cid = CENTRIST_CATEGORY_DEFS[i].id;
           var block = o.categories[cid];
@@ -6039,6 +6812,9 @@
             var iss = block.issues[j];
             if (!iss || !iss.topic || !iss.aiQuestion || !iss.id) return false;
             if (!Array.isArray(iss.comments)) return false;
+            if (!iss.lean || typeof iss.lean !== 'object') return false;
+            if (!A || typeof A.isValidContentLean !== 'function' || !A.isValidContentLean(iss.lean)) return false;
+            if (!isValidIssueChoices(iss.choices)) return false;
           }
         }
         return true;
@@ -6055,17 +6831,68 @@
         });
       }
 
-      function loadCentristIssueBundle() {
-        var dayKey = calendarDayKey();
+      function replaceDailyIssueHistoryBundle(bundle) {
+        if (!bundle || !bundle.slotKey || !bundle.categories) return false;
+        var root = loadDailyIssueHistoryRoot();
+        var list = [
+          {
+            slotKey: bundle.slotKey,
+            slotLabel: bundle.slotLabel || bundle.slotKey,
+            savedAt: new Date().toISOString(),
+            bundle: bundle,
+          },
+        ];
+        for (var i = 0; i < root.entries.length; i++) {
+          if (root.entries[i].slotKey !== bundle.slotKey) list.push(root.entries[i]);
+        }
+        root.entries = list.slice(0, 36);
+        saveDailyIssueHistoryRoot(root);
+        return true;
+      }
+
+      function loadLiveCentristIssueBundle() {
+        var slotDesc = getDailyIssueSlotDescriptor();
+        var slotId = slotDesc.slotId;
         try {
           var raw = localStorage.getItem(CENTRIST_ISSUE_KEY);
           var o = raw ? JSON.parse(raw) : null;
-          if (isValidCentristBundle(o, dayKey)) {
-            normalizeBundleComments(o);
-            return o;
+          if (o && o.slotKey === slotId && o.categories) {
+            var repaired = normalizeBundleIssueChoices(o);
+            if (isValidCentristBundle(o, slotId)) {
+              normalizeBundleComments(o);
+              if (repaired) {
+                syncDailyIssueStanceLabelsFromBundle(o);
+                try {
+                  localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(o));
+                } catch (e) {
+                  console.warn('[centrist issue]', e);
+                }
+              }
+              return o;
+            }
+          }
+          if (o && o.categories && o.slotKey && o.slotKey !== slotId) {
+            appendDailyIssueHistoryEntry(o);
+          }
+          var raw3 = localStorage.getItem(CENTRIST_ISSUE_KEY_LEGACY_V3);
+          var o3 = raw3 ? JSON.parse(raw3) : null;
+          if (o3 && o3.version === 3 && o3.categories) {
+            migrateCentristBundleV3ToV4(o3);
+            var repaired3 = normalizeBundleIssueChoices(o3);
+            if (isValidCentristBundle(o3, slotId)) {
+              normalizeBundleComments(o3);
+              if (repaired3) syncDailyIssueStanceLabelsFromBundle(o3);
+              try {
+                localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(o3));
+                localStorage.removeItem(CENTRIST_ISSUE_KEY_LEGACY_V3);
+              } catch (e) {
+                console.warn('[centrist issue]', e);
+              }
+              return o3;
+            }
           }
         } catch (_) {}
-        var bundle = buildFreshCentristBundle(dayKey);
+        var bundle = buildFreshCentristBundle(slotDesc);
         try {
           localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(bundle));
         } catch (e) {
@@ -6074,7 +6901,20 @@
         return bundle;
       }
 
+      function loadCentristIssueBundle() {
+        if (getCentristHubViewMode() === 'archive') {
+          var ask = getCentristArchiveSlotKey();
+          var hb = findDailyIssueHistoryBundle(ask);
+          if (hb && hb.categories) return hb;
+        }
+        return loadLiveCentristIssueBundle();
+      }
+
       function saveCentristIssueBundle(o) {
+        if (!o) return false;
+        if (getCentristHubViewMode() === 'archive') {
+          return replaceDailyIssueHistoryBundle(o);
+        }
         try {
           localStorage.setItem(CENTRIST_ISSUE_KEY, JSON.stringify(o));
           return true;
@@ -6127,6 +6967,13 @@
         te.className = 'board__comment-text';
         if (shouldBlindKantaOnEarthBoard(c.authorId, ctx.boardTerritoryId)) {
           te.appendChild(buildKantaBlindBlock(c.text));
+        } else if (ctx.dailyIssueContext && (c.stanceChoiceId || c.stanceLabel)) {
+          var dcx0 = ctx.dailyIssueContext;
+          var pref0 =
+            typeof dcx0.displayStanceLabel === 'function'
+              ? dcx0.displayStanceLabel(c)
+              : String(c.stanceLabel || '');
+          te.textContent = (pref0 ? '[' + pref0 + ']\n' : '') + (c.text || '');
         } else {
           te.textContent = c.text || '';
         }
@@ -6170,6 +7017,47 @@
             },
           });
           actions.appendChild(bar);
+        } else if (ctx.dailyIssueContext && ctx.dailyIssueContext.lean) {
+          var meD = uid();
+          var authorD = String(c.authorId || '').trim();
+          var ownD = authorD === String(meD || '').trim();
+          var hasAlignD = !!window.AlignmentScoring;
+          var dctx = ctx.dailyIssueContext;
+          var stanceOk = !!getDailyIssueStance(meD, dctx.categoryId, dctx.issueId, dctx.slotKey);
+          var gateHint = document.createElement('p');
+          gateHint.className = 'board__issue-react-gate muted';
+          gateHint.textContent = stanceOk
+            ? ''
+            : '이 카드에서 관점을 선택하면 공감·좋아요·싫어요를 쓸 수 있습니다.';
+          if (stanceOk) gateHint.hidden = true;
+          var barD = buildReactionControls({
+            empathyOnly: false,
+            empathyLikeOnlyEarth: false,
+            omitPlanet: true,
+            empathyHintBody: '콘텐츠 소비 기반 — 아주 미세한 성향 반영',
+            empathyAriaLabel: '공감 — 데일리 이슈 콘텐츠 소비 기반 미세 성향 반영',
+            empathyTitle:
+              '공감 — 데일리 이슈 가치 축을 읽으며 본인 성향이 아주 약하게 이동할 수 있습니다. (내부 lean 비표시)',
+            nEmpathy: c.reactions.empathy.length,
+            activeEmpathy: c.reactions.empathy.indexOf(meD) >= 0,
+            disabledEmpathy: !!ownD || !stanceOk,
+            onEmpathy: function () {
+              onDailyIssueToggleEmpathy(dctx.categoryId, dctx.issueId, c.id);
+            },
+            nLike: c.reactions.likes.length,
+            nDis: c.reactions.dislikes.length,
+            activeLike: c.reactions.likes.indexOf(meD) >= 0,
+            activeDis: c.reactions.dislikes.indexOf(meD) >= 0,
+            disabled: !!ownD || !hasAlignD || !stanceOk,
+            onLike: function () {
+              onDailyIssueToggleCommentReaction(dctx.categoryId, dctx.issueId, c.id, true);
+            },
+            onDis: function () {
+              onDailyIssueToggleCommentReaction(dctx.categoryId, dctx.issueId, c.id, false);
+            },
+          });
+          actions.appendChild(gateHint);
+          actions.appendChild(barD);
         }
 
         var replySlot = document.createElement('div');
@@ -6183,7 +7071,12 @@
           btnReply.addEventListener('click', function (ev) {
             ev.preventDefault();
             if (ctx.postId && alertBoardReactionsNotUnlocked()) return;
-            if (ctx.canReply && !ctx.canReply()) return;
+            if (ctx.canReply && !ctx.canReply()) {
+              if (ctx.dailyIssueContext) {
+                alert('의견을 남기려면 먼저 관점을 선택해 주세요.');
+              }
+              return;
+            }
             replySlot.textContent = '';
             var ta = document.createElement('textarea');
             ta.className = 'board__inline-reply';
@@ -6252,13 +7145,20 @@
 
       function submitCentristIssueComment(text, parentId, categoryId, issueId) {
         if (!isCommonHubVisible()) return;
+        var bundle0 = loadCentristIssueBundle();
+        var sk0 = String(bundle0.slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        var stance = getDailyIssueStance(uid(), categoryId, issueId, sk0);
+        if (!stance || !stance.choiceId) {
+          alert('의견을 남기려면 먼저 관점을 선택해 주세요.');
+          return;
+        }
         var t = String(text || '').trim();
         if (!t) return;
         if (t.length > MAX_COMMENT) {
           alert('최대 ' + MAX_COMMENT + '자입니다.');
           return;
         }
-        var bundle = loadCentristIssueBundle();
+        var bundle = bundle0;
         var block = bundle.categories[categoryId];
         if (!block || !Array.isArray(block.issues)) return;
         var issue = null;
@@ -6276,6 +7176,8 @@
           text: t,
           createdAt: new Date().toISOString(),
           parentId: parentId || null,
+          stanceChoiceId: stance.choiceId,
+          stanceLabel: stance.label,
         });
         if (!saveCentristIssueBundle(bundle)) return;
         if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('issue_comment');
@@ -6286,8 +7188,13 @@
         if (!rootEl) return;
         rootEl.textContent = '';
         normalizeIssueComments(rec);
+        var sk = String((rec && rec.slotKey) || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        ensureIssueChoices(rec, categoryId, sk, 0);
         var comments = rec.comments || [];
         var st = countCommentBreakdown(comments);
+        var meThread = uid();
+        var myStance = getDailyIssueStance(meThread, categoryId, rec.id, sk);
+        var myStanceLabel = resolveDailyIssueStanceDisplayLabel(rec, myStance);
 
         var toggle = document.createElement('button');
         toggle.type = 'button';
@@ -6309,17 +7216,81 @@
         panel.className = 'board__comments-panel';
         panel.hidden = true;
 
+        var stanceTitle = document.createElement('h4');
+        stanceTitle.className = 'board__comments-title board__comments-title--stance';
+        stanceTitle.textContent = '관점 선택 (필수)';
+
+        var choicesWrap = document.createElement('div');
+        choicesWrap.className = 'board__issue-choices';
+        var stanceNote = document.createElement('p');
+        stanceNote.className = 'board__issue-stance-note muted';
+        stanceNote.textContent = myStance
+          ? '선택한 관점: ' + myStanceLabel + ' — 아래에서 의견·답글·공감을 이용할 수 있습니다.'
+          : '의견을 남기려면 먼저 관점을 선택해 주세요.';
+
+        function paintChoiceButtons() {
+          choicesWrap.textContent = '';
+          var cur = getDailyIssueStance(meThread, categoryId, rec.id, sk);
+          var chs = shuffleArrayCopy(rec.choices || []);
+          for (var ci = 0; ci < chs.length; ci++) {
+            (function (ch) {
+              var roleKey = String(ch.type || ch.id || '').trim();
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.className = 'board__issue-choice-btn';
+              if (cur && String(cur.choiceId) === roleKey) b.classList.add('is-selected');
+              b.textContent = ch.label;
+              b.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var prev = getDailyIssueStance(meThread, categoryId, rec.id, sk);
+                applyDailyIssueChoiceGravityDelta(meThread, rec, prev ? prev.choiceId : null, ch);
+                setDailyIssueStance(meThread, categoryId, rec.id, roleKey, ch.label, sk);
+                stanceNote.textContent =
+                  '선택한 관점: ' + ch.label + ' — 아래에서 의견·답글·공감을 이용할 수 있습니다.';
+                if (taTop) {
+                  taTop.disabled = false;
+                  taTop.placeholder = '[' + ch.label + ']에 맞춰 의견을 적어 주세요';
+                }
+                if (btnTop) btnTop.disabled = false;
+                paintChoiceButtons();
+                if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+                renderCentristHub();
+              });
+              choicesWrap.appendChild(b);
+            })(chs[ci]);
+          }
+        }
+        paintChoiceButtons();
+
         var ht = document.createElement('h4');
         ht.className = 'board__comments-title';
-        ht.textContent = '스레드';
+        ht.textContent = '의견 · 토론';
 
         var list = document.createElement('div');
         list.className = 'board__comment-list';
 
         var ctx = {
           comments: comments,
+          boardTerritoryId: 'COMMON',
+          dailyIssueContext:
+            rec && rec.lean && window.AlignmentScoring && window.AlignmentScoring.isValidContentLean(rec.lean)
+              ? {
+                  categoryId: categoryId,
+                  issueId: rec.id,
+                  slotKey: sk,
+                  lean: rec.lean,
+                  displayStanceLabel: function (comment) {
+                    if (!comment) return '';
+                    var ch = findDailyIssueChoiceById(rec, comment.stanceChoiceId);
+                    return ch && String(ch.label || '').trim()
+                      ? String(ch.label)
+                      : String(comment.stanceLabel || '');
+                  },
+                }
+              : null,
           canReply: function () {
-            return isCommonHubVisible();
+            return isCommonHubVisible() && !!getDailyIssueStance(uid(), categoryId, rec.id, sk);
           },
           onSubmit: function (txt, pid) {
             submitCentristIssueComment(txt, pid, categoryId, rec.id);
@@ -6337,20 +7308,29 @@
           renderThreadedCommentNode(ctx, c, 0, list);
         });
 
+        panel.appendChild(stanceTitle);
+        panel.appendChild(choicesWrap);
+        panel.appendChild(stanceNote);
         panel.appendChild(ht);
         panel.appendChild(list);
 
+        var taTop = null;
+        var btnTop = null;
         if (isCommonHubVisible()) {
           var formRow = document.createElement('div');
           formRow.className = 'board__comment-form';
-          var taTop = document.createElement('textarea');
+          taTop = document.createElement('textarea');
           taTop.maxLength = MAX_COMMENT;
-          taTop.placeholder = '이 카드 질문에 대한 새 의견(댓글)';
+          taTop.placeholder = myStance
+            ? '[' + myStanceLabel + ']에 맞춰 의견을 적어 주세요'
+            : '관점 선택 후 입력할 수 있습니다';
           taTop.rows = 2;
-          var btnTop = document.createElement('button');
+          taTop.disabled = !myStance;
+          btnTop = document.createElement('button');
           btnTop.type = 'button';
           btnTop.textContent = '의견 등록';
           btnTop.className = 'board__comment-submit';
+          btnTop.disabled = !myStance;
           btnTop.addEventListener('click', function () {
             submitCentristIssueComment(taTop.value, null, categoryId, rec.id);
             taTop.value = '';
@@ -6360,6 +7340,7 @@
           panel.appendChild(formRow);
         }
 
+        var dwellClear = null;
         toggle.addEventListener('click', function (ev) {
           ev.preventDefault();
           ev.stopPropagation();
@@ -6367,15 +7348,135 @@
           var isOpen = !panel.hidden;
           toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
           setToggleLabel(isOpen);
+          if (isOpen) {
+            if (rec.lean && consumeDailyIssueTouch(sk, categoryId, rec.id, 'click')) {
+              tryApplyContentGravityDelta(uid(), rec.lean, CONTENT_LEAN_MULT_CLICK);
+            }
+            if (!dwellClear && rec.lean) {
+              dwellClear = startDailyIssueDwellTracking(panel, categoryId, rec, sk);
+            }
+          } else {
+            if (dwellClear) {
+              dwellClear();
+              dwellClear = null;
+            }
+          }
         });
 
         rootEl.appendChild(toggle);
         rootEl.appendChild(panel);
       }
 
+      /** 데일리 이슈: 최신(오전·저녁 슬롯) vs 과거 회차 선택 */
+      function paintCentristDailyEditionBar(bundle) {
+        var bar = document.getElementById('centrist-daily-edition-bar');
+        if (!bar) return;
+        bar.textContent = '';
+        var liveDesc = getDailyIssueSlotDescriptor();
+        var liveSk = String(liveDesc.slotId || '');
+        var mode = getCentristHubViewMode();
+        var hist = loadDailyIssueHistoryRoot().entries || [];
+
+        var inner = document.createElement('div');
+        inner.className = 'centrist-daily-edition-bar__inner';
+
+        var lab = document.createElement('label');
+        lab.className = 'centrist-daily-edition-bar__label';
+        lab.setAttribute('for', 'centrist-daily-edition-select');
+        lab.textContent = '회차';
+
+        var sel = document.createElement('select');
+        sel.id = 'centrist-daily-edition-select';
+        sel.className = 'centrist-daily-edition-bar__select';
+
+        var oLive = document.createElement('option');
+        oLive.value = '__live__';
+        oLive.textContent = '최신 · ' + liveDesc.label;
+        sel.appendChild(oLive);
+
+        for (var hi = 0; hi < hist.length; hi++) {
+          var ent = hist[hi];
+          if (!ent || !ent.slotKey) continue;
+          if (String(ent.slotKey) === liveSk) continue;
+          var op = document.createElement('option');
+          op.value = ent.slotKey;
+          op.textContent = '과거 · ' + (ent.slotLabel || ent.slotKey);
+          sel.appendChild(op);
+        }
+
+        var ask = getCentristArchiveSlotKey();
+        if (mode === 'archive' && ask && findDailyIssueHistoryBundle(ask)) {
+          sel.value = ask;
+        } else {
+          sel.value = '__live__';
+        }
+
+        sel.addEventListener('change', function () {
+          var v = String(sel.value || '');
+          if (v === '__live__') {
+            setCentristHubViewMode('live');
+            setCentristArchiveSlotKey('');
+          } else {
+            setCentristHubViewMode('archive');
+            setCentristArchiveSlotKey(v);
+          }
+          renderCentristHub();
+        });
+
+        inner.appendChild(lab);
+        inner.appendChild(sel);
+        bar.appendChild(inner);
+
+        var note = document.createElement('p');
+        note.className = 'centrist-daily-edition-bar__note muted';
+        if (mode === 'archive' && bundle && bundle.slotLabel) {
+          note.textContent =
+            '과거 이슈 모드입니다. 관점·댓글·답글은 이 회차(' +
+            bundle.slotLabel +
+            ')에만 묶입니다. 매일 서울 기준 오전 6시·저녁 6시에 새 회차가 쌓이는 것을 전제로 한 보관함입니다.';
+        } else {
+          note.textContent =
+            '주요 언론·공공기관 등 공신력 있는 출처의 요지를 바탕으로 같은 대분류로 묶었습니다. (베타: 오늘 저녁 6시 선별 기준)';
+        }
+        bar.appendChild(note);
+
+        var elIssueTitle = document.getElementById('centrist-issue-title');
+        if (elIssueTitle) {
+          elIssueTitle.textContent =
+            mode === 'archive' ? '중앙광장 · 데일리 이슈 · 과거 보기' : '중앙광장 · 데일리 이슈 · 최신';
+        }
+      }
+
       function renderCentristHub() {
         if (!elCentristTabs || !elCentristPanel) return;
+
+        if (getCentristHubViewMode() === 'archive') {
+          var ask0 = getCentristArchiveSlotKey();
+          if (!ask0 || !findDailyIssueHistoryBundle(ask0)) {
+            var hr0 = loadDailyIssueHistoryRoot();
+            var pickedSk = '';
+            if (hr0.entries && hr0.entries.length) {
+              for (var zi = 0; zi < hr0.entries.length; zi++) {
+                var ek = hr0.entries[zi] && hr0.entries[zi].slotKey;
+                if (ek && findDailyIssueHistoryBundle(ek)) {
+                  pickedSk = ek;
+                  break;
+                }
+              }
+            }
+            if (pickedSk) setCentristArchiveSlotKey(pickedSk);
+            else {
+              setCentristHubViewMode('live');
+              setCentristArchiveSlotKey('');
+            }
+          }
+        }
+
         var bundle = loadCentristIssueBundle();
+        if (normalizeBundleIssueChoices(bundle)) {
+          syncDailyIssueStanceLabelsFromBundle(bundle);
+          saveCentristIssueBundle(bundle);
+        }
         normalizeBundleComments(bundle);
         var activeId = getActiveCentristCategoryId();
 
@@ -6420,10 +7521,20 @@
               pq.className = 'centrist-issue-card__question';
               pq.textContent = issue.aiQuestion || '';
 
+              var src = document.createElement('p');
+              src.className = 'centrist-issue-card__source muted';
+              var sn0 = String(issue.sourceNote || '').trim();
+              if (!sn0) {
+                var dSrc = CENTRIST_CATEGORY_SOURCE_DEFAULTS[activeId] || {};
+                sn0 = String(dSrc.source || '').trim();
+                if (dSrc.url) sn0 = sn0 ? sn0 + ' · ' + String(dSrc.url) : String(dSrc.url);
+              }
+              src.textContent = sn0 ? '출처: ' + sn0 : '';
+
               var hint = document.createElement('p');
               hint.className = 'centrist-issue-card__thread-hint';
               hint.textContent =
-                '댓글 보기를 눌러 스레드를 펼칩니다. (답글 n)은 대댓글 개수입니다.';
+                '댓글 보기에서 관점을 고른 뒤 의견·공감을 남길 수 있습니다. (답글 n)은 대댓글 개수입니다.';
 
               var threadRoot = document.createElement('div');
               threadRoot.className = 'centrist-issue-thread-root';
@@ -6431,6 +7542,7 @@
 
               art.appendChild(h3);
               art.appendChild(pq);
+              if (src.textContent) art.appendChild(src);
               art.appendChild(hint);
               art.appendChild(threadRoot);
               elCentristPanel.appendChild(art);
@@ -6442,6 +7554,7 @@
 
         elCentristPanel.setAttribute('role', 'tabpanel');
         elCentristPanel.setAttribute('aria-labelledby', 'centrist-tab-' + activeId);
+        paintCentristDailyEditionBar(bundle);
         renderCentristFreeFeed();
         renderCommonTerritoryHotStrip();
       }
@@ -7264,6 +8377,244 @@
         saveScoresMap(map);
       }
 
+      function loadAlignContentGravityRoot() {
+        try {
+          var raw = localStorage.getItem(ALIGN_CONTENT_GRAVITY_KEY);
+          var o = raw ? JSON.parse(raw) : {};
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveAlignContentGravityRoot(root) {
+        try {
+          localStorage.setItem(ALIGN_CONTENT_GRAVITY_KEY, JSON.stringify(root));
+        } catch (e) {
+          console.warn('[board] content gravity cap save failed', e);
+        }
+      }
+
+      function getContentGravityDayEntry(userId) {
+        var id = String(userId || '').trim() || 'guest';
+        var day = calendarDayKey();
+        var root = loadAlignContentGravityRoot();
+        if (!root[id] || root[id].date !== day) {
+          root[id] = { date: day, used: 0 };
+          saveAlignContentGravityRoot(root);
+        }
+        return { root: root, id: id, entry: root[id] };
+      }
+
+      /**
+       * 데일리 이슈 등 콘텐츠 lean을 본인 축에만 미세 반영. mult 부호로 되돌림.
+       * 하루 가중치 합(양의 적용분)은 ALIGN_CONTENT_GRAVITY_DAILY_MAX.
+       */
+      function tryApplyContentGravityDelta(userId, lean, mult) {
+        var A = window.AlignmentScoring;
+        if (!A || typeof A.deltaContentGravityRaw !== 'function') return false;
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return false;
+        var m = Number(mult) || 0;
+        if (Math.abs(m) < 1e-12) return false;
+        var g = getContentGravityDayEntry(id);
+        if (m > 0 && g.entry.used + m > ALIGN_CONTENT_GRAVITY_DAILY_MAX + 1e-9) return false;
+        var s = getScoresForUser(id);
+        var d = A.deltaContentGravityRaw(lean, m);
+        d = clampAlignmentDeltaForDailyPctCap(id, s, d);
+        if (
+          Math.abs(d.conservative) + Math.abs(d.centrist) + Math.abs(d.progressive) <
+          1e-12
+        )
+          return false;
+        setScoresForUser(id, A.applyDelta(s, d));
+        if (m > 0) g.entry.used += m;
+        else g.entry.used = Math.max(0, g.entry.used + m);
+        saveAlignContentGravityRoot(g.root);
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+        return true;
+      }
+
+      function dailyIssueTouchRoot(slotKey) {
+        var u = uid();
+        var sk = String(slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        try {
+          var raw = sessionStorage.getItem('sc_daily_issue_touch_v2');
+          var o = raw ? JSON.parse(raw) : null;
+          if (o && o.slotKey === sk && o.userId === u && o.marks && typeof o.marks === 'object') return o;
+        } catch (_) {}
+        return { slotKey: sk, userId: u, marks: {} };
+      }
+
+      function saveDailyIssueTouchRoot(o) {
+        try {
+          sessionStorage.setItem('sc_daily_issue_touch_v2', JSON.stringify(o));
+        } catch (_) {}
+      }
+
+      function consumeDailyIssueTouch(slotKey, catId, issueId, field) {
+        var k = String(catId) + '|' + String(issueId);
+        var r = dailyIssueTouchRoot(slotKey);
+        if (!r.marks[k]) r.marks[k] = {};
+        if (r.marks[k][field]) return false;
+        r.marks[k][field] = true;
+        saveDailyIssueTouchRoot(r);
+        return true;
+      }
+
+      function findCentristIssueRef(bundle, catId, issueId) {
+        if (!bundle || !bundle.categories) return null;
+        var block = bundle.categories[catId];
+        if (!block || !Array.isArray(block.issues)) return null;
+        for (var i = 0; i < block.issues.length; i++) {
+          if (block.issues[i].id === issueId) return { issue: block.issues[i], block: block };
+        }
+        return null;
+      }
+
+      function startDailyIssueDwellTracking(panelEl, catId, issue, slotKey) {
+        if (!panelEl || !issue || !issue.lean) return function () {};
+        var sk = String(slotKey || (issue && issue.slotKey) || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        var fired20 = false;
+        var fired60 = false;
+        var t0 = null;
+        var timer = null;
+        function clear() {
+          if (timer) {
+            clearInterval(timer);
+            timer = null;
+          }
+          t0 = null;
+        }
+        function tick() {
+          if (panelEl.hidden) {
+            clear();
+            return;
+          }
+          if (t0 == null) t0 = Date.now();
+          var sec = (Date.now() - t0) / 1000;
+          if (!fired20 && sec >= 20) {
+            fired20 = true;
+            if (consumeDailyIssueTouch(sk, catId, issue.id, 'dwell20')) {
+              tryApplyContentGravityDelta(uid(), issue.lean, CONTENT_LEAN_MULT_DWELL_20);
+            }
+          }
+          if (!fired60 && sec >= 60) {
+            fired60 = true;
+            if (consumeDailyIssueTouch(sk, catId, issue.id, 'dwell60')) {
+              tryApplyContentGravityDelta(uid(), issue.lean, CONTENT_LEAN_MULT_DWELL_60);
+            }
+            clear();
+          }
+        }
+        timer = setInterval(tick, 1000);
+        return clear;
+      }
+
+      function onDailyIssueToggleEmpathy(catId, issueId, commentId) {
+        if (!canUseEmpathyOnCurrentBoard()) {
+          if (isBoardReadable()) alert('아직 해금되지 않았습니다.');
+          return;
+        }
+        var me = uid();
+        var bundle = loadCentristIssueBundle();
+        var ref = findCentristIssueRef(bundle, catId, issueId);
+        if (!ref) return;
+        var sk = String((ref.issue && ref.issue.slotKey) || bundle.slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        if (!getDailyIssueStance(me, catId, issueId, sk)) {
+          alert('공감·반응을 쓰려면 이 카드에서 관점을 먼저 선택해 주세요.');
+          return;
+        }
+        var issue = ref.issue;
+        var c = findCommentById(issue.comments, commentId);
+        if (!c) return;
+        normalizeComment(c);
+        var auth = String(c.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var em = c.reactions.empathy;
+        var ix = em.indexOf(me);
+        var tid = currentTerritory;
+        var mult = CONTENT_LEAN_MULT_EMPATHY_LIKE;
+        if (ix >= 0) {
+          em.splice(ix, 1);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, -1);
+          tryApplyContentGravityDelta(me, issue.lean, -mult);
+        } else {
+          em.push(me);
+          if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, 1);
+          tryApplyContentGravityDelta(me, issue.lean, mult);
+        }
+        if (!saveCentristIssueBundle(bundle)) return;
+        renderCentristHub();
+        refreshGrowthPanel();
+        if (typeof window.__scRefreshBeltTerritoryArt === 'function') window.__scRefreshBeltTerritoryArt();
+      }
+
+      function onDailyIssueToggleCommentReaction(catId, issueId, commentId, asLike) {
+        var me0 = uid();
+        var bundle = loadCentristIssueBundle();
+        var ref = findCentristIssueRef(bundle, catId, issueId);
+        if (!ref) return;
+        var sk = String((ref.issue && ref.issue.slotKey) || bundle.slotKey || '').trim() || getDailyIssueSlotDescriptor().slotId;
+        if (!getDailyIssueStance(me0, catId, issueId, sk)) {
+          alert('공감·반응을 쓰려면 이 카드에서 관점을 먼저 선택해 주세요.');
+          return;
+        }
+        if (asLike) {
+          if (!isBoardReadable()) return;
+          if (!isBoardUnlocked() && !isPlanetResidentEarthQuarantineBoard(currentTerritory, effectiveStage())) {
+            alert('아직 해금되지 않았습니다.');
+            return;
+          }
+        } else {
+          if (alertBoardReactionsNotUnlocked()) return;
+        }
+        var issue = ref.issue;
+        var c = findCommentById(issue.comments, commentId);
+        if (!c) return;
+        normalizeComment(c);
+        var me = me0;
+        var auth = String(c.authorId || '').trim();
+        if (!auth || auth === String(me || '').trim()) return;
+        var L = c.reactions.likes;
+        var D = c.reactions.dislikes;
+        var inL = L.indexOf(me) >= 0;
+        var inD = D.indexOf(me) >= 0;
+        var mult = CONTENT_LEAN_MULT_EMPATHY_LIKE;
+        if (asLike) {
+          if (inL) {
+            L.splice(L.indexOf(me), 1);
+            tryApplyContentGravityDelta(me, issue.lean, -mult);
+          } else {
+            if (inD) {
+              D.splice(D.indexOf(me), 1);
+            }
+            L.push(me);
+            tryApplyContentGravityDelta(me, issue.lean, mult);
+          }
+        } else {
+          var A = window.AlignmentScoring;
+          var oppLean =
+            issue.lean && A && typeof A.oppositeContentLeanForDisagree === 'function'
+              ? A.oppositeContentLeanForDisagree(issue.lean)
+              : issue.lean;
+          if (inD) {
+            D.splice(D.indexOf(me), 1);
+            if (issue.lean) tryApplyContentGravityDelta(me, oppLean, -mult);
+          } else {
+            if (inL) {
+              L.splice(L.indexOf(me), 1);
+              if (issue.lean) tryApplyContentGravityDelta(me, issue.lean, -mult);
+            }
+            D.push(me);
+            if (issue.lean) tryApplyContentGravityDelta(me, oppLean, mult);
+          }
+        }
+        if (!saveCentristIssueBundle(bundle)) return;
+        renderCentristHub();
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+      }
+
       function getPlanetPct(userId) {
         var b = readUserBucket(userId);
         var n = Number(b.planetPct);
@@ -7767,6 +9118,100 @@
         }
       }
 
+      var GUEST_LOCAL_PROFILE_PREFIXES = [
+        'sc_profile_photo_v1:',
+        'sc_profile_idphoto_v1:',
+        'sc_profile_avatar_v1:',
+      ];
+      var GUEST_LOCAL_USER_IDS = ['guest_demo', 'guest'];
+
+      function deleteKeysFromObjectRoot(loadFn, saveFn, keyIds) {
+        var root = loadFn();
+        if (!root || typeof root !== 'object') return;
+        var ch = false;
+        for (var di = 0; di < keyIds.length; di++) {
+          var kid = keyIds[di];
+          if (root[kid]) {
+            delete root[kid];
+            ch = true;
+          }
+        }
+        if (ch) saveFn(root);
+      }
+
+      /**
+       * 게스트 입장 시: 이전 세션에서 남은 guest_demo / guest 로컬 상태 제거
+       * (외계 격리·성향 버킷 등으로 중앙광장이 눈팅만 되는 현상 방지)
+       */
+      window.__scResetLocalStateForGuestEntry = function () {
+        var ids = GUEST_LOCAL_USER_IDS;
+        var map = loadScoresMap();
+        var mapCh = false;
+        for (var j = 0; j < ids.length; j++) {
+          if (map[ids[j]]) {
+            delete map[ids[j]];
+            mapCh = true;
+          }
+        }
+        if (mapCh) saveScoresMap(map);
+
+        deleteKeysFromObjectRoot(loadAlignContentGravityRoot, saveAlignContentGravityRoot, ids);
+        deleteKeysFromObjectRoot(loadAlignDailyCapRoot, saveAlignDailyCapRoot, ids);
+
+        var gr = loadGrowthContribRoot();
+        if (gr.byUser) {
+          var grCh = false;
+          for (var k = 0; k < ids.length; k++) {
+            if (gr.byUser[ids[k]]) {
+              delete gr.byUser[ids[k]];
+              grCh = true;
+            }
+          }
+          if (grCh) saveGrowthContribRoot(gr);
+        }
+
+        var ss = loadSeasonSoft();
+        var ssCh = false;
+        if (ss.seasonalContrib && typeof ss.seasonalContrib === 'object') {
+          for (var si = 0; si < ids.length; si++) {
+            if (ss.seasonalContrib[ids[si]]) {
+              delete ss.seasonalContrib[ids[si]];
+              ssCh = true;
+            }
+          }
+        }
+        if (ssCh) saveSeasonSoft(ss);
+
+        try {
+          sessionStorage.removeItem('sc_daily_issue_touch_v1');
+        } catch (_) {}
+
+        try {
+          var stRoot = loadDailyIssueStanceRoot();
+          var stCh = false;
+          for (var gi = 0; gi < ids.length; gi++) {
+            if (stRoot.byUser[ids[gi]]) {
+              delete stRoot.byUser[ids[gi]];
+              stCh = true;
+            }
+          }
+          if (stCh) saveDailyIssueStanceRoot(stRoot);
+        } catch (_) {}
+
+        for (var pi = 0; pi < GUEST_LOCAL_PROFILE_PREFIXES.length; pi++) {
+          for (var pj = 0; pj < ids.length; pj++) {
+            try {
+              localStorage.removeItem(GUEST_LOCAL_PROFILE_PREFIXES[pi] + ids[pj]);
+            } catch (_) {}
+          }
+        }
+
+        var PP = window.PlayerProgression;
+        if (PP && typeof PP.clearProgressForUsers === 'function') PP.clearProgressForUsers(ids);
+        var FS = window.FollowSystem;
+        if (FS && typeof FS.purgeFollowStateForUsers === 'function') FS.purgeFollowStateForUsers(ids);
+      };
+
       function getOrInitDailyAlignEntry(userId) {
         var id = String(userId || '').trim() || 'guest';
         var day = calendarDayKey();
@@ -7841,11 +9286,13 @@
           eico.setAttribute('aria-hidden', 'true');
           var elab = document.createElement('span');
           elab.className = 'sc-react-hover-txt';
-          elab.textContent = '정치 성향에 영향을 주지 않습니다';
+          elab.textContent = opts.empathyHintBody || '정치 성향에 영향을 주지 않습니다';
           ebtn.appendChild(eico);
           ebtn.appendChild(elab);
-          ebtn.setAttribute('aria-label', '공감 — 정치 성향에 영향 없음');
-          ebtn.title = '공감 — 정치 성향에 영향을 주지 않습니다. 인기·영토 인구에만 반영됩니다.';
+          ebtn.setAttribute('aria-label', opts.empathyAriaLabel || '공감 — 정치 성향에 영향 없음');
+          ebtn.title =
+            opts.empathyTitle ||
+            '공감 — 정치 성향에 영향을 주지 않습니다. 인기·영토 인구에만 반영됩니다.';
           ebtn.addEventListener('click', function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
@@ -7896,6 +9343,7 @@
             addPair(true, opts.nLike, opts.activeLike, opts.disabled, opts.onLike);
             addPair(false, opts.nDis, opts.activeDis, opts.disabled, opts.onDis);
 
+            if (!opts.omitPlanet) {
             var pbtn = document.createElement('button');
             pbtn.type = 'button';
             pbtn.className = 'sc-react-btn sc-react-btn--planet' + (opts.activePlanet ? ' is-active' : '');
@@ -7923,6 +9371,7 @@
             pcnt.textContent = String(opts.nPlanet != null ? opts.nPlanet : 0);
             row.appendChild(pbtn);
             row.appendChild(pcnt);
+            }
           }
         }
 
@@ -7943,6 +9392,8 @@
           dR = scaleDelta(dR, DISLIKE_ALIGN_SCALE);
           dAuth = scaleDelta(dAuth, DISLIKE_ALIGN_SCALE);
         }
+        dR = scaleDelta(dR, PEER_SOCIAL_PRESSURE_SCALE);
+        dAuth = scaleDelta(dAuth, PEER_SOCIAL_PRESSURE_SCALE);
         if (capPost) dAuth = clampAlignDeltaForThread(capPost, aut, dAuth);
         if (mult > 0) {
           dR = clampAlignmentDeltaForDailyPctCap(act, sA, dR);

@@ -198,6 +198,57 @@
     renderNotificationPanel();
   }
 
+  /** 게스트 입장 등: 해당 id를 팔로 그래프·알림 키에서 제거 */
+  function purgeFollowStateForUsers(ids) {
+    var set = {};
+    (ids || []).forEach(function (raw) {
+      var k = String(raw || '').trim();
+      if (k) set[k] = true;
+    });
+    var purgeKeys = Object.keys(set);
+    if (!purgeKeys.length) return;
+    var g = loadGraph();
+    var gCh = false;
+    purgeKeys.forEach(function (id) {
+      if (g.following[id]) {
+        delete g.following[id];
+        gCh = true;
+      }
+      if (g.followers[id]) {
+        delete g.followers[id];
+        gCh = true;
+      }
+    });
+    function strip(side) {
+      Object.keys(g[side]).forEach(function (uid) {
+        var arr = g[side][uid];
+        if (!Array.isArray(arr)) return;
+        var next = arr.filter(function (x) {
+          return !set[String(x || '').trim()];
+        });
+        if (next.length !== arr.length) {
+          g[side][uid] = next;
+          gCh = true;
+        }
+      });
+    }
+    strip('following');
+    strip('followers');
+    if (gCh) saveGraph(g);
+
+    var nm = loadNotifyMap();
+    var nCh = false;
+    purgeKeys.forEach(function (id) {
+      if (nm[id]) {
+        delete nm[id];
+        nCh = true;
+      }
+    });
+    if (nCh) saveNotifyMap(nm);
+    syncAllFollowerCountsToProgression();
+    renderFollowButtons();
+  }
+
   function unreadCount() {
     return getMyNotifications().filter(function (n) {
       return !n.read;
@@ -303,6 +354,7 @@
     getMyNotifications: getMyNotifications,
     renderNotificationPanel: renderNotificationPanel,
     renderFollowButtons: renderFollowButtons,
+    purgeFollowStateForUsers: purgeFollowStateForUsers,
   };
 
   if (document.readyState === 'loading') {
