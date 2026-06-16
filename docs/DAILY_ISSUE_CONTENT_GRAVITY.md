@@ -20,15 +20,15 @@
 - 이슈 객체:
 
 ```text
-topic, aiQuestion, lean, meta, choices[], comments[], choiceGenVersion?
+topic, aiQuestion, axis?, lean, meta, choices[], comments[], choiceGenVersion?
 ```
 
 - `choices[]` 항목: `{ type, id, label, lean }`
   - `type` / `id`: 역할 키(내부·저장용). UI에는 **라벨만**.
   - `lean`: **항상** `AlignmentScoring.leanForDailyIssueRoleType(type)` 결과로 덮어씀(저장/로드 시 `hydrateDailyIssueChoiceleans`). AI가 lean을 넣어도 무시됨.
   - **라벨 정화**: 로드 시 `label`에 진보·보수·중도·진영 등이 섞여 있으면(레거시 번들·AI 실수) 역할별 안전 문구(`DEFAULT_DAILY_ISSUE_ROLE_LABELS`)로 자동 교체 후 `localStorage`에 다시 저장. 입장(`sc_daily_issue_stance_v1`)·댓글 표시는 가능하면 현재 선택지 라벨을 사용.
-  - **`choiceGenVersion`**: 자동 생성 관점 문구 규칙 버전(`DAILY_ISSUE_CHOICE_GEN_VERSION`). 올리면 예전 단일 템플릿만 재생성하고, 풀에서 넣은 수기 `choices`는 버전만 맞추고 문구는 유지.
-- 풀 항목(`CENTRIST_THEME_POOLS`)에 `choices`를 넣으면 `isValidIssueRoleChoicesShape` 통과 시 그대로 사용(이후 hydrate). 없으면 **분야·제목·질문 해시로 역할별 문장 풀에서 한 줄씩 골라** `{T}`·`{Q}` 앵커를 채움(`buildContextualRoleChoicesForPick`).
+  - **`choiceGenVersion`**: 자동 생성 답변 문구 규칙 버전(`DAILY_ISSUE_CHOICE_GEN_VERSION`). 올리면 **검증을 통과하지 못한 구버전 자동 문구**는 재생성된다. 풀에 넣은 수기 `choices`는 형이 맞고 검증을 통과하면 유지되며, 버전만 올릴 수 있다.
+- 풀 항목(`CENTRIST_THEME_POOLS`)에 `choices`를 넣으면 `isValidIssueRoleChoicesShape` 통과 시 그대로 사용(이후 hydrate). 없으면 **`axis`(또는 질문 인용·제목에서 추론한 축) 기반으로 같은 질문에 대한 네 가지 직접 답**을 합성한다(`buildContextualRoleChoicesForPick` → `buildAxisAwareChoiceRows`). 풀에 `directAnswers`가 있으면 `validateIssueChoices(..., axis)` 통과 시 우선 사용.
 
 ## 관점 선택 저장 (클라이언트)
 

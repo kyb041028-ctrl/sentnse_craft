@@ -557,6 +557,7 @@
     var elXpLegend = document.getElementById('avatar-xpbar-legend');
     var elRank = document.getElementById('avatar-meta-rank');
     var elFollowers = document.getElementById('avatar-meta-followers');
+    var elFollowing = document.getElementById('avatar-meta-following');
     if (!elLevel) return;
 
     var uid = (global.__scPlayer && global.__scPlayer.userId) || 'guest';
@@ -573,7 +574,14 @@
     if (elXpLegend) elXpLegend.textContent = d.xpLegend;
     if (elRank) elRank.textContent = d.rankLabel;
     if (elFollowers) {
-      elFollowers.textContent = standings.followers.toLocaleString('ko-KR') + '명';
+      elFollowers.textContent = standings.followers.toLocaleString('ko-KR');
+    }
+    if (elFollowing) {
+      var fc = 0;
+      if (global.FollowSystem && typeof global.FollowSystem.getFollowingCount === 'function') {
+        fc = global.FollowSystem.getFollowingCount(uid);
+      }
+      elFollowing.textContent = String(fc);
     }
 
     if (global.__scPlayer) {

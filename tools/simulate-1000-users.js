@@ -2,6 +2,10 @@
 /**
  * 1000명 다양 활동 시뮬레이션 (Node, localStorage 없이 메모리)
  * 실행: node tools/simulate-1000-users.js
+ * 옵션:
+ *   --seed=123          결정적 난수 (기본: 42)
+ *   --legacy-tendency   구버전: 편향 분포(보수/진보/중도 비율 고정)
+ *   (기본)              축별 독립 균등 난수 + planetPct 0~100 + 소수 외계 소속 랜덤
  */
 'use strict';
 
@@ -11,7 +15,12 @@ const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
 const USER_COUNT = 1000;
-const SEED = 42;
+const argvSeed = (() => {
+  const a = process.argv.find((x) => /^--seed=/.test(x));
+  return a ? parseInt(a.split('=')[1], 10) : NaN;
+})();
+const SEED = Number.isFinite(argvSeed) ? argvSeed : 42;
+const LEGACY_TENDENCY = process.argv.includes('--legacy-tendency');
 
 function mulberry32(seed) {
   let a = seed >>> 0;
@@ -40,18 +49,27 @@ const KANTA_UNLOCK_PLANET_PCT = 50;
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
 const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
-const FREE_MEGA_CATS = ['all', 'affairs', 'economy', 'society', 'culture', 'tech', 'humor', 'life', 'advice'];
+const FREE_MEGA_CATS = ['all', 'mega_affairs', 'mega_life', 'mega_culture', 'mega_tech'];
 const FREE_MEGA_SUBS = {
-  affairs: ['politics_free'],
-  economy: ['money'],
-  society: ['society_free'],
-  culture: ['culture'],
-  tech: ['tech'],
-  humor: ['humor'],
-  life: ['free', 'daily'],
-  advice: ['advice'],
+  mega_affairs: ['politics_free', 'society_free', 'world_free'],
+  mega_life: ['money', 'advice', 'daily', 'meetup_free', 'free'],
+  mega_culture: ['culture', 'humor', 'games_free'],
+  mega_tech: ['tech'],
 };
-const FREE_SUB_CATS = ['free', 'politics_free', 'money', 'society_free', 'culture', 'tech', 'daily', 'advice', 'humor'];
+const FREE_SUB_CATS = [
+  'free',
+  'politics_free',
+  'money',
+  'society_free',
+  'world_free',
+  'culture',
+  'tech',
+  'daily',
+  'meetup_free',
+  'advice',
+  'humor',
+  'games_free',
+];
 const ISSUE_CATS = ['politics', 'economy', 'society', 'entertainment', 'world'];
 
 const issues = [];
@@ -306,36 +324,58 @@ function toggleFollow(me, target) {
   }
 }
 
+/** 축별 [0.5, max] 균등 — 화면 퍼센트는 합 100 근사 */
+function randomBucketScores(rndFn) {
+  const hi = 120;
+  const lo = 0.5;
+  const c = lo + rndFn() * (hi - lo);
+  const n = lo + rndFn() * (hi - lo);
+  const p = lo + rndFn() * (hi - lo);
+  const sc = bucketScores({ conservative: c, centrist: n, progressive: p });
+  const planetPct = Math.floor(rndFn() * 101);
+  let forcedTerritory = null;
+  if (rndFn() < 0.12) {
+    forcedTerritory = rndFn() < 0.5 ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
+  }
+  return { ...sc, planetPct, forcedTerritory };
+}
+
 function simulate() {
-  console.log(`=== ${USER_COUNT}명 활동 시뮬레이션 (seed=${SEED}) ===\n`);
+  console.log(
+    `=== ${USER_COUNT}명 활동 시뮬레이션 (seed=${SEED}, tendency=${LEGACY_TENDENCY ? 'legacy-bias' : 'full-random'}) ===\n`,
+  );
 
   for (let i = 0; i < USER_COUNT; i++) {
     const u = uid(i);
-    const bias = rnd();
-    const base = A.initialScores();
-    if (bias < 0.22) base.conservative += 6 + rnd() * 8;
-    else if (bias < 0.44) base.progressive += 6 + rnd() * 8;
-    else if (bias < 0.66) base.centrist += 6 + rnd() * 8;
-    else {
-      base.conservative += rnd() * 3;
-      base.centrist += rnd() * 3;
-      base.progressive += rnd() * 3;
-    }
-    if (rnd() < 0.08) {
-      const planet = 50 + Math.floor(rnd() * 40);
-      const sc = bucketScores(base);
-      const unit = A.unit3(sc);
-      const ft = unit.progressive >= unit.conservative ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
-      scoresMap[u] = {
-        ...sc,
-        planetPct: planet,
-        forcedTerritory: ft,
-      };
-    } else {
-      scoresMap[u] = bucketScores(base);
-      if (rnd() < 0.15) {
-        scoresMap[u].planetPct = Math.floor(rnd() * 100);
+    if (LEGACY_TENDENCY) {
+      const bias = rnd();
+      const base = A.initialScores();
+      if (bias < 0.22) base.conservative += 6 + rnd() * 8;
+      else if (bias < 0.44) base.progressive += 6 + rnd() * 8;
+      else if (bias < 0.66) base.centrist += 6 + rnd() * 8;
+      else {
+        base.conservative += rnd() * 3;
+        base.centrist += rnd() * 3;
+        base.progressive += rnd() * 3;
       }
+      if (rnd() < 0.08) {
+        const planet = 50 + Math.floor(rnd() * 40);
+        const sc = bucketScores(base);
+        const unit = A.unit3(sc);
+        const ft = unit.progressive >= unit.conservative ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
+        scoresMap[u] = {
+          ...sc,
+          planetPct: planet,
+          forcedTerritory: ft,
+        };
+      } else {
+        scoresMap[u] = bucketScores(base);
+        if (rnd() < 0.15) {
+          scoresMap[u].planetPct = Math.floor(rnd() * 100);
+        }
+      }
+    } else {
+      scoresMap[u] = randomBucketScores(rnd);
     }
   }
 
@@ -442,12 +482,29 @@ function simulate() {
     else unlocked.COMMON_only++;
   }
 
-  // 성향 합 100
-  for (let i = 0; i < 50; i++) {
-    const pct = getPct(uid(i));
+  // 성향 합 100 (전원)
+  for (let i = 0; i < USER_COUNT; i++) {
+    const id = uid(i);
+    const pct = getPct(id);
     const sum = pct.conservative + pct.centrist + pct.progressive;
-    if (sum < 98 || sum > 102) err(`성향 합 ${sum}% (user_${i})`);
+    if (sum < 98 || sum > 102) err(`성향 합 ${sum}% (${id})`);
+    const raw = getScores(id);
+    for (const k of ['conservative', 'centrist', 'progressive', 'planetPct']) {
+      const v = raw[k];
+      if (!Number.isFinite(v)) err(`${id} ${k} 비유한수: ${v}`);
+    }
+    if (raw.planetPct < 0 || raw.planetPct > 100) err(`${id} planetPct 범위 밖: ${raw.planetPct}`);
   }
+
+  // 팔로우 그래프 양방향 일관성
+  let followMismatch = 0;
+  for (const me of Object.keys(followGraph.following)) {
+    for (const t of followGraph.following[me] || []) {
+      const back = followGraph.followers[t] || [];
+      if (!back.includes(me)) followMismatch++;
+    }
+  }
+  if (followMismatch) err(`팔로우 역참조 불일치 ${followMismatch}건`);
 
   // pickAffiliation tie at 40/40/20 edge
   const tieUser = 'tie_test';

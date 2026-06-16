@@ -1,15 +1,20 @@
 /**
- * 센텐스크래프트 — 유저 팔로우 · 새 글 알림 (localStorage)
+ * 센텐스크래프트 — 유저 팔로우 · 팔로워/팔로우 알림 · 새 글 알림 (localStorage)
  */
 (function (global) {
   'use strict';
 
   var LS_KEY = 'sc_follow_v1';
   var NOTIFY_KEY = 'sc_follow_notify_v1';
-  var MAX_NOTIFY = 40;
+  var PREFS_KEY = 'sc_follow_notify_prefs_v1';
+  var MAX_NOTIFY = 60;
 
   function meId() {
     return String((global.__scPlayer && global.__scPlayer.userId) || 'guest').trim() || 'guest';
+  }
+
+  function genId() {
+    return 'fn_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
   }
 
   function loadGraph() {
@@ -62,6 +67,10 @@
     return getFollowers(userId).length;
   }
 
+  function getFollowingCount(userId) {
+    return getFollowing(userId).length;
+  }
+
   function isFollowing(targetId) {
     var me = meId();
     var t = String(targetId || '').trim();
@@ -74,6 +83,115 @@
     if (typeof global.__scSetFollowerCount === 'function') {
       global.__scSetFollowerCount(targetId, n);
     }
+  }
+
+  function loadNotifyPrefs() {
+    try {
+      var raw = localStorage.getItem(PREFS_KEY);
+      var d = raw ? JSON.parse(raw) : {};
+      if (!d || typeof d !== 'object') d = {};
+      return {
+        relFollowing: d.relFollowing !== false,
+        relFollower: d.relFollower !== false,
+        postFollowing: d.postFollowing === true,
+        postFollower: d.postFollower === true,
+      };
+    } catch (_) {
+      return {
+        relFollowing: true,
+        relFollower: true,
+        postFollowing: false,
+        postFollower: false,
+      };
+    }
+  }
+
+  function saveNotifyPrefs(p) {
+    try {
+      localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+    } catch (_) {}
+  }
+
+  function normalizeNotifyItem(n) {
+    if (!n || typeof n !== 'object') return n;
+    if (n.postId && !n.type) {
+      return Object.assign({}, n, { type: 'post', fromFollowee: true, fromFollower: false });
+    }
+    return n;
+  }
+
+  function itemVisible(n, prefs) {
+    var x = normalizeNotifyItem(n);
+    if (!x || !prefs) return true;
+    if (x.type === 'rel_my_follow') return prefs.relFollowing;
+    if (x.type === 'rel_follower') return prefs.relFollower;
+    if (x.type === 'post') {
+      var fe = !!x.fromFollowee;
+      var fr = !!x.fromFollower;
+      return (fe && prefs.postFollowing) || (fr && prefs.postFollower);
+    }
+    if (x.type === 'post_followee') return prefs.postFollowing;
+    if (x.type === 'post_follower') return prefs.postFollower;
+    return true;
+  }
+
+  function formatNotifyTime(iso) {
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      var now = new Date();
+      var opts = {
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: '2-digit',
+      };
+      if (d.getFullYear() !== now.getFullYear()) opts.year = 'numeric';
+      return d.toLocaleString('ko-KR', opts);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function notifyLabelForPost(n) {
+    var x = normalizeNotifyItem(n);
+    if (x.type !== 'post') return '';
+    var fe = !!x.fromFollowee;
+    var fr = !!x.fromFollower;
+    if (fe && fr) return '「맞팔」 ';
+    if (fe) return '「팔로우」 ';
+    if (fr) return '「팔로워」 ';
+    return '';
+  }
+
+  function buildNotifyLines(n) {
+    var x = normalizeNotifyItem(n);
+    var time = formatNotifyTime(x.createdAt);
+    var actor = String(x.actorId || '').trim() || '유저';
+    var author = String(x.authorId || '').trim() || '유저';
+
+    if (x.type === 'rel_my_follow') {
+      if (x.verb === 'follow') {
+        return { main: actor + ' 님을 팔로우했어요.', meta: time };
+      }
+      return { main: actor + ' 님 팔로우를 해제했어요.', meta: time };
+    }
+    if (x.type === 'rel_follower') {
+      if (x.verb === 'follow') {
+        return { main: actor + ' 님이 나를 팔로우했어요.', meta: time };
+      }
+      return { main: actor + ' 님이 나를 팔로우 취소했어요.', meta: time };
+    }
+    if (x.postId && (x.type === 'post' || x.type === 'post_followee' || x.type === 'post_follower')) {
+      var pre = notifyLabelForPost(x);
+      var t = String(x.title || '제목 없음').slice(0, 68);
+      return {
+        main: pre + author + ' 님의 새 글 「' + t + '」',
+        meta: time + ' · ' + territoryLabel(x.territoryId),
+      };
+    }
+    return { main: JSON.stringify(x).slice(0, 80), meta: time };
   }
 
   function toggleFollow(targetId) {
@@ -103,10 +221,29 @@
     g.following[me] = fl;
     saveGraph(g);
     syncProgressionFollowers(t);
-    if (nowFollowing && String(t) === String(meId()) === false) {
-      /* noop */
-    }
+
+    var iso = new Date().toISOString();
+    pushNotification(me, {
+      id: genId(),
+      type: 'rel_my_follow',
+      actorId: t,
+      verb: nowFollowing ? 'follow' : 'unfollow',
+      createdAt: iso,
+      read: false,
+    });
+    pushNotification(t, {
+      id: genId(),
+      type: 'rel_follower',
+      actorId: me,
+      verb: nowFollowing ? 'follow' : 'unfollow',
+      createdAt: iso,
+      read: false,
+    });
+
     renderFollowButtons();
+    if (typeof global.__scRefreshProgressionUI === 'function') {
+      global.__scRefreshProgressionUI();
+    }
     if (global.RankLeaderboard && typeof global.RankLeaderboard.refresh === 'function') {
       var modal = document.getElementById('sc-rank-modal');
       if (modal && !modal.hidden) global.RankLeaderboard.refresh();
@@ -148,8 +285,8 @@
       CENTRIST: '중앙광장',
       CONSERVATIVE: '보수',
       PROGRESSIVE: '진보',
-    KANTAPBIYA_LEFT: '외계행성 · 진보행성',
-    KANTAPBIYA_RIGHT: '외계행성 · 보수행성',
+      KANTAPBIYA_LEFT: '외계행성 · 진보행성',
+      KANTAPBIYA_RIGHT: '외계행성 · 보수행성',
       UNASSIGNED: '미편입',
     };
     return m[tid] || tid || '영토';
@@ -158,21 +295,38 @@
   function onAuthorNewPost(meta) {
     var authorId = String(meta && meta.authorId || '').trim();
     if (!authorId) return;
-    var followers = getFollowers(authorId);
-    if (!followers.length) return;
-    var note = {
-      id: 'fn_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-      postId: String(meta.postId || ''),
-      authorId: authorId,
-      title: String(meta.title || '(제목 없음)').slice(0, 80),
-      territoryId: String(meta.territoryId || 'COMMON'),
-      stage: Math.max(1, Math.floor(Number(meta.stage) || 1)),
-      createdAt: new Date().toISOString(),
-      read: false,
-    };
-    followers.forEach(function (fid) {
-      if (fid === authorId) return;
-      pushNotification(fid, note);
+    var followersOfAuthor = getFollowers(authorId);
+    var recipientSet = {};
+    followersOfAuthor.forEach(function (fid) {
+      if (fid !== authorId) recipientSet[fid] = true;
+    });
+    var g = loadGraph();
+    Object.keys(g.followers || {}).forEach(function (uid) {
+      if (uid === authorId) return;
+      if (uniqList(g.followers[uid]).indexOf(authorId) >= 0) recipientSet[uid] = true;
+    });
+    var createdAt = new Date().toISOString();
+    var postId = String(meta.postId || '');
+    var title = String(meta.title || '(제목 없음)').slice(0, 80);
+    var territoryId = String(meta.territoryId || 'COMMON');
+    var stage = Math.max(1, Math.floor(Number(meta.stage) || 1));
+
+    Object.keys(recipientSet).forEach(function (uid) {
+      var fromFollowee = followersOfAuthor.indexOf(uid) >= 0;
+      var fromFollower = getFollowers(uid).indexOf(authorId) >= 0;
+      pushNotification(uid, {
+        id: genId(),
+        type: 'post',
+        postId: postId,
+        authorId: authorId,
+        title: title,
+        territoryId: territoryId,
+        stage: stage,
+        fromFollowee: fromFollowee,
+        fromFollower: fromFollower,
+        createdAt: createdAt,
+        read: false,
+      });
     });
   }
 
@@ -247,11 +401,13 @@
     if (nCh) saveNotifyMap(nm);
     syncAllFollowerCountsToProgression();
     renderFollowButtons();
+    if (typeof global.__scRefreshProgressionUI === 'function') global.__scRefreshProgressionUI();
   }
 
   function unreadCount() {
+    var prefs = loadNotifyPrefs();
     return getMyNotifications().filter(function (n) {
-      return !n.read;
+      return !normalizeNotifyItem(n).read && itemVisible(n, prefs);
     }).length;
   }
 
@@ -260,6 +416,7 @@
     var list = document.getElementById('sc-follow-notify-list');
     var badge = document.getElementById('sc-follow-notify-badge');
     if (!list) return;
+    var prefs = loadNotifyPrefs();
     var items = getMyNotifications();
     var unread = unreadCount();
     if (badge) {
@@ -267,34 +424,50 @@
       badge.hidden = unread <= 0;
     }
     list.textContent = '';
-    if (!items.length) {
+    var visible = items.filter(function (n) {
+      return itemVisible(n, prefs);
+    });
+    if (!visible.length) {
       var empty = document.createElement('li');
       empty.className = 'sc-follow-notify__empty muted';
-      empty.textContent = '새 알림이 없습니다.';
+      empty.textContent =
+        items.length > 0
+          ? '지금은 보이는 알림이 없어요. 오른쪽 위 스위치에서 받을 알림을 켜 주세요.'
+          : '새 소식이 없어요. 팔로우하거나 글이 올라오면 여기에 모여요.';
       list.appendChild(empty);
       return;
     }
-    items.forEach(function (n) {
+    visible.forEach(function (n) {
+      var x = normalizeNotifyItem(n);
       var li = document.createElement('li');
-      li.className = 'sc-follow-notify__item' + (n.read ? '' : ' is-unread');
+      li.className = 'sc-follow-notify__item' + (x.read ? '' : ' is-unread');
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'sc-follow-notify__btn';
-      btn.textContent =
-        (n.authorId || '유저') +
-        ' · ' +
-        territoryLabel(n.territoryId) +
-        ' — ' +
-        (n.title || '새 글');
+      var lines = buildNotifyLines(x);
+      var main = document.createElement('span');
+      main.className = 'sc-follow-notify__line sc-follow-notify__line--main';
+      main.textContent = lines.main;
+      var meta = document.createElement('span');
+      meta.className = 'sc-follow-notify__line sc-follow-notify__line--meta';
+      meta.textContent = lines.meta;
+      btn.appendChild(main);
+      btn.appendChild(meta);
+      var isPost = !!(x.postId && (x.type === 'post' || x.type === 'post_followee' || x.type === 'post_follower'));
       btn.addEventListener('click', function () {
+        x.read = true;
         n.read = true;
         var map = loadNotifyMap();
         var uid = meId();
         if (Array.isArray(map[uid])) saveNotifyMap(map);
-        if (typeof global.__scBoardNavigateToPost === 'function') {
-          global.__scBoardNavigateToPost(n.territoryId, n.stage, n.postId);
+        if (isPost && typeof global.__scBoardNavigateToPost === 'function') {
+          global.__scBoardNavigateToPost(x.territoryId, x.stage, x.postId);
         }
         if (panel) panel.hidden = true;
+        var tgl = document.getElementById('sc-follow-notify-toggle');
+        if (tgl) tgl.setAttribute('aria-expanded', 'false');
+        var settingsPop = document.getElementById('sc-follow-notify-settings-pop');
+        if (settingsPop) settingsPop.hidden = true;
         renderNotificationPanel();
       });
       li.appendChild(btn);
@@ -319,6 +492,46 @@
     });
   }
 
+  function syncSettingsUiFromPrefs() {
+    var p = loadNotifyPrefs();
+    var pairs = [
+      ['sc-follow-pref-rel-following', p.relFollowing],
+      ['sc-follow-pref-rel-follower', p.relFollower],
+      ['sc-follow-pref-post-following', p.postFollowing],
+      ['sc-follow-pref-post-follower', p.postFollower],
+    ];
+    pairs.forEach(function (row) {
+      var el = document.getElementById(row[0]);
+      if (!el) return;
+      el.setAttribute('aria-checked', row[1] ? 'true' : 'false');
+    });
+  }
+
+  function bindPrefSwitch(id, key) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function () {
+      var p = loadNotifyPrefs();
+      var cur = p[key] === true;
+      p[key] = !cur;
+      saveNotifyPrefs(p);
+      el.setAttribute('aria-checked', p[key] ? 'true' : 'false');
+      renderNotificationPanel();
+    });
+  }
+
+  function setNotifyPanelOpen(open) {
+    var panel = document.getElementById('sc-follow-notify-panel');
+    var toggle = document.getElementById('sc-follow-notify-toggle');
+    var settingsPop = document.getElementById('sc-follow-notify-settings-pop');
+    if (panel) panel.hidden = !open;
+    if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (settingsPop) {
+      settingsPop.hidden = !open;
+      if (open) syncSettingsUiFromPrefs();
+    }
+  }
+
   function initNotificationUi() {
     syncAllFollowerCountsToProgression();
     var toggle = document.getElementById('sc-follow-notify-toggle');
@@ -326,21 +539,43 @@
     var btnClear = document.getElementById('sc-follow-notify-clear');
     var btnRead = document.getElementById('sc-follow-notify-read');
     if (toggle && panel) {
-      toggle.addEventListener('click', function () {
-        panel.hidden = !panel.hidden;
-        if (!panel.hidden) markAllRead();
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setNotifyPanelOpen(panel.hidden);
+      });
+    }
+    document.addEventListener('click', function () {
+      if (!panel || panel.hidden) return;
+      setNotifyPanelOpen(false);
+    });
+    if (panel) {
+      panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+    var settingsPop = document.getElementById('sc-follow-notify-settings-pop');
+    if (settingsPop) {
+      settingsPop.addEventListener('click', function (e) {
+        e.stopPropagation();
       });
     }
     if (btnClear) {
-      btnClear.addEventListener('click', function () {
+      btnClear.addEventListener('click', function (e) {
+        e.stopPropagation();
         clearMyNotifications();
       });
     }
     if (btnRead) {
-      btnRead.addEventListener('click', function () {
+      btnRead.addEventListener('click', function (e) {
+        e.stopPropagation();
         markAllRead();
       });
     }
+    bindPrefSwitch('sc-follow-pref-rel-following', 'relFollowing');
+    bindPrefSwitch('sc-follow-pref-rel-follower', 'relFollower');
+    bindPrefSwitch('sc-follow-pref-post-following', 'postFollowing');
+    bindPrefSwitch('sc-follow-pref-post-follower', 'postFollower');
+    syncSettingsUiFromPrefs();
     renderNotificationPanel();
   }
 
@@ -348,10 +583,12 @@
     getFollowing: getFollowing,
     getFollowers: getFollowers,
     getFollowerCount: getFollowerCount,
+    getFollowingCount: getFollowingCount,
     isFollowing: isFollowing,
     toggleFollow: toggleFollow,
     onAuthorNewPost: onAuthorNewPost,
     getMyNotifications: getMyNotifications,
+    loadNotifyPrefs: loadNotifyPrefs,
     renderNotificationPanel: renderNotificationPanel,
     renderFollowButtons: renderFollowButtons,
     purgeFollowStateForUsers: purgeFollowStateForUsers,
