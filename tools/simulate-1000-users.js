@@ -49,27 +49,27 @@ const KANTA_UNLOCK_PLANET_PCT = 50;
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
 const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
-const FREE_MEGA_CATS = ['all', 'mega_affairs', 'mega_life', 'mega_culture', 'mega_tech'];
+const FREE_MEGA_CATS = ['all', 'mega_debate', 'mega_light', 'mega_info'];
 const FREE_MEGA_SUBS = {
-  mega_affairs: ['politics_free', 'society_free', 'world_free'],
-  mega_life: ['money', 'advice', 'daily', 'meetup_free', 'free'],
-  mega_culture: ['culture', 'humor', 'games_free'],
-  mega_tech: ['tech'],
+  mega_debate: ['debate'],
+  mega_light: ['light'],
+  mega_info: ['info'],
 };
-const FREE_SUB_CATS = [
-  'free',
-  'politics_free',
-  'money',
-  'society_free',
-  'world_free',
-  'culture',
-  'tech',
-  'daily',
-  'meetup_free',
-  'advice',
-  'humor',
-  'games_free',
-];
+const FREE_SUB_CATS = ['debate', 'light', 'info'];
+const LEGACY_FREE_CAT_MAP = {
+  free: 'debate',
+  politics_free: 'debate',
+  society_free: 'debate',
+  world_free: 'debate',
+  money: 'debate',
+  humor: 'light',
+  games_free: 'light',
+  daily: 'light',
+  meetup_free: 'light',
+  advice: 'light',
+  culture: 'light',
+  tech: 'info',
+};
 const ISSUE_CATS = ['politics', 'economy', 'society', 'entertainment', 'world'];
 
 const issues = [];
@@ -106,7 +106,9 @@ function normalizePost(p, postTerritoryId) {
   }
   const tid = postTerritoryId != null && String(postTerritoryId) !== '' ? String(postTerritoryId) : 'COMMON';
   if (isCommonSpace(tid)) {
-    if (!p.category) p.category = 'free';
+    const raw = p.category || 'debate';
+    p.category = LEGACY_FREE_CAT_MAP[raw] || raw;
+    if (p.category !== 'debate' && p.category !== 'light' && p.category !== 'info') p.category = 'debate';
   } else {
     try {
       delete p.category;
@@ -121,7 +123,8 @@ function postMatchesFreeCategory(p, megaId) {
   if (!megaId || megaId === 'all') return true;
   const subs = FREE_MEGA_SUBS[megaId];
   if (!subs || !subs.length) return true;
-  const c = String((p && p.category) || 'free').trim() || 'free';
+  const raw = String((p && p.category) || 'debate').trim() || 'debate';
+  const c = LEGACY_FREE_CAT_MAP[raw] || raw;
   return subs.includes(c);
 }
 
@@ -269,7 +272,8 @@ function addPost(tid, stage, authorId, category) {
     comments: [],
   };
   if (isCommonSpace(tid)) {
-    raw.category = category && FREE_SUB_CATS.includes(category) ? category : 'free';
+    const mapped = category ? LEGACY_FREE_CAT_MAP[category] || category : 'debate';
+    raw.category = FREE_SUB_CATS.includes(mapped) ? mapped : 'debate';
   }
   const post = normalizePost(raw, tid);
   all.unshift(post);
@@ -455,7 +459,11 @@ function simulate() {
     if (cat === 'all') continue;
     const subs = FREE_MEGA_SUBS[cat];
     const filtered = commonPosts.filter((p) => postMatchesFreeCategory(p, cat));
-    const bad = filtered.filter((p) => !subs.includes(String((p && p.category) || 'free').trim()));
+    const bad = filtered.filter((p) => {
+      const raw = String((p && p.category) || 'debate').trim();
+      const c = LEGACY_FREE_CAT_MAP[raw] || raw;
+      return !subs.includes(c);
+    });
     if (bad.length) warn(`대분류 '${cat}' 필터에 불일치 ${bad.length}건`);
   }
 

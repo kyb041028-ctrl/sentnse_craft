@@ -272,6 +272,10 @@
       color: #f0f9ff;
       box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+    /* 게시판·글 상세에서는 상단 영토/안내/히스토리 탭 숨김 */
+    body.sc-app-mode.sc-hide-primary-nav .app-primary-nav {
+      display: none;
+    }
     .sc-history-soon {
       margin: 0;
       padding: 2.5rem 1rem;
@@ -663,19 +667,23 @@
       background: linear-gradient(180deg, rgba(120, 53, 15, 0.28), rgba(0, 0, 0, 0.12));
     }
     #board-section[data-sc-territory^="KANTAPBIYA"] .board__head {
-      background: linear-gradient(180deg, rgba(76, 29, 149, 0.32), rgba(15, 118, 110, 0.12));
+      background: linear-gradient(180deg, rgba(76, 29, 149, 0.38), rgba(15, 118, 110, 0.1));
+      border-bottom-color: rgba(167, 139, 250, 0.2);
+    }
+    #board-section[data-sc-territory^="KANTAPBIYA"] .board__kanta-tagline {
+      color: #ddd6fe;
     }
     #board-section[data-sc-territory="PROGRESSIVE"] #board-list .board__item:hover {
-      border-color: rgba(96, 165, 250, 0.28);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(59, 130, 246, 0.12);
+      border-color: rgba(96, 165, 250, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
     #board-section[data-sc-territory="CONSERVATIVE"] #board-list .board__item:hover {
-      border-color: rgba(251, 191, 36, 0.22);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(245, 158, 11, 0.1);
+      border-color: rgba(248, 113, 113, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
     #board-section[data-sc-territory^="KANTAPBIYA"] #board-list .board__item:hover {
-      border-color: rgba(167, 139, 250, 0.35);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 22px rgba(45, 212, 191, 0.08);
+      border-color: rgba(167, 139, 250, 0.24);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     /* ----- 영토 맵: 단일 PNG(contain) + SVG 히트존(진보·광장·보수·외계행성) ----- */
@@ -2412,35 +2420,76 @@
       padding: 0;
       overflow-x: hidden;
       overflow-y: visible;
+      --sc-card-gap: 0.35rem;
+      --sc-card-pad-x: 0.75rem;
+      --sc-card-pad-y: 0.55rem;
+      --sc-card-radius: 10px;
+      --sc-section-gap: 0.5rem;
+      --sc-react-h: 1.85rem;
+    }
+    #board-section[data-sc-territory="COMMON"] {
+      --sc-board-accent: rgba(212, 175, 55, 0.35);
+      --sc-board-accent-soft: rgba(212, 175, 55, 0.1);
+    }
+    #board-section[data-sc-territory="PROGRESSIVE"] {
+      --sc-board-accent: rgba(56, 189, 248, 0.4);
+      --sc-board-accent-soft: rgba(56, 189, 248, 0.1);
+    }
+    #board-section[data-sc-territory="CONSERVATIVE"] {
+      --sc-board-accent: rgba(248, 113, 113, 0.38);
+      --sc-board-accent-soft: rgba(248, 113, 113, 0.1);
+    }
+    #board-section[data-sc-territory^="KANTAPBIYA"] {
+      --sc-board-accent: rgba(167, 139, 250, 0.42);
+      --sc-board-accent-soft: rgba(167, 139, 250, 0.12);
     }
     .board__head {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 0.75rem;
-      padding: 1rem 1.25rem 1.05rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      background: linear-gradient(180deg, rgba(22, 32, 56, 0.92), rgba(5, 8, 16, 0.45));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      gap: 0.5rem 0.75rem;
+      padding: 0.65rem 1rem 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(22, 32, 56, 0.75), rgba(5, 8, 16, 0.35));
+    }
+    .board__head--compact .board__head-text {
+      min-width: 0;
+      flex: 1 1 12rem;
     }
     .board__head h2 {
       margin: 0;
-      font-size: 1.08rem;
+      font-size: 0.98rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text-strong);
-      text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+      line-height: 1.3;
     }
-    .board__head .muted {
-      margin: 0.25rem 0 0;
-      font-size: 0.78rem;
-      width: 100%;
+    .board__kanta-tagline {
+      margin: 0.2rem 0 0;
+      font-size: 0.72rem;
+      line-height: 1.4;
+      color: #c4b5fd;
+      font-weight: 500;
+    }
+    .board__active-users {
+      margin: 0.15rem 0 0;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+    .board__write-btn {
+      padding: 0.38rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+    }
+    .board__head .muted#board-title-desc {
+      display: none;
     }
     .board__context {
-      padding: 0.7rem 1.25rem 0.6rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(8, 12, 24, 0.55);
+      padding: 0.4rem 1rem 0.35rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(8, 12, 24, 0.45);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -2476,16 +2525,187 @@
       display: none !important;
     }
     .board__faction-stage-strip {
-      margin-top: 1rem;
-      padding-top: 0.9rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 0;
+      padding: 0.45rem 1rem 0.35rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(8, 12, 24, 0.4);
     }
     .board__faction-stage-strip__h {
-      margin: 0 0 0.5rem;
-      font-size: 0.92rem;
+      display: none;
+    }
+    .board__feed-tabs-wrap {
+      padding: 0.35rem 1rem 0.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(6, 10, 20, 0.55);
+    }
+    .board__feed-tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .board__feed-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .board__feed-tab {
+      flex: 0 0 auto;
+      padding: 0.28rem 0.62rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .board__feed-tab:hover,
+    .board__feed-tab:focus-visible {
+      color: #e2e8f0;
+      border-color: rgba(148, 163, 184, 0.28);
+      outline: none;
+    }
+    .board__feed-tab.is-active {
+      color: #ecfeff;
+      border-color: rgba(56, 189, 248, 0.5);
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .board__inline-notice {
+      margin: 0;
+      padding: 0.45rem 1rem;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.08);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    .board__inline-notice strong {
       font-weight: 700;
-      color: #f1f5f9;
-      line-height: 1.35;
+    }
+    .board__system-panels {
+      padding: 0.35rem 0.75rem 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(4, 6, 14, 0.35);
+    }
+    .board__system-panels--plaza {
+      margin-top: 0.15rem;
+      padding: 0;
+      border: none;
+      background: transparent;
+      opacity: 0.9;
+    }
+    .board__system-panels--plaza .board__fold {
+      margin: 0.2rem 0 0;
+      border-color: rgba(255, 255, 255, 0.05);
+      background: rgba(8, 12, 22, 0.38);
+    }
+    .board__system-panels--plaza .board__fold > summary {
+      padding: 0.38rem 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    .board__system-panels--plaza .board__fold__body {
+      padding: 0.45rem 0.65rem 0.55rem;
+      font-size: 0.78rem;
+    }
+    .board__unlock-hint {
+      margin: 0;
+      font-size: 0.74rem;
+      line-height: 1.45;
+    }
+    .board__fold {
+      margin: 0.35rem 0 0;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(12, 18, 32, 0.55);
+      overflow: hidden;
+    }
+    .board__fold > summary {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .board__fold > summary::-webkit-details-marker {
+      display: none;
+    }
+    .board__fold > summary::before {
+      content: '▸ ';
+      color: #64748b;
+    }
+    .board__fold[open] > summary::before {
+      content: '▾ ';
+    }
+    .board__fold__body {
+      padding: 0 0.75rem 0.65rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+    .board__fold__body .board-growth,
+    .board__fold__body .board-debate,
+    .board__fold__body .board-faction-hot {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+    .board__list--dense {
+      min-height: 8rem;
+    }
+    .board__list--dense .board__item {
+      margin: 0.28rem 0.5rem;
+      border-radius: 9px;
+    }
+    .board__list--dense .board__item-hdr {
+      padding: 0.5rem 0.75rem 0.2rem;
+    }
+    .board__list--dense .board__item-cmt-hint {
+      color: #64748b;
+      font-size: 0.68rem;
+    }
+    .board__list--dense .board__item-title {
+      margin: 0 0 0.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .board__list--dense .board__item-meta {
+      margin: 0;
+      font-size: 0.68rem;
+    }
+    .board__list--dense .board__item-react {
+      padding: 0.15rem 0.75rem 0.4rem;
+      font-size: 0.68rem;
+      border-top: none;
+      background: transparent;
+    }
+    .board__list--dense .board__item-comment-badge {
+      display: none;
+    }
+    .board__list--dense .board__follow-btn {
+      font-size: 0.62rem;
+      padding: 0.1rem 0.35rem;
+    }
+    .board__list--dense .board__author-thumb {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+    #board-section[data-sc-territory^="KANTAPBIYA"] .board__item {
+      border-color: rgba(167, 139, 250, 0.14);
+      background: linear-gradient(180deg, rgba(30, 20, 48, 0.9), rgba(10, 8, 22, 0.82));
+    }
+    @media (hover: hover) and (pointer: fine) {
+      #board-section[data-sc-territory^="KANTAPBIYA"] #board-list .board__item:hover {
+        border-color: rgba(167, 139, 250, 0.24);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
     }
     .board__faction-stage-strip__hint {
       display: inline;
@@ -2691,7 +2911,7 @@
     .board__comment-actions {
       margin-top: 0.28rem;
     }
-    .board__comment-actions button {
+    .board__comment-actions button:not(.sc-react-btn) {
       font-size: 0.72rem;
       padding: 0.18rem 0.5rem;
       border-radius: 6px;
@@ -2700,7 +2920,7 @@
       color: #93c5fd;
       cursor: pointer;
     }
-    .board__comment-actions button:hover {
+    .board__comment-actions button:not(.sc-react-btn):hover {
       background: rgba(255, 255, 255, 0.05);
     }
     .board__reply-slot {
@@ -2804,25 +3024,24 @@
     }
     .board__item {
       border-bottom: none;
-      margin: 0.5rem 0.4rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: linear-gradient(180deg, rgba(22, 32, 54, 0.88), rgba(8, 11, 22, 0.75));
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      margin: var(--sc-card-gap, 0.35rem) 0.5rem;
+      border-radius: var(--sc-card-radius, 10px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: linear-gradient(180deg, rgba(28, 36, 52, 0.92), rgba(14, 18, 30, 0.88));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
       overflow: hidden;
       transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
+        background 0.18s ease,
+        border-color 0.18s ease;
     }
     .board__item:last-child {
       margin-bottom: 0.55rem;
     }
     @media (hover: hover) and (pointer: fine) {
       #board-list .board__item:hover {
-        transform: translateY(-2px);
-        border-color: rgba(56, 189, 248, 0.22);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.1);
+        transform: none;
+        border-color: var(--sc-board-accent, rgba(56, 189, 248, 0.22));
+        background: linear-gradient(180deg, rgba(34, 44, 62, 0.95), rgba(18, 22, 36, 0.92));
       }
     }
     .board__item-btn {
@@ -2939,11 +3158,11 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .board__item-react {
-      padding: 0.2rem 1rem 0.55rem;
+      padding: 0.2rem var(--sc-card-pad-x, 0.75rem) 0.55rem;
       font-size: 0.75rem;
       color: var(--muted);
       border-top: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(0, 0, 0, 0.12);
+      background: rgba(0, 0, 0, 0.1);
     }
     .board__camp-affinity {
       margin: 0 1rem 0.55rem;
@@ -3020,42 +3239,79 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.25rem 0.65rem;
+      justify-content: flex-start;
+      gap: 0.35rem;
     }
     .sc-react-btn {
       font: inherit;
-      font-size: 0.72rem;
-      padding: 0.22rem 0.42rem;
+      font-size: 0.68rem;
+      height: var(--sc-react-h, 1.85rem);
+      min-width: 4.55rem;
+      padding: 0 0.38rem;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.05);
-      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.12rem;
-      max-width: 100%;
+      justify-content: center;
+      gap: 0.2rem;
+      transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        transform 0.16s ease,
+        color 0.16s ease;
     }
     .sc-react-btn:hover:not(:disabled) {
-      background: rgba(56, 189, 248, 0.12);
-      border-color: rgba(56, 189, 248, 0.35);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--sc-board-accent, rgba(56, 189, 248, 0.28));
+      color: #f1f5f9;
+      transform: scale(1.03);
     }
     .sc-react-btn:disabled {
-      opacity: 0.45;
+      opacity: 0.38;
       cursor: not-allowed;
+      transform: none;
     }
     .sc-react-btn.is-active {
-      border-color: rgba(56, 189, 248, 0.55);
-      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--sc-board-accent, rgba(56, 189, 248, 0.45));
+      background: var(--sc-board-accent-soft, rgba(56, 189, 248, 0.12));
+      color: #f8fafc;
+    }
+    .sc-react-btn--empathy.is-active {
+      border-color: rgba(244, 114, 182, 0.45);
+      background: rgba(244, 114, 182, 0.12);
     }
     .sc-react-btn--planet.is-active {
-      border-color: rgba(167, 139, 250, 0.65);
-      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(167, 139, 250, 0.5);
+      background: rgba(139, 92, 246, 0.14);
     }
     .sc-react-ico {
       display: inline-block;
       line-height: 1;
-      font-size: 1.05rem;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+    .sc-react-lbl {
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #94a3b8;
+    }
+    .sc-react-btn.is-active .sc-react-lbl {
+      color: #e2e8f0;
+    }
+    .sc-react-count {
+      font-size: 0.68rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #e2e8f0;
+      min-width: 0.85rem;
+      text-align: right;
+    }
+    .sc-react-hover-txt {
+      display: none;
     }
     .sc-react-ico--up::before {
       content: '👍';
@@ -3068,22 +3324,6 @@
     }
     .sc-react-ico--empathy::before {
       content: '❤️';
-    }
-    .sc-react-bar--kanta .sc-react-ico--kanta.sc-react-ico--up::before {
-      content: '🛸';
-    }
-    .sc-react-bar--kanta .sc-react-ico--kanta.sc-react-ico--down::before {
-      content: '👾';
-    }
-    .sc-react-bar--kanta .sc-react-ico--kanta.sc-react-ico--planet::before {
-      content: '✴';
-    }
-    .sc-react-bar--kanta .sc-react-ico--kanta.sc-react-ico--empathy::before {
-      content: '〰';
-    }
-    .sc-react-btn--empathy.is-active {
-      border-color: rgba(244, 114, 182, 0.55);
-      background: rgba(244, 114, 182, 0.16);
     }
     .board-growth {
       margin: 0.85rem 0 0.55rem;
@@ -3372,6 +3612,149 @@
       background: rgba(56, 189, 248, 0.18);
       color: #e0f2fe;
     }
+    .board__write-btn--ghost {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+    .moderation-modal__dialog {
+      width: min(62rem, 100%);
+      max-height: 86vh;
+      overflow: auto;
+    }
+    .moderation-dashboard-root {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+      gap: 0.55rem;
+      margin-top: 0.4rem;
+    }
+    .moderation-card {
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.58);
+      padding: 0.55rem 0.65rem;
+    }
+    .moderation-card h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+    }
+    .moderation-card ul {
+      margin: 0;
+      padding-left: 1rem;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+    .moderation-card li {
+      margin: 0.16rem 0;
+      line-height: 1.35;
+    }
+    .moderation-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.3rem;
+    }
+    .moderation-actions button {
+      font: inherit;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 7px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(30, 41, 59, 0.55);
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+    .moderation-dashboard-root--list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .moderation-panel {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.58);
+      padding: 0.5rem 0.6rem;
+    }
+    .moderation-panel h4 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+    .moderation-risk-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .moderation-risk-row {
+      display: grid;
+      grid-template-columns: minmax(5rem, 1fr) auto;
+      gap: 0.15rem 0.5rem;
+      padding: 0.32rem 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      font-size: 0.7rem;
+      line-height: 1.35;
+      color: #cbd5e1;
+    }
+    .moderation-risk-row:last-child {
+      border-bottom: none;
+    }
+    .moderation-risk-row__nick {
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .moderation-risk-row__meta {
+      grid-column: 1 / -1;
+      color: #94a3b8;
+      font-size: 0.66rem;
+    }
+    .moderation-risk-row__reasons {
+      grid-column: 1 / -1;
+      color: #fde68a;
+      font-size: 0.66rem;
+    }
+    .moderation-event-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 14rem;
+      overflow: auto;
+    }
+    .moderation-event-row {
+      padding: 0.28rem 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      font-size: 0.66rem;
+      line-height: 1.35;
+      color: #94a3b8;
+    }
+    .moderation-event-row strong {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .sc-soft-notice {
+      position: fixed;
+      left: 50%;
+      bottom: 1.1rem;
+      transform: translateX(-50%);
+      z-index: 12000;
+      max-width: min(22rem, calc(100vw - 2rem));
+      padding: 0.55rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.94);
+      color: #e2e8f0;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      text-align: center;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
+    .centrist-hot-opinion--fold-only {
+      display: none;
+    }
+    #centrist-fold-extra:not([open]) .centrist-hot-opinion--fold-only {
+      display: none;
+    }
 
     .board__posts-heading {
       margin: 0 0 0.5rem;
@@ -3385,13 +3768,160 @@
       font-size: 0.72rem;
       font-weight: 600;
     }
+    .board__origin {
+      display: inline-block;
+      margin: 0 0 0.28rem;
+      padding: 0.1rem 0.42rem;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      border: 1px solid transparent;
+    }
+    .board__origin--cent {
+      color: #d4d4d8;
+      background: rgba(161, 161, 170, 0.12);
+      border-color: rgba(161, 161, 170, 0.22);
+    }
+    .board__origin--prog {
+      color: #7dd3fc;
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.22);
+    }
+    .board__origin--con {
+      color: #fca5a5;
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.22);
+    }
+    .board__item-origin-row {
+      padding: var(--sc-card-pad-y, 0.55rem) var(--sc-card-pad-x, 0.75rem) 0;
+    }
+    .centrist-hub-flow--plaza {
+      gap: 0.55rem;
+    }
+    .centrist-hub__top {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .centrist-hub__main {
+      margin-top: 0.15rem;
+    }
+    .centrist-hub__meta {
+      margin-top: 0.2rem;
+      padding-top: 0.15rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .centrist-section--spotlight.card {
+      padding: 0.85rem 1rem 0.95rem;
+      background: linear-gradient(155deg, rgba(32, 44, 72, 0.94) 0%, rgba(14, 20, 36, 0.92) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        0 10px 32px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    }
+    .centrist-section--daily.centrist-section--spotlight.card {
+      border-left: 3px solid rgba(212, 175, 55, 0.55);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.4),
+        0 0 32px rgba(212, 175, 55, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .centrist-section--live.centrist-section--spotlight.card {
+      border-left: 3px solid rgba(52, 211, 153, 0.6);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.4),
+        0 0 36px rgba(45, 212, 191, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .centrist-section__title--spotlight {
+      font-size: 1rem;
+      margin: 0 0 0.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+    .centrist-section__lead--visible {
+      display: block;
+      margin: 0 0 0.55rem;
+      font-size: 0.74rem;
+      line-height: 1.45;
+    }
+    .centrist-section__lead--inline {
+      margin: 0.1rem 0 0;
+      font-size: 0.7rem;
+    }
+    .centrist-section--free.card {
+      padding: 0.7rem 0.85rem 0.8rem;
+      background: linear-gradient(180deg, rgba(24, 32, 48, 0.88), rgba(12, 16, 28, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .centrist-hub__fold--muted {
+      margin-top: 0.2rem;
+      border-color: rgba(255, 255, 255, 0.05);
+      background: rgba(8, 12, 22, 0.35);
+      opacity: 0.92;
+    }
+    .centrist-hub__fold--muted > summary {
+      padding: 0.38rem 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    .centrist-world-pulse--compact {
+      margin-bottom: 0.45rem;
+      padding: 0.45rem 0.55rem;
+    }
+    #board-section[data-sc-territory="COMMON"] .board__write-btn {
+      white-space: nowrap;
+    }
+    .centrist-section--compact.card {
+      padding: 0.65rem 0.85rem 0.75rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+    .centrist-section--compact .centrist-section__lead {
+      display: none;
+    }
+    .centrist-section__title--slim {
+      font-size: 0.92rem;
+      margin: 0 0 0.4rem;
+    }
+    .centrist-plaza-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .centrist-plaza-list__item {
+      margin: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .centrist-plaza-list__btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.42rem 0.15rem;
+      border: none;
+      background: transparent;
+      color: #e2e8f0;
+      font: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .centrist-plaza-list__btn:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .centrist-hub__fold {
+      margin-top: 0.25rem;
+    }
     .centrist-hub-wrap[hidden] {
       display: none !important;
     }
     .centrist-hub-flow {
       display: flex;
       flex-direction: column;
-      gap: 1.35rem;
+      gap: 0.55rem;
     }
     .centrist-hub-flow > .card {
       margin-top: 0;
@@ -3425,12 +3955,33 @@
         0 0 40px rgba(45, 212, 191, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
+    .centrist-section--daily.centrist-section--spotlight.card {
+      border-left: 3px solid rgba(212, 175, 55, 0.55);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.4),
+        0 0 32px rgba(212, 175, 55, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .centrist-section--live.centrist-section--spotlight.card {
+      border-left: 3px solid rgba(52, 211, 153, 0.6);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.4),
+        0 0 36px rgba(45, 212, 191, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
     .centrist-section--free.card {
       border-left: 3px solid rgba(167, 139, 250, 0.45);
       box-shadow:
         0 14px 44px rgba(0, 0, 0, 0.45),
         0 0 42px rgba(139, 92, 246, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .centrist-hub__main .centrist-section--free.card {
+      border-left: none;
+      padding: 0.7rem 0.85rem 0.8rem;
+      background: linear-gradient(180deg, rgba(24, 32, 48, 0.88), rgba(12, 16, 28, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
     .centrist-section__head {
       margin: 0 0 0.55rem;
@@ -3634,9 +4185,41 @@
     }
     .centrist-free-feed__tabs {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin: 0 0 0.65rem;
+      flex-wrap: nowrap;
+      gap: 0.28rem;
+      margin: 0 0 0.55rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      padding-bottom: 0.1rem;
+    }
+    .centrist-free-feed__tabs .board__stage-tab {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      padding: 0.3rem 0.62rem;
+      font-size: 0.74rem;
+    }
+    #board-free-category-tabs.board__stage-tabs {
+      flex-wrap: nowrap;
+      gap: 0.28rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #board-free-category-tabs .board__stage-tab {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      padding: 0.3rem 0.62rem;
+      font-size: 0.74rem;
+    }
+    .centrist-free-feed__list.board__list {
+      border: none;
+      background: transparent;
+      max-height: none;
+      overflow: visible;
+    }
+    .centrist-free-feed__list .board__item {
+      margin-left: 0;
+      margin-right: 0;
     }
     .centrist-free-feed__list {
       list-style: none;
@@ -4308,7 +4891,7 @@
           <div class="view-login__world-panel">
             <p>데일리 이슈에 참여하며 성향이 변화합니다</p>
             <p>성향에 따라 새로운 영토가 열립니다</p>
-            <p>과열된 공격성은 별도 구역으로 분리됩니다</p>
+            <p>고강도 토론은 분리 토론 구역에서 이어집니다</p>
           </div>
         </header>
         <div class="view-login__intro-media" role="region" aria-label="로그인 인트로 영상">
@@ -4503,236 +5086,289 @@
           <button type="button" id="board-back-main">← 영토 선택으로</button>
         </div>
         <section class="card board" id="board-section" data-sc-territory="COMMON" aria-labelledby="board-title">
-          <div class="board__head">
-            <div>
+          <div class="board__head board__head--compact">
+            <div class="board__head-text">
               <h2 id="board-title">중앙광장 · 광장</h2>
-              <p class="muted" id="board-title-desc">
+              <p id="board-kanta-tagline" class="board__kanta-tagline" hidden></p>
+              <p id="board-active-users" class="board__active-users">
+                현재 활동 유저 <span id="board-active-users-n">—</span>명
+              </p>
+              <p class="muted" id="board-title-desc" hidden>
                 중앙광장은 <strong>전원 이용</strong> · 영토 게시판은
-                <strong>1단계 40%</strong> · <strong>2단계 60%</strong>(외계행성: 외계인 50% + 사람 60%) · 3·4단계 추후 공개입니다.
+                <strong>1단계 40%</strong> · <strong>2단계 60%</strong>(고강도 토론 구역은 운영자 승인) · 3·4단계 추후 공개입니다.
               </p>
             </div>
             <div class="board__actions">
-              <button type="button" id="board-btn-write">글쓰기</button>
+              <button type="button" id="board-btn-write" class="board__write-btn">글쓰기</button>
             </div>
           </div>
+
+          <div id="board-faction-stage-strip" class="board__faction-stage-strip" hidden>
+            <div id="board-stage-wrap" class="board__stage-wrap board__stage-wrap--above-list">
+              <div
+                id="board-stage-tabs"
+                class="board__stage-tabs board__stage-tabs--compact"
+                role="tablist"
+                aria-label="영토 게시판 단계"
+              ></div>
+            </div>
+          </div>
+
           <div id="board-context-bar" class="board__context" role="navigation" aria-label="게시판 분야">
             <div id="board-free-cat-wrap" class="board__context-row" hidden>
-              <span class="board__context-label">대분류</span>
+              <span class="board__context-label">글 성격</span>
               <div
                 id="board-free-category-tabs"
                 class="board__stage-tabs"
                 role="tablist"
-                aria-label="자유 커뮤니티 대분류"
+                aria-label="자유 커뮤니티 글 성격"
               ></div>
             </div>
           </div>
 
-          <section class="board-growth" id="board-growth-panel" aria-labelledby="board-growth-title">
-            <h3 id="board-growth-title" class="board-growth__title">성장 · 영토 기여</h3>
-            <p class="board-growth__hint muted">
-              <strong>공감(하트)</strong>은 인기·핫랭킹·영토 인구(덩치)에만 반영됩니다.
-              <strong>엄지 반응</strong>은 정치 성향 시뮬 전용입니다.
-            </p>
-            <div class="board-growth__row">
-              <span class="board-growth__k">내 기여</span>
-              <div class="board-growth__track" id="board-contrib-self-track" aria-label="이 영토에서 공감을 준 누적">
-                <div id="board-contrib-self-fill" class="board-growth__fill board-growth__fill--self"></div>
-              </div>
-              <span id="board-contrib-self-val" class="board-growth__num muted">0</span>
-            </div>
-            <div class="board-growth__row">
-              <span class="board-growth__k">영토 인구</span>
-              <div class="board-growth__track" id="board-contrib-team-track" aria-label="이 영토 합산 인구">
-                <div id="board-contrib-team-fill" class="board-growth__fill board-growth__fill--team"></div>
-              </div>
-              <span id="board-contrib-team-val" class="board-growth__num muted">0</span>
-            </div>
-            <div class="board-growth__season muted">
-              <span id="board-season-label">시즌 1</span>
-              · 업적 <span id="board-ach-count">0</span> · 칭호 <span id="board-title-count">0</span>
-              <button type="button" id="board-season-demo-btn" class="board-growth__demo">
-                소프트 시즌 넘기기(데모)
-              </button>
-              <span class="board-growth__season-note">(자동 시즌 주기는 정책 확정 후 연결)</span>
-            </div>
-          </section>
+          <div id="board-feed-tabs-wrap" class="board__feed-tabs-wrap" hidden>
+            <div id="board-feed-tabs" class="board__feed-tabs" role="tablist" aria-label="게시글 정렬"></div>
+          </div>
 
-          <section class="board-debate" id="board-debate-panel" aria-labelledby="board-debate-title">
-            <h3 id="board-debate-title" class="board-debate__title">영토 토론전 (실시간만)</h3>
-            <p>
-              주 1~2회, <strong>정해진 시간에만</strong> 진행합니다. 비동기(기간 내 자유 제출) 방식은 사용하지 않습니다. 승리
-              영토 보상은 추후 연동 예정입니다.
-            </p>
-            <p id="board-debate-next" class="muted">다음 라이브 일정: 운영 공지 시 이곳에 표시됩니다.</p>
-          </section>
+          <div id="board-lurk-banner" class="board__inline-notice" hidden>
+            <span id="board-lurk-banner-title">눈팅 모드</span> —
+            <span class="board__lurk-banner-text">읽기·공감만 가능합니다. 글쓰기·댓글·반응은 해금 후 이용할 수 있습니다.</span>
+          </div>
 
-          <div id="board-faction-stage-strip" class="board__faction-stage-strip" hidden>
-            <h3 class="board__faction-stage-strip__h">
-              게시 단계
-              <span class="muted board__faction-stage-strip__hint">단계를 고른 뒤 아래 목록이 바뀝니다 · 열람 불가 단계는 비활성입니다</span>
-            </h3>
-            <div id="board-stage-wrap" class="board__stage-wrap board__stage-wrap--above-list">
-              <div
-                id="board-stage-tabs"
-                class="board__stage-tabs"
-                role="tablist"
-                aria-label="영토 게시판 단계 1에서 4까지"
-              ></div>
-            </div>
+          <ul id="board-list" class="board__list board__list--dense" aria-label="게시글 목록"></ul>
+
+          <div id="board-system-panels" class="board__system-panels" hidden>
+            <details class="board__fold" id="board-fold-growth">
+              <summary>영토 성장</summary>
+              <div class="board__fold__body">
+                <section class="board-growth" id="board-growth-panel" aria-labelledby="board-growth-title">
+                  <h3 id="board-growth-title" class="board-growth__title">성장 · 영토 기여</h3>
+                  <p class="board-growth__hint muted">
+                    <strong>공감(하트)</strong>은 인기·핫랭킹·영토 인구에 반영됩니다.
+                    <strong>엄지 반응</strong>은 정치 성향 시뮬 전용입니다.
+                  </p>
+                  <div class="board-growth__row">
+                    <span class="board-growth__k">내 기여</span>
+                    <div class="board-growth__track" id="board-contrib-self-track" aria-label="이 영토에서 공감을 준 누적">
+                      <div id="board-contrib-self-fill" class="board-growth__fill board-growth__fill--self"></div>
+                    </div>
+                    <span id="board-contrib-self-val" class="board-growth__num muted">0</span>
+                  </div>
+                  <div class="board-growth__row">
+                    <span class="board-growth__k">영토 인구</span>
+                    <div class="board-growth__track" id="board-contrib-team-track" aria-label="이 영토 합산 인구">
+                      <div id="board-contrib-team-fill" class="board-growth__fill board-growth__fill--team"></div>
+                    </div>
+                    <span id="board-contrib-team-val" class="board-growth__num muted">0</span>
+                  </div>
+                </section>
+              </div>
+            </details>
+
+            <details class="board__fold" id="board-fold-season">
+              <summary>시즌 정보</summary>
+              <div class="board__fold__body">
+                <p class="board-growth__season muted" style="margin: 0">
+                  <span id="board-season-label">시즌 1</span>
+                  · 업적 <span id="board-ach-count">0</span> · 칭호 <span id="board-title-count">0</span>
+                </p>
+                <button type="button" id="board-season-demo-btn" class="board-growth__demo" style="margin-top: 0.45rem">
+                  소프트 시즌 넘기기(데모)
+                </button>
+                <p class="board-growth__season-note muted" style="margin: 0.35rem 0 0; font-size: 0.72rem">
+                  자동 시즌 주기는 정책 확정 후 연결됩니다.
+                </p>
+              </div>
+            </details>
+
+            <details class="board__fold" id="board-fold-debate">
+              <summary>영토 토론전</summary>
+              <div class="board__fold__body">
+                <section class="board-debate" id="board-debate-panel" aria-labelledby="board-debate-title">
+                  <h3 id="board-debate-title" class="board-debate__title" style="font-size: 0.85rem; margin: 0 0 0.35rem">
+                    영토 토론전 (실시간)
+                  </h3>
+                  <p style="margin: 0 0 0.35rem; font-size: 0.78rem">
+                    주 1~2회, <strong>정해진 시간에만</strong> 진행합니다. 승리 영토 보상은 추후 연동 예정입니다.
+                  </p>
+                  <p id="board-debate-next" class="muted" style="margin: 0; font-size: 0.75rem">
+                    다음 라이브 일정: 운영 공지 시 이곳에 표시됩니다.
+                  </p>
+                </section>
+              </div>
+            </details>
+
+            <details class="board__fold" id="board-fold-hot">
+              <summary>오늘의 인기글</summary>
+              <div class="board__fold__body">
+                <section
+                  id="board-faction-hot-panel"
+                  class="board-faction-hot centrist-hot"
+                  aria-labelledby="board-faction-hot-title"
+                >
+                  <h3 id="board-faction-hot-title" class="centrist-hot__h" style="font-size: 0.85rem">1~5위</h3>
+                  <div id="board-faction-hot-opinion" class="hot-opinion-ticker" aria-live="polite"></div>
+                  <ol id="board-faction-hot-list" class="centrist-hot__list"></ol>
+                  <p id="board-faction-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
+                </section>
+              </div>
+            </details>
+
+            <details class="board__fold" id="board-fold-unlock">
+              <summary>단계 해금 안내</summary>
+              <div class="board__fold__body">
+                <p id="board-common-unlock-hint" class="board__unlock-hint muted" hidden>
+                  <strong>중앙광장</strong>은 전원 이용 가능합니다. 진보·보수 영토는 성향
+                    <strong>40%</strong> 이상이 되면
+                  <strong>1단계</strong>가 열립니다. <strong>Lv.3</strong>부터는 1단계 눈팅(읽기)이 가능합니다.
+                </p>
+                <div id="board-faction-locked" class="board__locked" style="padding: 0; border: none; background: transparent" hidden>
+                  <p class="board__locked-title">이 영토 게시판은 아직 해금되지 않았습니다</p>
+                  <p class="board__locked-text">
+                    <strong>중앙광장</strong>에서 활동하며 성향이 쌓이면 해당 영토
+                    <strong>40%</strong>에 도달할 때 <strong>1단계</strong>가 열립니다.
+                    <strong>Lv.3</strong>이면 <strong>1단계 눈팅(읽기)</strong>만 가능합니다.
+                  </p>
+                </div>
+                <div id="board-locked" class="board__locked" style="padding: 0.5rem 0 0; border: none; background: transparent" hidden>
+                  <p class="board__locked-title">이 단계는 아직 이용할 수 없습니다</p>
+                  <p class="board__locked-text">
+                    <strong>2단계</strong>는 해당 영토 성향 <strong>60%</strong> 이상입니다. 외계행성은
+                    <strong>사람 60%</strong> 이상입니다. 고강도 토론 구역은 운영자 승인으로만 이동됩니다.
+                  </p>
+                </div>
+              </div>
+            </details>
           </div>
 
           <h3 id="board-posts-heading" class="board__posts-heading" hidden>자유 게시판 글 (대분류별)</h3>
-          <ul id="board-list" class="board__list" aria-label="게시글 목록"></ul>
-
-          <section
-            id="board-faction-hot-panel"
-            class="board-faction-hot centrist-hot"
-            hidden
-            aria-labelledby="board-faction-hot-title"
-          >
-            <h3 id="board-faction-hot-title" class="centrist-hot__h">오늘의 인기글 (1~5위)</h3>
-            <p class="board-faction-hot__hint muted">
-              이 영토 · 현재 단계에서 오늘 작성된 글 기준(공감·댓글·본문 길이)입니다. 제목을 누르면
-              <strong>본문 전용 화면</strong>으로 이동합니다.
-            </p>
-            <div id="board-faction-hot-opinion" class="hot-opinion-ticker" aria-live="polite"></div>
-            <ol id="board-faction-hot-list" class="centrist-hot__list"></ol>
-            <p id="board-faction-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
-          </section>
-
-          <div id="board-faction-locked" class="board__locked" hidden>
-            <p class="board__locked-title">이 영토 게시판은 아직 해금되지 않았습니다</p>
-            <p class="board__locked-text">
-              <strong>중앙광장</strong>에서 글·댓글·반응으로 성향이 쌓이면 해당 영토
-              <strong>40%</strong>(외계행성은 외계인 성향 <strong>50%</strong>)에 도달할 때
-              <strong>1단계</strong>가 열립니다. <strong>Lv.3</strong>이면 중립이어도
-              <strong>1단계 눈팅(읽기)</strong>만 가능합니다.
-            </p>
-          </div>
-          <div id="board-lurk-banner" class="board__lurk-banner" hidden>
-            <p class="board__lurk-banner-title" id="board-lurk-banner-title">눈팅 모드</p>
-            <p class="board__lurk-banner-text">
-              이 단계는 <strong>목록·본문 열람(눈팅)</strong>만 가능합니다. 글쓰기·댓글·좋아요·싫어요·외계인 표시는 해당
-              영토·단계가 성향 해금된 뒤에만 이용할 수 있습니다.
-            </p>
-          </div>
-          <div id="board-locked" class="board__locked" hidden>
-            <p class="board__locked-title">이 단계는 아직 이용할 수 없습니다</p>
-            <p class="board__locked-text">
-              <strong>2단계</strong>는 해당 영토 성향 <strong>60%</strong> 이상입니다. 외계행성은
-              <strong>사람 성향 60% + 외계인 성향 50%</strong>가 모두 필요합니다.
-              <strong>3·4단계</strong> 해금 조건은 추후 공개됩니다.
-            </p>
-          </div>
         </section>
-        <div id="centrist-hub-wrap" class="centrist-hub-wrap centrist-hub-flow" hidden>
-          <div id="common-territory-hot-wrap" class="common-territory-hot-wrap card" style="padding: 0.65rem 0.75rem">
-            <div
-              class="common-territory-hot__tabs"
-              role="tablist"
-              aria-label="진보·보수 영토 1단계 핫글 기간"
+        <div id="centrist-hub-wrap" class="centrist-hub-wrap centrist-hub-flow centrist-hub-flow--plaza" hidden>
+          <div class="centrist-hub__top">
+            <section
+              class="card centrist-section centrist-section--daily centrist-section--spotlight centrist-main-issue"
+              aria-labelledby="centrist-issue-title"
             >
-              <button
-                type="button"
-                class="common-territory-hot__tab is-active"
-                data-common-hot-period="day"
-                role="tab"
-                aria-selected="true"
-              >
-                일간
-              </button>
-              <button type="button" class="common-territory-hot__tab" data-common-hot-period="week" role="tab" aria-selected="false">
-                주간
-              </button>
-              <button type="button" class="common-territory-hot__tab" data-common-hot-period="month" role="tab" aria-selected="false">
-                월간
-              </button>
-            </div>
-            <div id="common-territory-hot-opinion" class="hot-opinion-ticker hot-opinion-ticker--dual" aria-live="polite"></div>
-            <div class="common-territory-hot__columns">
-              <section class="common-territory-hot__col" aria-labelledby="common-hot-prog-title">
-                <h3 id="common-hot-prog-title" class="common-territory-hot__h">진보 영토 1단계 · 핫 TOP3</h3>
-                <ol id="common-hot-prog-list" class="common-territory-hot__list"></ol>
-                <p id="common-hot-prog-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
-              </section>
-              <section class="common-territory-hot__col" aria-labelledby="common-hot-con-title">
-                <h3 id="common-hot-con-title" class="common-territory-hot__h">보수 영토 1단계 · 핫 TOP3</h3>
-                <ol id="common-hot-con-list" class="common-territory-hot__list"></ol>
-                <p id="common-hot-con-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
-              </section>
-            </div>
-          </div>
-
-          <div id="centrist-world-pulse" class="centrist-world-pulse card" style="padding: 0.55rem 0.75rem" aria-live="polite"></div>
-
-          <section class="card centrist-section centrist-section--daily centrist-main-issue" aria-labelledby="centrist-issue-title">
-            <div class="centrist-section__head">
-              <h2 id="centrist-issue-title" class="centrist-section__title">오늘의 의제 · 데일리 이슈</h2>
-              <p class="centrist-section__lead">
-                오늘 광장에서 열리는 <strong>가치 충돌형 의제</strong>입니다. 사실 요지와 출처를 확인한 뒤, 네 가지 관점 중 하나를
-                고르면 성향 축에 아주 천천히 반영됩니다. 댓글·답글은 토론용이며, 본문만으로 진영을 판별하지 않습니다.
-              </p>
-            </div>
-            <div id="centrist-daily-edition-bar" class="centrist-daily-edition-bar" aria-live="polite"></div>
-            <div
-              id="centrist-category-tabs"
-              class="centrist-category-tabs board__stage-tabs"
-              role="tablist"
-              aria-label="데일리 이슈 분야"
-            ></div>
-            <div id="centrist-issues-panel" class="centrist-issues-panel" aria-live="polite"></div>
-            <button type="button" id="centrist-issues-more" class="centrist-issues-more" hidden aria-expanded="false">
-              더 보기
-            </button>
-          </section>
-
-          <section class="card centrist-section centrist-section--live centrist-hot" aria-labelledby="centrist-hot-title">
-            <div class="centrist-section__head">
-              <h2 id="centrist-hot-title" class="centrist-section__title">실시간 흐름 · 광장 반응</h2>
-              <p class="centrist-section__lead">
-                오늘 올라온 글을 기준으로, <strong>인기·최신·논쟁·공감</strong> 순으로 광장의 움직임을 봅니다. 제목을 누르면 본문
-                화면으로 이동합니다.
-              </p>
-            </div>
-            <div
-              id="centrist-live-tabs"
-              class="centrist-live-tabs board__stage-tabs"
-              role="tablist"
-              aria-label="실시간 정렬"
-            ></div>
-            <div id="centrist-hot-opinion" class="hot-opinion-ticker" aria-live="polite"></div>
-            <ol id="centrist-hot-list" class="centrist-hot__list"></ol>
-            <p id="centrist-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
-          </section>
-
-          <div class="centrist-free-write-strip">
-            <p class="centrist-free-write-strip__lead muted">
-              아래 <strong>자유 커뮤니티</strong>에서 대분류를 고른 뒤 글을 씁니다. 목록은 광장 메인과 동일한 필터를
-              공유합니다.
-            </p>
-            <button type="button" id="centrist-open-write" class="centrist-open-write">자유글 글쓰기</button>
-          </div>
-
-          <section class="card centrist-section centrist-section--free" aria-labelledby="centrist-free-feed-title">
-            <div class="centrist-free-feed" aria-labelledby="centrist-free-feed-title">
-              <div class="centrist-section__head">
-                <h3 id="centrist-free-feed-title" class="centrist-free-feed__h">
-                  자유 커뮤니티 · 최신 글
-                  <span class="centrist-free-feed__sub muted">시사 · 라이프 · 컬처 · 테크 묶음 탭 · 대분류당 최대 30개</span>
-                </h3>
-              </div>
+              <h2 id="centrist-issue-title" class="centrist-section__title centrist-section__title--spotlight">
+                데일리 이슈
+              </h2>
+              <div id="centrist-daily-edition-bar" class="centrist-daily-edition-bar" aria-live="polite"></div>
               <div
-                id="centrist-free-feed-tabs"
-                class="centrist-free-feed__tabs board__stage-tabs"
+                id="centrist-category-tabs"
+                class="centrist-category-tabs board__feed-tabs"
                 role="tablist"
-                aria-label="자유 커뮤니티 대분류"
+                aria-label="데일리 이슈 분야"
               ></div>
-              <ul id="centrist-free-feed-list" class="centrist-free-feed__list" aria-live="polite"></ul>
-              <p id="centrist-free-feed-empty" class="centrist-free-feed__empty muted" hidden>
-                이 대분류에 표시할 글이 없습니다.
-              </p>
-            </div>
-          </section>
+              <div id="centrist-issues-panel" class="centrist-issues-panel" aria-live="polite"></div>
+              <button type="button" id="centrist-issues-more" class="centrist-issues-more" hidden aria-expanded="false">
+                더 보기
+              </button>
+            </section>
+
+            <section
+              class="card centrist-section centrist-section--live centrist-section--spotlight centrist-hot"
+              aria-labelledby="centrist-hot-title"
+            >
+              <h2 id="centrist-hot-title" class="centrist-section__title centrist-section__title--spotlight">오늘의 인기글</h2>
+              <ol id="centrist-hot-list" class="centrist-hot__list"></ol>
+              <p id="centrist-hot-empty" class="centrist-hot__empty muted" hidden>오늘 올라온 글이 없습니다.</p>
+            </section>
+          </div>
+
+          <div class="centrist-hub__main">
+            <section class="card centrist-section centrist-section--free" aria-labelledby="centrist-free-feed-title">
+              <div class="centrist-free-feed" aria-labelledby="centrist-free-feed-title">
+                <div class="centrist-section__head">
+                  <h2 id="centrist-free-feed-title" class="centrist-section__title centrist-section__title--slim">게시글</h2>
+                </div>
+                <div
+                  id="centrist-free-feed-tabs"
+                  class="centrist-free-feed__tabs board__feed-tabs"
+                  role="tablist"
+                  aria-label="자유 커뮤니티 글 성격"
+                ></div>
+                <ul
+                  id="centrist-free-feed-list"
+                  class="centrist-free-feed__list board__list board__list--dense"
+                  aria-live="polite"
+                ></ul>
+                <p id="centrist-free-feed-empty" class="centrist-free-feed__empty muted" hidden>
+                  이 대분류에 표시할 글이 없습니다.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <div id="centrist-hub-meta" class="centrist-hub__meta">
+            <details class="board__fold centrist-hub__fold centrist-hub__fold--muted" id="centrist-fold-extra">
+              <summary>기타 · 광장 정보</summary>
+              <div class="board__fold__body">
+                <div
+                  id="centrist-hot-opinion"
+                  class="hot-opinion-ticker centrist-hot-opinion--fold-only"
+                  aria-live="polite"
+                  hidden
+                ></div>
+                <div id="centrist-world-pulse" class="centrist-world-pulse centrist-world-pulse--compact" aria-live="polite"></div>
+                <div id="common-territory-hot-wrap" class="common-territory-hot-wrap" style="padding: 0.35rem 0 0">
+                  <div
+                    class="common-territory-hot__tabs board__feed-tabs"
+                    role="tablist"
+                    aria-label="진보·보수 영토 1단계 핫글 기간"
+                  >
+                    <button
+                      type="button"
+                      class="common-territory-hot__tab board__feed-tab is-active"
+                      data-common-hot-period="day"
+                      role="tab"
+                      aria-selected="true"
+                    >
+                      일간
+                    </button>
+                    <button
+                      type="button"
+                      class="common-territory-hot__tab board__feed-tab"
+                      data-common-hot-period="week"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      주간
+                    </button>
+                    <button
+                      type="button"
+                      class="common-territory-hot__tab board__feed-tab"
+                      data-common-hot-period="month"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      월간
+                    </button>
+                  </div>
+                  <div
+                    id="common-territory-hot-opinion"
+                    class="hot-opinion-ticker hot-opinion-ticker--dual"
+                    aria-live="polite"
+                  ></div>
+                  <div class="common-territory-hot__columns">
+                    <section class="common-territory-hot__col" aria-labelledby="common-hot-prog-title">
+                      <h3 id="common-hot-prog-title" class="common-territory-hot__h">진보 · TOP3</h3>
+                      <ol id="common-hot-prog-list" class="common-territory-hot__list"></ol>
+                      <p id="common-hot-prog-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
+                    </section>
+                    <section class="common-territory-hot__col" aria-labelledby="common-hot-con-title">
+                      <h3 id="common-hot-con-title" class="common-territory-hot__h">보수 · TOP3</h3>
+                      <ol id="common-hot-con-list" class="common-territory-hot__list"></ol>
+                      <p id="common-hot-con-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <button type="button" id="centrist-open-write" class="centrist-open-write" hidden aria-hidden="true">
+            자유글 글쓰기
+          </button>
         </div>
       </div>
 
@@ -4775,30 +5411,13 @@
         <h3 id="board-modal-title">새 글 작성</h3>
         <form id="board-form">
           <div class="board-field" id="board-category-field" hidden>
-            <label for="board-category-input">세부 분야 (저장값)</label>
+            <label for="board-category-input">글 성격</label>
             <select id="board-category-input" name="category">
-              <optgroup label="시사">
-                <option value="politics_free">정치·현안</option>
-                <option value="society_free">사회·이슈</option>
-                <option value="world_free">세계 이슈</option>
-              </optgroup>
-              <optgroup label="라이프">
-                <option value="money">경제·소비</option>
-                <option value="advice">고민·상담</option>
-                <option value="daily">일상·지역</option>
-                <option value="meetup_free">모임·동호회</option>
-                <option value="free">자유·잡담</option>
-              </optgroup>
-              <optgroup label="컬처">
-                <option value="culture">문화·연예</option>
-                <option value="humor">유머</option>
-                <option value="games_free">게임</option>
-              </optgroup>
-              <optgroup label="테크">
-                <option value="tech">과학·IT·AI</option>
-              </optgroup>
+              <option value="debate">자유 토론 — 정치·사회·의견·논쟁</option>
+              <option value="light">유머·가벼운글 — 밈·일상·드립</option>
+              <option value="info">정보·분석 — 통계·자료·해설</option>
             </select>
-            <p class="board-field__hint">목록 필터는 위 「대분류」 탭을 따릅니다. 글에는 여기서 고른 세부 값이 붙습니다.</p>
+            <p class="board-field__hint">목록 필터 탭과 동일한 분류입니다. 상단 데일리 이슈·인기글과 역할이 겹치지 않습니다.</p>
           </div>
           <div class="board-field">
             <label for="board-title-input">제목</label>
@@ -4831,6 +5450,15 @@
             <button type="submit" class="board-btn-primary">등록</button>
           </div>
         </form>
+      </div>
+    </div>
+    <div id="moderation-modal" class="board-modal" aria-hidden="true">
+      <div class="board-modal__dialog moderation-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="moderation-modal-title">
+        <h3 id="moderation-modal-title">운영 대시보드</h3>
+        <div id="moderation-dashboard-root" class="moderation-dashboard-root"></div>
+        <div class="board-modal__footer">
+          <button type="button" id="moderation-modal-close">닫기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -4907,8 +5535,7 @@
               </div>
               <div id="avatar-tbar-legend-alien" class="avatar-tbar__legend">외계인 성향 0%</div>
               <p id="avatar-alien-warn" class="avatar-alien-warn" hidden>
-                당신은 외계인일 가능성이 보입니다. 외계인 성향치 50%가 되면 진보·보수 성향 중 더 큰 쪽 외계행성에 속하며,
-                중앙광장·진영 1단계에서는 읽기·공감·추천(좋아요)만 가능합니다.
+                최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.
               </p>
             </div>
           </div>
@@ -5332,6 +5959,12 @@
         }
       }
 
+      /** 영토 맵·안내·히스토리만 상단 탭 표시; 게시판·글 상세는 숨김 */
+      function syncAppPrimaryNavVisibility(mode) {
+        var hide = mode === 'board' || mode === 'post';
+        document.body.classList.toggle('sc-hide-primary-nav', hide);
+      }
+
       function hideAllAppScreens() {
         var mainS = el('screen-main');
         var boardS = el('screen-board');
@@ -5368,6 +6001,7 @@
           showAppChrome();
           hideAllAppScreens();
           setAppPrimaryTab('main');
+          syncAppPrimaryNavVisibility('territory');
           if (mainS) mainS.hidden = false;
           bindAppNavigation();
           if (window.__scRefreshBeltTerritoryArt) window.__scRefreshBeltTerritoryArt();
@@ -5383,6 +6017,7 @@
           showAppChrome();
           hideAllAppScreens();
           setAppPrimaryTab('guide');
+          syncAppPrimaryNavVisibility('territory');
           if (guideS) guideS.hidden = false;
           bindAppNavigation();
           if (window.PermissionsGuide && typeof window.PermissionsGuide.refresh === 'function') {
@@ -5395,6 +6030,7 @@
           showAppChrome();
           hideAllAppScreens();
           setAppPrimaryTab('history');
+          syncAppPrimaryNavVisibility('territory');
           if (historyS) historyS.hidden = false;
           bindAppNavigation();
           window.scrollTo(0, 0);
@@ -5405,6 +6041,7 @@
           showAppChrome();
           hideAllAppScreens();
           setAppPrimaryTab('main');
+          syncAppPrimaryNavVisibility('board');
           if (postD) postD.hidden = true;
           if (typeof window !== 'undefined') window.__scActivePostDetailId = null;
           if (boardS) boardS.hidden = false;
@@ -5418,6 +6055,7 @@
           this.enterAppMain();
           window.scrollTo(0, 0);
         },
+        syncPrimaryNavVisibility: syncAppPrimaryNavVisibility,
       };
 
       async function signOut() {
@@ -5832,7 +6470,7 @@
       var elAlienLegend = document.getElementById('avatar-tbar-legend-alien');
       var elAlienWarn = document.getElementById('avatar-alien-warn');
       var ALIEN_WARN_TEXT =
-        '당신은 외계인일 가능성이 보입니다. 외계인 성향치 50%가 되면 진보·보수 성향 중 더 큰 쪽 외계행성에 속하며, 중앙광장·진영 1단계에서는 읽기·공감·추천(좋아요)만 가능합니다.';
+        '최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.';
 
       function normalizeTendency3(conservative, centrist, progressive) {
         var r = Math.max(0, Number(conservative));
@@ -5919,7 +6557,19 @@
         if (elAlienLegend) elAlienLegend.textContent = '외계인 성향 ' + n + '%';
         if (elAlienWarn) {
           elAlienWarn.hidden = n < 30;
-          if (!elAlienWarn.hidden) elAlienWarn.textContent = ALIEN_WARN_TEXT;
+          if (!elAlienWarn.hidden) {
+            if (n >= ALIEN_REVIEW_PCT) {
+              elAlienWarn.textContent =
+                '운영 검토 우선 상태입니다. AI가 최근 과열 토론 신호를 요약해 운영 큐에 등록합니다.';
+            } else if (n >= ALIEN_RISK_CANDIDATE_PCT) {
+              elAlienWarn.textContent =
+                '운영 검토 후보 상태입니다. 과열 스레드·반복 충돌 패턴이 수집됩니다.';
+            } else if (n >= ALIEN_OBSERVE_PCT) {
+              elAlienWarn.textContent = '관찰 상태입니다. 참여 속도가 일시적으로 완화될 수 있습니다.';
+            } else {
+              elAlienWarn.textContent = ALIEN_WARN_TEXT;
+            }
+          }
         }
       }
 
@@ -5980,6 +6630,7 @@
             : { none: true },
         };
         loadProfileImages(userId);
+        if (typeof window.__scSyncOperatorModerationUI === 'function') window.__scSyncOperatorModerationUI();
       }
 
       window.__scDockSetMeta = setMeta;
@@ -6298,46 +6949,97 @@
       var ALIGN_DAILY_PCT_PER_AXIS = 5;
       var ALIEN_WARN_PCT = 30;
       var ALIEN_FORCE_KANTA_PCT = 50;
+      var ALIEN_OBSERVE_PCT = 50;
+      var ALIEN_RISK_CANDIDATE_PCT = 70;
+      var ALIEN_REVIEW_PCT = 90;
       var KANTA_UNLOCK_PLANET_PCT = ALIEN_FORCE_KANTA_PCT;
       var ALIEN_WARN_MSG =
-        '당신은 외계인일 가능성이 보입니다. 외계인 성향치 50%가 되면 진보·보수 성향 중 더 큰 쪽 외계행성에 속하게 되며, 지구(중앙광장·진영 1단계)에서는 읽기·공감·추천만 가능합니다.';
-      var KANTA_BLIND_MSG = '외계인의 언어입니다. 지구인은 읽을 수 없습니다';
+        '최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.';
+      var MOD_ROOT_KEY = 'sc_moderation_v1';
+      var IS_DEV_MODE =
+        location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      /** 운영 대시보드 접근 허용 ID(이메일·userId). 서버 역할 연동 전 임시 allowlist. */
+      var MOD_OPERATOR_BASE_IDS = ['ops@example.com'];
+      var MOD_OPERATOR_USER_IDS = IS_DEV_MODE
+        ? ['guest_demo'].concat(MOD_OPERATOR_BASE_IDS)
+        : MOD_OPERATOR_BASE_IDS.slice();
+
+      function modDevLog() {
+        if (!IS_DEV_MODE || typeof console === 'undefined' || !console.log) return;
+        console.log.apply(console, arguments);
+      }
+
+      function modDevWarn() {
+        if (!IS_DEV_MODE || typeof console === 'undefined' || !console.warn) return;
+        console.warn.apply(console, arguments);
+      }
+      var MOD_ACTION_COOLDOWN_MS = 30 * 1000;
+      var MOD_DECAY_7D = 5;
+      var MOD_DECAY_30D = 20;
+      var MOD_TOXICITY_CANDIDATE = 70;
+      var MOD_TOXICITY_REVIEW = 90;
+      var MOD_EVENTS_MAX = 400;
+      var ACTIVITY_THROTTLE_KEY = 'sc_activity_throttle_v1';
+      var TERRITORY_USER_COPY_KEY = 'sc_territory_user_copy_v1';
+      var SEASON_ARCHIVE_KEY = 'sc_season_archive_v1';
+      var POST_COOLDOWN_MS = 20 * 1000;
+      var COMMENT_COOLDOWN_MS = 15 * 1000;
+      var SLOW_MODE_WINDOW_MS = 5 * 60 * 1000;
+      var SLOW_MODE_ACTION_THRESHOLD = 10;
+      var SLOW_MODE_EXTRA_MS = 20 * 1000;
+      var SAME_USER_REPLY_WINDOW_MS = 3 * 60 * 1000;
+      var SAME_USER_REPLY_MAX = 3;
+      var THREAD_HEAT_WINDOW_MS = 10 * 60 * 1000;
+      var THREAD_HEAT_MAX_COMMENTS = 12;
+      var REPORT_SPIKE_WINDOW_MS = 60 * 60 * 1000;
+      var REPORT_SPIKE_THRESHOLD = 5;
+      var MOD_SOFT_MSG = '잠시 흐름을 정리하고 있습니다. 곧 다시 참여할 수 있어요.';
+      var USER_TEXT_BAN_SNIPPETS = [
+        '씨발',
+        '시발',
+        'ㅅㅂ',
+        'ㅆㅂ',
+        '병신',
+        'ㅂㅅ',
+        '지랄',
+        '죽어',
+        '죽어라',
+        '꺼져',
+        '한남',
+        '한녀',
+        '맘충',
+        '틀딱',
+        '좌빨',
+        '우빨',
+        '종북',
+        '친일',
+        '유배',
+        '추방',
+        '격리수용',
+        '범죄자',
+      ];
+      var KANTA_BLIND_MSG = '고강도 토론 구역 전용 표현입니다';
       var MAIN_BELT_FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE'];
       var KANTA_TERRITORY_IDS = ['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
       /** 데모 시드 등: 외계행성(진보·보수) 포함. UI상 4단계 스트립·핫랭 등은 보수·진보 벨트 + 외계행성(isFourTier). */
       var FOUR_TIER_IDS = MAIN_BELT_FOUR_TIER_IDS.concat(KANTA_TERRITORY_IDS);
       var ALL_TERRITORY_IDS = FOUR_TIER_IDS.slice();
       var FREE_SUBCATEGORY_DEFS = [
-        { id: 'free', label: '자유·잡담', mega: 'mega_life' },
-        { id: 'politics_free', label: '정치·현안', mega: 'mega_affairs' },
-        { id: 'money', label: '경제·소비', mega: 'mega_life' },
-        { id: 'society_free', label: '사회·이슈', mega: 'mega_affairs' },
-        { id: 'world_free', label: '세계 이슈', mega: 'mega_affairs' },
-        { id: 'culture', label: '문화·연예', mega: 'mega_culture' },
-        { id: 'tech', label: '과학·IT·AI', mega: 'mega_tech' },
-        { id: 'daily', label: '일상·지역', mega: 'mega_life' },
-        { id: 'meetup_free', label: '모임·동호회', mega: 'mega_life' },
-        { id: 'advice', label: '고민·상담', mega: 'mega_life' },
-        { id: 'humor', label: '유머', mega: 'mega_culture' },
-        { id: 'games_free', label: '게임', mega: 'mega_culture' },
+        { id: 'debate', label: '자유 토론', mega: 'mega_debate' },
+        { id: 'light', label: '유머·가벼운글', mega: 'mega_light' },
+        { id: 'info', label: '정보·분석', mega: 'mega_info' },
       ];
-      /** 중앙광장 자유글 — 상단 탭(대분류 묶음). 글에는 세부 id(위)가 그대로 저장됩니다. */
+      /** 중앙광장 자유글 — 상단 탭(글 성격). 저장값은 debate / light / info. */
       var FREE_MEGA_DEFS = [
         { id: 'all', label: '전체', subIds: null },
-        { id: 'mega_affairs', label: '시사', subIds: ['politics_free', 'society_free', 'world_free'] },
-        { id: 'mega_life', label: '라이프', subIds: ['money', 'advice', 'daily', 'meetup_free', 'free'] },
-        { id: 'mega_culture', label: '컬처', subIds: ['culture', 'humor', 'games_free'] },
-        { id: 'mega_tech', label: '테크', subIds: ['tech'] },
+        { id: 'mega_debate', label: '자유 토론', subIds: ['debate'] },
+        { id: 'mega_light', label: '유머·가벼운글', subIds: ['light'] },
+        { id: 'mega_info', label: '정보·분석', subIds: ['info'] },
       ];
-      var FREE_CATEGORY_TAB_KEY = 'sc_common_free_mega_tab_v1';
+      var FREE_CATEGORY_TAB_KEY = 'sc_common_free_mega_tab_v2';
       var COMMON_TERRITORY_HOT_TAB_KEY = 'sc_common_territory_hot_period_v1';
       var CENTRIST_LIVE_TAB_KEY = 'sc_centrist_live_tab_v1';
-      var CENTRIST_LIVE_TAB_DEFS = [
-        { id: 'popular', label: '인기', opinionScope: 'COMMON_LIVE_POPULAR' },
-        { id: 'fresh', label: '최신', opinionScope: 'COMMON_LIVE_FRESH' },
-        { id: 'debate', label: '논쟁중', opinionScope: 'COMMON_LIVE_DEBATE' },
-        { id: 'empathy', label: '공감많음', opinionScope: 'COMMON_LIVE_EMPATHY' },
-      ];
+      var CENTRIST_LIVE_TAB_DEFS = [{ id: 'popular', label: '인기', opinionScope: 'COMMON_LIVE_POPULAR' }];
       /** 핫랭킹 여론 이동(로컬 스냅샷 비교) */
       var HOT_OPINION_LOG_KEY = 'sc_hot_opinion_snap_log_v1';
       var HOT_OPINION_SNAP_MIN_INTERVAL_MS = 75 * 1000;
@@ -6346,6 +7048,23 @@
       var __scCommonMegaTabRaw = 'all';
       var COMMON_FREE_FEED_MAX = 30;
       var BOARD_LIST_DISPLAY_MAX = 30;
+      var BOARD_FEED_TAB_KEY = 'sc_board_feed_tab_v1';
+      var BOARD_FEED_TAB_DEFS = [
+        { id: 'fresh', label: '최신글' },
+        { id: 'popular', label: '인기글' },
+        { id: 'debate', label: '토론중' },
+        { id: 'new', label: '신규' },
+      ];
+      var STAGE_TAB_LABELS = {
+        1: '1 · 개방구역',
+        2: '2 · 심화토론',
+        3: '3 · 상위구역',
+        4: '4 · 지도층',
+      };
+      var KANTA_BOARD_TAGLINES = {
+        KANTAPBIYA_LEFT: '고강도 토론 구역 · 분리 토론 환경',
+        KANTAPBIYA_RIGHT: '고강도 토론 구역 · 분리 토론 환경',
+      };
       var COMMON_FREE_FEED_NEW_MS = 48 * 60 * 60 * 1000;
       var MAX_IMAGES = 4;
       var MAX_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -7261,6 +7980,7 @@
       var elList = document.getElementById('board-list');
       var elModal = document.getElementById('board-modal');
       var btnWrite = document.getElementById('board-btn-write');
+      var btnOpenModeration = null;
       var btnCentristWrite = document.getElementById('centrist-open-write');
       var btnCancel = document.getElementById('board-modal-cancel');
       var form = document.getElementById('board-form');
@@ -7276,6 +7996,7 @@
       var elBoardTitle = document.getElementById('board-title');
       var elBoardSection = document.getElementById('board-section');
       var elCentristHub = document.getElementById('centrist-hub-wrap');
+      var elCentristHubMeta = document.getElementById('centrist-hub-meta');
       var elCommonTerritoryHotWrap = document.getElementById('common-territory-hot-wrap');
       var elCentristTabs = document.getElementById('centrist-category-tabs');
       var elCentristPanel = document.getElementById('centrist-issues-panel');
@@ -7294,6 +8015,11 @@
       var elCentristFreeFeedEmpty = document.getElementById('centrist-free-feed-empty');
       var elBoardPostsHeading = document.getElementById('board-posts-heading');
       var elBoardTitleDesc = document.getElementById('board-title-desc');
+      var elBoardKantaTagline = document.getElementById('board-kanta-tagline');
+      var elBoardActiveUsersN = document.getElementById('board-active-users-n');
+      var elBoardFeedTabsWrap = document.getElementById('board-feed-tabs-wrap');
+      var elBoardFeedTabs = document.getElementById('board-feed-tabs');
+      var elBoardSystemPanels = document.getElementById('board-system-panels');
       var elFreeCatWrap = document.getElementById('board-free-cat-wrap');
       var elFreeCatTabs = document.getElementById('board-free-category-tabs');
       var elFactionLocked = document.getElementById('board-faction-locked');
@@ -7310,6 +8036,9 @@
       var elTitleCount = document.getElementById('board-title-count');
       var btnSeasonDemo = document.getElementById('board-season-demo-btn');
       var elDebateNext = document.getElementById('board-debate-next');
+      var moderationModal = document.getElementById('moderation-modal');
+      var moderationModalClose = document.getElementById('moderation-modal-close');
+      var moderationDashboardRoot = document.getElementById('moderation-dashboard-root');
 
       if (!elList || !elModal || !form || !btnWrite || !btnCancel) return;
 
@@ -7409,8 +8138,6 @@
           if (!map || typeof map !== 'object') return false;
           var b = map[id];
           if (!b || typeof b !== 'object') return false;
-          var planet = Number(b.planetPct);
-          if (!isFinite(planet) || planet < ALIEN_FORCE_KANTA_PCT) return false;
           var ft = b.forcedTerritory;
           return ft === 'KANTAPBIYA_LEFT' || ft === 'KANTAPBIYA_RIGHT' || ft === 'KANTAPBIYA_CENTER';
         } catch (_) {
@@ -7453,12 +8180,10 @@
         if (st >= 3) return false;
         var me = uid();
         if (t === 'KANTAPBIYA_LEFT' || t === 'KANTAPBIYA_RIGHT') {
-          var alien = getPlanetPct(me);
-          if (alien < ALIEN_FORCE_KANTA_PCT) return false;
           if (st === 1) {
             var homeK = getForcedTerritory(me);
             if (homeK && homeK !== t) return false;
-            return true;
+            return !!homeK;
           }
           if (st === 2) {
             var pctK = playerTendencyPct();
@@ -7584,21 +8309,52 @@
         if (!id || id === 'all') return 'all';
         if (megaDefById(id)) return id;
         var legacyMega = {
-          affairs: 'mega_affairs',
-          economy: 'mega_life',
-          society: 'mega_affairs',
-          culture: 'mega_culture',
-          tech: 'mega_tech',
-          humor: 'mega_culture',
-          life: 'mega_life',
-          advice: 'mega_life',
+          affairs: 'mega_debate',
+          economy: 'mega_debate',
+          society: 'mega_debate',
+          mega_affairs: 'mega_debate',
+          culture: 'mega_light',
+          humor: 'mega_light',
+          life: 'mega_light',
+          advice: 'mega_light',
+          mega_life: 'mega_light',
+          mega_culture: 'mega_light',
+          tech: 'mega_info',
+          mega_tech: 'mega_info',
         };
         var lm = legacyMega[String(id)];
         if (lm && megaDefById(lm)) return lm;
+        var canon = canonicalFreeCategoryId(id);
         for (var s = 0; s < FREE_SUBCATEGORY_DEFS.length; s++) {
-          if (FREE_SUBCATEGORY_DEFS[s].id === id) return FREE_SUBCATEGORY_DEFS[s].mega;
+          if (FREE_SUBCATEGORY_DEFS[s].id === canon) return FREE_SUBCATEGORY_DEFS[s].mega;
         }
         return 'all';
+      }
+
+      function canonicalFreeCategoryId(catId) {
+        var c = String(catId || '').trim() || 'debate';
+        if (c === 'debate' || c === 'light' || c === 'info') return c;
+        if (
+          c === 'politics_free' ||
+          c === 'society_free' ||
+          c === 'world_free' ||
+          c === 'free' ||
+          c === 'money'
+        ) {
+          return 'debate';
+        }
+        if (
+          c === 'humor' ||
+          c === 'games_free' ||
+          c === 'daily' ||
+          c === 'meetup_free' ||
+          c === 'advice' ||
+          c === 'culture'
+        ) {
+          return 'light';
+        }
+        if (c === 'tech') return 'info';
+        return 'debate';
       }
 
       function getActiveFreeCategoryId() {
@@ -7620,10 +8376,11 @@
       }
 
       function freeCategoryLabel(catId) {
+        var canon = canonicalFreeCategoryId(catId);
         for (var i = 0; i < FREE_SUBCATEGORY_DEFS.length; i++) {
-          if (FREE_SUBCATEGORY_DEFS[i].id === catId) return FREE_SUBCATEGORY_DEFS[i].label;
+          if (FREE_SUBCATEGORY_DEFS[i].id === canon) return FREE_SUBCATEGORY_DEFS[i].label;
         }
-        return catId || '자유';
+        return '자유 토론';
       }
 
       function ensureFreeMegaTabRow(container) {
@@ -7685,7 +8442,7 @@
         if (mid === 'all') return true;
         var mega = megaDefById(mid);
         if (!mega || !mega.subIds || !mega.subIds.length) return true;
-        var c = String((p && p.category) || 'free').trim() || 'free';
+        var c = canonicalFreeCategoryId(p && p.category);
         return mega.subIds.indexOf(c) >= 0;
       }
 
@@ -9611,12 +10368,11 @@
           var authorC = String(c.authorId || '').trim();
           var ownComment = authorC === String(meC || '').trim();
           var hasAlignC = !!window.AlignmentScoring;
-          var empathyOnlyC = isKantaTerritory(ctx.boardTerritoryId);
-          var earthLikeOnlyC =
-            !empathyOnlyC && isPlanetResidentEarthQuarantineBoard(ctx.boardTerritoryId, effectiveStage());
+          var gateC = reactionGateForBoard(ctx.boardTerritoryId, effectiveStage());
           var bar = buildReactionControls({
-            empathyOnly: empathyOnlyC,
-            empathyLikeOnlyEarth: earthLikeOnlyC,
+            disableLike: gateC.disableLike,
+            disableDis: gateC.disableDis,
+            disablePlanet: gateC.disablePlanet,
             nEmpathy: c.reactions.empathy.length,
             activeEmpathy: c.reactions.empathy.indexOf(meC) >= 0,
             disabledEmpathy: !!ownComment,
@@ -9656,8 +10412,6 @@
             : '이 카드에서 관점을 선택하면 공감·좋아요·싫어요를 쓸 수 있습니다.';
           if (stanceOk) gateHint.hidden = true;
           var barD = buildReactionControls({
-            empathyOnly: false,
-            empathyLikeOnlyEarth: false,
             omitPlanet: true,
             empathyHintBody: '콘텐츠 소비 기반 — 아주 미세한 성향 반영',
             empathyAriaLabel: '공감 — 데일리 이슈 콘텐츠 소비 기반 미세 성향 반영',
@@ -10068,7 +10822,7 @@
         var elIssueTitle = document.getElementById('centrist-issue-title');
         if (elIssueTitle) {
           elIssueTitle.textContent =
-            mode === 'archive' ? '과거 의제 보기 · 데일리 이슈' : '오늘의 의제 · 데일리 이슈';
+            mode === 'archive' ? '과거 의제 · 데일리 이슈' : '데일리 이슈 · 실험 의제';
         }
       }
 
@@ -10149,11 +10903,6 @@
         elCentristPanel.textContent = '';
         var block = bundle.categories[activeId];
         if (block && Array.isArray(block.issues)) {
-          var hubAgenda = document.createElement('p');
-          hubAgenda.className = 'centrist-hub__agenda-note muted';
-          hubAgenda.textContent =
-            '오늘 광장에서 열리는 의제입니다. 사실 요지와 가치 축을 기준으로 정리되었으며, 맞음·틀림보다 어떤 선택이 충돌하는지를 다룹니다.';
-          elCentristPanel.appendChild(hubAgenda);
           for (var ci = 0; ci < block.issues.length; ci++) {
             (function (issue) {
               var art = document.createElement('article');
@@ -10451,6 +11200,18 @@
       function softSeasonAdvanceDemo() {
         var pm = loadPersistentMeta();
         var ss = loadSeasonSoft();
+        var gr = loadGrowthContribRoot();
+        var arch = loadSeasonArchive();
+        arch.seasons.unshift({
+          season: ss.season || 1,
+          endedAt: new Date().toISOString(),
+          achievements: (pm.achievements || []).slice(),
+          titles: (pm.titles || []).slice(),
+          seasonalContrib: JSON.parse(JSON.stringify(ss.seasonalContrib || {})),
+          territoryHistory: JSON.parse(JSON.stringify((gr && gr.byUser) || {})),
+        });
+        if (arch.seasons.length > 24) arch.seasons.length = 24;
+        saveSeasonArchive(arch);
         ss.season = (ss.season || 1) + 1;
         ss.seasonalContrib = {};
         saveSeasonSoft(ss);
@@ -10458,7 +11219,7 @@
         alert(
           '시즌 ' +
             ss.season +
-            ' — 소프트 리셋: 시즌 집계만 초기화했습니다. 칭호·업적 데이터는 그대로 유지됩니다.',
+            ' — 소프트 리셋: 시즌 경쟁·랭킹 집계만 초기화했습니다. 업적·칭호·시즌 기록은 보관됩니다.',
         );
         refreshGrowthPanel();
       }
@@ -10595,7 +11356,7 @@
         inner.className = 'centrist-world-pulse__inner';
         var lab = document.createElement('p');
         lab.className = 'centrist-world-pulse__label';
-        lab.textContent = '광장 펄스';
+        lab.textContent = '나의 성향';
         var tx = document.createElement('p');
         tx.className = 'centrist-world-pulse__text';
         tx.textContent =
@@ -10634,7 +11395,7 @@
         var tabId = getCentristLiveTabId();
         var todayPosts = pickTodayCommonPostsForLive();
         var sorted = sortCommonPostsForLiveTab(todayPosts, tabId);
-        var limit = tabId === 'popular' ? 5 : 8;
+        var limit = tabId === 'popular' ? 8 : 6;
         var top = sorted.slice(0, limit);
         var opScope = liveTabOpinionScope(tabId);
 
@@ -10668,6 +11429,8 @@
             em +
             ' · ' +
             formatDate(p.createdAt);
+          var originLive = buildAuthorOriginPill(p.authorId);
+          if (originLive) btn.appendChild(originLive);
           btn.appendChild(title);
           btn.appendChild(meta);
           (function (pid) {
@@ -10825,58 +11588,7 @@
         if (elCentristFreeFeedEmpty) elCentristFreeFeedEmpty.hidden = slice.length > 0;
 
         slice.forEach(function (p) {
-          normalizePost(p, 'COMMON');
-          var li = document.createElement('li');
-          var btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'centrist-free-feed__row';
-
-          var blind = shouldBlindKantaOnEarthBoard(p.authorId, 'COMMON');
-          btn.appendChild(buildBoardAuthorThumb(p.authorId, blind));
-
-          var main = document.createElement('div');
-          main.className = 'centrist-free-feed__main';
-
-          var titleLine = document.createElement('span');
-          titleLine.className = 'centrist-free-feed__title-line';
-
-          if (isCommonPostNewBadge(p.createdAt)) {
-            var nw = document.createElement('span');
-            nw.className = 'centrist-free-feed__new';
-            nw.textContent = '[ NEW ]';
-            nw.setAttribute('aria-label', '최근 48시간 이내 새 글');
-            titleLine.appendChild(nw);
-          }
-
-          var tt = document.createElement('span');
-          tt.className = 'centrist-free-feed__title';
-          var stc = countCommentBreakdown(p.comments);
-          tt.textContent = blind ? KANTA_BLIND_MSG : p.title || '(제목 없음)';
-          titleLine.appendChild(tt);
-          main.appendChild(titleLine);
-
-          var meta = document.createElement('span');
-          meta.className = 'centrist-free-feed__meta';
-          meta.textContent =
-            (p.authorId || '익명') +
-            ' · ' +
-            formatDate(p.createdAt) +
-            ' · ' +
-            freeCategoryLabel(p.category) +
-            ' · 댓글 ' +
-            stc.total;
-
-          main.appendChild(meta);
-          btn.appendChild(main);
-
-          (function (pid) {
-            btn.addEventListener('click', function () {
-              scrollToPostById(pid);
-            });
-          })(p.id);
-
-          li.appendChild(btn);
-          elCentristFreeFeedList.appendChild(li);
+          elCentristFreeFeedList.appendChild(renderPost(p));
         });
       }
 
@@ -10979,7 +11691,7 @@
             ? String(postTerritoryId)
             : String(currentTerritory || 'COMMON');
         if (isCommonSpace(tid)) {
-          if (!p.category) p.category = 'free';
+          p.category = canonicalFreeCategoryId(p.category);
         } else {
           try {
             delete p.category;
@@ -11028,6 +11740,613 @@
         } catch (e) {
           console.warn('[board] alignment scores save failed', e);
         }
+      }
+
+      function loadModerationRoot() {
+        try {
+          var raw = localStorage.getItem(MOD_ROOT_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          if (!o || typeof o !== 'object') {
+            return { byUser: {}, candidates: [], reports: [], actions: [], threads: [], events: [] };
+          }
+          if (!o.byUser || typeof o.byUser !== 'object') o.byUser = {};
+          if (!Array.isArray(o.candidates)) o.candidates = [];
+          if (!Array.isArray(o.reports)) o.reports = [];
+          if (!Array.isArray(o.actions)) o.actions = [];
+          if (!Array.isArray(o.threads)) o.threads = [];
+          if (!Array.isArray(o.events)) o.events = [];
+          return o;
+        } catch (_) {
+          return { byUser: {}, candidates: [], reports: [], actions: [], threads: [], events: [] };
+        }
+      }
+
+      function saveModerationRoot(root) {
+        try {
+          localStorage.setItem(MOD_ROOT_KEY, JSON.stringify(root));
+        } catch (e) {
+          modDevWarn('[moderation] save failed', e);
+        }
+      }
+
+      function moderationStageLabelKo(stage) {
+        var s = String(stage || '');
+        if (s === 'REVIEW_PRIORITY') return '운영 검토 우선';
+        if (s === 'RISK_CANDIDATE') return '운영 검토 후보';
+        if (s === 'OBSERVATION') return '관찰';
+        if (s === 'WARNING') return '주의';
+        return '일반';
+      }
+
+      function appendModerationEvent(type, userId, detail, rootOpt) {
+        var root = rootOpt || loadModerationRoot();
+        if (!Array.isArray(root.events)) root.events = [];
+        root.events.unshift({
+          at: new Date().toISOString(),
+          type: String(type || 'EVENT'),
+          userId: String(userId || '').trim() || null,
+          detail: detail && typeof detail === 'object' ? detail : { note: String(detail || '') },
+        });
+        if (root.events.length > MOD_EVENTS_MAX) root.events.length = MOD_EVENTS_MAX;
+        if (!rootOpt) saveModerationRoot(root);
+        return root;
+      }
+
+      function countRecentReportsForUser(root, userId, windowMs) {
+        var id = String(userId || '').trim();
+        var now = Date.now();
+        var win = windowMs || REPORT_SPIKE_WINDOW_MS;
+        var n = 0;
+        var arr = root.reports || [];
+        for (var i = 0; i < arr.length; i++) {
+          var r = arr[i];
+          if (String(r.targetUserId || '').trim() !== id) continue;
+          var t = new Date(r.at || 0).getTime();
+          if (isFinite(t) && now - t <= win) n++;
+        }
+        return n;
+      }
+
+      function buildRiskReasonSummary(userId, entry, root) {
+        var reasons = [];
+        var e = entry || {};
+        var toxN = Number(e.toxicDetectCount) || 0;
+        if (toxN > 0) reasons.push('욕설·과격 표현 탐지 ' + toxN + '회');
+        var collision = Number(e.sameUserCollisionCount) || 0;
+        if (collision >= 2) reasons.push('동일 유저 충돌 반복');
+        var repRecent = countRecentReportsForUser(root, userId, REPORT_SPIKE_WINDOW_MS);
+        if (repRecent >= REPORT_SPIKE_THRESHOLD) reasons.push('짧은 시간 신고 급증 (' + repRecent + '건)');
+        var delN = Number(e.deleteRepeatCount) || 0;
+        if (delN >= 2) reasons.push('삭제 반복 ' + delN + '회');
+        var cdN = Number(e.cooldownViolationCount) || 0;
+        if (cdN >= 2) reasons.push('쿨다운 반복 위반 ' + cdN + '회');
+        if (e.reactionBurstFlag) reasons.push('최근 반응 폭주');
+        var spamN = Number(e.spamDetectCount) || 0;
+        if (spamN >= 2) reasons.push('도배 탐지 ' + spamN + '회');
+        if (!reasons.length) {
+          if ((Number(e.toxicityScore) || 0) >= 50) reasons.push('과열 토론 신호 누적');
+          else if ((Number(e.reportScore) || 0) >= 50) reasons.push('신고·반응 신호 누적');
+          else reasons.push('행동 패턴 모니터링 중');
+        }
+        return reasons;
+      }
+
+      function detectProfanityInText(text) {
+        var s = String(text || '').toLowerCase().replace(/\s+/g, '');
+        if (!s) return false;
+        for (var i = 0; i < USER_TEXT_BAN_SNIPPETS.length; i++) {
+          var frag = String(USER_TEXT_BAN_SNIPPETS[i] || '').toLowerCase();
+          if (frag && s.indexOf(frag) >= 0) return true;
+        }
+        return false;
+      }
+
+      function filterSafeUserText(text, fieldKind) {
+        var s = String(text || '')
+          .replace(/[<>]/g, '')
+          .trim();
+        if (!s) return { ok: true, text: '' };
+        var lower = s.toLowerCase();
+        for (var i = 0; i < USER_TEXT_BAN_SNIPPETS.length; i++) {
+          var frag = String(USER_TEXT_BAN_SNIPPETS[i] || '').toLowerCase();
+          if (frag && lower.indexOf(frag) >= 0) {
+            return { ok: false, reason: '사용할 수 없는 표현이 포함되어 있습니다.' };
+          }
+        }
+        var maxLen = fieldKind === 'banner' ? 48 : fieldKind === 'intro' ? 160 : 32;
+        if (s.length > maxLen) {
+          return { ok: false, reason: '입력 길이 제한을 초과했습니다.' };
+        }
+        return { ok: true, text: s };
+      }
+
+      function loadTerritoryUserCopyRoot() {
+        try {
+          var raw = localStorage.getItem(TERRITORY_USER_COPY_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          if (!o || typeof o !== 'object') return { byTerritory: {} };
+          if (!o.byTerritory || typeof o.byTerritory !== 'object') o.byTerritory = {};
+          return o;
+        } catch (_) {
+          return { byTerritory: {} };
+        }
+      }
+
+      function saveTerritoryUserCopyRoot(root) {
+        try {
+          localStorage.setItem(TERRITORY_USER_COPY_KEY, JSON.stringify(root));
+        } catch (e) {
+          modDevWarn('[territory-copy] save failed', e);
+        }
+      }
+
+      function saveTerritoryUserCopy(tid, patch) {
+        var t = String(tid || '').trim();
+        if (!t) return { ok: false, reason: '영토 ID가 없습니다.' };
+        patch = patch || {};
+        var root = loadTerritoryUserCopyRoot();
+        var prev = root.byTerritory[t] || {};
+        var next = {
+          name: prev.name || '',
+          banner: prev.banner || '',
+          intro: prev.intro || '',
+        };
+        if (patch.name != null) {
+          var vn = filterSafeUserText(patch.name, 'territoryName');
+          if (!vn.ok) return vn;
+          next.name = vn.text;
+        }
+        if (patch.banner != null) {
+          var vb = filterSafeUserText(patch.banner, 'banner');
+          if (!vb.ok) return vb;
+          next.banner = vb.text;
+        }
+        if (patch.intro != null) {
+          var vi = filterSafeUserText(patch.intro, 'intro');
+          if (!vi.ok) return vi;
+          next.intro = vi.text;
+        }
+        root.byTerritory[t] = next;
+        saveTerritoryUserCopyRoot(root);
+        return { ok: true, copy: next };
+      }
+
+      window.__scFilterSafeUserText = filterSafeUserText;
+      window.__scSaveTerritoryUserCopy = saveTerritoryUserCopy;
+
+      function loadActivityThrottleRoot() {
+        try {
+          var raw = localStorage.getItem(ACTIVITY_THROTTLE_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          if (!o || typeof o !== 'object') return { byUser: {} };
+          if (!o.byUser || typeof o.byUser !== 'object') o.byUser = {};
+          return o;
+        } catch (_) {
+          return { byUser: {} };
+        }
+      }
+
+      function saveActivityThrottleRoot(root) {
+        try {
+          localStorage.setItem(ACTIVITY_THROTTLE_KEY, JSON.stringify(root));
+        } catch (e) {
+          modDevWarn('[activity] throttle save failed', e);
+        }
+      }
+
+      function ensureActivityUser(root, userId) {
+        var id = String(userId || '').trim() || 'guest';
+        if (!root.byUser[id]) {
+          root.byUser[id] = {
+            stamps: [],
+            lastPostAt: null,
+            lastCommentAt: null,
+            targetReplies: {},
+            threadComments: {},
+            lastBodies: [],
+          };
+        }
+        return root.byUser[id];
+      }
+
+      var __scSoftNoticeTimer = null;
+      function showSoftThrottleNotice(msg) {
+        var el = document.getElementById('sc-soft-notice');
+        if (!el) return;
+        el.textContent = String(msg || MOD_SOFT_MSG);
+        el.hidden = false;
+        if (__scSoftNoticeTimer) clearTimeout(__scSoftNoticeTimer);
+        __scSoftNoticeTimer = setTimeout(function () {
+          el.hidden = true;
+        }, 3200);
+      }
+
+      function pruneActivityStamps(stamps, now, windowMs) {
+        var win = windowMs || SLOW_MODE_WINDOW_MS;
+        return (stamps || []).filter(function (ts) {
+          return isFinite(ts) && now - ts <= win;
+        });
+      }
+
+      function registerActivityViolation(userId, reason) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return;
+        var mroot = loadModerationRoot();
+        var e = ensureModerationUser(mroot, id);
+        e.cooldownViolationCount = (Number(e.cooldownViolationCount) || 0) + 1;
+        e.lastActivityAt = new Date().toISOString();
+        appendModerationEvent('COOLDOWN_VIOLATION', id, { reason: reason || 'cooldown' }, mroot);
+        saveModerationRoot(mroot);
+      }
+
+      function registerContentDelete(userId, kind) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, id);
+        e.deleteRepeatCount = (Number(e.deleteRepeatCount) || 0) + 1;
+        e.lastActivityAt = new Date().toISOString();
+        appendModerationEvent('DELETE_REPEAT', id, { kind: kind || 'content' }, root);
+        saveModerationRoot(root);
+      }
+      window.__scRegisterContentDelete = registerContentDelete;
+
+      function formatModerationWhen(iso) {
+        if (!iso) return '-';
+        try {
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) return '-';
+          return d.toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch (_) {
+          return String(iso).slice(0, 16);
+        }
+      }
+
+      function moderationEventLabel(type) {
+        var t = String(type || '');
+        if (t === 'TOXIC_DETECT') return '욕설·과격 표현 탐지';
+        if (t === 'SPAM_DETECT') return '도배 탐지';
+        if (t === 'DELETE_REPEAT') return '삭제 반복';
+        if (t === 'REPORT_SPIKE') return '신고 급증';
+        if (t === 'THREAD_OVERHEAT') return '과열 반응';
+        if (t === 'COOLDOWN_VIOLATION') return '쿨다운 위반';
+        if (t === 'FORCED_TERRITORY_APPROVED') return '운영자 승인';
+        if (t === 'FORCED_TERRITORY_REJECTED') return '운영자 거부';
+        if (t === 'REACTION_BURST') return '반응 폭주';
+        return t || '이벤트';
+      }
+
+      function noteReactionBurstForUser(targetUserId) {
+        var id = String(targetUserId || '').trim();
+        if (!id) return;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, id);
+        var now = Date.now();
+        if (!Array.isArray(e.reactionBurstStamps)) e.reactionBurstStamps = [];
+        e.reactionBurstStamps = e.reactionBurstStamps.filter(function (ts) {
+          return isFinite(ts) && now - ts <= 3 * 60 * 1000;
+        });
+        e.reactionBurstStamps.push(now);
+        if (e.reactionBurstStamps.length >= 5) {
+          e.reactionBurstFlag = true;
+          e.lastActivityAt = new Date(now).toISOString();
+          appendModerationEvent('REACTION_BURST', id, { count: e.reactionBurstStamps.length }, root);
+        }
+        saveModerationRoot(root);
+      }
+
+      function checkWriteActivityGate(userId, kind, ctx) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return { ok: true };
+        ctx = ctx || {};
+        var now = Date.now();
+        var root = loadActivityThrottleRoot();
+        var u = ensureActivityUser(root, id);
+        u.stamps = pruneActivityStamps(u.stamps, now, SLOW_MODE_WINDOW_MS);
+        var baseCd = kind === 'post' ? POST_COOLDOWN_MS : COMMENT_COOLDOWN_MS;
+        var lastAt =
+          kind === 'post'
+            ? u.lastPostAt
+              ? new Date(u.lastPostAt).getTime()
+              : 0
+            : u.lastCommentAt
+              ? new Date(u.lastCommentAt).getTime()
+              : 0;
+        var slowExtra = u.stamps.length >= SLOW_MODE_ACTION_THRESHOLD ? SLOW_MODE_EXTRA_MS : 0;
+        var needGap = baseCd + slowExtra;
+        if (isFinite(lastAt) && lastAt > 0 && now - lastAt < needGap) {
+          registerActivityViolation(id, kind + '-interval');
+          return { ok: false, msg: MOD_SOFT_MSG };
+        }
+        if (kind === 'comment') {
+          var parentAuthor = String(ctx.parentAuthorId || '').trim();
+          var postId = String(ctx.postId || '').trim();
+          if (parentAuthor && parentAuthor !== id) {
+            var tk = parentAuthor + ':' + (postId || 'global');
+            if (!Array.isArray(u.targetReplies[tk])) u.targetReplies[tk] = [];
+            u.targetReplies[tk] = u.targetReplies[tk].filter(function (ts) {
+              return isFinite(ts) && now - ts <= SAME_USER_REPLY_WINDOW_MS;
+            });
+            if (u.targetReplies[tk].length >= SAME_USER_REPLY_MAX) {
+              registerActivityViolation(id, 'same-target-reply');
+              return { ok: false, msg: MOD_SOFT_MSG };
+            }
+          }
+          if (postId) {
+            if (!Array.isArray(u.threadComments[postId])) u.threadComments[postId] = [];
+            u.threadComments[postId] = u.threadComments[postId].filter(function (ts) {
+              return isFinite(ts) && now - ts <= THREAD_HEAT_WINDOW_MS;
+            });
+            if (u.threadComments[postId].length >= THREAD_HEAT_MAX_COMMENTS) {
+              registerActivityViolation(id, 'thread-heat');
+              var mroot = loadModerationRoot();
+              appendModerationEvent('THREAD_OVERHEAT', id, { postId: postId }, mroot);
+              saveModerationRoot(mroot);
+              return { ok: false, msg: MOD_SOFT_MSG };
+            }
+          }
+        }
+        return { ok: true, root: root, user: u, now: now };
+      }
+
+      function recordWriteActivity(userId, kind, ctx, bodyText) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return true;
+        ctx = ctx || {};
+        var now = Date.now();
+        var root = loadActivityThrottleRoot();
+        var u = ensureActivityUser(root, id);
+        u.stamps.push(now);
+        if (u.stamps.length > 40) u.stamps = u.stamps.slice(-40);
+        if (kind === 'post') u.lastPostAt = new Date(now).toISOString();
+        else u.lastCommentAt = new Date(now).toISOString();
+        if (kind === 'comment') {
+          var parentAuthor = String(ctx.parentAuthorId || '').trim();
+          var postId = String(ctx.postId || '').trim();
+          if (parentAuthor && parentAuthor !== id) {
+            var tk = parentAuthor + ':' + (postId || 'global');
+            if (!Array.isArray(u.targetReplies[tk])) u.targetReplies[tk] = [];
+            u.targetReplies[tk].push(now);
+          }
+          if (postId) {
+            if (!Array.isArray(u.threadComments[postId])) u.threadComments[postId] = [];
+            u.threadComments[postId].push(now);
+          }
+          var body = String(bodyText || '').trim();
+          if (body) {
+            if (!Array.isArray(u.lastBodies)) u.lastBodies = [];
+            var dup = 0;
+            for (var bi = 0; bi < u.lastBodies.length; bi++) {
+              if (u.lastBodies[bi].text === body && now - u.lastBodies[bi].at < 2 * 60 * 1000) dup++;
+            }
+            u.lastBodies.push({ text: body, at: now });
+            if (u.lastBodies.length > 12) u.lastBodies = u.lastBodies.slice(-12);
+            if (dup >= 2) {
+              var mroot = loadModerationRoot();
+              var me = ensureModerationUser(mroot, id);
+              me.spamDetectCount = (Number(me.spamDetectCount) || 0) + 1;
+              me.lastActivityAt = new Date(now).toISOString();
+              saveModerationRoot(mroot);
+              appendModerationEvent('SPAM_DETECT', id, { note: 'repeat-body' }, mroot);
+              saveModerationRoot(mroot);
+            }
+          }
+        }
+        saveActivityThrottleRoot(root);
+        var mroot2 = loadModerationRoot();
+        var ent = ensureModerationUser(mroot2, id);
+        ent.lastActivityAt = new Date(now).toISOString();
+        saveModerationRoot(mroot2);
+        return true;
+      }
+
+      function tryWriteActivity(userId, kind, ctx, bodyText) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return true;
+        var gate = checkWriteActivityGate(id, kind, ctx);
+        if (!gate.ok) {
+          showSoftThrottleNotice(gate.msg || MOD_SOFT_MSG);
+          return false;
+        }
+        if (!recordWriteActivity(id, kind, ctx, bodyText)) {
+          showSoftThrottleNotice(MOD_SOFT_MSG);
+          return false;
+        }
+        return true;
+      }
+
+      function loadSeasonArchive() {
+        try {
+          var raw = localStorage.getItem(SEASON_ARCHIVE_KEY);
+          var o = raw ? JSON.parse(raw) : null;
+          if (!o || typeof o !== 'object') return { seasons: [] };
+          if (!Array.isArray(o.seasons)) o.seasons = [];
+          return o;
+        } catch (_) {
+          return { seasons: [] };
+        }
+      }
+
+      function saveSeasonArchive(o) {
+        try {
+          localStorage.setItem(SEASON_ARCHIVE_KEY, JSON.stringify(o));
+        } catch (e) {
+          console.warn('[season] archive save failed', e);
+        }
+      }
+
+      function moderationStageFromPlanet(planetPct) {
+        var n = Math.max(0, Math.min(100, Math.floor(Number(planetPct) || 0)));
+        if (n >= 90) return 'REVIEW_PRIORITY';
+        if (n >= 70) return 'RISK_CANDIDATE';
+        if (n >= 50) return 'OBSERVATION';
+        if (n >= 30) return 'WARNING';
+        return 'NORMAL';
+      }
+
+      function ensureModerationUser(root, userId) {
+        var id = String(userId || '').trim() || 'guest';
+        if (!root.byUser[id]) {
+          root.byUser[id] = {
+            toxicityScore: 0,
+            reportScore: 0,
+            lastIssueAt: null,
+            lastDecayAt: null,
+            lastActivityAt: null,
+            lastActionAt: null,
+            underObservation: false,
+            reportersByTarget: {},
+            reviewerNotes: '',
+            toxicDetectCount: 0,
+            spamDetectCount: 0,
+            deleteRepeatCount: 0,
+            cooldownViolationCount: 0,
+            sameUserCollisionCount: 0,
+            reactionBurstFlag: false,
+            reactionBurstStamps: [],
+          };
+        }
+        return root.byUser[id];
+      }
+
+      function applyModerationDecay(entry, nowMs) {
+        var now = nowMs || Date.now();
+        var lastIssue = entry.lastIssueAt ? new Date(entry.lastIssueAt).getTime() : 0;
+        if (!isFinite(lastIssue) || lastIssue <= 0) return;
+        var quietMs = now - lastIssue;
+        if (quietMs >= 30 * 24 * 60 * 60 * 1000) {
+          entry.toxicityScore = Math.max(0, (Number(entry.toxicityScore) || 0) - MOD_DECAY_30D);
+          entry.reportScore = Math.max(0, (Number(entry.reportScore) || 0) - MOD_DECAY_30D);
+          entry.lastDecayAt = new Date(now).toISOString();
+          return;
+        }
+        if (quietMs >= 7 * 24 * 60 * 60 * 1000) {
+          entry.toxicityScore = Math.max(0, (Number(entry.toxicityScore) || 0) - MOD_DECAY_7D);
+          entry.reportScore = Math.max(0, (Number(entry.reportScore) || 0) - MOD_DECAY_7D);
+          entry.lastDecayAt = new Date(now).toISOString();
+        }
+      }
+
+      function queueModerationCandidate(root, userId, reason, stage) {
+        var id = String(userId || '').trim();
+        if (!id) return;
+        var at = new Date().toISOString();
+        root.candidates.unshift({
+          userId: id,
+          reason: String(reason || 'risk'),
+          stage: String(stage || 'RISK_CANDIDATE'),
+          at: at,
+        });
+        if (root.candidates.length > 200) root.candidates.length = 200;
+      }
+
+      function registerToxicEvent(userId, delta, reason) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, id);
+        applyModerationDecay(e);
+        e.toxicityScore = Math.max(0, Math.min(100, (Number(e.toxicityScore) || 0) + Number(delta || 0)));
+        if (delta > 0) {
+          e.lastIssueAt = new Date().toISOString();
+          e.lastActivityAt = e.lastIssueAt;
+        }
+        var rsn = String(reason || '');
+        if (rsn.indexOf('profanity') >= 0 || rsn.indexOf('toxic') >= 0) {
+          e.toxicDetectCount = (Number(e.toxicDetectCount) || 0) + 1;
+          appendModerationEvent('TOXIC_DETECT', id, { reason: rsn, delta: delta }, root);
+        }
+        var stage = moderationStageFromPlanet(getPlanetPct(id));
+        e.underObservation = stage === 'OBSERVATION' || stage === 'RISK_CANDIDATE' || stage === 'REVIEW_PRIORITY';
+        if (e.toxicityScore >= MOD_TOXICITY_REVIEW || stage === 'REVIEW_PRIORITY') {
+          queueModerationCandidate(root, id, reason || 'high-toxicity', 'REVIEW_PRIORITY');
+        } else if (e.toxicityScore >= MOD_TOXICITY_CANDIDATE || stage === 'RISK_CANDIDATE') {
+          queueModerationCandidate(root, id, reason || 'risk-candidate', 'RISK_CANDIDATE');
+        }
+        saveModerationRoot(root);
+      }
+
+      function reporterReliabilityWeight(reporterId) {
+        var id = String(reporterId || '').trim();
+        if (!id || id === 'guest') return 0.15;
+        var w = 1;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, id);
+        var tox = Number(e.toxicityScore) || 0;
+        if (tox >= 70) w *= 0.5;
+        else if (tox >= 50) w *= 0.75;
+        var s = getScoresForUser(id);
+        var sum = Math.max(0, +s.progressive || 0) + Math.max(0, +s.centrist || 0) + Math.max(0, +s.conservative || 0);
+        if (sum <= 0.001) w *= 0.7;
+        return Math.max(0.1, Math.min(1.35, w));
+      }
+
+      function getReporterFaction(reporterId) {
+        var tag = getCommentAuthorFactionTag(reporterId);
+        if (tag === 'PROGRESSIVE') return 'P';
+        if (tag === 'CONSERVATIVE') return 'C';
+        return 'N';
+      }
+
+      function registerReportSignal(targetUserId, reporterId, targetKey, reason) {
+        var tid = String(targetUserId || '').trim();
+        var rid = String(reporterId || '').trim();
+        var key = String(targetKey || '').trim() || 'global';
+        if (!tid || !rid || tid === rid) return;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, tid);
+        applyModerationDecay(e);
+        if (!e.reportersByTarget || typeof e.reportersByTarget !== 'object') e.reportersByTarget = {};
+        if (!Array.isArray(e.reportersByTarget[key])) e.reportersByTarget[key] = [];
+        var arr = e.reportersByTarget[key];
+        var prevCount = 0;
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i] === rid) prevCount++;
+        }
+        var decay = prevCount <= 0 ? 1 : prevCount === 1 ? 0.3 : 0.1;
+        arr.push(rid);
+        var uniq = {};
+        var factions = { P: 0, C: 0, N: 0 };
+        for (var j = 0; j < arr.length; j++) {
+          var rr = String(arr[j] || '').trim();
+          if (!rr) continue;
+          if (!uniq[rr]) {
+            uniq[rr] = 1;
+            factions[getReporterFaction(rr)] += 1;
+          }
+        }
+        var activeSides = (factions.P > 0 ? 1 : 0) + (factions.C > 0 ? 1 : 0) + (factions.N > 0 ? 1 : 0);
+        var diversity = activeSides >= 3 ? 1.2 : activeSides === 2 ? 1 : 0.7;
+        var reporterWeight = reporterReliabilityWeight(rid);
+        var delta = Math.max(0.05, Math.min(3, decay * diversity * reporterWeight));
+        e.reportScore = Math.max(0, Math.min(100, (Number(e.reportScore) || 0) + delta));
+        e.lastIssueAt = new Date().toISOString();
+        e.lastActivityAt = e.lastIssueAt;
+        if (prevCount >= 1 && decay <= 0.3) {
+          e.sameUserCollisionCount = (Number(e.sameUserCollisionCount) || 0) + 1;
+        }
+        root.reports.unshift({
+          at: new Date().toISOString(),
+          targetUserId: tid,
+          reporterId: rid,
+          targetKey: key,
+          reason: String(reason || 'signal'),
+          decay: decay,
+          diversity: diversity,
+          reporterWeight: reporterWeight,
+          appliedDelta: delta,
+        });
+        if (root.reports.length > 600) root.reports.length = 600;
+        var recentRep = countRecentReportsForUser(root, tid, REPORT_SPIKE_WINDOW_MS);
+        if (recentRep >= REPORT_SPIKE_THRESHOLD) {
+          appendModerationEvent('REPORT_SPIKE', tid, { count: recentRep, windowMs: REPORT_SPIKE_WINDOW_MS }, root);
+        }
+        if (e.reportScore >= 90 || (Number(e.toxicityScore) || 0) >= MOD_TOXICITY_REVIEW) {
+          queueModerationCandidate(root, tid, 'report+toxicity-review', 'REVIEW_PRIORITY');
+        } else if (e.reportScore >= 70 || (Number(e.toxicityScore) || 0) >= MOD_TOXICITY_CANDIDATE) {
+          queueModerationCandidate(root, tid, 'report+toxicity-candidate', 'RISK_CANDIDATE');
+        }
+        saveModerationRoot(root);
       }
 
       function getScoresForUser(userId) {
@@ -11223,13 +12542,19 @@
         var map = loadScoresMap();
         var prev = readUserBucket(id);
         var pp = typeof prev.planetPct === 'number' && !isNaN(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0;
-        var nextForced = pp >= ALIEN_FORCE_KANTA_PCT ? kantaForcedTerritoryFromScores(pp, scores) : null;
+        var nextForced =
+          prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+            ? prev.forcedTerritory
+            : null;
+        var stage = moderationStageFromPlanet(pp);
         map[id] = {
           conservative: scores.conservative,
           centrist: scores.centrist,
           progressive: scores.progressive,
           planetPct: pp,
           forcedTerritory: nextForced,
+          moderationStage: stage,
+          isUnderObservation: stage === 'OBSERVATION' || stage === 'RISK_CANDIDATE' || stage === 'REVIEW_PRIORITY',
         };
         saveScoresMap(map);
       }
@@ -11556,13 +12881,7 @@
             var o = map[id];
             if (!o || typeof o !== 'object') continue;
             if (o.forcedTerritory !== 'KANTAPBIYA_CENTER') continue;
-            var pp =
-              typeof o.planetPct === 'number' && !isNaN(o.planetPct) ? Math.max(0, Math.min(100, o.planetPct)) : 0;
-            if (pp < ALIEN_FORCE_KANTA_PCT) {
-              o.forcedTerritory = null;
-            } else {
-              o.forcedTerritory = kantaForcedTerritoryFromScores(pp, bucketScores(o));
-            }
+            o.forcedTerritory = 'KANTAPBIYA_LEFT';
             changed = true;
           }
           if (changed) saveScoresMap(map);
@@ -11870,23 +13189,30 @@
         var prevPct = getPlanetPct(id);
         var next = Math.max(0, Math.min(100, prevPct + effDelta));
         var prevForced = getForcedTerritory(id);
-        var forced = next >= ALIEN_FORCE_KANTA_PCT ? kantaForcedTerritoryFromScores(next, sc) : null;
         var map = loadScoresMap();
         var prev = readUserBucket(id);
         var sc = bucketScores(prev);
+        var forced =
+          prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+            ? prev.forcedTerritory
+            : null;
+        var stage = moderationStageFromPlanet(next);
         map[id] = {
           conservative: sc.conservative,
           centrist: sc.centrist,
           progressive: sc.progressive,
           planetPct: next,
           forcedTerritory: forced,
+          moderationStage: stage,
+          isUnderObservation: stage === 'OBSERVATION' || stage === 'RISK_CANDIDATE' || stage === 'REVIEW_PRIORITY',
         };
         saveScoresMap(map);
         if (capPost && effDelta !== 0) recordPlanetThreadUse(capPost, effDelta);
+        if (effDelta > 0) registerToxicEvent(id, Math.abs(effDelta) * 0.45, 'planet-signal');
         return {
           next: next,
           forced: forced,
-          crossed50: prevPct < ALIEN_FORCE_KANTA_PCT && next >= ALIEN_FORCE_KANTA_PCT,
+          crossed50: false,
           crossed30: prevPct < ALIEN_WARN_PCT && next >= ALIEN_WARN_PCT,
           cleared: !!prevForced && !forced,
         };
@@ -11900,13 +13226,6 @@
         var ft = getForcedTerritory(authorId);
         if (alienRes.crossed30) {
           alert(ALIEN_WARN_MSG);
-        }
-        if (alienRes.crossed50 && ft) {
-          alert(
-            '외계인 성향치가 50%에 도달해 외계행성 ' +
-              kantaPlanetLabelKo(ft) +
-              ' 행성에 소속됩니다. 중앙광장·진영 1단계에서는 읽기·공감·추천(좋아요)만 가능합니다.',
-          );
         }
       }
 
@@ -11998,7 +13317,7 @@
 
       /**
        * 게스트 입장 시: 이전 세션에서 남은 guest_demo / guest 로컬 상태 제거
-       * (외계 격리·성향 버킷 등으로 중앙광장이 눈팅만 되는 현상 방지)
+       * (고강도 토론 구역·성향 버킷 등으로 중앙광장이 눈팅만 되는 현상 방지)
        */
       window.__scResetLocalStateForGuestEntry = function () {
         var ids = GUEST_LOCAL_USER_IDS;
@@ -12128,57 +13447,56 @@
         return scaleDelta(delta, lo);
       }
 
+      function reactionGateForBoard(boardTerritoryId, stage) {
+        var kanta = isKantaTerritory(boardTerritoryId);
+        var earthQ = !kanta && isPlanetResidentEarthQuarantineBoard(boardTerritoryId, stage);
+        return {
+          disableLike: kanta,
+          disableDis: kanta || earthQ,
+          disablePlanet: kanta || earthQ,
+        };
+      }
+
+      function buildAuthorOriginPill(authorId) {
+        var A = window.AlignmentScoring;
+        if (!A || typeof A.leanFromPercent !== 'function') return null;
+        var pct = A.toDisplayPercent(getScoresForUser(authorId));
+        var lean = A.leanFromPercent(pct);
+        var span = document.createElement('span');
+        span.className = 'board__origin';
+        if (lean.side === 'progressive') {
+          span.classList.add('board__origin--prog');
+          span.textContent = '진보';
+        } else if (lean.side === 'conservative') {
+          span.classList.add('board__origin--con');
+          span.textContent = '보수';
+        } else {
+          span.classList.add('board__origin--cent');
+          span.textContent = '중앙';
+        }
+        return span;
+      }
+
       function buildReactionControls(opts) {
         opts = opts || {};
         var row = document.createElement('div');
         row.className = 'sc-react-bar' + (opts.extraClass ? ' ' + opts.extraClass : '');
 
-        if (opts.onEmpathy) {
-          var ebtn = document.createElement('button');
-          ebtn.type = 'button';
-          ebtn.className = 'sc-react-btn sc-react-btn--empathy' + (opts.activeEmpathy ? ' is-active' : '');
-          ebtn.disabled = !!opts.disabledEmpathy;
-          var eico = document.createElement('span');
-          eico.className = 'sc-react-ico sc-react-ico--empathy';
-          eico.setAttribute('aria-hidden', 'true');
-          var elab = document.createElement('span');
-          elab.className = 'sc-react-hover-txt';
-          elab.textContent = opts.empathyHintBody || '정치 성향에 영향을 주지 않습니다';
-          ebtn.appendChild(eico);
-          ebtn.appendChild(elab);
-          ebtn.setAttribute('aria-label', opts.empathyAriaLabel || '공감 — 정치 성향에 영향 없음');
-          ebtn.title =
-            opts.empathyTitle ||
-            '공감 — 정치 성향에 영향을 주지 않습니다. 인기·영토 인구에만 반영됩니다.';
-          ebtn.addEventListener('click', function (ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            opts.onEmpathy(ev);
-          });
-          var ecnt = document.createElement('span');
-          ecnt.className = 'sc-react-count';
-          ecnt.textContent = String(opts.nEmpathy != null ? opts.nEmpathy : 0);
-          row.appendChild(ebtn);
-          row.appendChild(ecnt);
-        }
-
-        function addPair(asLike, count, active, disabled, onClick) {
+        function addBtn(kind, count, active, disabled, onClick, icoClass, lbl, aria, title) {
           var btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'sc-react-btn sc-react-btn--' + (asLike ? 'like' : 'dislike') + (active ? ' is-active' : '');
+          btn.className = 'sc-react-btn sc-react-btn--' + kind + (active ? ' is-active' : '');
           btn.disabled = !!disabled;
           var ico = document.createElement('span');
-          ico.className = 'sc-react-ico sc-react-ico--' + (asLike ? 'up' : 'down');
+          ico.className = 'sc-react-ico ' + icoClass;
           ico.setAttribute('aria-hidden', 'true');
           var lab = document.createElement('span');
-          lab.className = 'sc-react-hover-txt';
-          lab.textContent = asLike ? '정치 반응(동조)' : '정치 반응(비동조)';
+          lab.className = 'sc-react-lbl';
+          lab.textContent = lbl;
           btn.appendChild(ico);
           btn.appendChild(lab);
-          btn.setAttribute('aria-label', asLike ? '정치 반응 — 좋아요' : '정치 반응 — 싫어요');
-          btn.title = asLike
-            ? '좋아요는 정치 방향(보수·중도·진보)에 반영되며, 받는 사람의 외계인 성향도 조금 오릅니다.'
-            : '싫어요는 정치 방향보다 외계인(사회 충돌·과열) 쪽 영향이 더 큽니다. 정치 축 이동은 완화되어 있습니다.';
+          btn.setAttribute('aria-label', aria);
+          btn.title = title || aria;
           if (onClick) {
             btn.addEventListener('click', function (ev) {
               ev.preventDefault();
@@ -12188,49 +13506,56 @@
           }
           var cnt = document.createElement('span');
           cnt.className = 'sc-react-count';
-          cnt.textContent = String(count);
+          cnt.textContent = String(count != null ? count : 0);
           row.appendChild(btn);
           row.appendChild(cnt);
         }
 
-        if (!opts.empathyOnly) {
-          if (opts.empathyLikeOnlyEarth) {
-            addPair(true, opts.nLike, opts.activeLike, opts.disabled, opts.onLike);
-          } else {
-            addPair(true, opts.nLike, opts.activeLike, opts.disabled, opts.onLike);
-            addPair(false, opts.nDis, opts.activeDis, opts.disabled, opts.onDis);
-
-            if (!opts.omitPlanet) {
-            var pbtn = document.createElement('button');
-            pbtn.type = 'button';
-            pbtn.className = 'sc-react-btn sc-react-btn--planet' + (opts.activePlanet ? ' is-active' : '');
-            pbtn.disabled = !!opts.disabledPlanet;
-            var pico = document.createElement('span');
-            pico.className = 'sc-react-ico sc-react-ico--planet';
-            pico.setAttribute('aria-hidden', 'true');
-            var plab = document.createElement('span');
-            plab.className = 'sc-react-hover-txt';
-            plab.textContent = '외계인 표시';
-            pbtn.appendChild(pico);
-            pbtn.appendChild(plab);
-            pbtn.setAttribute('aria-label', '외계인 표시 — 외계인 성향만 증가(사람 성향 무관)');
-            pbtn.title =
-              '외계인 표시 — 외계인 성향 +10% (사람 성향에는 영향 없음). 30% 경고 · 50% 시 진보/보수 우세에 따라 외계행성(진보·보수) 편입.';
-            if (opts.onPlanet) {
-              pbtn.addEventListener('click', function (ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                opts.onPlanet(ev);
-              });
-            }
-            var pcnt = document.createElement('span');
-            pcnt.className = 'sc-react-count';
-            pcnt.textContent = String(opts.nPlanet != null ? opts.nPlanet : 0);
-            row.appendChild(pbtn);
-            row.appendChild(pcnt);
-            }
-          }
-        }
+        addBtn(
+          'empathy',
+          opts.nEmpathy,
+          opts.activeEmpathy,
+          opts.disabledEmpathy,
+          opts.onEmpathy,
+          'sc-react-ico--empathy',
+          '공감',
+          opts.empathyAriaLabel || '공감 — 정치 성향에 영향 없음',
+          opts.empathyTitle ||
+            '공감 — 정치 성향에 영향을 주지 않습니다. 인기·영토 인구에만 반영됩니다.',
+        );
+        addBtn(
+          'like',
+          opts.nLike,
+          opts.activeLike,
+          opts.disabled || opts.disableLike,
+          opts.onLike,
+          'sc-react-ico--up',
+          '추천',
+          '추천 — 정치 반응(동조)',
+          '추천 — 정치 방향(보수·중도·진보)에 반영되며, 받는 사람의 외계인 성향도 조금 오릅니다.',
+        );
+        addBtn(
+          'dislike',
+          opts.nDis,
+          opts.activeDis,
+          opts.disabled || opts.disableDis,
+          opts.onDis,
+          'sc-react-ico--down',
+          '비추천',
+          '비추천 — 정치 반응(비동조)',
+          '비추천 — 정치 방향보다 외계인(사회 충돌·과열) 쪽 영향이 더 큽니다. 정치 축 이동은 완화되어 있습니다.',
+        );
+        addBtn(
+          'planet',
+          opts.nPlanet,
+          opts.activePlanet,
+          opts.disabledPlanet || opts.disablePlanet || opts.omitPlanet,
+          opts.onPlanet,
+          'sc-react-ico--planet',
+          '외계인',
+          '외계인 표시 — 외계인 성향만 증가(사람 성향 무관)',
+          '외계인 표시 — 과열 토론 신호만 기록(사람 성향 무관). 고강도 토론 구역 이동은 운영자 승인 시에만 적용됩니다.',
+        );
 
         return row;
       }
@@ -12287,10 +13612,12 @@
       }
 
       function sanitizeTitle(s) {
-        return String(s || '')
+        var raw = String(s || '')
           .replace(/[<>]/g, '')
           .trim()
           .slice(0, 120);
+        var safe = filterSafeUserText(raw, 'territoryName');
+        return safe.ok ? safe.text : raw.replace(/[<>]/g, '').trim().slice(0, 120);
       }
 
       function seedTerritoryIfEmpty(tid) {
@@ -12330,9 +13657,9 @@
               title: '[중앙광장] 자유 게시판에 오신 것을 환영합니다',
               body:
                 '처음에는 중앙광장에서 글을 쓰고, 정치 성향이 40%에 도달하면 보수·중도·진보·외계행성 1단계 게시판이 열립니다.\n\n' +
-                '· 아래 「대분류」 탭으로 묶음을 고른 뒤 글 목록을 볼 수 있습니다. 글쓰기 시에는 세부 분야를 골라 저장합니다.\n' +
+                '· 아래 탭으로 글 성격(자유 토론 · 유머·가벼운글 · 정보·분석)을 고른 뒤 목록을 볼 수 있습니다.\n' +
                 '· 데일리 이슈는 위에서 분야 탭을 고른 뒤, 해당 분야 카드 4개 중에서 참여할 수 있습니다.',
-              category: 'free',
+              category: 'debate',
               images: [],
               authorId: '운영자(샘플)',
               createdAt: new Date().toISOString(),
@@ -12351,7 +13678,7 @@
           '】\n\n' +
           '새로고침할 때마다 이 데모 글들이 다시 채워져 목록이 길어졌을 때의 화면을 바로 볼 수 있습니다. ' +
           '제목·작성자·시간·분류 태그·본문 스니펫이 한 화면에 어떻게 배치되는지, 스크롤을 내리며 확인해 보세요.\n\n' +
-          '두 번째 단락에서는 정치·경제·사회·문화·기술·일상·고민·유머 등 태그가 돌아가며 붙습니다. ' +
+          '두 번째 단락에서는 자유 토론·유머·정보 분석 태그가 돌아가며 붙습니다. ' +
           '실제 서비스에서는 운영 정책과 신고 처리 규칙에 맞는 내용만 작성해 주세요.\n\n' +
           '세 번째 단락(길이 테스트): ' +
           '동네 카페 메뉴판이 바뀔 때마다 단골 손님들은 익숙한 자리에 앉아 오늘의 이야기를 나눕니다. '.repeat(10) +
@@ -12382,20 +13709,7 @@
         for (var r = 0; r < all.length; r++) {
           if (String(all[r].id || '').indexOf(DEMO_PREFIX) !== 0) rest.push(all[r]);
         }
-        var subcats = [
-          'free',
-          'politics_free',
-          'money',
-          'society_free',
-          'world_free',
-          'culture',
-          'tech',
-          'daily',
-          'meetup_free',
-          'advice',
-          'humor',
-          'games_free',
-        ];
+        var subcats = ['debate', 'light', 'info'];
         var titles = [
           '오늘 점심 메뉴 추천 받아요',
           '지하철 연착 시민 불편 어떻게 보시나요',
@@ -12511,6 +13825,90 @@
         return (window.__scPlayer && window.__scPlayer.userId) || 'guest';
       }
 
+      function normalizeOperatorUserId(userId) {
+        return String(userId || '').trim().toLowerCase();
+      }
+
+      function isOperatorUser(userId) {
+        var id = normalizeOperatorUserId(userId);
+        if (!id || id === 'guest') return false;
+        for (var oi = 0; oi < MOD_OPERATOR_USER_IDS.length; oi++) {
+          if (normalizeOperatorUserId(MOD_OPERATOR_USER_IDS[oi]) === id) return true;
+        }
+        return false;
+      }
+
+      function openModerationDashboard() {
+        if (!isOperatorUser(uid())) return;
+        renderModerationDashboard();
+        if (moderationModal) {
+          moderationModal.classList.add('is-open');
+          moderationModal.setAttribute('aria-hidden', 'false');
+        }
+      }
+
+      function ensureOperatorModerationButton() {
+        if (!isOperatorUser(uid())) {
+          if (btnOpenModeration) {
+            btnOpenModeration.remove();
+            btnOpenModeration = null;
+          }
+          return;
+        }
+        if (btnOpenModeration) return;
+        var actions = document.querySelector('.board__actions');
+        if (!actions) return;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = 'board-open-moderation';
+        btn.className = 'board__write-btn board__write-btn--ghost';
+        btn.textContent = '운영';
+        btn.addEventListener('click', openModerationDashboard);
+        actions.appendChild(btn);
+        btnOpenModeration = btn;
+      }
+
+      function syncOperatorModerationUI() {
+        var op = isOperatorUser(uid());
+        if (op) {
+          ensureOperatorModerationButton();
+        } else {
+          if (btnOpenModeration) {
+            btnOpenModeration.remove();
+            btnOpenModeration = null;
+          }
+        }
+        if (!op && moderationModal) {
+          moderationModal.classList.remove('is-open');
+          moderationModal.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      window.__scIsDevMode = IS_DEV_MODE;
+
+      window.__scIsOperatorUser = isOperatorUser;
+      window.__scSyncOperatorModerationUI = syncOperatorModerationUI;
+
+      function canPerformModeratedAction(userId) {
+        var id = String(userId || '').trim();
+        if (!id || id === 'guest') return true;
+        var b = readUserBucket(id);
+        var stage = String(b.moderationStage || moderationStageFromPlanet(getPlanetPct(id)));
+        if (stage !== 'OBSERVATION' && stage !== 'RISK_CANDIDATE' && stage !== 'REVIEW_PRIORITY') return true;
+        var root = loadModerationRoot();
+        var e = ensureModerationUser(root, id);
+        var now = Date.now();
+        var last = e.lastActionAt ? new Date(e.lastActionAt).getTime() : 0;
+        if (isFinite(last) && now - last < MOD_ACTION_COOLDOWN_MS) {
+          registerActivityViolation(id, 'observation-stage');
+          showSoftThrottleNotice(MOD_SOFT_MSG);
+          return false;
+        }
+        e.lastActionAt = new Date(now).toISOString();
+        saveModerationRoot(root);
+        return true;
+      }
+
       function applyReceivedLikeForAuthor(authorId, kind, delta) {
         if (typeof window.__scGrantReceivedLike === 'function') {
           window.__scGrantReceivedLike(authorId, kind, delta);
@@ -12589,6 +13987,9 @@
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1, post);
             bumpLikeRecvPlanet(auth, post, DISLIKE_RECV_PLANET_DELTA);
+            registerReportSignal(auth, me, 'post:' + String(post.id || ''), 'dislike-signal');
+            registerToxicEvent(auth, 1.5, 'dislike-burst');
+            noteReactionBurstForUser(auth);
           }
         }
 
@@ -12657,6 +14058,9 @@
         var bs = document.getElementById('screen-board');
         if (pd) pd.hidden = true;
         if (bs) bs.hidden = false;
+        if (typeof window.__scApp !== 'undefined' && window.__scApp && typeof window.__scApp.syncPrimaryNavVisibility === 'function') {
+          window.__scApp.syncPrimaryNavVisibility('board');
+        }
         window.scrollTo(0, 0);
       }
       window.__scClosePostDetail = closePostDetail;
@@ -12674,6 +14078,9 @@
         var bs = document.getElementById('screen-board');
         if (pd) pd.hidden = false;
         if (bs) bs.hidden = true;
+        if (typeof window.__scApp !== 'undefined' && window.__scApp && typeof window.__scApp.syncPrimaryNavVisibility === 'function') {
+          window.__scApp.syncPrimaryNavVisibility('post');
+        }
         renderPostDetailContent(post);
         window.scrollTo(0, 0);
       }
@@ -12771,12 +14178,11 @@
         reactOuter.className = 'board-post-detail__react';
         reactOuter.style.marginTop = '0.65rem';
         var hasAlignP = !!window.AlignmentScoring;
-        var empathyOnlyBoard = isKantaTerritory(currentTerritory);
-        var earthLikeOnlyBoard =
-          !empathyOnlyBoard && isPlanetResidentEarthQuarantineBoard(currentTerritory, effectiveStage());
+        var gateP = reactionGateForBoard(currentTerritory, effectiveStage());
         var bar = buildReactionControls({
-          empathyOnly: empathyOnlyBoard,
-          empathyLikeOnlyEarth: earthLikeOnlyBoard,
+          disableLike: gateP.disableLike,
+          disableDis: gateP.disableDis,
+          disablePlanet: gateP.disablePlanet,
           nEmpathy: post.reactions.empathy.length,
           activeEmpathy: post.reactions.empathy.indexOf(meR) >= 0,
           disabledEmpathy: !!ownPost,
@@ -12922,6 +14328,7 @@
           return;
         }
         var me = uid();
+        if (!canPerformModeratedAction(me)) return;
         var all = loadPostsCurrent();
         var post = findPostInCurrentList(all, postId);
         if (!post) return;
@@ -12967,6 +14374,8 @@
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1, post);
             bumpLikeRecvPlanet(auth, post, DISLIKE_RECV_PLANET_DELTA);
+            registerReportSignal(auth, me, 'comment:' + String(commentId || ''), 'dislike-comment-signal');
+            registerToxicEvent(auth, 1.2, 'comment-dislike-burst');
           }
         }
 
@@ -12979,6 +14388,7 @@
         if (alertBoardReactionsNotUnlocked()) return;
         if (isKantaTerritory(currentTerritory)) return;
         var me = uid();
+        if (!canPerformModeratedAction(me)) return;
         var all = loadPostsCurrent();
         var post = findPostInCurrentList(all, postId);
         if (!post) return;
@@ -12993,6 +14403,8 @@
         } else {
           pv.push(me);
           r = addPlanetScoreForAuthor(auth, ALIEN_MARK_DELTA, post);
+          registerReportSignal(auth, me, 'post:' + String(post.id || ''), 'planet-mark');
+          registerToxicEvent(auth, 2.6, 'planet-mark');
         }
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
         refreshListOnly();
@@ -13003,6 +14415,7 @@
         if (alertBoardReactionsNotUnlocked()) return;
         if (isKantaTerritory(currentTerritory)) return;
         var me = uid();
+        if (!canPerformModeratedAction(me)) return;
         var all = loadPostsCurrent();
         var post = findPostInCurrentList(all, postId);
         if (!post) return;
@@ -13020,6 +14433,8 @@
         } else {
           pv.push(me);
           r = addPlanetScoreForAuthor(auth, ALIEN_MARK_DELTA, post);
+          registerReportSignal(auth, me, 'comment:' + String(commentId || ''), 'planet-mark-comment');
+          registerToxicEvent(auth, 2.2, 'planet-mark-comment');
         }
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
         refreshListOnly();
@@ -13086,6 +14501,7 @@
 
       function submitComment(postId, text, parentId) {
         if (alertBoardReactionsNotUnlocked()) return;
+        if (!canPerformModeratedAction(uid())) return;
         var t = String(text || '').trim();
         if (!t) return;
         if (t.length > MAX_COMMENT) {
@@ -13102,6 +14518,27 @@
           }
         }
         if (!post) return;
+        var parentAuthorId = null;
+        if (parentId) {
+          for (var pi = 0; pi < post.comments.length; pi++) {
+            if (post.comments[pi].id === parentId) {
+              parentAuthorId = post.comments[pi].authorId;
+              break;
+            }
+          }
+        }
+        if (
+          !tryWriteActivity(uid(), 'comment', {
+            postId: postId,
+            parentId: parentId || null,
+            parentAuthorId: parentAuthorId,
+          }, t)
+        ) {
+          return;
+        }
+        if (detectProfanityInText(t)) {
+          registerToxicEvent(uid(), 2.5, 'profanity-comment');
+        }
         post.comments.push({
           id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
           authorId: uid(),
@@ -13111,6 +14548,7 @@
           reactions: { likes: [], dislikes: [], planetVoters: [], empathy: [] },
         });
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        registerToxicEvent(uid(), 0.4, 'comment-activity');
         if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('board_comment');
         refreshListOnly();
       }
@@ -13286,15 +14724,25 @@
         hdr.appendChild(h);
         hdr.appendChild(meta);
 
+        if (isCommonSpace(currentTerritory)) {
+          var originPill = buildAuthorOriginPill(p.authorId);
+          if (originPill) {
+            var originRow = document.createElement('div');
+            originRow.className = 'board__item-origin-row';
+            originRow.appendChild(originPill);
+            li.appendChild(originRow);
+          }
+        }
+        li.appendChild(hdr);
+
         var reactRow = document.createElement('div');
         reactRow.className = 'board__item-react';
         var hasAlign = !!window.AlignmentScoring;
-        var empathyOnlyBoard = isKantaTerritory(currentTerritory);
-        var earthLikeOnlyBoard =
-          !empathyOnlyBoard && isPlanetResidentEarthQuarantineBoard(currentTerritory, effectiveStage());
+        var gateR = reactionGateForBoard(currentTerritory, effectiveStage());
         var bar = buildReactionControls({
-          empathyOnly: empathyOnlyBoard,
-          empathyLikeOnlyEarth: earthLikeOnlyBoard,
+          disableLike: gateR.disableLike,
+          disableDis: gateR.disableDis,
+          disablePlanet: gateR.disablePlanet,
           nEmpathy: p.reactions.empathy.length,
           activeEmpathy: p.reactions.empathy.indexOf(meR) >= 0,
           disabledEmpathy: !!ownPost,
@@ -13320,19 +14768,145 @@
           },
         });
         reactRow.appendChild(bar);
-
-        li.appendChild(hdr);
-        li.appendChild(reactRow);
-        try {
-          li.appendChild(
-            buildCampAffinityPanel(computePostCampAffinityBreakdown(p, currentTerritory), {
-              compact: true,
-            }),
-          );
-        } catch (e) {
-          console.warn('[board] camp affinity', e);
+        var stb2 = countCommentBreakdown(p.comments);
+        if (stb2.total > 0) {
+          var cmtHint = document.createElement('span');
+          cmtHint.className = 'board__item-cmt-hint';
+          cmtHint.textContent = ' · 댓글 ' + stb2.total;
+          reactRow.appendChild(cmtHint);
         }
+
+        li.appendChild(reactRow);
         return li;
+      }
+
+      function stageTabLabel(stage) {
+        var st = Math.max(1, Math.min(4, Math.floor(Number(stage) || 1)));
+        return STAGE_TAB_LABELS[st] || st + '단계';
+      }
+
+      function boardFeedTabStorageKey() {
+        return currentTerritory + '_s' + String(effectiveStage());
+      }
+
+      function getBoardFeedTabId() {
+        try {
+          var raw = sessionStorage.getItem(BOARD_FEED_TAB_KEY);
+          var o = raw ? JSON.parse(raw) : {};
+          var v = o && o[boardFeedTabStorageKey()];
+          for (var i = 0; i < BOARD_FEED_TAB_DEFS.length; i++) {
+            if (BOARD_FEED_TAB_DEFS[i].id === v) return v;
+          }
+        } catch (_) {}
+        return 'fresh';
+      }
+
+      function setBoardFeedTabId(id) {
+        var ok = 'fresh';
+        for (var j = 0; j < BOARD_FEED_TAB_DEFS.length; j++) {
+          if (BOARD_FEED_TAB_DEFS[j].id === id) {
+            ok = id;
+            break;
+          }
+        }
+        try {
+          var raw = sessionStorage.getItem(BOARD_FEED_TAB_KEY);
+          var o = raw ? JSON.parse(raw) : {};
+          if (!o || typeof o !== 'object') o = {};
+          o[boardFeedTabStorageKey()] = ok;
+          sessionStorage.setItem(BOARD_FEED_TAB_KEY, JSON.stringify(o));
+        } catch (_) {}
+      }
+
+      function buildBoardFeedTabs() {
+        if (!elBoardFeedTabs) return;
+        if (elBoardFeedTabs.dataset.scBuilt === '1') return;
+        elBoardFeedTabs.dataset.scBuilt = '1';
+        elBoardFeedTabs.textContent = '';
+        for (var fi = 0; fi < BOARD_FEED_TAB_DEFS.length; fi++) {
+          (function (def) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'board__feed-tab';
+            b.setAttribute('role', 'tab');
+            b.dataset.feedTab = def.id;
+            b.textContent = def.label;
+            b.addEventListener('click', function () {
+              setBoardFeedTabId(def.id);
+              syncBoardFeedTabStyles();
+              refreshListOnly();
+            });
+            elBoardFeedTabs.appendChild(b);
+          })(BOARD_FEED_TAB_DEFS[fi]);
+        }
+      }
+
+      function syncBoardFeedTabStyles() {
+        if (!elBoardFeedTabs) return;
+        var active = getBoardFeedTabId();
+        var tabs = elBoardFeedTabs.querySelectorAll('.board__feed-tab');
+        for (var ti = 0; ti < tabs.length; ti++) {
+          var t = tabs[ti];
+          var on = t.dataset.feedTab === active;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+      }
+
+      function sortFactionPostsForFeedTab(posts, tabId, tid) {
+        var arr = posts.slice();
+        var territoryId = tid || currentTerritory;
+        if (tabId === 'popular') {
+          arr.sort(function (a, b) {
+            var ds = hotScore(b, territoryId) - hotScore(a, territoryId);
+            if (ds !== 0) return ds;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
+        } else if (tabId === 'debate') {
+          arr.sort(function (a, b) {
+            normalizePost(a, territoryId);
+            normalizePost(b, territoryId);
+            var ca = countCommentBreakdown(a.comments).total;
+            var cb = countCommentBreakdown(b.comments).total;
+            if (cb !== ca) return cb - ca;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
+        } else if (tabId === 'new') {
+          var cutoff = Date.now() - 72 * 60 * 60 * 1000;
+          arr = arr.filter(function (p) {
+            var t = new Date(p.createdAt || 0).getTime();
+            return isFinite(t) && t >= cutoff;
+          });
+          arr.sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
+        } else {
+          arr.sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
+        }
+        return arr;
+      }
+
+      function refreshBoardHeaderMeta() {
+        if (elBoardActiveUsersN) {
+          var pop = 0;
+          if (window.__scTerritoryPop && typeof window.__scTerritoryPop.get === 'function') {
+            var pg = window.__scTerritoryPop.get();
+            pop = Math.floor(Number(pg[currentTerritory]) || 0);
+          }
+          elBoardActiveUsersN.textContent = isCommonSpace(currentTerritory) ? '—' : String(pop);
+        }
+        if (elBoardKantaTagline) {
+          var kt = String(currentTerritory || '');
+          if (isKantaTerritory(kt) && KANTA_BOARD_TAGLINES[kt]) {
+            elBoardKantaTagline.textContent = KANTA_BOARD_TAGLINES[kt];
+            elBoardKantaTagline.hidden = false;
+          } else {
+            elBoardKantaTagline.textContent = '';
+            elBoardKantaTagline.hidden = true;
+          }
+        }
       }
 
       function refreshListOnly() {
@@ -13352,6 +14926,8 @@
           posts.sort(function (a, b) {
             return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
           });
+        } else if (isFourTier(currentTerritory)) {
+          posts = sortFactionPostsForFeedTab(posts, getBoardFeedTabId(), currentTerritory);
         } else {
           posts.sort(function (a, b) {
             return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
@@ -13400,7 +14976,7 @@
             b.className = 'board__stage-tab';
             b.setAttribute('role', 'tab');
             b.dataset.stage = String(stage);
-            b.textContent = stage + '단계';
+            b.textContent = stageTabLabel(stage);
             b.addEventListener('click', function () {
               var st = stage;
               if (!canOpenFactionStageForRead(currentTerritory, st)) {
@@ -13433,7 +15009,7 @@
 
           var showLockGlyph = st === 1 ? false : !canRead;
 
-          var baseLabel = st + '단계';
+          var baseLabel = stageTabLabel(st);
           t.textContent = showLockGlyph ? lockPre + baseLabel : baseLabel;
 
           if (st === 1) {
@@ -13502,18 +15078,63 @@
 
         if (elBoardTitle) {
           if (isCommonSpace(currentTerritory)) {
-            elBoardTitle.textContent = '중앙광장 · 광장';
+            elBoardTitle.textContent = '중앙광장';
           } else if (isFourTier(currentTerritory)) {
             elBoardTitle.textContent =
-              territoryShortLabel(currentTerritory) + ' · ' + currentStage + '단계 게시판';
+              territoryShortLabel(currentTerritory) + ' · ' + stageTabLabel(currentStage);
           } else {
-            elBoardTitle.textContent = '게시판 — ' + territoryShortLabel(currentTerritory);
+            elBoardTitle.textContent = territoryShortLabel(currentTerritory);
           }
         }
 
+        refreshBoardHeaderMeta();
+        syncOperatorModerationUI();
+
         if (elBoardTitleDesc) {
-          elBoardTitleDesc.hidden = !isCommonSpace(currentTerritory);
+          elBoardTitleDesc.hidden = true;
         }
+
+        if (elBoardFeedTabsWrap) {
+          elBoardFeedTabsWrap.hidden = !isFourTier(currentTerritory) || !isBoardReadable();
+        }
+        if (isFourTier(currentTerritory) && isBoardReadable()) {
+          buildBoardFeedTabs();
+          syncBoardFeedTabStyles();
+        }
+
+        if (elBoardSystemPanels) {
+          if (isCommonSpace(currentTerritory)) {
+            elBoardSystemPanels.hidden = false;
+            var metaHost = elCentristHubMeta || elCentristHub;
+            if (metaHost && elBoardSystemPanels.parentElement !== metaHost) {
+              metaHost.insertBefore(elBoardSystemPanels, metaHost.firstChild);
+            }
+            elBoardSystemPanels.classList.add('board__system-panels--plaza');
+            var foldHot = document.getElementById('board-fold-hot');
+            if (foldHot) foldHot.hidden = true;
+          } else if (isFourTier(currentTerritory)) {
+            elBoardSystemPanels.hidden = false;
+            elBoardSystemPanels.classList.remove('board__system-panels--plaza');
+            var foldHotF = document.getElementById('board-fold-hot');
+            if (foldHotF) foldHotF.hidden = false;
+            if (elList && elList.parentNode && elBoardSystemPanels.parentElement !== elList.parentNode) {
+              elList.parentNode.insertBefore(elBoardSystemPanels, elList.nextSibling);
+            } else if (elList && elList.parentNode) {
+              var afterList = elList.nextElementSibling;
+              if (afterList !== elBoardSystemPanels) {
+                elList.parentNode.insertBefore(elBoardSystemPanels, afterList);
+              }
+            }
+          } else {
+            elBoardSystemPanels.hidden = true;
+          }
+        }
+
+        var foldDebate = document.getElementById('board-fold-debate');
+        if (foldDebate) foldDebate.hidden = isCommonSpace(currentTerritory);
+
+        var commonUnlockHint = document.getElementById('board-common-unlock-hint');
+        if (commonUnlockHint) commonUnlockHint.hidden = !isCommonSpace(currentTerritory);
 
         if (elStageWrap) {
           elStageWrap.hidden = false;
@@ -13559,22 +15180,24 @@
         }
 
         if (elList) {
-          elList.hidden = !isBoardReadable();
+          var showHubList = isCommonSpace(currentTerritory) && isCommonHubVisible();
+          elList.hidden = !isBoardReadable() || showHubList;
           elList.classList.toggle(
             'board__list--scroll-zone',
             isFourTier(currentTerritory) && isBoardReadable() && isCommonSpace(currentTerritory) === false,
           );
         }
 
+        if (elBoardFeedTabsWrap && isCommonSpace(currentTerritory)) {
+          elBoardFeedTabsWrap.hidden = true;
+        }
+
         if (elFactionHotPanel) {
-          var lurkS1b = isLevelLurkStage1(currentTerritory, 1);
-          var factionLockedB =
-            isFourTier(currentTerritory) && !isFactionTier1Unlocked(currentTerritory) && !lurkS1b;
-          elFactionHotPanel.hidden =
-            !isFourTier(currentTerritory) || !isBoardReadable() || factionLockedB;
+          elFactionHotPanel.hidden = false;
         }
 
         if (btnWrite) {
+          btnWrite.textContent = isCommonSpace(currentTerritory) ? '자유 글쓰기' : '글쓰기';
           btnWrite.disabled = !isBoardUnlocked();
           if (lurkOnly) {
             btnWrite.title =
@@ -13584,19 +15207,19 @@
               isFactionStageUnlocked(currentTerritory, 1)
                 ? '2단계 눈팅 — 읽기만 가능합니다. 2단계 성향 해금 후 글쓰기·댓글·반응이 열립니다.'
                 : isFourTier(currentTerritory) && currentStage === 1 && !isFactionTier1Unlocked(currentTerritory)
-                  ? '1단계 눈팅 — 읽기만 가능합니다. 성향 40% 해금(외계행성은 외계인 50%) 후 글쓰기·댓글·반응이 열립니다.'
+                  ? '1단계 눈팅 — 읽기만 가능합니다. 성향 40% 해금 후 글쓰기·댓글·반응이 열립니다.'
                   : 'Lv.' +
                     lurkMinLevel() +
                     ' 눈팅 — 읽기만 가능합니다. 글쓰기는 해당 영토·단계가 성향 해금된 뒤에 이용할 수 있습니다.';
           } else if (!isBoardUnlocked()) {
             btnWrite.title = factionLocked
-              ? '성향 40% 이상(외계행성은 외계인 성향 50%)에 도달하면 1단계가 열립니다. Lv.' +
+              ? '성향 40% 이상에 도달하면 1단계가 열립니다. Lv.' +
                 lurkMinLevel() +
                 '부터 1단계 눈팅만 가능.'
               : elLocked && !elLocked.hidden
                 ? currentStage === 2
                   ? isKantaTerritory(currentTerritory)
-                    ? '외계행성 2단계: 사람 성향 60% + 외계인 50% 이상. 3·4단계는 추후 공개.'
+                    ? '외계행성 2단계: 사람 성향 60% 이상. 고강도 토론 구역 이동은 운영자 승인입니다.'
                     : '2단계: 해당 사람 성향 60% 이상. 3·4단계는 추후 공개.'
                   : '3·4단계 해금 조건은 추후 공개됩니다.'
                 : '';
@@ -13612,7 +15235,7 @@
         if (elCentristHub) {
           var showHub = isCommonHubVisible();
           elCentristHub.hidden = !showHub;
-          if (elBoardPostsHeading) elBoardPostsHeading.hidden = !showHub;
+          if (elBoardPostsHeading) elBoardPostsHeading.hidden = true;
           if (showHub) {
             renderCentristHub();
             buildFreeCategoryTabs();
@@ -13620,10 +15243,7 @@
         }
 
         if (elGrowthPanel) {
-          elGrowthPanel.hidden = isCommonSpace(currentTerritory);
-        }
-        if (elDebateNext && elDebateNext.parentElement && elDebateNext.parentElement.parentElement) {
-          elDebateNext.parentElement.parentElement.hidden = isCommonSpace(currentTerritory);
+          elGrowthPanel.hidden = false;
         }
 
         if (isBoardReadable()) {
@@ -13654,7 +15274,7 @@
               '2단계 눈팅 모드입니다. 목록·본문은 읽기만 가능하며, 글쓰기·댓글·반응은 2단계 성향 해금 후 이용할 수 있습니다.';
           } else if (isFourTier(currentTerritory) && currentStage === 1) {
             lurkMsg =
-              '1단계 눈팅 모드입니다. 목록·본문은 읽기만 가능하며, 글쓰기·댓글·반응은 해당 영토 성향 40% 해금(외계행성은 외계인 50%) 후 이용할 수 있습니다.';
+              '1단계 눈팅 모드입니다. 목록·본문은 읽기만 가능하며, 글쓰기·댓글·반응은 해당 영토 성향 40% 해금 후 이용할 수 있습니다.';
           } else {
             lurkMsg =
               'Lv.' +
@@ -13670,14 +15290,14 @@
               alert(
                 '이 영토 1단계는 Lv.' +
                   lurkMinLevel() +
-                  ' 눈팅(읽기)으로 열려 있습니다. 글쓰기는 성향 40% 해금(외계행성은 외계인 50%) 후 가능합니다.',
+                  ' 눈팅(읽기)으로 열려 있습니다. 글쓰기는 성향 40% 해금 후 가능합니다.',
               );
             } else {
               alert('이 영토는 성향이 40%에 도달해야 1단계에서 글을 쓸 수 있습니다. 먼저 중앙광장에서 활동해 보세요.');
             }
           } else if (currentStage === 2) {
             if (isKantaTerritory(currentTerritory)) {
-              alert('외계행성 2단계: 사람 성향 60% 이상과 외계인 성향 50% 이상이 모두 필요합니다.');
+              alert('외계행성 2단계: 사람 성향 60% 이상이 필요합니다. 고강도 토론 구역 이동은 운영자 승인입니다.');
             } else {
               alert('2단계는 해당 사람 성향 60% 이상이 필요합니다.');
             }
@@ -13697,9 +15317,8 @@
         if (elCategoryInput && isCommonSpace(currentTerritory)) {
           var mega = getActiveFreeCategoryId();
           var megaRow = megaDefById(mega);
-          var pick = 'free';
-          if (megaRow && megaRow.subIds && megaRow.subIds.length === 1) pick = megaRow.subIds[0];
-          else if (megaRow && megaRow.subIds && megaRow.subIds.length > 1) pick = megaRow.subIds[0];
+          var pick = 'debate';
+          if (megaRow && megaRow.subIds && megaRow.subIds.length >= 1) pick = megaRow.subIds[0];
           elCategoryInput.value = pick;
         }
         if (titleIn) titleIn.focus();
@@ -13708,6 +15327,267 @@
       function closeModal() {
         elModal.classList.remove('is-open');
         elModal.setAttribute('aria-hidden', 'true');
+      }
+
+      function approveForcedTerritoryByAdmin(userId, tid) {
+        if (!isOperatorUser(uid())) return;
+        var id = String(userId || '').trim();
+        if (!id) return;
+        var t = String(tid || '');
+        if (t !== 'KANTAPBIYA_LEFT' && t !== 'KANTAPBIYA_RIGHT') return;
+        var map = loadScoresMap();
+        var prev = readUserBucket(id);
+        var sc = bucketScores(prev);
+        map[id] = {
+          conservative: sc.conservative,
+          centrist: sc.centrist,
+          progressive: sc.progressive,
+          planetPct: getPlanetPct(id),
+          forcedTerritory: t,
+          moderationStage: moderationStageFromPlanet(getPlanetPct(id)),
+          isUnderObservation: true,
+        };
+        saveScoresMap(map);
+        var root = loadModerationRoot();
+        appendModerationEvent(
+          'FORCED_TERRITORY_APPROVED',
+          id,
+          { by: uid(), previous: prev.forcedTerritory || null, next: t },
+          root,
+        );
+        root.actions.unshift({
+          at: new Date().toISOString(),
+          by: uid(),
+          type: 'FORCED_TERRITORY_APPROVED',
+          userId: id,
+          reason: '운영자 수동 승인',
+          previous: prev.forcedTerritory || null,
+          next: t,
+        });
+        if (root.actions.length > 300) root.actions.length = 300;
+        saveModerationRoot(root);
+        if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
+      }
+
+      function rejectForcedTerritoryByAdmin(userId, note) {
+        if (!isOperatorUser(uid())) return;
+        var id = String(userId || '').trim();
+        if (!id) return;
+        var root = loadModerationRoot();
+        appendModerationEvent(
+          'FORCED_TERRITORY_REJECTED',
+          id,
+          { by: uid(), note: String(note || '운영자 검토 유지') },
+          root,
+        );
+        root.actions.unshift({
+          at: new Date().toISOString(),
+          by: uid(),
+          type: 'FORCED_TERRITORY_REJECTED',
+          userId: id,
+          reason: String(note || '운영자 검토 유지'),
+        });
+        if (root.actions.length > 300) root.actions.length = 300;
+        saveModerationRoot(root);
+      }
+
+      function renderModerationDashboard() {
+        if (!moderationDashboardRoot) return;
+        var root = loadModerationRoot();
+        moderationDashboardRoot.textContent = '';
+        moderationDashboardRoot.className = 'moderation-dashboard-root moderation-dashboard-root--list';
+
+        var riskUsers = Object.keys(root.byUser || {})
+          .map(function (id) {
+            var e = root.byUser[id] || {};
+            var stage = moderationStageFromPlanet(getPlanetPct(id));
+            return {
+              id: id,
+              entry: e,
+              tox: Number(e.toxicityScore) || 0,
+              rep: Number(e.reportScore) || 0,
+              stage: stage,
+              recentReports: countRecentReportsForUser(root, id, REPORT_SPIKE_WINDOW_MS),
+              reasons: buildRiskReasonSummary(id, e, root),
+            };
+          })
+          .filter(function (u) {
+            return u.tox >= 25 || u.rep >= 25 || u.stage !== 'NORMAL' || u.recentReports >= 2;
+          })
+          .sort(function (a, b) {
+            return b.tox - a.tox || b.rep - a.rep || b.recentReports - a.recentReports;
+          })
+          .slice(0, 12);
+
+        var riskPanel = document.createElement('section');
+        riskPanel.className = 'moderation-panel';
+        var riskH = document.createElement('h4');
+        riskH.textContent = '행동 안정 후보';
+        riskPanel.appendChild(riskH);
+        var riskList = document.createElement('ul');
+        riskList.className = 'moderation-risk-list';
+        if (!riskUsers.length) {
+          var emptyLi = document.createElement('li');
+          emptyLi.className = 'moderation-risk-row';
+          emptyLi.textContent = '현재 수집된 후보가 없습니다.';
+          riskList.appendChild(emptyLi);
+        } else {
+          riskUsers.forEach(function (u) {
+            var li = document.createElement('li');
+            li.className = 'moderation-risk-row';
+            var nick = document.createElement('span');
+            nick.className = 'moderation-risk-row__nick';
+            nick.textContent = u.id;
+            var stage = document.createElement('span');
+            stage.textContent = moderationStageLabelKo(u.stage);
+            var meta = document.createElement('span');
+            meta.className = 'moderation-risk-row__meta';
+            meta.textContent =
+              'toxicity ' +
+              Math.round(u.tox) +
+              ' · report ' +
+              Math.round(u.rep) +
+              ' · 최근 신고 ' +
+              u.recentReports +
+              ' · 활동 ' +
+              formatModerationWhen(u.entry.lastActivityAt) +
+              (u.entry.reactionBurstFlag ? ' · 반응 폭주' : '');
+            var reasons = document.createElement('span');
+            reasons.className = 'moderation-risk-row__reasons';
+            reasons.textContent = '이유: ' + u.reasons.join(' · ');
+            li.appendChild(nick);
+            li.appendChild(stage);
+            li.appendChild(meta);
+            li.appendChild(reasons);
+            riskList.appendChild(li);
+          });
+        }
+        riskPanel.appendChild(riskList);
+        moderationDashboardRoot.appendChild(riskPanel);
+
+        var candidates = (root.candidates || []).slice(0, 8);
+        var candPanel = document.createElement('section');
+        candPanel.className = 'moderation-panel';
+        var candH = document.createElement('h4');
+        candH.textContent = 'AI 추천 큐 (운영자 최종 승인)';
+        candPanel.appendChild(candH);
+        var candUl = document.createElement('ul');
+        candUl.className = 'moderation-risk-list';
+        if (!candidates.length) {
+          var c0 = document.createElement('li');
+          c0.className = 'moderation-risk-row';
+          c0.textContent = '대기 중인 추천이 없습니다.';
+          candUl.appendChild(c0);
+        } else {
+          candidates.forEach(function (c) {
+            var id = String(c.userId || '').trim();
+            if (!id) return;
+            var cli = document.createElement('li');
+            cli.className = 'moderation-risk-row';
+            var cNick = document.createElement('span');
+            cNick.className = 'moderation-risk-row__nick';
+            cNick.textContent = id;
+            var cMeta = document.createElement('span');
+            cMeta.className = 'moderation-risk-row__meta';
+            cMeta.textContent =
+              moderationStageLabelKo(c.stage) + ' · ' + (c.reason || '-') + ' · ' + formatModerationWhen(c.at);
+            var cAct = document.createElement('div');
+            cAct.className = 'moderation-actions';
+            var bL = document.createElement('button');
+            bL.type = 'button';
+            bL.textContent = '진보행성 승인';
+            bL.addEventListener('click', function () {
+              approveForcedTerritoryByAdmin(id, 'KANTAPBIYA_LEFT');
+              renderModerationDashboard();
+            });
+            var bR = document.createElement('button');
+            bR.type = 'button';
+            bR.textContent = '보수행성 승인';
+            bR.addEventListener('click', function () {
+              approveForcedTerritoryByAdmin(id, 'KANTAPBIYA_RIGHT');
+              renderModerationDashboard();
+            });
+            var bX = document.createElement('button');
+            bX.type = 'button';
+            bX.textContent = '유지';
+            bX.addEventListener('click', function () {
+              rejectForcedTerritoryByAdmin(id, '운영자 검토 유지');
+              renderModerationDashboard();
+            });
+            cAct.appendChild(bL);
+            cAct.appendChild(bR);
+            cAct.appendChild(bX);
+            cli.appendChild(cNick);
+            cli.appendChild(cMeta);
+            cli.appendChild(cAct);
+            candUl.appendChild(cli);
+          });
+        }
+        candPanel.appendChild(candUl);
+        moderationDashboardRoot.appendChild(candPanel);
+
+        var events = (root.events || []).slice(0, 16);
+        var evPanel = document.createElement('section');
+        evPanel.className = 'moderation-panel';
+        var evH = document.createElement('h4');
+        evH.textContent = '최근 운영 이벤트 (내부)';
+        evPanel.appendChild(evH);
+        var evUl = document.createElement('ul');
+        evUl.className = 'moderation-event-list';
+        if (!events.length) {
+          var ev0 = document.createElement('li');
+          ev0.className = 'moderation-event-row';
+          ev0.textContent = '기록 없음';
+          evUl.appendChild(ev0);
+        } else {
+          events.forEach(function (ev) {
+            var eli = document.createElement('li');
+            eli.className = 'moderation-event-row';
+            eli.innerHTML =
+              '<strong>' +
+              moderationEventLabel(ev.type) +
+              '</strong> · ' +
+              (ev.userId || '-') +
+              ' · ' +
+              formatModerationWhen(ev.at);
+            evUl.appendChild(eli);
+          });
+        }
+        evPanel.appendChild(evUl);
+        moderationDashboardRoot.appendChild(evPanel);
+
+        var reports = (root.reports || []).slice(0, 8);
+        var repPanel = document.createElement('section');
+        repPanel.className = 'moderation-panel';
+        var repH = document.createElement('h4');
+        repH.textContent = '최근 신고';
+        repPanel.appendChild(repH);
+        var repUl = document.createElement('ul');
+        repUl.className = 'moderation-event-list';
+        if (!reports.length) {
+          var r0 = document.createElement('li');
+          r0.className = 'moderation-event-row';
+          r0.textContent = '기록 없음';
+          repUl.appendChild(r0);
+        } else {
+          reports.forEach(function (r) {
+            var rli = document.createElement('li');
+            rli.className = 'moderation-event-row';
+            rli.textContent =
+              (r.targetUserId || '-') +
+              ' ← ' +
+              (r.reporterId || '-') +
+              ' · ' +
+              (r.reason || '-') +
+              ' · +' +
+              Math.round((Number(r.appliedDelta) || 0) * 10) / 10 +
+              ' · ' +
+              formatModerationWhen(r.at);
+            repUl.appendChild(rli);
+          });
+        }
+        repPanel.appendChild(repUl);
+        moderationDashboardRoot.appendChild(repPanel);
       }
 
       if (imgIn && previews) {
@@ -13753,11 +15633,22 @@
       form.addEventListener('submit', function (ev) {
         ev.preventDefault();
         if (!isBoardUnlocked()) return;
+        if (!canPerformModeratedAction(uid())) return;
         var title = titleIn ? sanitizeTitle(titleIn.value) : '';
         var body = bodyIn ? String(bodyIn.value || '').trim() : '';
         if (!title) {
           alert('제목을 입력해 주세요.');
           return;
+        }
+        var titleSafe = filterSafeUserText(title, 'territoryName');
+        if (!titleSafe.ok) {
+          showSoftThrottleNotice('제목에 사용할 수 없는 표현이 포함되어 있습니다.');
+          return;
+        }
+        title = titleSafe.text;
+        if (!tryWriteActivity(uid(), 'post', { postId: 'new' }, title + '\n' + body)) return;
+        if (detectProfanityInText(title) || detectProfanityInText(body)) {
+          registerToxicEvent(uid(), 2, 'profanity-post');
         }
         var post = normalizePost(
           {
@@ -13765,13 +15656,7 @@
             title: title,
             body: body,
             category: isCommonSpace(currentTerritory)
-              ? (function () {
-                  var raw = elCategoryInput ? String(elCategoryInput.value || 'free').trim() || 'free' : 'free';
-                  for (var ci = 0; ci < FREE_SUBCATEGORY_DEFS.length; ci++) {
-                    if (FREE_SUBCATEGORY_DEFS[ci].id === raw) return raw;
-                  }
-                  return 'free';
-                })()
+              ? canonicalFreeCategoryId(elCategoryInput ? String(elCategoryInput.value || 'debate').trim() : 'debate')
               : undefined,
             images: pendingImages.slice(0, MAX_IMAGES),
             authorId: uid(),
@@ -13783,6 +15668,7 @@
         var all = loadPostsCurrent();
         all.unshift(post);
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
+        registerToxicEvent(uid(), 0.6, 'post-activity');
         if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('post_write');
         if (window.FollowSystem && typeof window.FollowSystem.onAuthorNewPost === 'function') {
           window.FollowSystem.onAuthorNewPost({
@@ -13804,6 +15690,12 @@
         });
       }
       btnCancel.addEventListener('click', closeModal);
+      if (moderationModalClose && moderationModal) {
+        moderationModalClose.addEventListener('click', function () {
+          moderationModal.classList.remove('is-open');
+          moderationModal.setAttribute('aria-hidden', 'true');
+        });
+      }
       if (btnSeasonDemo) {
         btnSeasonDemo.addEventListener('click', function () {
           softSeasonAdvanceDemo();
@@ -13812,6 +15704,14 @@
       elModal.addEventListener('click', function (e) {
         if (e.target === elModal) closeModal();
       });
+      if (moderationModal) {
+        moderationModal.addEventListener('click', function (e) {
+          if (e.target === moderationModal) {
+            moderationModal.classList.remove('is-open');
+            moderationModal.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && elModal.classList.contains('is-open')) closeModal();
       });
@@ -13893,6 +15793,7 @@
         if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
         if (typeof window.__scTendencyTrendsOnAlignmentRefresh === 'function') window.__scTendencyTrendsOnAlignmentRefresh();
         paintCentristWorldPulse();
+        syncOperatorModerationUI();
       };
 
       window.__scApplyStoredKantaAffiliation = applyStoredForceToPlayer;
@@ -14448,5 +16349,6 @@
       }
     })();
   </script>
-</body>
+    <div id="sc-soft-notice" class="sc-soft-notice" hidden role="status" aria-live="polite"></div>
+  </body>
 </html>
