@@ -5,7 +5,7 @@
  * 옵션:
  *   --seed=123          결정적 난수 (기본: 42)
  *   --legacy-tendency   구버전: 편향 분포(보수/진보/중도 비율 고정)
- *   (기본)              축별 독립 균등 난수 + planetPct 0~100 + 소수 외계 소속 랜덤
+ *   (기본)              축별 독립 균등 난수 + planetPct 0~100 + 소수 기간제 외계 체류 랜덤
  */
 'use strict';
 
@@ -45,7 +45,7 @@ const A = loadAlignmentScoring();
 const rnd = mulberry32(SEED);
 
 const FACTION_UNLOCK_PCT = 40;
-const KANTA_UNLOCK_PLANET_PCT = 50;
+const EXILE_STAGE_DAYS = [0, 3, 7, 14, 30, 90];
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
 const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
@@ -128,10 +128,49 @@ function postMatchesFreeCategory(p, megaId) {
   return subs.includes(c);
 }
 
+function defaultUserModerationState() {
+  return { exileStage: 0, exileUntil: null, exileHistory: [], lastExileAt: null };
+}
+
+function readUserModerationState(prev) {
+  const s = prev && prev.userModerationState;
+  if (!s || typeof s !== 'object') return defaultUserModerationState();
+  return {
+    exileStage: Math.max(0, Math.min(5, Math.floor(Number(s.exileStage) || 0))),
+    exileUntil: s.exileUntil || null,
+    exileHistory: Array.isArray(s.exileHistory) ? s.exileHistory.slice() : [],
+    lastExileAt: s.lastExileAt || null,
+  };
+}
+
+function isActiveAlienExile(prev) {
+  if (!prev || typeof prev !== 'object') return false;
+  const ft = prev.forcedTerritory;
+  if (ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return false;
+  const ms = readUserModerationState(prev);
+  if (!ms.exileUntil) return false;
+  const until = new Date(ms.exileUntil).getTime();
+  return Number.isFinite(until) && Date.now() < until;
+}
+
+function makeTimedExileBucket(sc, signal, stage, days) {
+  const until = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+  return {
+    ...sc,
+    forcedTerritory: signal,
+    userModerationState: {
+      exileStage: stage,
+      exileUntil: until,
+      exileHistory: [{ at: new Date().toISOString(), stage, until, signal, note: 'sim-seed' }],
+      lastExileAt: new Date().toISOString(),
+    },
+  };
+}
+
 function bucketScores(prev) {
   const init = A.initialScores();
   if (!prev || typeof prev !== 'object') return { ...init };
-  return {
+  const base = {
     conservative: Number.isFinite(prev.conservative) ? prev.conservative : init.conservative,
     centrist: Number.isFinite(prev.centrist) ? prev.centrist : init.centrist,
     progressive: Number.isFinite(prev.progressive) ? prev.progressive : init.progressive,
@@ -140,7 +179,10 @@ function bucketScores(prev) {
       prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
         ? prev.forcedTerritory
         : null,
+    userModerationState: prev.userModerationState,
   };
+  if (!isActiveAlienExile(base)) base.forcedTerritory = null;
+  return base;
 }
 
 function pickAffiliationFromPct(pct, userId, getForced) {
@@ -165,7 +207,6 @@ function isFactionTier1Unlocked(tid, pct, userId, getForced, getPlanetPct) {
   if (tid === 'CONSERVATIVE') return pct.conservative >= FACTION_UNLOCK_PCT;
   if (tid === 'PROGRESSIVE') return pct.progressive >= FACTION_UNLOCK_PCT;
   if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_RIGHT') {
-    if (getPlanetPct(userId) < KANTA_UNLOCK_PLANET_PCT) return false;
     const home = getForced(userId);
     if (!home) return false;
     return home === tid;
@@ -212,7 +253,8 @@ function getPct(userId) {
 }
 
 function getForced(userId) {
-  return getScores(userId).forcedTerritory;
+  const raw = scoresMap[userId];
+  return isActiveAlienExile(raw) ? raw.forcedTerritory : null;
 }
 
 function getPlanetPct(userId) {
@@ -337,11 +379,13 @@ function randomBucketScores(rndFn) {
   const p = lo + rndFn() * (hi - lo);
   const sc = bucketScores({ conservative: c, centrist: n, progressive: p });
   const planetPct = Math.floor(rndFn() * 101);
-  let forcedTerritory = null;
   if (rndFn() < 0.12) {
-    forcedTerritory = rndFn() < 0.5 ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
+    const signal = rndFn() < 0.5 ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
+    const stage = 1 + Math.floor(rndFn() * 3);
+    const days = EXILE_STAGE_DAYS[stage] || 3;
+    return { ...makeTimedExileBucket(sc, signal, stage, days), planetPct };
   }
-  return { ...sc, planetPct, forcedTerritory };
+  return { ...sc, planetPct, forcedTerritory: null };
 }
 
 function simulate() {
@@ -368,9 +412,8 @@ function simulate() {
         const unit = A.unit3(sc);
         const ft = unit.progressive >= unit.conservative ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
         scoresMap[u] = {
-          ...sc,
+          ...makeTimedExileBucket(sc, ft, 1, EXILE_STAGE_DAYS[1]),
           planetPct: planet,
-          forcedTerritory: ft,
         };
       } else {
         scoresMap[u] = bucketScores(base);

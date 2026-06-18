@@ -285,8 +285,9 @@
       CENTRIST: '중앙광장',
       CONSERVATIVE: '보수',
       PROGRESSIVE: '진보',
-      KANTAPBIYA_LEFT: '외계행성 · 진보행성',
-      KANTAPBIYA_RIGHT: '외계행성 · 보수행성',
+      KANTAPBIYA: '외계행성',
+      KANTAPBIYA_LEFT: '진보 신호구역',
+      KANTAPBIYA_RIGHT: '보수 신호구역',
       UNASSIGNED: '미편입',
     };
     return m[tid] || tid || '영토';

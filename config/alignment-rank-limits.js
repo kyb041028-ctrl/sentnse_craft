@@ -57,8 +57,8 @@ function getKantapbiyaRankAlignmentLimits() {
   return Object.freeze({
     poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT']),
     poleAxisLabelKo: Object.freeze({
-      KANTAPBIYA_LEFT: '외계행성 · 진보행성 축',
-      KANTAPBIYA_RIGHT: '외계행성 · 보수행성 축',
+      KANTAPBIYA_LEFT: '진보 신호구역 축',
+      KANTAPBIYA_RIGHT: '보수 신호구역 축',
     }),
     ranks: RANK_ALIGNMENT_TABLE,
     noteKo:

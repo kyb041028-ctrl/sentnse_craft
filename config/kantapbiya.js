@@ -26,12 +26,12 @@ function buildKantapbiya(earthReturnTicketKrw) {
     territory: Object.freeze({
       left: Object.freeze({
         id: 'KANTAPBIYA_LEFT',
-        labelKo: '외계행성 · 진보행성',
+        labelKo: '진보 신호구역',
         forumTierCount: 4,
       }),
       right: Object.freeze({
         id: 'KANTAPBIYA_RIGHT',
-        labelKo: '외계행성 · 보수행성',
+        labelKo: '보수 신호구역',
         forumTierCount: 4,
       }),
     }),
