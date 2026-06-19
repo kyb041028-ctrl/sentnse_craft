@@ -283,11 +283,11 @@
     var m = {
       COMMON: '중앙광장',
       CENTRIST: '중앙광장',
-      CONSERVATIVE: '보수',
-      PROGRESSIVE: '진보',
+      CONSERVATIVE: '질서',
+      PROGRESSIVE: '개혁',
       KANTAPBIYA: '외계행성',
-      KANTAPBIYA_LEFT: '진보 신호구역',
-      KANTAPBIYA_RIGHT: '보수 신호구역',
+      KANTAPBIYA_LEFT: '개혁 신호구역',
+      KANTAPBIYA_RIGHT: '질서 신호구역',
       UNASSIGNED: '미편입',
     };
     return m[tid] || tid || '영토';

@@ -186,7 +186,7 @@ const EXILE_RULES = Object.freeze({
 });
 
 /**
- * 외계행성 — 영토(진보·보수 행성) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
+ * 외계행성 — 영토(개혁·질서 신호구역) + 유배 규칙 (config/kantapbiya.js 에서 한 덩어리로 생성)
  */
 const KANTAPBIYA = buildKantapbiya(PAYMENT_PRODUCTS.EARTH_RETURN_TICKET.priceKrw);
 

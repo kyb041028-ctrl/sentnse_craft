@@ -401,7 +401,7 @@
       W +
       ' ' +
       H +
-      '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="성향 비율 추이: 진보(좌)·중도·보수(우)">' +
+      '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="성향 비율 추이: 개혁(좌)·중도·질서(우)">' +
       '<rect x="' +
       padL +
       '" y="' +
@@ -446,9 +446,9 @@
       xLabels +
       '</svg>' +
       '<div class="sc-tendency-modal__legend sc-tendency-modal__legend--ltr-spectrum">' +
-      '<span><span class="sc-tendency-dot sc-tendency-dot--p"></span>진보(좌)</span>' +
+      '<span><span class="sc-tendency-dot sc-tendency-dot--p"></span>개혁(좌)</span>' +
       '<span><span class="sc-tendency-dot sc-tendency-dot--n"></span>중도</span>' +
-      '<span><span class="sc-tendency-dot sc-tendency-dot--c"></span>보수(우)</span>' +
+      '<span><span class="sc-tendency-dot sc-tendency-dot--c"></span>질서(우)</span>' +
       '</div>';
   }
 

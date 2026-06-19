@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "센텐스크래프트: 서버 + 브라우저",
+      "dependsOn": ["npm: start", "Open Browser"],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "label": "npm: start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "sentence-craft",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "\\[센텐스크래프트\\] http://localhost:"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Open Browser",
+      "type": "shell",
+      "command": "start http://localhost:3000/",
+      "windows": {
+        "command": "start http://localhost:3000/"
+      },
+      "osx": {
+        "command": "open http://localhost:3000/"
+      },
+      "linux": {
+        "command": "xdg-open http://localhost:3000/"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

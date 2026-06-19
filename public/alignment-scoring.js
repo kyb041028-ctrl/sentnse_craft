@@ -1,5 +1,5 @@
 /**
- * 센텐스크래프트 — 정치색(보수·중도·진보) 점수 로직 (브라우저 전용)
+ * 센텐스크래프트 — 정치색(질서·중도·개혁) 점수 로직 (브라우저 전용)
  *
  * 규칙 요약
  * 1) 각 유저는 conservative / centrist / progressive 양수 누적치를 가진다.
@@ -114,13 +114,13 @@
     };
   }
 
-  /** 보수−진보 격차: 미만이면 표시·라벨은 중립 */
+  /** 질서−개혁 격차: 미만이면 표시·라벨은 중립 */
   var LEAN_NEUTRAL_MAX = 12;
   /** 격차가 이상이면 “약함”, 그 이상이면 분명한 한쪽 */
   var LEAN_MILD_MAX = 25;
 
   /**
-   * 화면용 최종 기울기 — 양극(보수·진보) 격차만 사용. 중도 축은 영토 해금 등 내부 계산용.
+   * 화면용 최종 기울기 — 양극(질서·개혁) 격차만 사용. 중도 축은 영토 해금 등 내부 계산용.
    * @returns {{ gap: number, side: 'neutral'|'conservative'|'progressive', tier: 'neutral'|'mild'|'strong', conservative: number, centrist: number, progressive: number }}
    */
   function leanFromPercent(pct) {
@@ -149,7 +149,7 @@
   function tendencyLabelFromPercent(pct) {
     var lean = leanFromPercent(pct);
     if (lean.tier === 'neutral') return '중립';
-    var pole = lean.side === 'conservative' ? '보수' : '진보';
+    var pole = lean.side === 'conservative' ? '질서' : '개혁';
     var suffix = lean.tier === 'mild' ? ' (약함)' : '';
     return pole + ' +' + lean.gap + suffix;
   }
@@ -159,10 +159,10 @@
     var lean = leanFromPercent(pct);
     if (lean.tier === 'neutral') {
       return lean.gap > 0
-        ? '사람 · 중립 (보수·진보 격차 ' + lean.gap + ')'
+        ? '사람 · 중립 (질서·개혁 격차 ' + lean.gap + ')'
         : '사람 · 중립';
     }
-    var pole = lean.side === 'conservative' ? '보수' : '진보';
+    var pole = lean.side === 'conservative' ? '질서' : '개혁';
     var strength = lean.tier === 'mild' ? '약한 ' : '';
     return (
       '사람 · ' +
@@ -174,7 +174,7 @@
     );
   }
 
-  /** 스펙트럼 막대: 중립=가운데, 한쪽 기울기=보수(좌)·진보(우) 비율 */
+  /** 스펙트럼 막대: 중립=가운데, 한쪽 기울기=질서(좌)·개혁(우) 비율 */
   function leanBarWidths(pct) {
     var lean = leanFromPercent(pct);
     var g = Math.min(50, lean.gap);
@@ -220,7 +220,7 @@
 
   /**
    * 콘텐츠 lean의 "반대" 분포 — 비공감·싫어요 시 축 이동용.
-   * (1 - u_i) 후 정규화: 보수 우세 이슈에서 반대 태도는 진보·중도 쪽 상대 가중이 커짐.
+   * (1 - u_i) 후 정규화: 질서 우세 이슈에서 반대 태도는 개혁·중도 쪽 상대 가중이 커짐.
    */
   function oppositeContentLeanForDisagree(lean) {
     var u = normalizeContentLean(lean);

@@ -37,12 +37,21 @@
       min-height: min(72vh, 32rem);
       overflow: hidden; touch-action: none; cursor: crosshair;
       background-color: #0b1628;
+    }
+    #frame.is-panning { cursor: grabbing; }
+    #zoom-layer {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      transform-origin: 0 0; will-change: transform;
+    }
+    #map-stage {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      background-color: transparent;
       background-position: center center;
       background-size: contain;
       background-repeat: no-repeat;
       background-image: none;
     }
-    #frame.layout-editor--show-island-bg {
+    #map-stage.layout-editor--show-island-bg {
       background-image: url("/assets/territory-zones-unified.png");
     }
     @media (min-width: 640px) { #frame { min-height: min(78vh, 44rem); } }
@@ -51,6 +60,13 @@
     .hit-fit-wrap {
       position: absolute; z-index: 2; pointer-events: none;
       left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box;
+    }
+    #alien-overlay-wrap {
+      position: absolute; z-index: 1; pointer-events: none; overflow: hidden;
+    }
+    #alien-overlay-wrap img {
+      display: block; width: 100%; height: 100%; object-fit: contain;
+      opacity: 0.92; user-select: none;
     }
     #overlay-svg {
       position: absolute; inset: 0; width: 100%; height: 100%;
@@ -93,6 +109,10 @@
     .steps ol { margin: 0.4rem 0 0; padding-left: 1.25rem; }
     .steps li { margin: 0.35rem 0; color: var(--muted); }
     .steps strong { color: var(--text); }
+    .zoom-hint {
+      font-size: 0.82rem; color: var(--muted); margin: 0.25rem 0 0;
+    }
+    #zoomLabel { font-size: 0.82rem; color: #bae6fd; min-width: 4.5rem; }
   </style>
 </head>
 <body>
@@ -100,11 +120,11 @@
   <div class="steps" role="region" aria-label="사용 순서">
     <strong>마우스로 경계 그리기</strong>
     <ol>
-      <li>위에서 <strong>편집 구역</strong>(진보·보수·중앙광장·외계행성)을 고릅니다.</li>
+      <li>위에서 <strong>편집 구역</strong>(개혁·질서·중앙광장·외계행성)을 고릅니다.</li>
       <li>아래 맵에서 <strong>클릭할 때마다 꼭짓점</strong>이 생기고, 이전 점과 <strong>실선</strong>으로 이어집니다.</li>
       <li>점이 세 개 이상이면 <strong>녹색 점선</strong>으로 닫힘 미리보기가 보입니다. <strong>첫 점(큰 초록 테두리)</strong> 근처를 다시 클릭하면 닫힌 폴리곤으로 확정됩니다.</li>
       <li>꼭짓점은 <strong>드래그</strong>로 옮길 수 있고, <strong>마지막 점 취소</strong>로 되돌릴 수 있습니다.</li>
-      <li>JSON을 반영한 뒤 <code>territory-hit-zones.json</code>에 저장하세요.</li>
+      <li>JSON은 <strong>편집할 때마다 아래 칸에 자동 반영</strong>됩니다. 확인 후 <code>public/territories/territory-hit-zones.json</code>에 저장하세요.</li>
     </ol>
   </div>
   <p>
@@ -114,6 +134,9 @@
   <p>
     <strong>통합 게시판·외계행성</strong>의 위치·크기는 <code>territory-layout.json</code> +
     <a href="/tools/territory-layout-editor.html">레이아웃 편집기</a>입니다.
+    외계행성 <strong>간판 오버레이</strong>는
+    <a href="/tools/territory-alien-overlay-editor.html">오버레이 편집기</a> +
+    <code>territory-alien-overlay.json</code> 입니다.
   </p>
   <p><a href="/">← 메인</a> · <a href="/tools/index.html">편집 도구 목록</a></p>
 
@@ -122,14 +145,21 @@
       <input type="checkbox" id="chkShowIslandBg" />
       <span>배경 일러스트(단일 영토 PNG) 표시</span>
     </label>
+    <label style="display: flex; align-items: center; gap: 0.45rem; cursor: pointer; margin: 0; color: var(--text); font-size: 0.88rem">
+      <input type="checkbox" id="chkShowAlienOverlay" checked />
+      <span>외계행성 오버레이(간판 PNG) 표시</span>
+    </label>
+    <span id="zoomLabel">100%</span>
+    <button type="button" class="secondary" id="btnZoomReset">확대 초기화</button>
   </div>
+  <p class="zoom-hint">맵 위에서 <strong>휠 위</strong>: 커서 기준 확대 · <strong>휠 아래</strong>: 가운데 기준 축소 · <strong>가운데 버튼 드래그</strong>: 이동</p>
 
   <div class="row">
     <div>
       <label for="selLayer">편집 구역</label>
       <select id="selLayer">
-        <option value="progressive">진보 진영</option>
-        <option value="conservative">보수 진영</option>
+        <option value="progressive">개혁 진영</option>
+        <option value="conservative">질서 진영</option>
         <option value="plaza">중앙광장</option>
         <option value="kantapbiya">외계행성</option>
       </select>
@@ -141,13 +171,20 @@
 
   <div id="preview-wrap">
     <div id="frame" aria-label="맵 — 클릭해 순서대로 꼭짓점 연결, 첫 점 재클릭으로 닫힘 확인">
-      <div id="hit-fit-wrap" class="hit-fit-wrap">
-        <svg id="overlay-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path id="pathFill" class="hit-preview" d="" />
-          <path id="pathCloseHint" class="poly-close-hint" d="" />
-          <path id="pathChain" class="poly-chain" d="" />
-          <g id="handles"></g>
-        </svg>
+      <div id="zoom-layer">
+        <div id="map-stage">
+          <div id="hit-fit-wrap" class="hit-fit-wrap">
+            <div id="alien-overlay-wrap" hidden aria-hidden="true">
+              <img id="alien-overlay-img" src="/assets/territory-alien-overlay.png" alt="" draggable="false" />
+            </div>
+            <svg id="overlay-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path id="pathFill" class="hit-preview" d="" />
+              <path id="pathCloseHint" class="poly-close-hint" d="" />
+              <path id="pathChain" class="poly-chain" d="" />
+              <g id="handles"></g>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -163,13 +200,24 @@
     <button type="button" id="btnDownload">territory-hit-zones.json 다운로드</button>
     <button type="button" class="secondary" id="btnCopy">클립보드 복사</button>
   </div>
-  <label for="outJson">JSON (이 내용을 territory-hit-zones.json 에만 저장)</label>
+  <label for="outJson">JSON (편집 시 자동 갱신 · 이 내용을 territory-hit-zones.json 에 저장)</label>
+  <p id="jsonLoadStatus" class="zoom-hint" aria-live="polite"></p>
   <textarea id="outJson" spellcheck="false"></textarea>
 
   <script>
 (function () {
   var KEYS = ['progressive', 'conservative', 'plaza', 'kantapbiya'];
   var MAP_URL = '/assets/territory-zones-unified.png';
+  var ALIEN_OVERLAY_JSON = '/territories/territory-alien-overlay.json';
+  var DEFAULT_ALIEN_OVERLAY = {
+    enabled: true,
+    image: '/assets/territory-alien-overlay.png',
+    left: 38.5,
+    top: 0,
+    width: 23,
+    height: 32,
+    opacity: 1,
+  };
   var DEFAULT_POLYGONS = {
     kantapbiya: [
       [37, 0],
@@ -209,7 +257,11 @@
   resetStateToDefault();
 
   var frame = document.getElementById('frame');
+  var zoomLayer = document.getElementById('zoom-layer');
+  var mapStage = document.getElementById('map-stage');
   var hitFit = document.getElementById('hit-fit-wrap');
+  var alienOverlayWrap = document.getElementById('alien-overlay-wrap');
+  var alienOverlayImg = document.getElementById('alien-overlay-img');
   var svg = document.getElementById('overlay-svg');
   var pathFill = document.getElementById('pathFill');
   var pathCloseHint = document.getElementById('pathCloseHint');
@@ -217,6 +269,11 @@
   var handles = document.getElementById('handles');
   var selLayer = document.getElementById('selLayer');
   var outJson = document.getElementById('outJson');
+  var jsonLoadStatus = document.getElementById('jsonLoadStatus');
+  var zoomLabel = document.getElementById('zoomLabel');
+  var alienOverlayState = Object.assign({}, DEFAULT_ALIEN_OVERLAY);
+  var viewZoom = { scale: 1, panX: 0, panY: 0 };
+  var panDrag = null;
 
   function clamp(v, a, b) {
     return Math.max(a, Math.min(b, v));
@@ -269,20 +326,104 @@
       hitFit.style.top = lastFit.topPct + '%';
       hitFit.style.width = lastFit.widthPct + '%';
       hitFit.style.height = lastFit.heightPct + '%';
+      paintAlienOverlay();
       paint();
     });
+  }
+
+  function applyViewTransform() {
+    if (!zoomLayer) return;
+    zoomLayer.style.transform =
+      'translate(' + viewZoom.panX + 'px,' + viewZoom.panY + 'px) scale(' + viewZoom.scale + ')';
+    if (zoomLabel) {
+      zoomLabel.textContent = Math.round(viewZoom.scale * 100) + '%';
+    }
+  }
+
+  function resetViewZoom() {
+    viewZoom.scale = 1;
+    viewZoom.panX = 0;
+    viewZoom.panY = 0;
+    applyViewTransform();
+  }
+
+  /** 100% 이하로 축소되면 항상 맵을 프레임 정중앙에 맞춤 */
+  function snapViewIfAtHome() {
+    if (viewZoom.scale <= 1) {
+      viewZoom.scale = 1;
+      viewZoom.panX = 0;
+      viewZoom.panY = 0;
+    }
+  }
+
+  function framePointFromClient(clientX, clientY) {
+    var r = frame.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return null;
+    return {
+      x: (clientX - r.left - viewZoom.panX) / viewZoom.scale,
+      y: (clientY - r.top - viewZoom.panY) / viewZoom.scale,
+      fw: r.width,
+      fh: r.height,
+    };
+  }
+
+  function paintAlienOverlay() {
+    if (!alienOverlayWrap) return;
+    var show =
+      document.getElementById('chkShowAlienOverlay') &&
+      document.getElementById('chkShowAlienOverlay').checked &&
+      alienOverlayState.enabled !== false;
+    if (!show) {
+      alienOverlayWrap.hidden = true;
+      alienOverlayWrap.setAttribute('aria-hidden', 'true');
+      return;
+    }
+    alienOverlayWrap.hidden = false;
+    alienOverlayWrap.removeAttribute('aria-hidden');
+    alienOverlayWrap.style.left = alienOverlayState.left + '%';
+    alienOverlayWrap.style.top = alienOverlayState.top + '%';
+    alienOverlayWrap.style.width = alienOverlayState.width + '%';
+    alienOverlayWrap.style.height = alienOverlayState.height + '%';
+    if (alienOverlayImg) {
+      alienOverlayImg.src = alienOverlayState.image || DEFAULT_ALIEN_OVERLAY.image;
+      alienOverlayImg.style.opacity = String(alienOverlayState.opacity != null ? alienOverlayState.opacity : 1);
+    }
+  }
+
+  function applyAlienOverlayJson(o) {
+    if (!o || typeof o !== 'object') return;
+    alienOverlayState.enabled = o.enabled !== false;
+    alienOverlayState.image = o.image || DEFAULT_ALIEN_OVERLAY.image;
+    alienOverlayState.left = clamp(Number(o.left) || DEFAULT_ALIEN_OVERLAY.left, 0, 100);
+    alienOverlayState.top = clamp(Number(o.top) || DEFAULT_ALIEN_OVERLAY.top, 0, 100);
+    alienOverlayState.width = clamp(Number(o.width) || DEFAULT_ALIEN_OVERLAY.width, 1, 100);
+    alienOverlayState.height = clamp(Number(o.height) || DEFAULT_ALIEN_OVERLAY.height, 1, 100);
+    alienOverlayState.opacity = clamp(Number(o.opacity) || 1, 0.1, 1);
+    paintAlienOverlay();
+  }
+
+  function fetchAlienOverlayJson() {
+    return fetch(ALIEN_OVERLAY_JSON + '?cb=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('fetch');
+        return r.json();
+      })
+      .then(applyAlienOverlayJson)
+      .catch(function () {
+        applyAlienOverlayJson(DEFAULT_ALIEN_OVERLAY);
+      });
   }
 
   var chkShowIslandBg = document.getElementById('chkShowIslandBg');
   var LS_ISLAND_BG = 'scTerritoryEditorShowIslandBg';
   function applyIslandBgVisibility() {
-    if (!frame || !chkShowIslandBg) return;
-    frame.classList.toggle('layout-editor--show-island-bg', chkShowIslandBg.checked);
+    if (!mapStage || !chkShowIslandBg) return;
+    mapStage.classList.toggle('layout-editor--show-island-bg', chkShowIslandBg.checked);
     try {
       localStorage.setItem(LS_ISLAND_BG, chkShowIslandBg.checked ? '1' : '0');
     } catch (_) {}
   }
-  if (chkShowIslandBg && frame) {
+  if (chkShowIslandBg && mapStage) {
     try {
       var v = localStorage.getItem(LS_ISLAND_BG);
       chkShowIslandBg.checked = v !== '0';
@@ -296,12 +437,12 @@
     applyIslandBgVisibility();
   }
 
-  /** 맵 이미지(contain 박스) 기준 0~100 */
+  /** 맵 이미지(contain 박스) 기준 0~100 — 확대·이동(transform) 역산 포함 */
   function clientToNorm(clientX, clientY) {
-    var r = frame.getBoundingClientRect();
-    if (r.width < 4 || r.height < 4) return null;
-    var fx = ((clientX - r.left) / r.width) * 100;
-    var fy = ((clientY - r.top) / r.height) * 100;
+    var pt = framePointFromClient(clientX, clientY);
+    if (!pt) return null;
+    var fx = (pt.x / pt.fw) * 100;
+    var fy = (pt.y / pt.fh) * 100;
     var wp = lastFit.widthPct > 0.01 ? lastFit.widthPct : 100;
     var hp = lastFit.heightPct > 0.01 ? lastFit.heightPct : 100;
     var ix = ((fx - lastFit.leftPct) / wp) * 100;
@@ -399,8 +540,17 @@
     outJson.value = JSON.stringify(toJson(), null, 2);
   }
 
+  function setJsonLoadStatus(msg, ok) {
+    if (!jsonLoadStatus) return;
+    jsonLoadStatus.textContent = msg || '';
+    jsonLoadStatus.style.color = ok === false ? '#fca5a5' : 'var(--muted)';
+  }
+
   function applyImported(j) {
-    if (!j || !j.zones) return;
+    if (!j || !j.zones) {
+      setJsonLoadStatus('JSON 형식 오류 — zones 가 없습니다.', false);
+      return;
+    }
     KEYS.forEach(function (k) {
       var z = j.zones[k];
       var pts = z && z.points;
@@ -412,10 +562,32 @@
     });
     paint();
     syncTextarea();
+    var kN = state.kantapbiya ? state.kantapbiya.length : 0;
+    setJsonLoadStatus(
+      'territory-hit-zones.json 불러옴 · 외계행성 꼭짓점 ' + kN + '개 (편집 시 아래 JSON 자동 갱신)',
+      true,
+    );
+  }
+
+  function fetchHitZonesJson() {
+    setJsonLoadStatus('territory-hit-zones.json 불러오는 중…', true);
+    return fetch('/territories/territory-hit-zones.json?cb=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('fetch');
+        return r.json();
+      })
+      .then(applyImported)
+      .catch(function () {
+        resetStateToDefault();
+        paint();
+        syncTextarea();
+        setJsonLoadStatus('파일 불러오기 실패 — 기본 사각형을 표시합니다. 「다시 읽기」를 눌러 보세요.', false);
+      });
   }
 
   selLayer.addEventListener('change', function () {
     paint();
+    syncTextarea();
   });
 
   function dist2(ax, ay, bx, by) {
@@ -428,6 +600,8 @@
   var SNAP_CLOSE_R2 = 3 * 3;
 
   frame.addEventListener('click', function (ev) {
+    if (ev.button !== 0) return;
+    if (panDrag && panDrag.moved) return;
     if (ev.target.closest && ev.target.closest('.pt-handle')) return;
     var k = selLayer.value;
     var pts = state[k];
@@ -546,15 +720,8 @@
     this.value = '';
   });
   document.getElementById('btnFetch').addEventListener('click', function () {
-    fetch('/territories/territory-hit-zones.json?cb=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('fetch');
-        return r.json();
-      })
-      .then(applyImported)
-      .catch(function () {
-        alert('불러오기 실패');
-      });
+    fetchAlienOverlayJson();
+    fetchHitZonesJson();
   });
 
   window.addEventListener('resize', function () {
@@ -566,8 +733,76 @@
     });
     ro.observe(frame);
   }
-  syncEditorHitFit();
-  syncTextarea();
+
+  var chkShowAlienOverlay = document.getElementById('chkShowAlienOverlay');
+  var LS_ALIEN_OVERLAY = 'scTerritoryEditorShowAlienOverlay';
+  if (chkShowAlienOverlay) {
+    try {
+      var ov = localStorage.getItem(LS_ALIEN_OVERLAY);
+      if (ov === '0') chkShowAlienOverlay.checked = false;
+    } catch (_) {}
+    chkShowAlienOverlay.addEventListener('change', function () {
+      try {
+        localStorage.setItem(LS_ALIEN_OVERLAY, chkShowAlienOverlay.checked ? '1' : '0');
+      } catch (_) {}
+      paintAlienOverlay();
+    });
+  }
+
+  frame.addEventListener(
+    'wheel',
+    function (ev) {
+      ev.preventDefault();
+      var r = frame.getBoundingClientRect();
+      var oldScale = viewZoom.scale;
+      var factor = ev.deltaY > 0 ? 0.9 : 1.1;
+      var newScale = clamp(oldScale * factor, 0.5, 8);
+      if (Math.abs(newScale - oldScale) < 0.0001) return;
+      var ratio = newScale / oldScale;
+      var zoomOut = ev.deltaY > 0;
+      /* 축소: 프레임 중앙 기준 — 옆으로 밀리지 않게 */
+      var ax = zoomOut ? r.width * 0.5 : ev.clientX - r.left;
+      var ay = zoomOut ? r.height * 0.5 : ev.clientY - r.top;
+      viewZoom.panX = ax - ratio * (ax - viewZoom.panX);
+      viewZoom.panY = ay - ratio * (ay - viewZoom.panY);
+      viewZoom.scale = newScale;
+      snapViewIfAtHome();
+      applyViewTransform();
+    },
+    { passive: false },
+  );
+
+  frame.addEventListener('mousedown', function (ev) {
+    if (ev.button !== 1) return;
+    ev.preventDefault();
+    panDrag = { x: ev.clientX, y: ev.clientY, panX: viewZoom.panX, panY: viewZoom.panY, moved: false };
+    frame.classList.add('is-panning');
+  });
+  window.addEventListener('mousemove', function (ev) {
+    if (!panDrag) return;
+    var dx = ev.clientX - panDrag.x;
+    var dy = ev.clientY - panDrag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 2) panDrag.moved = true;
+    viewZoom.panX = panDrag.panX + dx;
+    viewZoom.panY = panDrag.panY + dy;
+    applyViewTransform();
+  });
+  window.addEventListener('mouseup', function (ev) {
+    if (ev.button !== 1 || !panDrag) return;
+    frame.classList.remove('is-panning');
+    panDrag = null;
+  });
+  frame.addEventListener('auxclick', function (ev) {
+    if (ev.button === 1) ev.preventDefault();
+  });
+
+  document.getElementById('btnZoomReset').addEventListener('click', resetViewZoom);
+
+  applyViewTransform();
+  fetchAlienOverlayJson();
+  fetchHitZonesJson().then(function () {
+    syncEditorHitFit();
+  });
 })();
   </script>
 </body>

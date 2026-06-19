@@ -606,6 +606,24 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ ok: false, error: 'INTERNAL_SERVER_ERROR' });
 });
 
+function shouldOpenBrowserOnStart() {
+  const flag = String(process.env.OPEN_BROWSER || '').trim().toLowerCase();
+  return flag === '1' || flag === 'true' || flag === 'yes';
+}
+
+function tryOpenBrowser(port) {
+  if (!shouldOpenBrowserOnStart()) return;
+  const url = `http://localhost:${port}/`;
+  const { exec } = require('child_process');
+  if (process.platform === 'win32') {
+    exec(`start "" "${url}"`, { windowsHide: true });
+  } else if (process.platform === 'darwin') {
+    exec(`open "${url}"`);
+  } else {
+    exec(`xdg-open "${url}"`);
+  }
+}
+
 app.listen(PORT, () => {
   console.log(`[센텐스크래프트] http://localhost:${PORT}/`);
   console.log(`- 헬스: http://localhost:${PORT}/health`);
@@ -614,4 +632,5 @@ app.listen(PORT, () => {
   } else {
     console.log('[안내] Supabase 클라이언트 준비 완료 (anon, 서버 사이드).');
   }
+  tryOpenBrowser(PORT);
 });

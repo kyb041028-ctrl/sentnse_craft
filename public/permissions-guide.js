@@ -159,10 +159,10 @@
       '<p class="perm-guide__lead">중앙광장은 누구나 이용합니다. 영토 게시판은 <strong>성향(또는 외계인 %)</strong>으로 단계가 열립니다.</p>' +
       '<table class="perm-guide__table"><thead><tr><th>구역</th><th>읽기</th><th>글·댓글·반응</th></tr></thead><tbody>' +
       '<tr><td><strong>중앙광장</strong></td><td>전원</td><td>전원 (1단계)</td></tr>' +
-      '<tr><td><strong>보수·진보</strong> 1단계</td><td>Lv.' +
+      '<tr><td><strong>질서·개혁</strong> 1단계</td><td>Lv.' +
       lurkLv +
       ' 눈팅 또는 해당 축 40%+</td><td>해당 축 40%+</td></tr>' +
-      '<tr><td><strong>보수·진보</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
+      '<tr><td><strong>질서·개혁</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
       '<tr><td><strong>외계행성</strong> 1단계</td><td>Lv.' +
       lurkLv +
       ' 눈팅 또는 외계인 50%+</td><td>외계인 50%+</td></tr>' +
@@ -175,14 +175,14 @@
       '<ul class="perm-guide__list">' +
       '<li><strong>Lv.' +
       lurkLv +
-      ' 이상</strong>이면 중립(보수·진보 격차 12 미만)이어도 <strong>모든 영토 1단계</strong> 글·댓글을 <strong>읽기만</strong> 할 수 있습니다.</li>' +
+      ' 이상</strong>이면 중립(질서·개혁 격차 12 미만)이어도 <strong>모든 영토 1단계</strong> 글·댓글을 <strong>읽기만</strong> 할 수 있습니다.</li>' +
       '<li>글쓰기·댓글·좋아요·싫어요·외계인 표시는 불가 (버튼 숨김).</li>' +
       '<li>2단계 이상은 눈팅 없이 기존 해금 규칙만 적용됩니다.</li>' +
       '</ul>' +
       '<h4 class="perm-guide__subh">성향 표시 (사람)</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>프로필에는 <strong>보수−진보 격차</strong>만 표시: 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
-      '<li>영토 해금·소속은 보수·진보 두 게시판 축과 중도(균형) %를 함께 봅니다. 두 축 모두 40% 미만이면 중앙광장 소속입니다.</li>' +
+      '<li>프로필에는 <strong>질서−개혁 격차</strong>만 표시: 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
+      '<li>영토 해금·소속은 질서·개혁 두 게시판 축과 중도(균형) %를 함께 봅니다. 두 축 모두 40% 미만이면 중앙광장 소속입니다.</li>' +
       '<li>공감은 성향에 영향 없음. 엄지 좋아요/싫어요만 성향 시뮬에 반영.</li>' +
       '</ul>' +
       '<h4 class="perm-guide__subh">외계행성 소속 시</h4>' +

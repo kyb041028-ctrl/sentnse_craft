@@ -52,13 +52,13 @@
 
   var TERRITORY_LABELS = {
     UNASSIGNED: '미편입',
-    CONSERVATIVE: '보수',
+    CONSERVATIVE: '질서',
     COMMON: '중앙광장',
     CENTRIST: '중앙광장',
-    PROGRESSIVE: '진보',
+    PROGRESSIVE: '개혁',
     KANTAPBIYA: '외계행성',
-    KANTAPBIYA_LEFT: '진보 신호구역',
-    KANTAPBIYA_RIGHT: '보수 신호구역',
+    KANTAPBIYA_LEFT: '개혁 신호구역',
+    KANTAPBIYA_RIGHT: '질서 신호구역',
   };
 
   var LEADERBOARD_MAX = 100;

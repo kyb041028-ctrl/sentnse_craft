@@ -9,11 +9,11 @@
 
 'use strict';
 
-/** 메인 벨트(보수·진보) + 중앙광장(COMMON). 중도(CENTRIST) 전용 게시판은 없음. */
+/** 메인 벨트(질서·개혁) + 중앙광장(COMMON). 중도(CENTRIST) 전용 게시판은 없음. */
 const MAIN_BELT = Object.freeze({
   CONSERVATIVE: {
     id: 'CONSERVATIVE',
-    labelKo: '보수 진영',
+    labelKo: '질서 진영',
     /** 게시판 단계 수 (1~4) */
     forumTierCount: 4,
   },
@@ -25,7 +25,7 @@ const MAIN_BELT = Object.freeze({
   },
   PROGRESSIVE: {
     id: 'PROGRESSIVE',
-    labelKo: '진보 진영',
+    labelKo: '개혁 진영',
     forumTierCount: 4,
   },
 });

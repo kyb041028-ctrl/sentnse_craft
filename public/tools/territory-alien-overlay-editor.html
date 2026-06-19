@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>외계행성 오버레이 편집기 — Sentence Craft</title>
+  <style>
+    :root { --bg: #0b1020; --text: #e8eefc; --muted: #94a3b8; --accent: #a78bfa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1rem 1rem 2rem; font-family: system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+    h1 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+    p { margin: 0.35rem 0; color: var(--muted); font-size: 0.88rem; }
+    code { font-size: 0.82em; background: rgba(0,0,0,0.35); padding: 0.1em 0.35em; border-radius: 4px; }
+    a { color: #38bdf8; font-weight: 600; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; margin: 0.75rem 0; }
+    label { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 0.2rem; }
+    input[type="number"], input[type="text"], textarea {
+      font: inherit; font-size: 0.86rem; padding: 0.35rem 0.5rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.35); color: var(--text);
+    }
+    input[type="number"] { width: 5.5rem; }
+    input[type="range"] { width: 10rem; accent-color: var(--accent); }
+    textarea { width: 100%; min-height: 10rem; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: var(--accent); cursor: pointer; }
+    button {
+      font: inherit; font-size: 0.84rem; font-weight: 600; padding: 0.45rem 0.85rem; border-radius: 8px;
+      border: 1px solid rgba(167, 139, 250, 0.45); background: rgba(91, 33, 182, 0.2); color: #ede9fe; cursor: pointer;
+    }
+    button.secondary { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.25); color: #cbd5e1; }
+    #preview-wrap { max-width: min(96rem, calc(100vw - 2rem)); margin: 1rem auto; padding: 0 1rem; }
+    @media (min-width: 960px) { #preview-wrap { max-width: min(108rem, calc(100vw - 1.5rem)); } }
+    #frame {
+      position: relative; width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);
+      min-height: min(72vh, 32rem); overflow: hidden; touch-action: none;
+      background-color: #0b1628; background-position: center; background-size: contain; background-repeat: no-repeat;
+      background-image: url("/assets/territory-zones-unified.png");
+    }
+    @media (min-width: 640px) { #frame { min-height: min(78vh, 44rem); } }
+    @media (min-width: 960px) { #frame { min-height: min(84vh, 58rem); } }
+    .map-fit-wrap {
+      position: absolute; z-index: 2; pointer-events: none;
+      left: 0; top: 0; width: 100%; height: 100%;
+    }
+    #overlay-box {
+      position: absolute; pointer-events: auto; cursor: move;
+      border: 2px dashed rgba(167, 139, 250, 0.85);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset;
+      background: rgba(91, 33, 182, 0.08);
+      min-width: 2%; min-height: 2%;
+    }
+    #overlay-box img {
+      display: block; width: 100%; height: 100%; object-fit: contain;
+      pointer-events: none; user-select: none;
+    }
+    .resize-handle {
+      position: absolute; width: 12px; height: 12px; border-radius: 3px;
+      background: #c4b5fd; border: 1px solid #1e1b4b;
+      pointer-events: auto; z-index: 3;
+    }
+    .resize-handle--se { right: -6px; bottom: -6px; cursor: nwse-resize; }
+    .resize-handle--sw { left: -6px; bottom: -6px; cursor: nesw-resize; }
+    .resize-handle--ne { right: -6px; top: -6px; cursor: nesw-resize; }
+    .resize-handle--nw { left: -6px; top: -6px; cursor: nwse-resize; }
+    .steps {
+      margin: 0.75rem 0 0; padding: 0.75rem 1rem; border-radius: 12px;
+      border: 1px solid rgba(167, 139, 250, 0.35); background: rgba(91, 33, 182, 0.1);
+      font-size: 0.88rem;
+    }
+    .steps ol { margin: 0.4rem 0 0; padding-left: 1.25rem; color: var(--muted); }
+    .steps li { margin: 0.3rem 0; }
+  </style>
+</head>
+<body>
+  <h1>외계행성 오버레이 편집기</h1>
+  <div class="steps">
+    <strong>맵 위에 외계행성 간판 PNG를 덮어씌우는 위치·크기</strong>
+    <ol>
+      <li>보라색 점선 박스를 <strong>드래그</strong>해 옮기거나, 모서리 핸들로 <strong>크기</strong>를 조절합니다.</li>
+      <li>숫자 입력(0~100%)으로도 미세 조정할 수 있습니다. 좌표 기준은 메인 앱·히트존과 동일한 <strong>맵 contain 영역</strong>입니다.</li>
+      <li>JSON을 반영한 뒤 <code>public/territories/territory-alien-overlay.json</code>에 저장하세요.</li>
+    </ol>
+  </div>
+  <p>저장 파일: <code>public/territories/territory-alien-overlay.json</code> · 이미지: <code>public/assets/territory-alien-overlay.png</code></p>
+  <p><a href="/">← 메인</a> · <a href="/tools/territory-hit-zone-editor.html">히트존 편집기</a> · <a href="/tools/index.html">도구 목록</a></p>
+
+  <div class="row" style="align-items: center">
+    <label style="display:flex;align-items:center;gap:0.45rem;margin:0;color:var(--text);font-size:0.88rem">
+      <input type="checkbox" id="chkEnabled" checked />
+      <span>오버레이 표시</span>
+    </label>
+  </div>
+
+  <div class="row">
+    <div><label for="inLeft">left %</label><input type="number" id="inLeft" min="0" max="100" step="0.1" /></div>
+    <div><label for="inTop">top %</label><input type="number" id="inTop" min="0" max="100" step="0.1" /></div>
+    <div><label for="inWidth">width %</label><input type="number" id="inWidth" min="1" max="100" step="0.1" /></div>
+    <div><label for="inHeight">height %</label><input type="number" id="inHeight" min="1" max="100" step="0.1" /></div>
+    <div>
+      <label for="inOpacity">opacity <span id="opacityVal">1</span></label>
+      <input type="range" id="inOpacity" min="0.1" max="1" step="0.05" value="1" />
+    </div>
+  </div>
+
+  <div id="preview-wrap">
+    <div id="frame" aria-label="맵 미리보기 — 오버레이 박스 드래그·리사이즈">
+      <div id="map-fit-wrap" class="map-fit-wrap">
+        <div id="overlay-box">
+          <img id="overlay-img" src="/assets/territory-alien-overlay.png" alt="" draggable="false" />
+          <span class="resize-handle resize-handle--nw" data-handle="nw"></span>
+          <span class="resize-handle resize-handle--ne" data-handle="ne"></span>
+          <span class="resize-handle resize-handle--sw" data-handle="sw"></span>
+          <span class="resize-handle resize-handle--se" data-handle="se"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="btnFetch">JSON 다시 읽기</button>
+    <button type="button" class="secondary" id="btnReset">기본값</button>
+    <button type="button" id="btnExport">아래에 JSON 반영</button>
+    <button type="button" id="btnDownload">territory-alien-overlay.json 다운로드</button>
+    <button type="button" class="secondary" id="btnCopy">클립보드 복사</button>
+  </div>
+  <label for="outJson">JSON</label>
+  <textarea id="outJson" spellcheck="false"></textarea>
+
+  <script>
+(function () {
+  var MAP_URL = '/assets/territory-zones-unified.png';
+  var OVERLAY_URL = '/assets/territory-alien-overlay.png';
+  var JSON_PATH = '/territories/territory-alien-overlay.json';
+  var DEFAULTS = {
+    version: 1,
+    comment: '외계행성 맵 오버레이',
+    image: OVERLAY_URL,
+    enabled: true,
+    left: 38.5,
+    top: 0,
+    width: 23,
+    height: 32,
+    opacity: 1,
+  };
+
+  var state = Object.assign({}, DEFAULTS);
+  var frame = document.getElementById('frame');
+  var mapFit = document.getElementById('map-fit-wrap');
+  var box = document.getElementById('overlay-box');
+  var overlayImg = document.getElementById('overlay-img');
+  var outJson = document.getElementById('outJson');
+  var natCache = null;
+  var lastFit = { leftPct: 0, topPct: 0, widthPct: 100, heightPct: 100 };
+
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function round1(n) { return Math.round(n * 10) / 10; }
+
+  function ensureNat(cb) {
+    if (natCache && natCache.w > 0) { cb(natCache); return; }
+    var im = new Image();
+    im.onload = function () {
+      natCache = { w: im.naturalWidth || 1, h: im.naturalHeight || 1 };
+      cb(natCache);
+    };
+    im.onerror = function () { natCache = { w: 16, h: 9 }; cb(natCache); };
+    im.src = MAP_URL;
+  }
+
+  function containPct(boxW, boxH, nw, nh) {
+    if (boxW < 2 || boxH < 2 || !nw || !nh) return { leftPct: 0, topPct: 0, widthPct: 100, heightPct: 100 };
+    var sc = Math.min(boxW / nw, boxH / nh);
+    var dw = nw * sc, dh = nh * sc;
+    return {
+      leftPct: ((boxW - dw) * 0.5 / boxW) * 100,
+      topPct: ((boxH - dh) * 0.5 / boxH) * 100,
+      widthPct: (dw / boxW) * 100,
+      heightPct: (dh / boxH) * 100,
+    };
+  }
+
+  function syncMapFit() {
+    if (!mapFit || !frame) return;
+    ensureNat(function (nat) {
+      lastFit = containPct(frame.clientWidth, frame.clientHeight, nat.w, nat.h);
+      mapFit.style.left = lastFit.leftPct + '%';
+      mapFit.style.top = lastFit.topPct + '%';
+      mapFit.style.width = lastFit.widthPct + '%';
+      mapFit.style.height = lastFit.heightPct + '%';
+      paintBox();
+    });
+  }
+
+  function paintBox() {
+    if (!box) return;
+    var on = document.getElementById('chkEnabled').checked;
+    box.style.display = on ? 'block' : 'none';
+    box.style.left = state.left + '%';
+    box.style.top = state.top + '%';
+    box.style.width = state.width + '%';
+    box.style.height = state.height + '%';
+    box.style.opacity = String(state.opacity);
+    if (overlayImg && state.image) overlayImg.src = state.image;
+    document.getElementById('inLeft').value = round1(state.left);
+    document.getElementById('inTop').value = round1(state.top);
+    document.getElementById('inWidth').value = round1(state.width);
+    document.getElementById('inHeight').value = round1(state.height);
+    document.getElementById('inOpacity').value = state.opacity;
+    document.getElementById('opacityVal').textContent = String(state.opacity);
+  }
+
+  function readInputs() {
+    state.left = clamp(parseFloat(document.getElementById('inLeft').value) || 0, 0, 100);
+    state.top = clamp(parseFloat(document.getElementById('inTop').value) || 0, 0, 100);
+    state.width = clamp(parseFloat(document.getElementById('inWidth').value) || 1, 1, 100);
+    state.height = clamp(parseFloat(document.getElementById('inHeight').value) || 1, 1, 100);
+    state.opacity = clamp(parseFloat(document.getElementById('inOpacity').value) || 1, 0.1, 1);
+    state.enabled = document.getElementById('chkEnabled').checked;
+    if (state.left + state.width > 100) state.left = Math.max(0, 100 - state.width);
+    if (state.top + state.height > 100) state.top = Math.max(0, 100 - state.height);
+    paintBox();
+  }
+
+  function toJsonObject() {
+    return {
+      version: 1,
+      comment: '외계행성 맵 오버레이 — 좌표는 territory-zones-unified.png contain 영역 기준 0~100(%)',
+      image: state.image || OVERLAY_URL,
+      enabled: !!state.enabled,
+      left: round1(state.left),
+      top: round1(state.top),
+      width: round1(state.width),
+      height: round1(state.height),
+      opacity: round1(state.opacity),
+    };
+  }
+
+  function exportJson() {
+    outJson.value = JSON.stringify(toJsonObject(), null, 2);
+  }
+
+  function applyJsonObject(o) {
+    if (!o || typeof o !== 'object') return;
+    state.enabled = o.enabled !== false;
+    state.image = o.image || OVERLAY_URL;
+    state.left = clamp(Number(o.left) || DEFAULTS.left, 0, 100);
+    state.top = clamp(Number(o.top) || DEFAULTS.top, 0, 100);
+    state.width = clamp(Number(o.width) || DEFAULTS.width, 1, 100);
+    state.height = clamp(Number(o.height) || DEFAULTS.height, 1, 100);
+    state.opacity = clamp(Number(o.opacity) || 1, 0.1, 1);
+    document.getElementById('chkEnabled').checked = state.enabled;
+    paintBox();
+    exportJson();
+  }
+
+  function fetchJson() {
+    return fetch(JSON_PATH + '?cb=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('fetch'); return r.json(); })
+      .then(applyJsonObject)
+      .catch(function () { applyJsonObject(DEFAULTS); });
+  }
+
+  /* drag / resize on map-normalized coords inside map-fit-wrap */
+  var drag = null;
+  function onPointerDown(ev) {
+    var handle = ev.target.getAttribute && ev.target.getAttribute('data-handle');
+    if (handle) {
+      drag = { mode: 'resize', handle: handle, x: ev.clientX, y: ev.clientY, s: { left: state.left, top: state.top, w: state.width, h: state.height } };
+    } else if (ev.target === box || ev.target === overlayImg) {
+      drag = { mode: 'move', x: ev.clientX, y: ev.clientY, s: { left: state.left, top: state.top } };
+    } else return;
+    ev.preventDefault();
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+  }
+
+  function clientDeltaToNorm(dx, dy) {
+    var r = mapFit.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return { dx: 0, dy: 0 };
+    return { dx: (dx / r.width) * 100, dy: (dy / r.height) * 100 };
+  }
+
+  function onPointerMove(ev) {
+    if (!drag) return;
+    var d = clientDeltaToNorm(ev.clientX - drag.x, ev.clientY - drag.y);
+    if (drag.mode === 'move') {
+      state.left = clamp(drag.s.left + d.dx, 0, 100 - state.width);
+      state.top = clamp(drag.s.top + d.dy, 0, 100 - state.height);
+    } else {
+      var h = drag.handle;
+      var l = drag.s.left, t = drag.s.top, w = drag.s.w, hi = drag.s.h;
+      if (h.indexOf('e') >= 0) w = clamp(drag.s.w + d.dx, 2, 100 - l);
+      if (h.indexOf('w') >= 0) {
+        var nl = clamp(l + d.dx, 0, l + w - 2);
+        w = w - (nl - l); l = nl;
+      }
+      if (h.indexOf('s') >= 0) hi = clamp(drag.s.h + d.dy, 2, 100 - t);
+      if (h.indexOf('n') >= 0) {
+        var nt = clamp(t + d.dy, 0, t + hi - 2);
+        hi = hi - (nt - t); t = nt;
+      }
+      state.left = l; state.top = t; state.width = w; state.height = hi;
+    }
+    paintBox();
+  }
+
+  function onPointerUp() {
+    drag = null;
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+    exportJson();
+  }
+
+  ['inLeft', 'inTop', 'inWidth', 'inHeight'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', readInputs);
+    document.getElementById(id).addEventListener('input', readInputs);
+  });
+  document.getElementById('inOpacity').addEventListener('input', readInputs);
+  document.getElementById('chkEnabled').addEventListener('change', readInputs);
+  document.getElementById('btnExport').addEventListener('click', exportJson);
+  document.getElementById('btnFetch').addEventListener('click', fetchJson);
+  document.getElementById('btnReset').addEventListener('click', function () { applyJsonObject(DEFAULTS); });
+  document.getElementById('btnDownload').addEventListener('click', function () {
+    exportJson();
+    var blob = new Blob([outJson.value], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'territory-alien-overlay.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('btnCopy').addEventListener('click', function () {
+    exportJson();
+    navigator.clipboard.writeText(outJson.value).catch(function () {});
+  });
+
+  box.addEventListener('pointerdown', onPointerDown);
+  box.querySelectorAll('.resize-handle').forEach(function (el) {
+    el.addEventListener('pointerdown', onPointerDown);
+  });
+
+  window.addEventListener('resize', syncMapFit);
+  fetchJson().then(syncMapFit);
+})();
+  </script>
+</body>
+</html>

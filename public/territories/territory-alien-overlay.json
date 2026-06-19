@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "comment": "외계행성 맵 오버레이 — 좌표는 territory-zones-unified.png contain 영역 기준 0~100(%)",
+  "image": "/assets/territory-alien-overlay.png",
+  "enabled": true,
+  "left": 38.5,
+  "top": 0,
+  "width": 23,
+  "height": 32,
+  "opacity": 1
+}

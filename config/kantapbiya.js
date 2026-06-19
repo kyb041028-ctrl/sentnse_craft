@@ -1,8 +1,8 @@
 /**
  * =============================================================================
- * 외계행성 — 예전 KANTAPBIYA_RULES + 영토(진보·보수 행성) 맵을 한 이름으로 묶음
+ * 외계행성 — 예전 KANTAPBIYA_RULES + 영토(개혁·질서 행성) 맵을 한 이름으로 묶음
  * =============================================================================
- * - 극단 성향 행성 + 진보·보수 행성 영토(게시판 4단계)
+ * - 극단 성향 행성 + 개혁·질서 행성 영토(게시판 4단계)
  * - 유배지 규칙(자동 사면 없음, 지구 귀환 티켓 가격, 내부 재축출 등)
  * 가격 숫자만 바꾸려면 app-config.js 의 PAYMENT_PRODUCTS 와 맞추면 됩니다.
  * =============================================================================
@@ -22,16 +22,16 @@ function buildKantapbiya(earthReturnTicketKrw) {
     id: 'KANTAPBIYA',
     labelKo: '외계행성',
 
-    /** 진보·보수 행성 (각 4단계 게시판) */
+    /** 개혁·질서 행성 (각 4단계 게시판) */
     territory: Object.freeze({
       left: Object.freeze({
         id: 'KANTAPBIYA_LEFT',
-        labelKo: '진보 신호구역',
+        labelKo: '개혁 신호구역',
         forumTierCount: 4,
       }),
       right: Object.freeze({
         id: 'KANTAPBIYA_RIGHT',
-        labelKo: '보수 신호구역',
+        labelKo: '질서 신호구역',
         forumTierCount: 4,
       }),
     }),

@@ -686,7 +686,7 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
-    /* ----- 영토 맵: 단일 PNG(contain) + SVG 히트존(진보·광장·보수·외계행성) ----- */
+    /* ----- 영토 맵: 단일 PNG(contain) + SVG 히트존(개혁·광장·질서·외계행성) ----- */
     .territory-centrist-hero {
       margin-top: 1rem;
     }
@@ -900,6 +900,27 @@
       pointer-events: none;
     }
     /* 폴리곤 좌표 = 맵 PNG(contain으로 붙은 영역) 기준 0~100. 래퍼가 그 영역에 맞춰짐 — territory-hit-zones.json */
+    .territory-alien-overlay-wrap {
+      position: absolute;
+      z-index: 3;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .territory-alien-overlay-wrap[hidden] {
+      display: none !important;
+    }
+    .territory-alien-overlay-img {
+      position: absolute;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
     .territory-hit-zones-wrap {
       position: absolute;
       z-index: 5;
@@ -993,7 +1014,7 @@
     .territory-hit-zones-svg .territory-hit-zone__hit:focus {
       outline: none;
     }
-    /* 진보·보수·광장·외계행성: 테두리 없이 글로우만 번쩍 (호버·포커스) */
+    /* 개혁·질서·광장·외계행성: 테두리 없이 글로우만 번쩍 (호버·포커스) */
     .territory-hit-zones-svg .territory-hit-zone--prog .territory-hit-zone__hit:hover,
     .territory-hit-zones-svg .territory-hit-zone--prog .territory-hit-zone__hit:focus-visible {
       stroke: none;
@@ -1031,7 +1052,7 @@
         filter: none;
       }
     }
-    /* ----- 영토: 단일 일러스트 + SVG 히트존(진보·광장·보수·외계행성) — 오버레이 PNG 없음 ----- */
+    /* ----- 영토: 단일 일러스트 + SVG 히트존(개혁·광장·질서·외계행성) — 오버레이 PNG 없음 ----- */
     .zone {
       min-height: 5.5rem;
       padding: 0.65rem 0.75rem;
@@ -1065,7 +1086,7 @@
       color: #bfdbfe;
     }
 
-    /* 보수·진보: 일러스트가 곧 칸(전면), 글자는 하단 오버레이 */
+    /* 질서·개혁: 일러스트가 곧 칸(전면), 글자는 하단 오버레이 */
     .zone--belt-visual {
       position: relative;
       display: block;
@@ -2342,6 +2363,18 @@
       width: 0.85rem;
       height: 0.85rem;
       display: block;
+    }
+    .avatar-tbar-emblem {
+      width: 1.05rem;
+      height: 1.05rem;
+      object-fit: contain;
+      display: block;
+      image-rendering: auto;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    }
+    .avatar-tbar-icon--human {
+      padding: 0.05rem;
+      background: rgba(0, 0, 0, 0.2);
     }
     .avatar-tbar-icon--alien {
       color: #c4b5fd;
@@ -5173,6 +5206,15 @@
         <section class="territory-centrist-hero" aria-label="영토 맵 배경">
           <div class="territory-centrist-hero__frame territory-centrist-hero__frame--island-map">
             <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
+            <div id="territory-alien-overlay-wrap" class="territory-alien-overlay-wrap" hidden aria-hidden="true">
+              <img
+                id="territory-alien-overlay-img"
+                class="territory-alien-overlay-img"
+                src="/assets/territory-alien-overlay.png"
+                alt=""
+                decoding="async"
+              />
+            </div>
             <div class="sc-map-top-tabs" role="toolbar" aria-label="영토 맵 상단 메뉴">
               <button
                 type="button"
@@ -5441,7 +5483,7 @@
               <summary>단계 해금 안내</summary>
               <div class="board__fold__body">
                 <p id="board-common-unlock-hint" class="board__unlock-hint muted" hidden>
-                  <strong>중앙광장</strong>은 전원 이용 가능합니다. 진보·보수 영토는 성향
+                  <strong>중앙광장</strong>은 전원 이용 가능합니다. 개혁·질서 영토는 성향
                     <strong>40%</strong> 이상이 되면
                   <strong>1단계</strong>가 열립니다. <strong>Lv.3</strong>부터는 1단계 눈팅(읽기)이 가능합니다.
                 </p>
@@ -5538,7 +5580,7 @@
                   <div
                     class="common-territory-hot__tabs board__feed-tabs"
                     role="tablist"
-                    aria-label="진보·보수 영토 1단계 핫글 기간"
+                    aria-label="개혁·질서 영토 1단계 핫글 기간"
                   >
                     <button
                       type="button"
@@ -5575,12 +5617,12 @@
                   ></div>
                   <div class="common-territory-hot__columns">
                     <section class="common-territory-hot__col" aria-labelledby="common-hot-prog-title">
-                      <h3 id="common-hot-prog-title" class="common-territory-hot__h">진보 · TOP3</h3>
+                      <h3 id="common-hot-prog-title" class="common-territory-hot__h">개혁 · TOP3</h3>
                       <ol id="common-hot-prog-list" class="common-territory-hot__list"></ol>
                       <p id="common-hot-prog-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
                     </section>
                     <section class="common-territory-hot__col" aria-labelledby="common-hot-con-title">
-                      <h3 id="common-hot-con-title" class="common-territory-hot__h">보수 · TOP3</h3>
+                      <h3 id="common-hot-con-title" class="common-territory-hot__h">질서 · TOP3</h3>
                       <ol id="common-hot-con-list" class="common-territory-hot__list"></ol>
                       <p id="common-hot-con-empty" class="common-territory-hot__empty muted" hidden>표시할 글이 없습니다.</p>
                     </section>
@@ -5805,12 +5847,16 @@
             <div class="avatar-dock__vstack">
               <span class="avatar-dock__v" id="avatar-meta-tendency">—</span>
               <div class="avatar-tbar-row">
-                <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path
-                      d="M12 12a4.2 4.2 0 1 0-4.2-4.2A4.2 4.2 0 0 0 12 12Zm0 2.2c-3.1 0-5.6 1.6-5.6 3.6V20h11.2v-2.2c0-2-2.5-3.6-5.6-3.6Z"
-                    />
-                  </svg>
+                <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향">
+                  <img
+                    id="avatar-tbar-emblem-human"
+                    class="avatar-tbar-emblem"
+                    src="assets/emblems/square-emblem-32.png"
+                    alt=""
+                    width="18"
+                    height="18"
+                    decoding="async"
+                  />
                 </span>
                 <div class="avatar-tbar-row__bar">
                   <div
@@ -5830,12 +5876,15 @@
               </div>
               <div id="avatar-tbar-legend-human" class="avatar-tbar__legend"></div>
               <div class="avatar-tbar-row">
-                <span class="avatar-tbar-icon avatar-tbar-icon--alien" title="외계인 성향" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path
-                      d="M12 2a5 5 0 0 0-4.9 6.1 6.5 6.5 0 0 0-3.1 5.5V17h16V13.6a6.5 6.5 0 0 0-3.1-5.5A5 5 0 0 0 12 2Zm-2.2 5.8a2.2 2.2 0 1 1 4.4 0 2.2 2.2 0 0 1-4.4 0ZM5 19v2h14v-2H5Z"
-                    />
-                  </svg>
+                <span class="avatar-tbar-icon avatar-tbar-icon--alien" title="외계인 성향">
+                  <img
+                    class="avatar-tbar-emblem"
+                    src="assets/emblems/alien-emblem-32.png"
+                    alt=""
+                    width="18"
+                    height="18"
+                    decoding="async"
+                  />
                 </span>
                 <div class="avatar-tbar-row__bar">
                   <div
@@ -6421,6 +6470,11 @@
         if (bar) bar.textContent = '';
       }
 
+      function enterGuestApp() {
+        if (window.__scApp) window.__scApp.enterAppMain();
+        renderAppUserBarGuest();
+      }
+
       async function refreshAuthUi() {
         var statusLogin = el('auth-status-login');
         var oauth = el('oauth-buttons');
@@ -6439,6 +6493,10 @@
         }
 
         function stayOnLogin(msg) {
+          if (isGuestOk()) {
+            enterGuestApp();
+            return;
+          }
           if (statusLogin && msg) statusLogin.textContent = msg;
           clearAppUserBar();
           if (window.__scApp) window.__scApp.showLoginOnly();
@@ -6455,8 +6513,7 @@
               'Supabase가 설정되지 않았습니다. OAuth는 비활성입니다. 게스트 입장으로 메인·게시판만 둘러볼 수 있습니다.';
           }
           if (isGuestOk()) {
-            if (window.__scApp) window.__scApp.enterAppMain();
-            renderAppUserBarGuest();
+            enterGuestApp();
             return;
           }
           if (window.__scApp) window.__scApp.showLoginOnly();
@@ -6476,8 +6533,7 @@
 
         if (!token) {
           if (isGuestOk()) {
-            if (window.__scApp) window.__scApp.enterAppMain();
-            renderAppUserBarGuest();
+            enterGuestApp();
             return;
           }
           if (statusLogin) statusLogin.textContent = '로그인하지 않은 상태입니다.';
@@ -6492,6 +6548,10 @@
           var j = await r.json();
           if (!j.ok) {
             clearAuth();
+            if (isGuestOk()) {
+              enterGuestApp();
+              return;
+            }
             stayOnLogin('세션이 만료되었거나 유효하지 않습니다. 다시 로그인해 주세요.');
             return;
           }
@@ -6501,6 +6561,10 @@
           renderAppUserBarLoggedIn(label);
           if (window.__scApp) window.__scApp.enterAppMain();
         } catch (_) {
+          if (isGuestOk()) {
+            enterGuestApp();
+            return;
+          }
           stayOnLogin('로그인 상태를 확인하지 못했습니다. 네트워크를 확인해 주세요.');
         }
       }
@@ -6532,6 +6596,7 @@
       var gBtn = el('auth-guest-btn');
       if (gBtn) {
         gBtn.addEventListener('click', function () {
+          clearAuth();
           try {
             sessionStorage.setItem(GUEST_KEY, '1');
           } catch (_) {}
@@ -6559,6 +6624,7 @@
           if (typeof window.__scRefreshBoardView === 'function') {
             window.__scRefreshBoardView();
           }
+          enterGuestApp();
           refreshAuthUi();
         });
       }
@@ -6787,8 +6853,23 @@
       var elAlienTrack = document.getElementById('avatar-alien-tbar-track');
       var elAlienLegend = document.getElementById('avatar-tbar-legend-alien');
       var elAlienWarn = document.getElementById('avatar-alien-warn');
+      var elTbarEmblemHuman = document.getElementById('avatar-tbar-emblem-human');
+      var SC_EMBLEMS = {
+        order: 'assets/emblems/order-emblem-32.png',
+        reform: 'assets/emblems/reform-emblem-32.png',
+        square: 'assets/emblems/square-emblem-32.png',
+        alien: 'assets/emblems/alien-emblem-32.png',
+      };
+      var SC_EMBLEM_TITLES = {
+        order: '질서영토 · 질서 성향',
+        reform: '개혁영토 · 개혁 성향',
+        square: '중앙광장 · 중립 성향',
+        alien: '외계인 성향',
+      };
       var ALIEN_WARN_TEXT =
         '최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.';
+      var ALIEN_WARN_PCT = 30;
+      var ALIEN_WARN_MSG = ALIEN_WARN_TEXT;
 
       function normalizeTendency3(conservative, centrist, progressive) {
         var r = Math.max(0, Number(conservative));
@@ -6802,7 +6883,35 @@
         return { r: (100 * r) / t, c: (100 * c) / t, l: (100 * l) / t };
       }
 
+      function resolveHumanTendencyEmblemKey(pctIn) {
+        if (!pctIn || pctIn.none) return 'square';
+        var A = window.AlignmentScoring;
+        if (A && typeof A.leanFromPercent === 'function') {
+          var lean = A.leanFromPercent(pctIn);
+          if (lean.tier === 'neutral' || lean.side === 'neutral') return 'square';
+          if (lean.side === 'conservative') return 'order';
+          if (lean.side === 'progressive') return 'reform';
+        }
+        var r = Number(pctIn.conservative) || 0;
+        var c = Number(pctIn.centrist) || 0;
+        var l = Number(pctIn.progressive) || 0;
+        if (Math.abs(r - l) < 0.5) return 'square';
+        return r > l ? 'order' : 'reform';
+      }
+
+      function syncHumanTendencyEmblem(pctIn) {
+        if (!elTbarEmblemHuman) return;
+        var key = resolveHumanTendencyEmblemKey(pctIn);
+        var src = SC_EMBLEMS[key] || SC_EMBLEMS.square;
+        if (elTbarEmblemHuman.getAttribute('src') !== src) {
+          elTbarEmblemHuman.setAttribute('src', src);
+        }
+        var host = elTbarEmblemHuman.closest('.avatar-tbar-icon--human');
+        if (host) host.title = SC_EMBLEM_TITLES[key] || SC_EMBLEM_TITLES.square;
+      }
+
       function setTendencyNone() {
+        syncHumanTendencyEmblem(null);
         if (elTbarTrack) {
           elTbarTrack.classList.add('avatar-tbar--neutral');
         }
@@ -6811,7 +6920,7 @@
         if (elTbarL) elTbarL.style.width = '0%';
         if (elTbarLegend) {
           elTbarLegend.textContent =
-            '아직 분류 없음 · 활동이 쌓이면 보수·진보 격차(중립/한쪽 기울기)가 표시됩니다.';
+            '아직 분류 없음 · 활동이 쌓이면 질서·개혁 격차(중립/한쪽 기울기)가 표시됩니다.';
         }
         if (elTbarTrack) {
           elTbarTrack.setAttribute('aria-label', '정치 성향 없음 (미분류)');
@@ -6838,12 +6947,12 @@
           var lean = A.leanFromPercent(p);
           ariaText =
             lean.tier === 'neutral'
-              ? '사람 성향: 중립' + (lean.gap > 0 ? ', 보수·진보 격차 ' + lean.gap : '')
+              ? '사람 성향: 중립' + (lean.gap > 0 ? ', 질서·개혁 격차 ' + lean.gap : '')
               : '사람 성향: ' +
                 A.tendencyLabelFromPercent(p) +
-                ' (보수 ' +
+                ' (질서 ' +
                 lean.conservative +
-                ', 진보 ' +
+                ', 개혁 ' +
                 lean.progressive +
                 ')';
         } else {
@@ -6851,8 +6960,8 @@
           ir = Math.round(n.r);
           ic = Math.round(n.c);
           il = Math.max(0, 100 - ir - ic);
-          legendText = '사람 · 보수 ' + ir + '% · 중도 ' + ic + '% · 진보 ' + il + '%';
-          ariaText = '사람 성향: 보수 ' + ir + '%, 중도 ' + ic + '%, 진보 ' + il + '%';
+          legendText = '사람 · 질서 ' + ir + '% · 중도 ' + ic + '% · 개혁 ' + il + '%';
+          ariaText = '사람 성향: 질서 ' + ir + '%, 중도 ' + ic + '%, 개혁 ' + il + '%';
         }
         if (elTbarTrack) {
           if (ic >= 99) elTbarTrack.classList.add('avatar-tbar--neutral');
@@ -6863,6 +6972,7 @@
         if (elTbarL) elTbarL.style.width = il + '%';
         if (elTbarLegend) elTbarLegend.textContent = legendText;
         if (elTbarTrack) elTbarTrack.setAttribute('aria-label', ariaText);
+        syncHumanTendencyEmblem(p);
       }
 
       function setAlienBar(alienPct, userIdOpt) {
@@ -7275,7 +7385,6 @@
       /** 반응으로 인한 표시 % 변화: 축당 하루 기준선 대비 최대 ±(이 값) */
       var ALIGN_DAILY_CAP_KEY = 'sc_align_daily_pct_cap_v1';
       var ALIGN_DAILY_PCT_PER_AXIS = 5;
-      var ALIEN_WARN_PCT = 30;
       /** planetPct는 과열 신호(표시·내부 점수)만 — 외계행성 체류 자동 배정에 사용하지 않음 */
       var ALIEN_OBSERVE_PCT = 50;
       var ALIEN_RISK_CANDIDATE_PCT = 70;
@@ -7284,8 +7393,6 @@
       var EXILE_REENTRY_WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
       var EXILE_STAGE_DECAY_90_MS = 90 * 24 * 60 * 60 * 1000;
       var EXILE_STAGE_DECAY_180_MS = 180 * 24 * 60 * 60 * 1000;
-      var ALIEN_WARN_MSG =
-        '최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.';
       var MOD_ROOT_KEY = 'sc_moderation_v1';
       var IS_DEV_MODE =
         location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -7363,8 +7470,8 @@
         freeZone: '외계 자유구역',
         lounge: '외계 라운지',
         observeZone: '외계 관측구역',
-        progSignal: '진보 신호구역',
-        conSignal: '보수 신호구역',
+        progSignal: '개혁 신호구역',
+        conSignal: '질서 신호구역',
       };
       var ALIEN_SIGNAL_LABELS = {
         KANTAPBIYA_LEFT: ALIEN_UI.planet + ' · ' + ALIEN_UI.progSignal,
@@ -8633,7 +8740,7 @@
         return isActiveAlienExile(uid());
       }
 
-      /** 외계행성 소속일 때: 중앙광장·진보/보수 메인 1단계는 읽기·공감·추천(좋아요)만 */
+      /** 외계행성 소속일 때: 중앙광장·개혁/질서 메인 1단계는 읽기·공감·추천(좋아요)만 */
       function isPlanetResidentEarthQuarantineBoard(tid, stage) {
         if (!isStoredKantaForcedPlanetResident()) return false;
         var t = String(tid != null ? tid : currentTerritory || '');
@@ -9231,7 +9338,7 @@
       function dailyIssueChoiceLabelExposesFactionWords(label) {
         var s = String(label || '');
         if (!s.trim()) return true;
-        if (/진보|보수|중도|좌파|우파|진영|극좌|극우/.test(s)) return true;
+        if (/개혁|질서|진보|보수|중도|좌파|우파|진영|극좌|극우/.test(s)) return true;
         if (/쪽에\s*더\s*가깝|에\s*더\s*가깝다/.test(s)) return true;
         if (/progressive|conservative|centrist|left\s*wing|right\s*wing/i.test(s)) return true;
         return false;
@@ -11858,7 +11965,7 @@
         var bars = document.createElement('div');
         bars.className = 'centrist-world-pulse__bars';
         bars.setAttribute('role', 'img');
-        bars.setAttribute('aria-label', '진보·중도·보수 비중 시각화');
+        bars.setAttribute('aria-label', '개혁·중도·질서 비중 시각화');
         var wsum = (pct.progressive || 0) + (pct.centrist || 0) + (pct.conservative || 0);
         if (!wsum || !isFinite(wsum)) wsum = 1;
         var wp = ((pct.progressive || 0) / wsum) * 100;
@@ -12102,8 +12209,8 @@
         var m = {
           UNASSIGNED: '미편입',
           COMMON: '중앙광장',
-          CONSERVATIVE: '보수',
-          PROGRESSIVE: '진보',
+          CONSERVATIVE: '질서',
+          PROGRESSIVE: '개혁',
           KANTAPBIYA: ALIEN_UI.planet,
           KANTAPBIYA_LEFT: ALIEN_UI.progSignal,
           KANTAPBIYA_CENTER: ALIEN_UI.progSignal,
@@ -13058,7 +13165,7 @@
         return bucketScores(readUserBucket(id));
       }
 
-      /** 진보·보수 2극 UI용: 중도 성향은 양쪽에 반반 가중 */
+      /** 개혁·질서 2극 UI용: 중도 성향은 양쪽에 반반 가중 */
       function campPolarWeights(userId) {
         var u = getScoresForUser(userId);
         var p = Math.max(0, +u.progressive || 0);
@@ -13145,7 +13252,7 @@
 
       /**
        * 글·전체 댓글 트리의 반응(좋아요·싫어요·공감·행성)과 댓글 참여(가중)를
-       * 참여자별 저장 성향(local)으로 가중해 진보·보수 각각의 '호감도'(긍정 비율)를 추정합니다.
+       * 참여자별 저장 성향(local)으로 가중해 개혁·질서 각각의 '호감도'(긍정 비율)를 추정합니다.
        */
       function computePostCampAffinityBreakdown(post, boardTerritoryId) {
         normalizePost(post, boardTerritoryId);
@@ -13194,7 +13301,7 @@
           var m = document.createElement('p');
           m.className = 'board__camp-affinity__empty muted';
           m.textContent =
-            '좋아요·싫어요·공감 등 반응이 있으면, 참여자 성향 기준 진보·보수 호감도 추정치가 표시됩니다.';
+            '좋아요·싫어요·공감 등 반응이 있으면, 참여자 성향 기준 개혁·질서 호감도 추정치가 표시됩니다.';
           wrap.appendChild(m);
           return wrap;
         }
@@ -13224,8 +13331,8 @@
 
         var pp = bd.progPct == null ? 0 : bd.progPct;
         var cp = bd.consPct == null ? 0 : bd.consPct;
-        wrap.appendChild(row('진보 호감도', pp, 'linear-gradient(90deg,#38bdf8,#0ea5e9)'));
-        wrap.appendChild(row('보수 호감도', cp, 'linear-gradient(90deg,#fb7185,#e11d48)'));
+        wrap.appendChild(row('개혁 호감도', pp, 'linear-gradient(90deg,#38bdf8,#0ea5e9)'));
+        wrap.appendChild(row('질서 호감도', cp, 'linear-gradient(90deg,#fb7185,#e11d48)'));
 
         if (!compact) {
           var hint = document.createElement('p');
@@ -13518,12 +13625,12 @@
       }
 
       function kantaPlanetLabelKo(ft) {
-        if (ft === 'KANTAPBIYA_LEFT') return '진보';
-        if (ft === 'KANTAPBIYA_RIGHT') return '보수';
+        if (ft === 'KANTAPBIYA_LEFT') return '개혁';
+        if (ft === 'KANTAPBIYA_RIGHT') return '질서';
         return '';
       }
 
-      /** 댓글·인기댓글 분리용: 작성자를 진보 / 보수 / 중립(중도 우세)으로 분류 */
+      /** 댓글·인기댓글 분리용: 작성자를 개혁 / 질서 / 중립(중도 우세)으로 분류 */
       function getCommentAuthorFactionTag(authorId) {
         var id = String(authorId || '').trim();
         if (!id) return 'NEUTRAL';
@@ -13721,9 +13828,9 @@
           var cur = document.createElement('div');
           cur.className = 'hot-opinion-ticker__line';
           cur.textContent =
-            '현재 전선(핫글 추정): 진보 ~' +
+            '현재 전선(핫글 추정): 개혁 ~' +
             Math.round(top.avgProg) +
-            '% · 보수 ~' +
+            '% · 질서 ~' +
             Math.round(top.avgCons) +
             '%';
           el.appendChild(cur);
@@ -13735,7 +13842,7 @@
             var ln = document.createElement('div');
             ln.className = 'hot-opinion-ticker__line';
             ln.textContent =
-              '약 1시간 전 관측 대비 보수 호감 ' + (dc > 0 ? '+' : '') + dc + '%p';
+              '약 1시간 전 관측 대비 질서 호감 ' + (dc > 0 ? '+' : '') + dc + '%p';
             el.appendChild(ln);
           }
         }
@@ -13744,7 +13851,7 @@
           if (Math.abs(dp) >= 1) {
             var ln2 = document.createElement('div');
             ln2.className = 'hot-opinion-ticker__line';
-            ln2.textContent = '동일 구간 진보 호감 ' + (dp > 0 ? '+' : '') + dp + '%p';
+            ln2.textContent = '동일 구간 개혁 호감 ' + (dp > 0 ? '+' : '') + dp + '%p';
             el.appendChild(ln2);
           }
         }
@@ -13807,7 +13914,7 @@
           'COMMON_STRIP:PROGRESSIVE:' + period,
           topP,
           'PROGRESSIVE',
-          '진보 1단 핫 TOP3',
+          '개혁 1단 핫 TOP3',
         );
         var laneC = document.createElement('div');
         laneC.className = 'hot-opinion-ticker__lane';
@@ -13816,7 +13923,7 @@
           'COMMON_STRIP:CONSERVATIVE:' + period,
           topC,
           'CONSERVATIVE',
-          '보수 1단 핫 TOP3',
+          '질서 1단 핫 TOP3',
         );
         el.appendChild(laneP);
         el.appendChild(laneC);
@@ -13925,8 +14032,8 @@
         var c = pct.conservative;
         var pr = pct.progressive;
         var poles = [];
-        if (c >= FACTION_UNLOCK_PCT) poles.push({ tid: 'CONSERVATIVE', label: 'CONSERVATIVE · 보수', val: c });
-        if (pr >= FACTION_UNLOCK_PCT) poles.push({ tid: 'PROGRESSIVE', label: 'PROGRESSIVE · 진보', val: pr });
+        if (c >= FACTION_UNLOCK_PCT) poles.push({ tid: 'CONSERVATIVE', label: 'CONSERVATIVE · 질서', val: c });
+        if (pr >= FACTION_UNLOCK_PCT) poles.push({ tid: 'PROGRESSIVE', label: 'PROGRESSIVE · 개혁', val: pr });
         if (poles.length) {
           poles.sort(function (a, b) {
             if (b.val !== a.val) return b.val - a.val;
@@ -14160,10 +14267,10 @@
         span.className = 'board__origin';
         if (lean.side === 'progressive') {
           span.classList.add('board__origin--prog');
-          span.textContent = '진보';
+          span.textContent = '개혁';
         } else if (lean.side === 'conservative') {
           span.classList.add('board__origin--con');
-          span.textContent = '보수';
+          span.textContent = '질서';
         } else {
           span.classList.add('board__origin--cent');
           span.textContent = '중앙';
@@ -14226,7 +14333,7 @@
           'sc-react-ico--up',
           '추천',
           '추천 — 정치 반응(동조)',
-          '추천 — 정치 방향(보수·중도·진보)에 반영되며, 받는 사람의 외계인 성향도 조금 오릅니다.',
+          '추천 — 정치 방향(질서·중도·개혁)에 반영되며, 받는 사람의 외계인 성향도 조금 오릅니다.',
         );
         addBtn(
           'dislike',
@@ -14368,7 +14475,7 @@
               id: 'seed_COMMON_welcome',
               title: '[중앙광장] 자유 게시판에 오신 것을 환영합니다',
               body:
-                '처음에는 중앙광장에서 글을 쓰고, 정치 성향이 40%에 도달하면 보수·중도·진보·외계행성 1단계 게시판이 열립니다.\n\n' +
+                '처음에는 중앙광장에서 글을 쓰고, 정치 성향이 40%에 도달하면 질서·중도·개혁·외계행성 1단계 게시판이 열립니다.\n\n' +
                 '· 아래 탭으로 글 성격(자유 토론 · 유머·가벼운글 · 정보·분석)을 고른 뒤 목록을 볼 수 있습니다.\n' +
                 '· 데일리 이슈는 위에서 분야 탭을 고른 뒤, 해당 분야 카드 4개 중에서 참여할 수 있습니다.',
               category: 'debate',
@@ -14969,8 +15076,8 @@
 
         var bestIds = {};
 
-        var bp = appendDetailFactionCommentBlock(root, ctx, '진보 인기댓글 (상위 3)', roots, 'PROGRESSIVE');
-        var bc = appendDetailFactionCommentBlock(root, ctx, '보수 인기댓글 (상위 3)', roots, 'CONSERVATIVE');
+        var bp = appendDetailFactionCommentBlock(root, ctx, '개혁 인기댓글 (상위 3)', roots, 'PROGRESSIVE');
+        var bc = appendDetailFactionCommentBlock(root, ctx, '질서 인기댓글 (상위 3)', roots, 'CONSERVATIVE');
         var bn = appendDetailFactionCommentBlock(root, ctx, '중립 인기댓글 (상위 3)', roots, 'NEUTRAL');
 
         bp.forEach(function (c) {
@@ -16161,9 +16268,9 @@
         elAlienSignalToday.textContent =
           '라운지 ' +
           freeN +
-          ' · 진보 신호 ' +
+          ' · 개혁 신호 ' +
           leftN +
-          ' · 보수 신호 ' +
+          ' · 질서 신호 ' +
           rightN +
           ' — 오늘의 흐름은 신호구역 내부에서 유지됩니다.';
       }
@@ -16965,14 +17072,14 @@
             var dayN = EXILE_STAGE_DAYS[nextSt] || 3;
             var bL = document.createElement('button');
             bL.type = 'button';
-            bL.textContent = '진보 신호 체류 (' + nextSt + '차·' + dayN + '일)';
+            bL.textContent = '개혁 신호 체류 (' + nextSt + '차·' + dayN + '일)';
             bL.addEventListener('click', function () {
               approveAlienStayByAdmin(id, ALIEN_SIGNAL_LEFT);
               renderModerationDashboard();
             });
             var bR = document.createElement('button');
             bR.type = 'button';
-            bR.textContent = '보수 신호 체류 (' + nextSt + '차·' + dayN + '일)';
+            bR.textContent = '질서 신호 체류 (' + nextSt + '차·' + dayN + '일)';
             bR.addEventListener('click', function () {
               approveAlienStayByAdmin(id, ALIEN_SIGNAL_RIGHT);
               renderModerationDashboard();
@@ -17691,8 +17798,67 @@
           wrap.style.right = 'auto';
           wrap.style.bottom = 'auto';
         });
+        if (typeof window.__scSyncTerritoryAlienOverlayFit === 'function') {
+          window.__scSyncTerritoryAlienOverlayFit();
+        }
       }
       window.__scSyncTerritoryHitZonesFit = syncTerritoryHitZonesFit;
+
+      function applyTerritoryAlienOverlay(cfg) {
+        window.__scTerritoryAlienOverlay = cfg && typeof cfg === 'object' ? cfg : null;
+        var wrap = el('territory-alien-overlay-wrap');
+        var img = el('territory-alien-overlay-img');
+        if (!wrap || !img) return;
+        if (!cfg || cfg.enabled === false) {
+          wrap.hidden = true;
+          wrap.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        wrap.hidden = false;
+        wrap.setAttribute('aria-hidden', 'false');
+        var src = String(cfg.image || '/assets/territory-alien-overlay.png');
+        if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+        img.style.left = (Number(cfg.left) || 0) + '%';
+        img.style.top = (Number(cfg.top) || 0) + '%';
+        img.style.width = (Number(cfg.width) || 20) + '%';
+        img.style.height = (Number(cfg.height) || 20) + '%';
+        img.style.opacity = String(cfg.opacity != null && isFinite(cfg.opacity) ? cfg.opacity : 1);
+        if (typeof window.__scSyncTerritoryAlienOverlayFit === 'function') {
+          window.__scSyncTerritoryAlienOverlayFit();
+        }
+      }
+
+      function loadTerritoryAlienOverlay() {
+        var url = '/territories/territory-alien-overlay.json?cb=' + String(Date.now());
+        return fetch(url, { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('alien-overlay');
+            return r.json();
+          })
+          .then(function (j) {
+            applyTerritoryAlienOverlay(j);
+          })
+          .catch(function () {
+            applyTerritoryAlienOverlay(null);
+          });
+      }
+      window.__scReloadTerritoryAlienOverlay = loadTerritoryAlienOverlay;
+
+      function syncTerritoryAlienOverlayFit() {
+        var wrap = el('territory-alien-overlay-wrap');
+        var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
+        if (!wrap || wrap.hidden || !frame) return;
+        scEnsureTerritoryMapNatural(function (nat) {
+          var L = scContainBoxLayout(frame, nat.w, nat.h);
+          wrap.style.left = L.ox + 'px';
+          wrap.style.top = L.oy + 'px';
+          wrap.style.width = L.dw + 'px';
+          wrap.style.height = L.dh + 'px';
+          wrap.style.right = 'auto';
+          wrap.style.bottom = 'auto';
+        });
+      }
+      window.__scSyncTerritoryAlienOverlayFit = syncTerritoryAlienOverlayFit;
 
       function initScTerritoryHitZonesFitObservers() {
         var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
@@ -17743,8 +17909,8 @@
           return;
         }
         var defs = [
-          { key: 'progressive', kind: 'PROGRESSIVE', edge: 'prog', aria: '진보 진영 — 게시판으로 이동' },
-          { key: 'conservative', kind: 'CONSERVATIVE', edge: 'con', aria: '보수 진영 — 게시판으로 이동' },
+          { key: 'progressive', kind: 'PROGRESSIVE', edge: 'prog', aria: '개혁 진영 — 게시판으로 이동' },
+          { key: 'conservative', kind: 'CONSERVATIVE', edge: 'con', aria: '질서 진영 — 게시판으로 이동' },
           { key: 'plaza', kind: 'COMMON', edge: 'plaza', aria: '중앙광장 — 게시판으로 이동' },
           {
             key: 'kantapbiya',
@@ -17850,6 +18016,7 @@
         Promise.all([
           loadTerritoryLayoutOverrides().catch(function () {}),
           loadTerritoryHitZones().catch(function () {}),
+          loadTerritoryAlienOverlay().catch(function () {}),
         ]).then(function () {
           applyCentristHeroArt();
           if (typeof window.__scTendencyTrendsInit === 'function') window.__scTendencyTrendsInit();
