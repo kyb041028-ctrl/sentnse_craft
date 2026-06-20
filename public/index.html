@@ -900,27 +900,6 @@
       pointer-events: none;
     }
     /* 폴리곤 좌표 = 맵 PNG(contain으로 붙은 영역) 기준 0~100. 래퍼가 그 영역에 맞춰짐 — territory-hit-zones.json */
-    .territory-alien-overlay-wrap {
-      position: absolute;
-      z-index: 3;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      pointer-events: none;
-      overflow: visible;
-    }
-    .territory-alien-overlay-wrap[hidden] {
-      display: none !important;
-    }
-    .territory-alien-overlay-img {
-      position: absolute;
-      object-fit: contain;
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
-    }
     .territory-hit-zones-wrap {
       position: absolute;
       z-index: 5;
@@ -3087,9 +3066,6 @@
       color: #64748b;
       margin-top: 0.12rem;
     }
-    #alien-own-signal-pagination.board-pagination {
-      margin-top: 0.35rem;
-    }
     .board-faction-hot {
       margin: 0.65rem 0 0;
       padding: 0.75rem 1rem;
@@ -4008,46 +3984,7 @@
       color: #c4b5fd;
       line-height: 1.45;
     }
-    .alien-hub__observe-banner {
-      margin: 0 0 0.45rem;
-      padding: 0.4rem 0.55rem;
-      border-radius: 8px;
-      border: 1px solid rgba(167, 139, 250, 0.22);
-      background: rgba(88, 28, 135, 0.12);
-      font-size: 0.72rem;
-      color: #c4b5fd;
-      line-height: 1.4;
-    }
-    .alien-hub__stage-locks {
-      display: grid;
-      gap: 0.35rem;
-      margin-top: 0.45rem;
-    }
-    .alien-hub__stage-lock {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.4rem;
-      padding: 0.38rem 0.5rem;
-      border-radius: 8px;
-      border: 1px dashed rgba(148, 163, 184, 0.22);
-      background: rgba(15, 23, 42, 0.35);
-      font-size: 0.7rem;
-      color: #94a3b8;
-      line-height: 1.35;
-    }
-    .alien-hub__stage-lock strong {
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-    .alien-signal-section__head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.35rem;
-      margin-bottom: 0.35rem;
-    }
-    .alien-signal-section__write {
+    .alien-hub__write {
       font: inherit;
       font-size: 0.68rem;
       padding: 0.22rem 0.5rem;
@@ -4057,110 +3994,9 @@
       color: #e9d5ff;
       cursor: pointer;
     }
-    .alien-signal-section__write:disabled {
+    .alien-hub__write:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-    }
-    .alien-observe-preview-section {
-      border-color: rgba(148, 163, 184, 0.14);
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.35));
-    }
-    .alien-observe-preview__more {
-      font: inherit;
-      font-size: 0.68rem;
-      padding: 0.22rem 0.5rem;
-      border-radius: 7px;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      background: rgba(30, 41, 59, 0.45);
-      color: #cbd5e1;
-      cursor: pointer;
-    }
-    .alien-observe-preview__block {
-      margin-top: 0.35rem;
-    }
-    .alien-observe-preview__label {
-      margin: 0 0 0.25rem;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: #94a3b8;
-      letter-spacing: 0.02em;
-    }
-    .alien-observe-preview__list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 0.28rem;
-    }
-    .alien-observe-preview__row {
-      display: grid;
-      gap: 0.12rem;
-      width: 100%;
-      text-align: left;
-      font: inherit;
-      padding: 0.38rem 0.45rem;
-      border-radius: 8px;
-      border: 1px solid rgba(148, 163, 184, 0.12);
-      background: rgba(15, 23, 42, 0.42);
-      color: #e2e8f0;
-      cursor: pointer;
-    }
-    .alien-observe-preview__row:hover {
-      border-color: rgba(167, 139, 250, 0.22);
-      background: rgba(30, 27, 75, 0.28);
-    }
-    .alien-observe-preview__title {
-      font-size: 0.74rem;
-      font-weight: 600;
-      line-height: 1.35;
-      color: #e2e8f0;
-    }
-    .alien-observe-preview__snippet {
-      font-size: 0.68rem;
-      color: #94a3b8;
-      line-height: 1.35;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .alien-observe-preview__meta {
-      font-size: 0.64rem;
-      color: #64748b;
-    }
-    .alien-observe-detail {
-      margin-top: 0.35rem;
-      padding: 0.55rem;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.16);
-      background: rgba(15, 23, 42, 0.72);
-      box-shadow: inset 0 0 0 1px rgba(88, 28, 135, 0.08);
-    }
-    .alien-observe-detail__bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.45rem;
-      margin-bottom: 0.45rem;
-    }
-    .alien-observe-detail__bar button {
-      font: inherit;
-      font-size: 0.72rem;
-      padding: 0.28rem 0.55rem;
-      border-radius: 8px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(30, 41, 59, 0.55);
-      color: #cbd5e1;
-      cursor: pointer;
-    }
-    .alien-observe-detail__bar h2 {
-      margin: 0;
-      font-size: 0.88rem;
-      color: #c4b5fd;
-    }
-    #alien-own-signal-list.board__list {
-      margin-top: 0.35rem;
-      max-height: none;
     }
     @media (max-width: 640px) {
       .alien-hub-flow {
@@ -4168,9 +4004,6 @@
       }
       .centrist-hot .centrist-live-row {
         padding: 0.38rem 0.42rem;
-      }
-      .alien-observe-preview__row {
-        padding: 0.32rem 0.4rem;
       }
     }
     .centrist-hub-flow {
@@ -5206,15 +5039,6 @@
         <section class="territory-centrist-hero" aria-label="영토 맵 배경">
           <div class="territory-centrist-hero__frame territory-centrist-hero__frame--island-map">
             <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
-            <div id="territory-alien-overlay-wrap" class="territory-alien-overlay-wrap" hidden aria-hidden="true">
-              <img
-                id="territory-alien-overlay-img"
-                class="territory-alien-overlay-img"
-                src="/assets/territory-alien-overlay.png"
-                alt=""
-                decoding="async"
-              />
-            </div>
             <div class="sc-map-top-tabs" role="toolbar" aria-label="영토 맵 상단 메뉴">
               <button
                 type="button"
@@ -5396,7 +5220,7 @@
 
           <div id="board-lurk-banner" class="board__inline-notice" hidden>
             <span id="board-lurk-banner-title">눈팅 모드</span> —
-            <span class="board__lurk-banner-text">읽기·공감만 가능합니다. 글쓰기·댓글·반응은 해금 후 이용할 수 있습니다.</span>
+            <span class="board__lurk-banner-text">읽기만 가능합니다. 글쓰기·댓글·반응은 해금 후 이용할 수 있습니다.</span>
           </div>
 
           <ul id="board-list" class="board__list board__list--dense" aria-label="게시글 목록"></ul>
@@ -5498,8 +5322,8 @@
                 <div id="board-locked" class="board__locked" style="padding: 0.5rem 0 0; border: none; background: transparent" hidden>
                   <p class="board__locked-title">이 단계는 아직 이용할 수 없습니다</p>
                   <p class="board__locked-text">
-                    <strong>2단계</strong>는 해당 영토 성향 <strong>60%</strong> 이상입니다. 외계행성은
-                    <strong>사람 60%</strong> 이상입니다. 고강도 토론 구역은 운영자 승인으로만 이동됩니다.
+                    <strong>2단계</strong>는 해당 영토 성향 <strong>60%</strong> 이상입니다. 1단계 해금 후
+                    <strong>눈팅(읽기)</strong>이 가능합니다.
                   </p>
                 </div>
               </div>
@@ -5643,16 +5467,16 @@
           <h2 id="alien-hub-title" class="centrist-section__title centrist-section__title--spotlight">외계행성</h2>
           <p id="alien-hub-status" class="alien-hub__status muted" aria-live="polite"></p>
           <p id="alien-hub-sub" class="muted" style="margin: 0; font-size: 0.74rem; line-height: 1.45">
-            고온 토론 생활권 · 자유구역과 신호구역으로 나뉩니다. 중앙광장은 계속 메인 커뮤니티입니다.
+            행동 관측 기반 완충 구역입니다. 정치 진영이 아닌 활동 패턴을 관측합니다. 중앙광장은 계속 메인 커뮤니티입니다.
           </p>
         </section>
 
         <section class="card centrist-section" aria-labelledby="alien-free-title">
           <div class="centrist-section__head">
-            <h2 id="alien-free-title" class="centrist-section__title centrist-section__title--slim">외계 자유구역</h2>
-            <button type="button" id="alien-free-write" class="alien-signal-section__write">라운지 글쓰기</button>
+            <h2 id="alien-free-title" class="centrist-section__title centrist-section__title--slim">외계행성 게시판</h2>
+            <button type="button" id="alien-free-write" class="alien-hub__write">글쓰기</button>
           </div>
-          <p class="muted" style="margin: 0 0 0.4rem; font-size: 0.7rem">잡담 · 밈 · 유머 · 일상 · 가벼운 이야기</p>
+          <p class="muted" style="margin: 0 0 0.4rem; font-size: 0.7rem">자유게시판 · 관측기록 · 밈·드립 · 생존일지</p>
           <ul id="alien-free-list" class="centrist-free-feed__list board__list board__list--dense" aria-live="polite"></ul>
           <p id="alien-free-empty" class="centrist-free-feed__empty muted" hidden>아직 글이 없습니다.</p>
         </section>
@@ -5664,51 +5488,13 @@
           <p id="alien-hot-empty" class="centrist-hot__empty muted" hidden>표시할 글이 없습니다.</p>
         </section>
 
-        <section class="card centrist-section centrist-hot" id="alien-faction-hot-section" aria-labelledby="alien-faction-hot-title">
-          <h2 id="alien-faction-hot-title" class="centrist-section__title centrist-section__title--spotlight">내 진영 인기글</h2>
-          <div id="alien-faction-hot-tabs" class="centrist-live-tabs board__feed-tabs" role="tablist" aria-label="내 진영 인기글 정렬"></div>
-          <ol id="alien-faction-hot-list" class="centrist-hot__list"></ol>
-          <p id="alien-faction-hot-empty" class="centrist-hot__empty muted" hidden>표시할 글이 없습니다.</p>
-        </section>
-
-        <section class="card centrist-section" id="alien-my-signal-section" aria-labelledby="alien-my-signal-title">
-          <div class="alien-signal-section__head">
-            <h2 id="alien-my-signal-title" class="centrist-section__title centrist-section__title--slim">내 신호구역</h2>
-            <button type="button" id="alien-my-signal-write" class="alien-signal-section__write">신호 글쓰기</button>
-          </div>
-          <ul id="alien-own-signal-list" class="board__list" aria-live="polite"></ul>
-          <p id="alien-own-signal-empty" class="centrist-free-feed__empty muted" hidden>표시할 글이 없습니다.</p>
-          <nav id="alien-own-signal-pagination" class="board-pagination" hidden aria-label="내 신호구역 페이지"></nav>
-          <div id="alien-my-stage-locks" class="alien-hub__stage-locks" aria-label="잠금 단계"></div>
-        </section>
-
-        <section class="card centrist-section alien-observe-preview-section" id="alien-opp-observe-section" aria-labelledby="alien-opp-observe-title">
-          <div class="alien-signal-section__head">
-            <h2 id="alien-opp-observe-title" class="centrist-section__title centrist-section__title--slim">상대 신호 관측</h2>
-            <button type="button" id="alien-opp-observe-more" class="alien-observe-preview__more">상대 신호구역 자세히 보기</button>
-          </div>
-          <p class="alien-hub__observe-banner">상대 신호를 관측 중입니다. 읽기 전용 관측 구역입니다.</p>
-          <div class="alien-observe-preview__block">
-            <h3 class="alien-observe-preview__label">인기 신호</h3>
-            <ul id="alien-opp-popular-list" class="alien-observe-preview__list"></ul>
-          </div>
-          <div class="alien-observe-preview__block">
-            <h3 class="alien-observe-preview__label">논쟁중</h3>
-            <ul id="alien-opp-debate-list" class="alien-observe-preview__list"></ul>
-          </div>
-          <div class="alien-observe-preview__block">
-            <h3 class="alien-observe-preview__label">최근 신호</h3>
-            <ul id="alien-opp-recent-list" class="alien-observe-preview__list"></ul>
-          </div>
-        </section>
-
         <div id="alien-hub-meta" class="centrist-hub__meta">
           <details class="board__fold centrist-hub__fold centrist-hub__fold--muted">
             <summary>시즌 · 관측 정보</summary>
             <div class="board__fold__body">
-              <p id="alien-signal-today" class="muted" style="margin: 0 0 0.35rem; font-size: 0.72rem; line-height: 1.45"></p>
+              <p id="alien-hub-stats" class="muted" style="margin: 0 0 0.35rem; font-size: 0.72rem; line-height: 1.45"></p>
               <p class="muted" style="margin: 0; font-size: 0.72rem; line-height: 1.45">
-                시즌 경쟁·랭킹은 중앙광장 흐름과 분리됩니다. 외계행성은 고온 토론 완충 구역으로 운영됩니다.
+                시즌 경쟁·랭킹은 중앙광장 흐름과 분리됩니다. 외계행성은 행동 관측·안정화 분리 구역으로 운영됩니다.
               </p>
             </div>
           </details>
@@ -5716,21 +5502,11 @@
             <summary>기타 · 외계행성 정보</summary>
             <div class="board__fold__body">
               <p class="muted" style="margin: 0; font-size: 0.72rem; line-height: 1.45">
-                신호구역 2~4단계는 안정화 이후 순차 개방 예정입니다. 상대 신호구역은 관측(읽기)만 가능합니다.
+                자유게시판·관측기록·밈·생존일지로 나눕니다. 입장은 행동 moderation(유배)만 해당합니다.
               </p>
             </div>
           </details>
         </div>
-        </div>
-
-        <div id="alien-observe-detail-wrap" class="alien-observe-detail card" hidden>
-          <div class="alien-observe-detail__bar">
-            <button type="button" id="alien-observe-detail-back">← 외계행성으로</button>
-            <h2 id="alien-observe-detail-title">상대 신호 관측</h2>
-          </div>
-          <p class="alien-hub__observe-banner">상대 신호를 관측 중입니다. 읽기 전용 관측 구역입니다.</p>
-          <ul id="alien-observe-detail-list" class="alien-observe-preview__list" aria-live="polite"></ul>
-          <p id="alien-observe-detail-empty" class="centrist-free-feed__empty muted" hidden>표시할 신호가 없습니다.</p>
         </div>
       </div>
       </div>
@@ -5752,7 +5528,7 @@
         >
           <h2 id="kanta-picker-title" style="margin: 0 0 0.35rem; font-size: 1.05rem">외계행성</h2>
           <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.82rem">
-            고온 토론 생활권입니다. 자유구역과 신호구역이 하나의 공간으로 연결됩니다.
+            행동 관측 기반 완충 구역입니다. 정치 진영이 아닌 활동 패턴을 관측합니다.
           </p>
           <div class="kanta-planet-picker__grid">
             <button type="button" class="kanta-planet-picker__choice" data-kanta-tid="KANTAPBIYA">
@@ -5875,35 +5651,7 @@
                 </div>
               </div>
               <div id="avatar-tbar-legend-human" class="avatar-tbar__legend"></div>
-              <div class="avatar-tbar-row">
-                <span class="avatar-tbar-icon avatar-tbar-icon--alien" title="외계인 성향">
-                  <img
-                    class="avatar-tbar-emblem"
-                    src="assets/emblems/alien-emblem-32.png"
-                    alt=""
-                    width="18"
-                    height="18"
-                    decoding="async"
-                  />
-                </span>
-                <div class="avatar-tbar-row__bar">
-                  <div
-                    id="avatar-alien-tbar-track"
-                    class="avatar-tbar avatar-tbar--alien"
-                    role="progressbar"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    aria-valuenow="0"
-                    aria-label="외계인 성향 0퍼센트"
-                  >
-                    <div id="avatar-alien-fill" class="avatar-tbar__alien-fill" style="width: 0%"></div>
-                  </div>
-                </div>
-              </div>
-              <div id="avatar-tbar-legend-alien" class="avatar-tbar__legend">외계인 성향 0%</div>
-              <p id="avatar-alien-warn" class="avatar-alien-warn" hidden>
-                최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.
-              </p>
+              <p id="avatar-exile-status" class="avatar-exile-status muted" hidden></p>
             </div>
           </div>
           <div class="avatar-dock__meta-row avatar-dock__meta-row--level">
@@ -6849,10 +6597,7 @@
       var elTbarL = document.getElementById('avatar-tbar-l');
       var elTbarLegend = document.getElementById('avatar-tbar-legend-human');
       var elTbarTrack = document.getElementById('avatar-tbar-track');
-      var elAlienFill = document.getElementById('avatar-alien-fill');
-      var elAlienTrack = document.getElementById('avatar-alien-tbar-track');
-      var elAlienLegend = document.getElementById('avatar-tbar-legend-alien');
-      var elAlienWarn = document.getElementById('avatar-alien-warn');
+      var elAlienExileStatus = document.getElementById('avatar-exile-status');
       var elTbarEmblemHuman = document.getElementById('avatar-tbar-emblem-human');
       var SC_EMBLEMS = {
         order: 'assets/emblems/order-emblem-32.png',
@@ -6864,12 +6609,31 @@
         order: '질서영토 · 질서 성향',
         reform: '개혁영토 · 개혁 성향',
         square: '중앙광장 · 중립 성향',
-        alien: '외계인 성향',
+        alien: '외계행성 · 관측 체류',
       };
-      var ALIEN_WARN_TEXT =
-        '최근 과열 반응이 증가하고 있습니다. 감정적 표현보다 토론 중심 활동을 권장합니다.';
-      var ALIEN_WARN_PCT = 30;
-      var ALIEN_WARN_MSG = ALIEN_WARN_TEXT;
+      function updateAvatarExileStatus(userIdOpt) {
+        if (!elAlienExileStatus) return;
+        var uidStr =
+          String(userIdOpt || '').trim() ||
+          String((window.__scPlayer && window.__scPlayer.userId) || '').trim() ||
+          'guest';
+        if (
+          typeof window.__scIsActiveAlienExile === 'function' &&
+          window.__scIsActiveAlienExile(uidStr)
+        ) {
+          var label =
+            typeof window.__scExileStatusLabel === 'function'
+              ? window.__scExileStatusLabel(uidStr)
+              : '외계행성 관측 체류 중';
+          elAlienExileStatus.hidden = false;
+          elAlienExileStatus.textContent = label;
+        } else {
+          elAlienExileStatus.hidden = true;
+          elAlienExileStatus.textContent = '';
+        }
+      }
+
+      window.__scDockSetAlienBar = updateAvatarExileStatus;
 
       function normalizeTendency3(conservative, centrist, progressive) {
         var r = Math.max(0, Number(conservative));
@@ -6975,44 +6739,6 @@
         syncHumanTendencyEmblem(p);
       }
 
-      function setAlienBar(alienPct, userIdOpt) {
-        var n = Math.max(0, Math.min(100, Math.floor(Number(alienPct) || 0)));
-        var uidStr =
-          String(userIdOpt || '').trim() ||
-          String((window.__scPlayer && window.__scPlayer.userId) || '').trim() ||
-          'guest';
-        if (elAlienFill) elAlienFill.style.width = n + '%';
-        if (elAlienTrack) {
-          elAlienTrack.setAttribute('aria-valuenow', String(n));
-          elAlienTrack.setAttribute('aria-label', '외계인 성향 ' + n + '퍼센트');
-        }
-        if (elAlienLegend) elAlienLegend.textContent = '외계인 성향 ' + n + '%';
-        if (elAlienWarn) {
-          var stage =
-            typeof window.__scModerationStageFromBehavior === 'function'
-              ? window.__scModerationStageFromBehavior(uidStr)
-              : 'NORMAL';
-          if (String(stage).indexOf('EXILE_STAGE_') === 0) {
-            elAlienWarn.hidden = false;
-            elAlienWarn.textContent =
-              '안정화 분리 상태입니다. 외계행성 생활권에서 일정 기간 체류 중입니다.';
-          } else if (stage === 'OBSERVATION') {
-            elAlienWarn.hidden = false;
-            elAlienWarn.textContent = '관측 상태입니다. 참여 속도가 일시적으로 완화될 수 있습니다.';
-          } else if (stage === 'WARNING') {
-            elAlienWarn.hidden = false;
-            elAlienWarn.textContent = ALIEN_WARN_TEXT;
-          } else if (n >= ALIEN_WARN_PCT) {
-            elAlienWarn.hidden = false;
-            elAlienWarn.textContent = ALIEN_WARN_MSG;
-          } else {
-            elAlienWarn.hidden = true;
-          }
-        }
-      }
-
-      window.__scDockSetAlienBar = setAlienBar;
-
       function hasMeasuredTendency(pct) {
         if (!pct || typeof pct !== 'object' || pct.none) return false;
         var r = pct.conservative;
@@ -7040,7 +6766,7 @@
         } else {
           setTendencyBar(tendencyPct);
         }
-        setAlienBar(0);
+        updateAvatarExileStatus(userId);
 
         var tid = territoryCodeFromLabel(territory);
         var ts = String(territory || '').trim();
@@ -7074,17 +6800,13 @@
       window.__scDockSetMeta = setMeta;
 
       function territoryCodeFromLabel(territoryStr) {
-        var allowed = [
-          'COMMON',
-          'CONSERVATIVE',
-          'PROGRESSIVE',
-          'KANTAPBIYA_LEFT',
-          'KANTAPBIYA_RIGHT',
-        ];
+        var allowed = ['COMMON', 'CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA'];
         var s = String(territoryStr || '').trim();
         if (!s || s === '미편입') return 'COMMON';
         var code = s.split('·')[0].trim();
-        if (code === 'KANTAPBIYA_CENTER') return 'KANTAPBIYA_LEFT';
+        if (code === 'KANTAPBIYA_CENTER' || code === 'KANTAPBIYA_LEFT' || code === 'KANTAPBIYA_RIGHT') {
+          return 'KANTAPBIYA';
+        }
         if (allowed.indexOf(code) >= 0) return code;
         return 'COMMON';
       }
@@ -7365,11 +7087,7 @@
       var LEGACY_KEY = 'sc_board_posts_v1';
       var FACTION_UNLOCK_PCT = 40;
       var FACTION_STAGE2_PCT = 60;
-      var ALIEN_MARK_DELTA = 10;
-      var LIKE_RECV_PLANET_DELTA = 2;
-      /** 싫어요는 planetPct(사회적 과열) 쪽 비중을 좋아요보다 크게 */
-      var DISLIKE_RECV_PLANET_DELTA = 3;
-      /** 싫어요 alignment 델타 추가 스케일(applyReactionScoresWithMult 내에서 적용) */
+      /** @deprecated planetPct 제거 — 레거시 호출부 no-op 유지 */
       var DISLIKE_ALIGN_SCALE = 0.4;
       /** 타인 글 반응으로 오가는 정치 이동(상호 평가) — 콘텐츠 중력 대비 ~30% 체감 */
       var PEER_SOCIAL_PRESSURE_SCALE = 0.33;
@@ -7385,10 +7103,7 @@
       /** 반응으로 인한 표시 % 변화: 축당 하루 기준선 대비 최대 ±(이 값) */
       var ALIGN_DAILY_CAP_KEY = 'sc_align_daily_pct_cap_v1';
       var ALIGN_DAILY_PCT_PER_AXIS = 5;
-      /** planetPct는 과열 신호(표시·내부 점수)만 — 외계행성 체류 자동 배정에 사용하지 않음 */
-      var ALIEN_OBSERVE_PCT = 50;
-      var ALIEN_RISK_CANDIDATE_PCT = 70;
-      var ALIEN_REVIEW_PCT = 90;
+      /** planetPct 레거시 필드 — 더 이상 사용하지 않음 */
       var EXILE_STAGE_DAYS = [0, 3, 7, 14, 30, 90];
       var EXILE_REENTRY_WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
       var EXILE_STAGE_DECAY_90_MS = 90 * 24 * 60 * 60 * 1000;
@@ -7459,44 +7174,22 @@
       var ALIEN_BLIND_MSG = '외계 관측구역 전용 표현입니다';
       var KANTA_BLIND_MSG = ALIEN_BLIND_MSG;
       var MAIN_BELT_FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE'];
-      var ALIEN_SIGNAL_LEFT = 'KANTAPBIYA_LEFT';
-      var ALIEN_SIGNAL_RIGHT = 'KANTAPBIYA_RIGHT';
-      var KANTA_TERRITORY_IDS = [ALIEN_SIGNAL_LEFT, ALIEN_SIGNAL_RIGHT];
-      /** 데모 시드 등: 외계행성 신호구역(레거시 ID) 포함 */
-      var FOUR_TIER_IDS = MAIN_BELT_FOUR_TIER_IDS.concat(KANTA_TERRITORY_IDS);
+      var FOUR_TIER_IDS = MAIN_BELT_FOUR_TIER_IDS.slice();
       var ALL_TERRITORY_IDS = FOUR_TIER_IDS.concat(['KANTAPBIYA']);
       var ALIEN_UI = {
         planet: '외계행성',
-        freeZone: '외계 자유구역',
-        lounge: '외계 라운지',
-        observeZone: '외계 관측구역',
-        progSignal: '개혁 신호구역',
-        conSignal: '질서 신호구역',
+        observeBase: '행동 관측 기지',
       };
-      var ALIEN_SIGNAL_LABELS = {
-        KANTAPBIYA_LEFT: ALIEN_UI.planet + ' · ' + ALIEN_UI.progSignal,
-        KANTAPBIYA_RIGHT: ALIEN_UI.planet + ' · ' + ALIEN_UI.conSignal,
-      };
-      var KANTA_AFFIL_LABELS = ALIEN_SIGNAL_LABELS;
       var ALIEN_PLANET_HEADER_STATUS = [
-        { min: 70, text: '현재 고온 토론 상태 · 일부 흐름 제한 적용 중' },
-        { min: 50, text: '관측 안정화 진행 중 · 신호구역 흐름 분리 운영' },
-        { min: 30, text: '외계 관측구역 · 생활권과 신호구역 병행' },
-        { min: 0, text: '외계행성 생활권 · 자유구역과 신호구역' },
-      ];
-      var ALIEN_LOCKED_STAGE_DEFS = [
-        { stage: 2, title: '2단계 관측 제한 구역', note: '추후 개방 예정' },
-        { stage: 3, title: '3단계 심화 신호 구역', note: '안정화 이후 접근 가능' },
-        { stage: 4, title: '4단계 미확인 구역', note: '현재 접근 불가' },
+        { min: 0, text: '외계행성 행동 관측 구역' },
       ];
       var ALIEN_FREE_CATEGORY_DEFS = [
-        { id: 'lounge', label: '잡담·일상' },
-        { id: 'meme', label: '밈·유머' },
-        { id: 'story', label: '짧은 이야기' },
-        { id: 'light', label: '가벼운 드립' },
+        { id: 'free', label: '자유게시판' },
+        { id: 'observe', label: '관측기록' },
+        { id: 'meme', label: '밈·드립' },
+        { id: 'diary', label: '생존일지' },
       ];
       var ALIEN_HOT_TAB_KEY = 'sc_alien_hot_tab_v1';
-      var ALIEN_FACTION_HOT_TAB_KEY = 'sc_alien_faction_hot_tab_v1';
       var ALIEN_HOT_TAB_DEFS = [
         { id: 'popular', label: '인기' },
         { id: 'rising', label: '급상승' },
@@ -7504,9 +7197,7 @@
         { id: 'empathy', label: '공감' },
       ];
       var ALIEN_HOT_LIST_MAX = 6;
-      var ALIEN_FACTION_HOT_MAX = 6;
       var ALIEN_FREE_FEED_MAX = 8;
-      var alienObserveDetailOpen = false;
       var FREE_SUBCATEGORY_DEFS = [
         { id: 'debate', label: '자유 토론', mega: 'mega_debate' },
         { id: 'light', label: '유머·가벼운글', mega: 'mega_light' },
@@ -7533,7 +7224,6 @@
       var BOARD_LIST_DISPLAY_MAX = 30;
       var BOARD_PAGE_SIZE = 18;
       var BOARD_PAGE_KEY = 'sc_board_page_v1';
-      var ALIEN_SIGNAL_PAGE_KEY = 'sc_alien_signal_page_v1';
       var BOARD_FEED_TAB_KEY = 'sc_board_feed_tab_v1';
       var BOARD_FEED_TAB_DEFS = [
         { id: 'fresh', label: '최신글' },
@@ -7548,9 +7238,7 @@
         4: '4 · 지도층',
       };
       var KANTA_BOARD_TAGLINES = {
-        KANTAPBIYA: ALIEN_UI.planet + ' · 고온 토론 생활권',
-        KANTAPBIYA_LEFT: ALIEN_UI.progSignal,
-        KANTAPBIYA_RIGHT: ALIEN_UI.conSignal,
+        KANTAPBIYA: ALIEN_UI.planet + ' · 행동 관측 구역',
       };
       var COMMON_FREE_FEED_NEW_MS = 48 * 60 * 60 * 1000;
       var MAX_IMAGES = 4;
@@ -8482,34 +8170,13 @@
       var elCentristHub = document.getElementById('centrist-hub-wrap');
       var elCentristHubMeta = document.getElementById('centrist-hub-meta');
       var elAlienHub = document.getElementById('alien-hub-wrap');
-      var elAlienHubMain = document.getElementById('alien-hub-main');
       var elAlienHubStatus = document.getElementById('alien-hub-status');
       var elAlienFreeList = document.getElementById('alien-free-list');
       var elAlienFreeEmpty = document.getElementById('alien-free-empty');
-      var elAlienSignalToday = document.getElementById('alien-signal-today');
+      var elAlienHubStats = document.getElementById('alien-hub-stats');
       var elAlienHotTabs = document.getElementById('alien-hot-tabs');
       var elAlienHotList = document.getElementById('alien-hot-list');
       var elAlienHotEmpty = document.getElementById('alien-hot-empty');
-      var elAlienFactionHotTabs = document.getElementById('alien-faction-hot-tabs');
-      var elAlienFactionHotList = document.getElementById('alien-faction-hot-list');
-      var elAlienFactionHotEmpty = document.getElementById('alien-faction-hot-empty');
-      var elAlienFactionHotTitle = document.getElementById('alien-faction-hot-title');
-      var elAlienMySignalTitle = document.getElementById('alien-my-signal-title');
-      var elAlienOwnSignalList = document.getElementById('alien-own-signal-list');
-      var elAlienOwnSignalEmpty = document.getElementById('alien-own-signal-empty');
-      var elAlienOwnSignalPagination = document.getElementById('alien-own-signal-pagination');
-      var elAlienMyStageLocks = document.getElementById('alien-my-stage-locks');
-      var btnAlienMySignalWrite = document.getElementById('alien-my-signal-write');
-      var elAlienOppObserveTitle = document.getElementById('alien-opp-observe-title');
-      var elAlienOppPopularList = document.getElementById('alien-opp-popular-list');
-      var elAlienOppDebateList = document.getElementById('alien-opp-debate-list');
-      var elAlienOppRecentList = document.getElementById('alien-opp-recent-list');
-      var btnAlienOppObserveMore = document.getElementById('alien-opp-observe-more');
-      var elAlienObserveDetailWrap = document.getElementById('alien-observe-detail-wrap');
-      var elAlienObserveDetailTitle = document.getElementById('alien-observe-detail-title');
-      var elAlienObserveDetailList = document.getElementById('alien-observe-detail-list');
-      var elAlienObserveDetailEmpty = document.getElementById('alien-observe-detail-empty');
-      var btnAlienObserveDetailBack = document.getElementById('alien-observe-detail-back');
       var btnAlienFreeWrite = document.getElementById('alien-free-write');
       var elCommonTerritoryHotWrap = document.getElementById('common-territory-hot-wrap');
       var elCentristTabs = document.getElementById('centrist-category-tabs');
@@ -8585,51 +8252,14 @@
         return String(tid || '') === 'KANTAPBIYA';
       }
 
-      function getAlienHomeSignalTerritory(userId) {
-        var ft = getForcedTerritory(userId);
-        if (ft === ALIEN_SIGNAL_LEFT || ft === ALIEN_SIGNAL_RIGHT) return ft;
-        return null;
-      }
-
-      function getAlienUiHomeSignalTerritory(userId) {
-        var forced = getAlienHomeSignalTerritory(userId);
-        if (forced) return forced;
-        return pickSignalTerritoryFromScores(getScoresForUser(userId));
-      }
-
-      function getAlienUiOpponentSignalTerritory(userId) {
-        var home = getAlienUiHomeSignalTerritory(userId);
-        return home === ALIEN_SIGNAL_LEFT ? ALIEN_SIGNAL_RIGHT : ALIEN_SIGNAL_LEFT;
-      }
-
-      function alienSignalSectionLabel(signalTid) {
-        if (signalTid === ALIEN_SIGNAL_LEFT) return ALIEN_UI.progSignal;
-        if (signalTid === ALIEN_SIGNAL_RIGHT) return ALIEN_UI.conSignal;
-        return '신호구역';
-      }
-
-      function isAlienOwnSignalZone(signalTid) {
-        var home = getAlienHomeSignalTerritory(uid());
-        return !!home && String(signalTid || '') === home;
-      }
-
-      function isAlienOpponentSignalReadOnly(signalTid) {
-        if (!isKantaTerritory(signalTid)) return false;
-        var home = getAlienHomeSignalTerritory(uid());
-        if (!home) return true;
-        return home !== String(signalTid || '');
-      }
-
       function effectiveBoardTerritoryId() {
         return window.__scDetailBoardTerritory || currentTerritory;
       }
 
       function canCommentOnBoardTerritory(tid) {
         var t = String(tid || '');
-        if (isAlienOpponentSignalReadOnly(t)) return false;
         if (isPlanetResidentEarthQuarantineBoard(t, window.__scDetailBoardStage || effectiveStage())) return false;
         if (t === 'KANTAPBIYA') return isBoardUnlocked();
-        if (isKantaTerritory(t)) return isAlienOwnSignalZone(t) && isBoardUnlocked();
         return isBoardUnlocked();
       }
 
@@ -8654,19 +8284,17 @@
       }
 
       function alienPlanetHeaderStatus(planetPct) {
-        var n = Math.max(0, Math.min(100, Math.floor(Number(planetPct) || 0)));
-        for (var i = 0; i < ALIEN_PLANET_HEADER_STATUS.length; i++) {
-          if (n >= ALIEN_PLANET_HEADER_STATUS[i].min) return ALIEN_PLANET_HEADER_STATUS[i].text;
-        }
-        return ALIEN_PLANET_HEADER_STATUS[ALIEN_PLANET_HEADER_STATUS.length - 1].text;
+        return ALIEN_PLANET_HEADER_STATUS[0].text;
       }
 
       function canonicalAlienFreeCategoryId(cat) {
-        var c = String(cat || 'lounge').trim();
+        var c = String(cat || 'free').trim();
+        var legacy = { lounge: 'free', light: 'meme', story: 'diary' };
+        if (legacy[c]) c = legacy[c];
         for (var i = 0; i < ALIEN_FREE_CATEGORY_DEFS.length; i++) {
           if (ALIEN_FREE_CATEGORY_DEFS[i].id === c) return c;
         }
-        return 'lounge';
+        return 'free';
       }
 
       var alienWriteTargetTerritory = null;
@@ -8676,12 +8304,11 @@
       }
 
       function isKantaTerritory(tid) {
-        var t = String(tid || '');
-        return t === 'KANTAPBIYA_LEFT' || t === 'KANTAPBIYA_RIGHT';
+        return isAlienPlanetHub(tid);
       }
 
       function isAuthorKantapbiya(userId) {
-        return isKantaTerritory(getForcedTerritory(userId));
+        return isActiveAlienExile(userId);
       }
 
       function shouldBlindKantaOnEarthBoard(authorId, boardTerritoryId) {
@@ -8773,22 +8400,6 @@
         if (isCommonSpace(t)) return st === 1;
         if (!isFourTier(t)) return st === 1;
         if (st >= 3) return false;
-        var me = uid();
-        if (t === 'KANTAPBIYA_LEFT' || t === 'KANTAPBIYA_RIGHT') {
-          if (st === 1) {
-            var homeK = getForcedTerritory(me);
-            if (homeK && homeK !== t) return false;
-            return !!homeK;
-          }
-          if (st === 2) {
-            var pctK = playerTendencyPct();
-            if (!pctK) return false;
-            if (t === 'KANTAPBIYA_LEFT') return pctK.progressive >= FACTION_STAGE2_PCT;
-            if (t === 'KANTAPBIYA_RIGHT') return pctK.conservative >= FACTION_STAGE2_PCT;
-            return false;
-          }
-          return false;
-        }
         var pct = playerTendencyPct();
         var axis = factionAxisPct(t, pct);
         if (st === 1) return axis >= FACTION_UNLOCK_PCT;
@@ -11676,15 +11287,9 @@
       }
 
       function bumpMapPopForTerritory(tid, delta) {
-        var t = String(tid || '').trim();
+        var t = normalizeBoardTerritoryId(String(tid || '').trim());
         if (!t || t === 'UNASSIGNED') return;
-        var allowed = {
-          COMMON: 1,
-          CONSERVATIVE: 1,
-          PROGRESSIVE: 1,
-          KANTAPBIYA_LEFT: 1,
-          KANTAPBIYA_RIGHT: 1,
-        };
+        var allowed = { COMMON: 1, CONSERVATIVE: 1, PROGRESSIVE: 1, KANTAPBIYA: 1 };
         if (!allowed[t]) return;
         if (!window.__scTerritoryPop || typeof window.__scTerritoryPop.get !== 'function') return;
         var g = window.__scTerritoryPop.get();
@@ -11952,7 +11557,6 @@
         var s = getScoresForUser(uidStr);
         var pct = A.toDisplayPercent(s);
         var label = A.tendencyLabelFromPercent(pct);
-        var alien = Math.round(getPlanetPct(uidStr));
         var inner = document.createElement('div');
         inner.className = 'centrist-world-pulse__inner';
         var lab = document.createElement('p');
@@ -11960,8 +11564,7 @@
         lab.textContent = '나의 성향';
         var tx = document.createElement('p');
         tx.className = 'centrist-world-pulse__text';
-        tx.textContent =
-          '나의 성향 지도: ' + label + (alien >= 5 ? ' · 외계 지수 약 ' + alien + '%' : '');
+        tx.textContent = '나의 성향 지도: ' + label;
         var bars = document.createElement('div');
         bars.className = 'centrist-world-pulse__bars';
         bars.setAttribute('role', 'img');
@@ -12212,9 +11815,9 @@
           CONSERVATIVE: '질서',
           PROGRESSIVE: '개혁',
           KANTAPBIYA: ALIEN_UI.planet,
-          KANTAPBIYA_LEFT: ALIEN_UI.progSignal,
-          KANTAPBIYA_CENTER: ALIEN_UI.progSignal,
-          KANTAPBIYA_RIGHT: ALIEN_UI.conSignal,
+          KANTAPBIYA_LEFT: ALIEN_UI.planet,
+          KANTAPBIYA_CENTER: ALIEN_UI.planet,
+          KANTAPBIYA_RIGHT: ALIEN_UI.planet,
         };
         return m[t] || t;
       }
@@ -12244,6 +11847,30 @@
           alert('저장에 실패했습니다. 본문·이미지·댓글을 줄여 보세요.');
           return false;
         }
+      }
+
+      function migrateLegacyKantaPostsInBundle() {
+        try {
+          var b = loadBundle();
+          var hubKey = postKey('KANTAPBIYA', 1);
+          var hub = Array.isArray(b.posts[hubKey]) ? b.posts[hubKey].slice() : [];
+          var legacyTids = ['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT', 'KANTAPBIYA_CENTER'];
+          var changed = false;
+          for (var li = 0; li < legacyTids.length; li++) {
+            var lk = postKey(legacyTids[li], 1);
+            var arr = b.posts[lk];
+            if (!Array.isArray(arr) || !arr.length) continue;
+            for (var pi = 0; pi < arr.length; pi++) {
+              hub.push(normalizePost(arr[pi], 'KANTAPBIYA'));
+            }
+            delete b.posts[lk];
+            changed = true;
+          }
+          if (changed) {
+            b.posts[hubKey] = hub;
+            saveBundle(b);
+          }
+        } catch (_) {}
       }
 
       function migrateLegacy() {
@@ -12341,28 +11968,21 @@
         if (!id || id === 'guest') return false;
         var b = readUserBucket(id);
         var ft = b.forcedTerritory;
-        if (ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return false;
+        if (ft !== 'KANTAPBIYA' && ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return false;
         var ms = readUserModerationState(id);
         if (!ms.exileUntil) return false;
         var until = new Date(ms.exileUntil).getTime();
         return isFinite(until) && Date.now() < until;
       }
 
-      function pickSignalTerritoryFromScores(scores3) {
-        var A = window.AlignmentScoring;
-        if (!A || !scores3) return ALIEN_SIGNAL_LEFT;
-        var bu = A.unit3(scores3);
-        return bu.progressive >= bu.conservative ? ALIEN_SIGNAL_LEFT : ALIEN_SIGNAL_RIGHT;
-      }
-
       function preserveActiveForcedTerritory(prev) {
         var ft = prev && prev.forcedTerritory;
-        if (ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return null;
+        if (ft !== 'KANTAPBIYA' && ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return null;
         var ms = prev.userModerationState;
         if (!ms || !ms.exileUntil) return null;
         var until = new Date(ms.exileUntil).getTime();
         if (!isFinite(until) || Date.now() >= until) return null;
-        return ft;
+        return 'KANTAPBIYA';
       }
 
       function computeNextExileStage(userId) {
@@ -12477,9 +12097,14 @@
             var o = map[id];
             if (!o || typeof o !== 'object') continue;
             var ft = o.forcedTerritory;
-            if (ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') continue;
-            if (o.userModerationState && o.userModerationState.exileUntil) continue;
+            if (ft !== 'KANTAPBIYA' && ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') continue;
+            if (o.userModerationState && o.userModerationState.exileUntil) {
+              o.forcedTerritory = 'KANTAPBIYA';
+              changed = true;
+              continue;
+            }
             var until = new Date(Date.now() + EXILE_STAGE_DAYS[1] * 24 * 60 * 60 * 1000).toISOString();
+            o.forcedTerritory = 'KANTAPBIYA';
             o.userModerationState = {
               exileStage: 1,
               exileUntil: until,
@@ -12504,12 +12129,13 @@
 
       function alienPlanetHeaderStatusForUser(userId) {
         if (isActiveAlienExile(userId)) {
-          return '일정 기간 외계행성 체류 중 · 안정화 분리 상태';
+          var exSt = Math.max(1, Math.min(5, Math.floor(Number(readUserModerationState(userId).exileStage) || 1)));
+          return '외계행성 · ' + exSt + '차 관측 · 안정화 분리 상태';
         }
         var stage = moderationStageFromBehavior(userId);
-        if (stage === 'OBSERVATION') return '관측 안정화 진행 중 · 일부 흐름 제한 적용 중';
+        if (stage === 'OBSERVATION') return '행동 관측 진행 중 · 일부 활동 제한 적용 중';
         if (stage === 'WARNING') return '고온 토론 주의 · 토론 중심 활동을 권장합니다';
-        return '외계행성 생활권 · 자유구역과 신호구역';
+        return '외계행성 행동 관측 구역';
       }
 
       function bucketScores(prev) {
@@ -12530,7 +12156,20 @@
           var raw = localStorage.getItem(ALIGN_LS);
           if (!raw) return {};
           var o = JSON.parse(raw);
-          return o && typeof o === 'object' ? o : {};
+          if (!o || typeof o !== 'object') return {};
+          var changed = false;
+          for (var id in o) {
+            if (!Object.prototype.hasOwnProperty.call(o, id)) continue;
+            var b = o[id];
+            if (!b || typeof b !== 'object') continue;
+            var ft = b.forcedTerritory;
+            if (ft === 'KANTAPBIYA_LEFT' || ft === 'KANTAPBIYA_RIGHT') {
+              b.forcedTerritory = 'KANTAPBIYA';
+              changed = true;
+            }
+          }
+          if (changed) saveScoresMap(o);
+          return o;
         } catch (_) {
           return {};
         }
@@ -13183,7 +12822,7 @@
         normalizePost(post, boardTerritoryId);
         function anyOnReactions(r) {
           if (!r || typeof r !== 'object') return false;
-          if (isKantaTerritory(boardTerritoryId)) {
+          if (isAlienPlanetHub(boardTerritoryId)) {
             return Array.isArray(r.empathy) && r.empathy.length > 0;
           }
           return (
@@ -13203,7 +12842,7 @@
       }
 
       function accumulateReactionsForCampAffinity(reactions, boardTerritoryId, out) {
-        var empOnly = isKantaTerritory(boardTerritoryId);
+        var empOnly = isAlienPlanetHub(boardTerritoryId);
         if (!reactions || typeof reactions !== 'object') return;
         var E = reactions.empathy,
           L = reactions.likes,
@@ -13348,14 +12987,12 @@
         var id = String(userId || '').trim() || 'guest';
         var map = loadScoresMap();
         var prev = readUserBucket(id);
-        var pp = typeof prev.planetPct === 'number' && !isNaN(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0;
         var nextForced = preserveActiveForcedTerritory(prev);
         var stage = moderationStageFromBehavior(id);
         map[id] = {
           conservative: scores.conservative,
           centrist: scores.centrist,
           progressive: scores.progressive,
-          planetPct: pp,
           forcedTerritory: nextForced,
           moderationStage: stage,
           isUnderObservation: stage === 'OBSERVATION' || stage === 'WARNING' || String(stage).indexOf('EXILE_STAGE_') === 0,
@@ -13603,40 +13240,18 @@
       }
 
       function getPlanetPct(userId) {
-        var b = readUserBucket(userId);
-        var n = Number(b.planetPct);
-        if (!isFinite(n)) return 0;
-        return Math.max(0, Math.min(100, n));
+        return 0;
       }
 
       function getForcedTerritory(userId) {
         if (!isActiveAlienExile(userId)) return null;
-        var ft = readUserBucket(userId).forcedTerritory;
-        if (ft === ALIEN_SIGNAL_LEFT || ft === ALIEN_SIGNAL_RIGHT) return ft;
-        return null;
-      }
-
-      function kantaForcedTerritoryFromScores(planetPct, scores3) {
-        return pickSignalTerritoryFromScores(scores3);
-      }
-
-      function kantaForcedTerritoryFromUser(authorId) {
-        return pickSignalTerritoryFromScores(getScoresForUser(authorId));
-      }
-
-      function kantaPlanetLabelKo(ft) {
-        if (ft === 'KANTAPBIYA_LEFT') return '개혁';
-        if (ft === 'KANTAPBIYA_RIGHT') return '질서';
-        return '';
+        return 'KANTAPBIYA';
       }
 
       /** 댓글·인기댓글 분리용: 작성자를 개혁 / 질서 / 중립(중도 우세)으로 분류 */
       function getCommentAuthorFactionTag(authorId) {
         var id = String(authorId || '').trim();
         if (!id) return 'NEUTRAL';
-        var ft = getForcedTerritory(id);
-        if (ft === 'KANTAPBIYA_LEFT') return 'PROGRESSIVE';
-        if (ft === 'KANTAPBIYA_RIGHT') return 'CONSERVATIVE';
         var u = getScoresForUser(id);
         var p = Math.max(0, +u.progressive || 0);
         var c = Math.max(0, +u.conservative || 0);
@@ -13651,20 +13266,9 @@
         return 'NEUTRAL';
       }
 
-      /** 소속이 아닌 상대 외계행성 1단계: 읽기(눈팅) 전용 컨텍스트 */
-      function isKantaOpponentTier1LurkContext(tid, stage) {
-        var t = String(tid != null ? tid : currentTerritory || '');
-        var stg = Math.max(1, Math.min(4, Math.floor(Number(stage != null ? stage : currentStage) || 1)));
-        if (!isKantaTerritory(t) || stg !== 1) return false;
-        var homeK = getForcedTerritory(uid());
-        if (!homeK || homeK === t) return false;
-        return canOpenFactionStageForRead(t, stg);
-      }
-
       function canUseEmpathyOnCurrentBoard() {
         if (!isBoardReadable()) return false;
         var bt = effectiveBoardTerritoryId();
-        if (isAlienOpponentSignalReadOnly(bt)) return false;
         if (isBoardUnlocked()) return true;
         if (isPlanetResidentEarthQuarantineBoard(bt, effectiveStage())) return true;
         return false;
@@ -13678,9 +13282,11 @@
             if (!Object.prototype.hasOwnProperty.call(map, id)) continue;
             var o = map[id];
             if (!o || typeof o !== 'object') continue;
-            if (o.forcedTerritory !== 'KANTAPBIYA_CENTER') continue;
-            o.forcedTerritory = null;
-            changed = true;
+            var ft = o.forcedTerritory;
+            if (ft === 'KANTAPBIYA_LEFT' || ft === 'KANTAPBIYA_RIGHT' || ft === 'KANTAPBIYA_CENTER') {
+              o.forcedTerritory = 'KANTAPBIYA';
+              changed = true;
+            }
           }
           if (changed) saveScoresMap(map);
         } catch (_) {}
@@ -13697,7 +13303,7 @@
           else if (tag === 'PROGRESSIVE') out.prog++;
           else out.cons++;
         }
-        if (isKantaTerritory(territoryId)) {
+        if (isAlienPlanetHub(territoryId)) {
           (reactions.empathy || []).forEach(bump);
           return;
         }
@@ -13979,38 +13585,12 @@
       }
 
       function addPlanetScoreForAuthor(authorId, delta, capPost) {
-        var id = String(authorId || '').trim();
-        if (!id) {
-          return { next: 0, forced: null, crossed50: false, crossed30: false, cleared: false };
-        }
-        var effDelta = capPost ? clampPlanetDeltaForThread(capPost, id, delta) : delta;
-        var prevPct = getPlanetPct(id);
-        var next = Math.max(0, Math.min(100, prevPct + effDelta));
-        var prevForced = getForcedTerritory(id);
-        var map = loadScoresMap();
-        var prev = readUserBucket(id);
-        var sc = bucketScores(prev);
-        var forced = preserveActiveForcedTerritory(prev);
-        var stage = moderationStageFromBehavior(id);
-        map[id] = {
-          conservative: sc.conservative,
-          centrist: sc.centrist,
-          progressive: sc.progressive,
-          planetPct: next,
-          forcedTerritory: forced,
-          moderationStage: stage,
-          isUnderObservation: stage === 'OBSERVATION' || stage === 'WARNING' || String(stage).indexOf('EXILE_STAGE_') === 0,
-          userModerationState: prev.userModerationState || defaultUserModerationState(),
-        };
-        saveScoresMap(map);
-        if (capPost && effDelta !== 0) recordPlanetThreadUse(capPost, effDelta);
-        if (effDelta > 0) registerToxicEvent(id, Math.abs(effDelta) * 0.45, 'planet-signal');
         return {
-          next: next,
-          forced: forced,
+          next: 0,
+          forced: getForcedTerritory(authorId),
           crossed50: false,
-          crossed30: prevPct < ALIEN_WARN_PCT && next >= ALIEN_WARN_PCT,
-          cleared: !!prevForced && !forced,
+          crossed30: false,
+          cleared: false,
         };
       }
 
@@ -14018,16 +13598,15 @@
         var p = window.__scPlayer;
         if (!p || String(p.userId) !== String(authorId)) return;
         if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
-        if (!alienRes) return;
-        var ft = getForcedTerritory(authorId);
-        if (alienRes.crossed30) {
-          alert(ALIEN_WARN_MSG);
-        }
       }
 
       function pickAffiliationFromPct(pct, userId) {
         var ft = getForcedTerritory(userId);
-        if (ft) return { tid: 'KANTAPBIYA', label: KANTA_AFFIL_LABELS[ft] || ALIEN_UI.planet };
+        if (ft) {
+          var ms = readUserModerationState(userId);
+          var st = Math.max(1, Math.min(5, Math.floor(Number(ms.exileStage) || 1)));
+          return { tid: 'KANTAPBIYA', label: '외계행성 · ' + st + '차 관측' };
+        }
         if (!pct || pct.none) return { tid: 'COMMON', label: 'COMMON · 중앙광장' };
         var c = pct.conservative;
         var pr = pct.progressive;
@@ -14055,7 +13634,7 @@
         if (ft) {
           p.affiliationTerritoryId = 'KANTAPBIYA';
           p.territoryId = 'KANTAPBIYA';
-          p.affiliationDisplay = KANTA_AFFIL_LABELS[ft] || ALIEN_UI.planet;
+          p.affiliationDisplay = pickAffiliationFromPct(p.tendencyPct, uidStr).label;
         } else {
           var aff = pickAffiliationFromPct(p.tendencyPct, uidStr);
           p.affiliationTerritoryId = aff.tid;
@@ -14245,16 +13824,14 @@
       }
 
       function reactionGateForBoard(boardTerritoryId, stage) {
-        var tid = String(boardTerritoryId || '');
-        var kanta = isKantaTerritory(tid);
-        var alienOpp = isAlienOpponentSignalReadOnly(tid);
-        var alienOwn = isAlienOwnSignalZone(tid);
-        var earthQ = !kanta && !isAlienPlanetHub(tid) && isPlanetResidentEarthQuarantineBoard(tid, stage);
+        var earthQ =
+          !isAlienPlanetHub(boardTerritoryId) && isPlanetResidentEarthQuarantineBoard(boardTerritoryId, stage);
         return {
-          disableLike: alienOpp || earthQ || (kanta && !alienOwn),
-          disableDis: kanta || earthQ || alienOpp || isAlienPlanetHub(tid),
-          disablePlanet: kanta || earthQ || alienOpp || isAlienPlanetHub(tid),
-          disableEmpathy: alienOpp || earthQ,
+          disableLike: earthQ,
+          disableDis: earthQ || isAlienPlanetHub(boardTerritoryId),
+          disablePlanet: true,
+          omitPlanet: true,
+          disableEmpathy: earthQ,
         };
       }
 
@@ -14282,6 +13859,7 @@
         opts = opts || {};
         var row = document.createElement('div');
         row.className = 'sc-react-bar' + (opts.extraClass ? ' ' + opts.extraClass : '');
+        var omitPlanet = true;
 
         function addBtn(kind, count, active, disabled, onClick, icoClass, lbl, aria, title) {
           var btn = document.createElement('button');
@@ -14333,7 +13911,7 @@
           'sc-react-ico--up',
           '추천',
           '추천 — 정치 반응(동조)',
-          '추천 — 정치 방향(질서·중도·개혁)에 반영되며, 받는 사람의 외계인 성향도 조금 오릅니다.',
+          '추천 — 정치 방향(질서·중도·개혁)에 반영됩니다.',
         );
         addBtn(
           'dislike',
@@ -14344,19 +13922,21 @@
           'sc-react-ico--down',
           '비추천',
           '비추천 — 정치 반응(비동조)',
-          '비추천 — 정치 방향보다 외계인(사회 충돌·과열) 쪽 영향이 더 큽니다. 정치 축 이동은 완화되어 있습니다.',
+          '비추천 — 정치 방향에 반영됩니다. 정치 축 이동은 완화되어 있습니다.',
         );
-        addBtn(
-          'planet',
-          opts.nPlanet,
-          opts.activePlanet,
-          opts.disabledPlanet || opts.disablePlanet || opts.omitPlanet,
-          opts.onPlanet,
-          'sc-react-ico--planet',
-          '외계인',
-          '외계인 표시 — 외계인 성향만 증가(사람 성향 무관)',
-          '외계인 표시 — 과열 토론 신호만 기록(사람 성향 무관). 고강도 토론 구역 이동은 운영자 승인 시에만 적용됩니다.',
-        );
+        if (!omitPlanet) {
+          addBtn(
+            'planet',
+            opts.nPlanet,
+            opts.activePlanet,
+            opts.disabledPlanet || opts.disablePlanet,
+            opts.onPlanet,
+            'sc-react-ico--planet',
+            '외계인',
+            '외계인 표시',
+            '외계인 표시',
+          );
+        }
 
         return row;
       }
@@ -14417,7 +13997,7 @@
       function findPostByIdAnywhere(postId) {
         var id = String(postId || '').trim();
         if (!id) return null;
-        var tids = ['COMMON', 'CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA', ALIEN_SIGNAL_LEFT, ALIEN_SIGNAL_RIGHT];
+        var tids = ['COMMON', 'CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA'];
         for (var ti = 0; ti < tids.length; ti++) {
           for (var st = 1; st <= 4; st++) {
             var arr = getPosts(tids[ti], st);
@@ -14707,6 +14287,12 @@
 
       window.__scIsOperatorUser = isOperatorUser;
       window.__scModerationStageFromBehavior = moderationStageFromBehavior;
+      window.__scIsActiveAlienExile = isActiveAlienExile;
+      window.__scExileStatusLabel = function (userId) {
+        var ms = readUserModerationState(userId);
+        var st = Math.max(1, Math.min(5, Math.floor(Number(ms.exileStage) || 1)));
+        return '외계행성 · ' + st + '차 관측 체류 중 — 안정화 분리 상태입니다.';
+      };
       window.__scSyncOperatorModerationUI = syncOperatorModerationUI;
 
       function canPerformModeratedAction(userId) {
@@ -14736,9 +14322,7 @@
       }
 
       function bumpLikeRecvPlanet(authorId, rootPost, signedDelta) {
-        if (!rootPost || !authorId || !signedDelta) return;
-        var r = addPlanetScoreForAuthor(authorId, signedDelta, rootPost);
-        syncForcedAffiliationForAuthor(authorId, r);
+        return;
       }
 
       function onTogglePostReaction(postId, asLike) {
@@ -14751,7 +14335,7 @@
         } else {
           if (alertBoardReactionsNotUnlocked()) return;
         }
-        if (isKantaTerritory(currentTerritory)) return;
+        if (isAlienPlanetHub(currentTerritory)) return;
         var A = window.AlignmentScoring;
         if (!A) {
           alert('정치 성향 계산 모듈을 불러오지 못했습니다. 페이지를 새로고침 해 주세요.');
@@ -14781,7 +14365,6 @@
             L.splice(L.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, true, -1, post);
             applyReceivedLikeForAuthor(auth, 'post', -1);
-            bumpLikeRecvPlanet(auth, post, -LIKE_RECV_PLANET_DELTA);
           } else {
             if (inD) {
               D.splice(D.indexOf(me), 1);
@@ -14790,23 +14373,19 @@
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1, post);
             applyReceivedLikeForAuthor(auth, 'post', 1);
-            bumpLikeRecvPlanet(auth, post, LIKE_RECV_PLANET_DELTA);
           }
         } else {
           if (inD) {
             D.splice(D.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, false, -1, post);
-            bumpLikeRecvPlanet(auth, post, -DISLIKE_RECV_PLANET_DELTA);
           } else {
             if (inL) {
               L.splice(L.indexOf(me), 1);
               applyReactionScoresWithMult(me, auth, true, -1, post);
               applyReceivedLikeForAuthor(auth, 'post', -1);
-              bumpLikeRecvPlanet(auth, post, -LIKE_RECV_PLANET_DELTA);
             }
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1, post);
-            bumpLikeRecvPlanet(auth, post, DISLIKE_RECV_PLANET_DELTA);
             registerReportSignal(auth, me, 'post:' + String(post.id || ''), 'dislike-signal');
             registerToxicEvent(auth, 1.5, 'dislike-burst');
             noteReactionBurstForUser(auth);
@@ -14828,7 +14407,7 @@
 
       function commentReactionBestScore(c) {
         normalizeComment(c);
-        if (isKantaTerritory(currentTerritory)) {
+        if (isAlienPlanetHub(currentTerritory)) {
           return c.reactions.empathy.length;
         }
         /* 베스트 댓글: 공감·좋아요·싫어요만 사용. 외계인(행성) 표시(planetVoters)는 순위에 넣지 않음. */
@@ -15069,7 +14648,7 @@
 
         var hBestIntro = document.createElement('h2');
         hBestIntro.className = 'board-post-detail__section-title';
-        hBestIntro.textContent = isKantaTerritory(detailTid)
+        hBestIntro.textContent = isAlienPlanetHub(detailTid)
           ? '인기 댓글 (진영별 · 공감 기준)'
           : '인기 댓글 (진영별 · 공감·좋아요·싫어요 합 기준)';
         root.appendChild(hBestIntro);
@@ -15146,7 +14725,7 @@
         } else {
           if (alertBoardReactionsNotUnlocked()) return;
         }
-        if (isKantaTerritory(currentTerritory)) return;
+        if (isAlienPlanetHub(currentTerritory)) return;
         var A = window.AlignmentScoring;
         if (!A) {
           alert('정치 성향 계산 모듈을 불러오지 못했습니다. 페이지를 새로고침 해 주세요.');
@@ -15173,7 +14752,6 @@
             L.splice(L.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, true, -1, post);
             applyReceivedLikeForAuthor(auth, 'comment', -1);
-            bumpLikeRecvPlanet(auth, post, -LIKE_RECV_PLANET_DELTA);
           } else {
             if (inD) {
               D.splice(D.indexOf(me), 1);
@@ -15182,23 +14760,19 @@
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1, post);
             applyReceivedLikeForAuthor(auth, 'comment', 1);
-            bumpLikeRecvPlanet(auth, post, LIKE_RECV_PLANET_DELTA);
           }
         } else {
           if (inD) {
             D.splice(D.indexOf(me), 1);
             applyReactionScoresWithMult(me, auth, false, -1, post);
-            bumpLikeRecvPlanet(auth, post, -DISLIKE_RECV_PLANET_DELTA);
           } else {
             if (inL) {
               L.splice(L.indexOf(me), 1);
               applyReactionScoresWithMult(me, auth, true, -1, post);
               applyReceivedLikeForAuthor(auth, 'comment', -1);
-              bumpLikeRecvPlanet(auth, post, -LIKE_RECV_PLANET_DELTA);
             }
             D.push(me);
             applyReactionScoresWithMult(me, auth, false, 1, post);
-            bumpLikeRecvPlanet(auth, post, DISLIKE_RECV_PLANET_DELTA);
             registerReportSignal(auth, me, 'comment:' + String(commentId || ''), 'dislike-comment-signal');
             registerToxicEvent(auth, 1.2, 'comment-dislike-burst');
           }
@@ -15210,60 +14784,11 @@
       }
 
       function togglePlanetOnPost(postId) {
-        if (alertBoardReactionsNotUnlocked()) return;
-        if (isKantaTerritory(currentTerritory)) return;
-        var me = uid();
-        if (!canPerformModeratedAction(me)) return;
-        var all = loadPostsCurrent();
-        var post = findPostInCurrentList(all, postId);
-        if (!post) return;
-        var auth = String(post.authorId || '').trim();
-        if (!auth || auth === String(me || '').trim()) return;
-        var pv = post.reactions.planetVoters;
-        var ix = pv.indexOf(me);
-        var r;
-        if (ix >= 0) {
-          pv.splice(ix, 1);
-          r = addPlanetScoreForAuthor(auth, -ALIEN_MARK_DELTA, post);
-        } else {
-          pv.push(me);
-          r = addPlanetScoreForAuthor(auth, ALIEN_MARK_DELTA, post);
-          registerReportSignal(auth, me, 'post:' + String(post.id || ''), 'planet-mark');
-          registerToxicEvent(auth, 2.6, 'planet-mark');
-        }
-        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
-        refreshListOnly();
-        syncForcedAffiliationForAuthor(auth, r);
+        return;
       }
 
       function togglePlanetOnComment(postId, commentId) {
-        if (alertBoardReactionsNotUnlocked()) return;
-        if (isKantaTerritory(currentTerritory)) return;
-        var me = uid();
-        if (!canPerformModeratedAction(me)) return;
-        var all = loadPostsCurrent();
-        var post = findPostInCurrentList(all, postId);
-        if (!post) return;
-        var c = findCommentById(post.comments, commentId);
-        if (!c) return;
-        normalizeComment(c);
-        var auth = String(c.authorId || '').trim();
-        if (!auth || auth === String(me || '').trim()) return;
-        var pv = c.reactions.planetVoters;
-        var ix = pv.indexOf(me);
-        var r;
-        if (ix >= 0) {
-          pv.splice(ix, 1);
-          r = addPlanetScoreForAuthor(auth, -ALIEN_MARK_DELTA, post);
-        } else {
-          pv.push(me);
-          r = addPlanetScoreForAuthor(auth, ALIEN_MARK_DELTA, post);
-          registerReportSignal(auth, me, 'comment:' + String(commentId || ''), 'planet-mark-comment');
-          registerToxicEvent(auth, 2.2, 'planet-mark-comment');
-        }
-        if (!setPosts(currentTerritory, effectiveStage(), all)) return;
-        refreshListOnly();
-        syncForcedAffiliationForAuthor(auth, r);
+        return;
       }
 
       function onToggleEmpathyPost(postId) {
@@ -15327,10 +14852,6 @@
       function submitComment(postId, text, parentId) {
         if (alertBoardReactionsNotUnlocked()) return;
         var detailTid = effectiveBoardTerritoryId();
-        if (isAlienOpponentSignalReadOnly(detailTid)) {
-          alert('상대 신호를 관측 중입니다. 읽기 전용 구역입니다.');
-          return;
-        }
         if (!canCommentOnBoardTerritory(detailTid)) return;
         if (!canPerformModeratedAction(uid())) return;
         var t = String(text || '').trim();
@@ -15686,9 +15207,6 @@
       }
 
       function boardPageStorageKey(scope) {
-        if (scope === 'alien-signal') {
-          return 'alien:' + String(getAlienUiHomeSignalTerritory(uid()) || '');
-        }
         if (scope === 'common') {
           return 'COMMON_s1_' + String(getActiveFreeCategoryId() || 'all');
         }
@@ -15698,8 +15216,7 @@
 
       function getStoredBoardPage(scope) {
         try {
-          var storeKey = scope === 'alien-signal' ? ALIEN_SIGNAL_PAGE_KEY : BOARD_PAGE_KEY;
-          var raw = sessionStorage.getItem(storeKey);
+          var raw = sessionStorage.getItem(BOARD_PAGE_KEY);
           var o = raw ? JSON.parse(raw) : {};
           var n = o && o[boardPageStorageKey(scope)];
           return isFinite(n) && n >= 1 ? Math.floor(n) : 1;
@@ -15710,12 +15227,11 @@
 
       function setStoredBoardPage(scope, page) {
         try {
-          var storeKey = scope === 'alien-signal' ? ALIEN_SIGNAL_PAGE_KEY : BOARD_PAGE_KEY;
-          var raw = sessionStorage.getItem(storeKey);
+          var raw = sessionStorage.getItem(BOARD_PAGE_KEY);
           var o = raw ? JSON.parse(raw) : {};
           if (!o || typeof o !== 'object') o = {};
           o[boardPageStorageKey(scope)] = Math.max(1, Math.floor(Number(page) || 1));
-          sessionStorage.setItem(storeKey, JSON.stringify(o));
+          sessionStorage.setItem(BOARD_PAGE_KEY, JSON.stringify(o));
         } catch (_) {}
       }
 
@@ -15860,18 +15376,6 @@
         return arr;
       }
 
-      function renderAlienStageLocks(container) {
-        if (!container) return;
-        container.textContent = '';
-        for (var ali = 0; ali < ALIEN_LOCKED_STAGE_DEFS.length; ali++) {
-          var def = ALIEN_LOCKED_STAGE_DEFS[ali];
-          var row = document.createElement('div');
-          row.className = 'alien-hub__stage-lock';
-          row.innerHTML = '🔒 <span><strong>' + def.title + '</strong> — ' + def.note + '</span>';
-          container.appendChild(row);
-        }
-      }
-
       function renderAlienCompactPostRow(p, boardTid, listEl) {
         var li = document.createElement('li');
         var btn = document.createElement('button');
@@ -15899,77 +15403,15 @@
         listEl.appendChild(li);
       }
 
-      function alienPostSnippet(body, maxLen) {
-        var s = String(body || '')
-          .replace(/\s+/g, ' ')
-          .trim();
-        if (!s) return '';
-        var n = maxLen || 56;
-        return s.length > n ? s.slice(0, n) + '…' : s;
-      }
-
-      function alienPostReactionCount(p) {
-        normalizePost(p);
-        var em = p.reactions.empathy ? p.reactions.empathy.length : 0;
-        var lk = p.reactions.likes ? p.reactions.likes.length : 0;
-        var ds = p.reactions.dislikes ? p.reactions.dislikes.length : 0;
-        return em + lk + ds;
-      }
-
-      function renderAlienObservePreviewRow(p, boardTid, listEl) {
-        if (!listEl) return;
-        normalizePost(p, boardTid);
-        var li = document.createElement('li');
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'alien-observe-preview__row';
-        var title = document.createElement('span');
-        title.className = 'alien-observe-preview__title';
-        title.textContent = p.title || '(제목 없음)';
-        var snippet = document.createElement('span');
-        snippet.className = 'alien-observe-preview__snippet';
-        snippet.textContent = alienPostSnippet(p.body, 64);
-        var meta = document.createElement('span');
-        meta.className = 'alien-observe-preview__meta';
-        meta.textContent =
-          '반응 ' + alienPostReactionCount(p) + ' · ' + formatDate(p.createdAt);
-        btn.appendChild(title);
-        if (snippet.textContent) btn.appendChild(snippet);
-        btn.appendChild(meta);
-        (function (pid, tid) {
-          btn.addEventListener('click', function () {
-            window.__scDetailBoardTerritory = tid;
-            window.__scDetailBoardStage = 1;
-            openPostDetailScreen(pid);
-          });
-        })(p.id, boardTid);
-        li.appendChild(btn);
-        listEl.appendChild(li);
-      }
-
       function collectAlienHotPool() {
         var pool = [];
-        var sources = [
-          { tid: 'KANTAPBIYA', st: 1 },
-          { tid: ALIEN_SIGNAL_LEFT, st: 1 },
-          { tid: ALIEN_SIGNAL_RIGHT, st: 1 },
-        ];
+        var sources = [{ tid: 'KANTAPBIYA', st: 1 }];
         for (var si = 0; si < sources.length; si++) {
           var arr = getPosts(sources[si].tid, sources[si].st);
           for (var hi = 0; hi < arr.length; hi++) {
             normalizePost(arr[hi], sources[si].tid);
             pool.push({ post: arr[hi], boardTid: sources[si].tid });
           }
-        }
-        return pool;
-      }
-
-      function collectAlienFactionHotPool(homeTid) {
-        var pool = [];
-        var arr = getPosts(homeTid, 1);
-        for (var hi = 0; hi < arr.length; hi++) {
-          normalizePost(arr[hi], homeTid);
-          pool.push({ post: arr[hi], boardTid: homeTid });
         }
         return pool;
       }
@@ -16033,29 +15475,6 @@
         }
         try {
           sessionStorage.setItem(ALIEN_HOT_TAB_KEY, ok);
-        } catch (_) {}
-      }
-
-      function getAlienFactionHotTabId() {
-        try {
-          var v = sessionStorage.getItem(ALIEN_FACTION_HOT_TAB_KEY);
-          for (var li = 0; li < ALIEN_HOT_TAB_DEFS.length; li++) {
-            if (ALIEN_HOT_TAB_DEFS[li].id === v) return v;
-          }
-        } catch (_) {}
-        return 'popular';
-      }
-
-      function setAlienFactionHotTabId(id) {
-        var ok = 'popular';
-        for (var lj = 0; lj < ALIEN_HOT_TAB_DEFS.length; lj++) {
-          if (ALIEN_HOT_TAB_DEFS[lj].id === id) {
-            ok = id;
-            break;
-          }
-        }
-        try {
-          sessionStorage.setItem(ALIEN_FACTION_HOT_TAB_KEY, ok);
         } catch (_) {}
       }
 
@@ -16129,150 +15548,11 @@
         renderAlienHotListRows(elAlienHotList, elAlienHotEmpty, sorted, tabId);
       }
 
-      function renderAlienFactionHotSection(homeTid) {
-        if (!elAlienFactionHotList || !homeTid) return;
-        ensureAlienHotTabs(elAlienFactionHotTabs, 'faction', function (id) {
-          setAlienFactionHotTabId(id);
-          renderAlienFactionHotSection(getAlienUiHomeSignalTerritory(uid()));
-        });
-        var tabId = getAlienFactionHotTabId();
-        syncAlienHotTabStyles(elAlienFactionHotTabs, tabId);
-        var sorted = sortAlienHotPool(collectAlienFactionHotPool(homeTid), tabId).slice(0, ALIEN_FACTION_HOT_MAX);
-        renderAlienHotListRows(elAlienFactionHotList, elAlienFactionHotEmpty, sorted, tabId);
-        if (elAlienFactionHotTitle) {
-          elAlienFactionHotTitle.textContent = '내 진영 인기글 · ' + alienSignalSectionLabel(homeTid);
-        }
-      }
-
-      function renderAlienOwnSignalFeed(homeTid) {
-        if (!elAlienOwnSignalList || !homeTid) return;
-        var prevTerritory = currentTerritory;
-        currentTerritory = homeTid;
-        elAlienOwnSignalList.textContent = '';
-        var posts = loadPostsCurrent().slice();
-        posts.sort(function (a, b) {
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        });
-        var page = getStoredBoardPage('alien-signal');
-        var slice = paginatePostList(posts, page, BOARD_PAGE_SIZE);
-        if (slice.page !== page) setStoredBoardPage('alien-signal', slice.page);
-        if (elAlienOwnSignalEmpty) elAlienOwnSignalEmpty.hidden = slice.total > 0;
-        slice.items.forEach(function (p) {
-          elAlienOwnSignalList.appendChild(renderPost(p));
-        });
-        renderBoardPagination(elAlienOwnSignalPagination, slice, 'alien-signal', function () {
-          renderAlienOwnSignalFeed(homeTid);
-          scrollBoardListToTop(elAlienOwnSignalList);
-        });
-        currentTerritory = prevTerritory;
-        renderAlienStageLocks(elAlienMyStageLocks);
-        if (elAlienMySignalTitle) {
-          elAlienMySignalTitle.textContent = alienSignalSectionLabel(homeTid);
-        }
-        if (btnAlienMySignalWrite) {
-          var own = isAlienOwnSignalZone(homeTid);
-          btnAlienMySignalWrite.disabled = !own || !isBoardUnlocked();
-          btnAlienMySignalWrite.hidden = !own;
-          btnAlienMySignalWrite.dataset.alienWriteSignal = homeTid;
-        }
-      }
-
-      function renderAlienOpponentObservePreview(oppTid) {
-        if (!oppTid) return;
-        var posts = getPosts(oppTid, 1).slice();
-        posts.forEach(function (p) {
-          normalizePost(p, oppTid);
-        });
-        var popular = posts
-          .slice()
-          .sort(function (a, b) {
-            return hotScore(b, oppTid) - hotScore(a, oppTid);
-          })
-          .slice(0, 5);
-        var debate = posts
-          .slice()
-          .sort(function (a, b) {
-            return countCommentBreakdown(b.comments).total - countCommentBreakdown(a.comments).total;
-          })
-          .slice(0, 3);
-        var recent = posts
-          .slice()
-          .sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-          })
-          .slice(0, 3);
-        if (elAlienOppPopularList) {
-          elAlienOppPopularList.textContent = '';
-          popular.forEach(function (p) {
-            renderAlienObservePreviewRow(p, oppTid, elAlienOppPopularList);
-          });
-        }
-        if (elAlienOppDebateList) {
-          elAlienOppDebateList.textContent = '';
-          debate.forEach(function (p) {
-            renderAlienObservePreviewRow(p, oppTid, elAlienOppDebateList);
-          });
-        }
-        if (elAlienOppRecentList) {
-          elAlienOppRecentList.textContent = '';
-          recent.forEach(function (p) {
-            renderAlienObservePreviewRow(p, oppTid, elAlienOppRecentList);
-          });
-        }
-        if (elAlienOppObserveTitle) {
-          elAlienOppObserveTitle.textContent = '상대 신호 관측 · ' + alienSignalSectionLabel(oppTid);
-        }
-        if (btnAlienOppObserveMore) {
-          btnAlienOppObserveMore.textContent = alienSignalSectionLabel(oppTid) + ' 자세히 보기';
-        }
-      }
-
-      function openAlienObserveDetail() {
-        alienObserveDetailOpen = true;
-        renderAlienHub();
-        if (elAlienObserveDetailWrap) {
-          elAlienObserveDetailWrap.scrollIntoView({ block: 'start', behavior: 'smooth' });
-        }
-      }
-
-      function closeAlienObserveDetail() {
-        alienObserveDetailOpen = false;
-        renderAlienHub();
-      }
-
-      function renderAlienObserveDetail(oppTid) {
-        if (!elAlienObserveDetailWrap || !oppTid) return;
-        if (elAlienObserveDetailTitle) {
-          elAlienObserveDetailTitle.textContent = alienSignalSectionLabel(oppTid) + ' 관측';
-        }
-        var posts = getPosts(oppTid, 1).slice();
-        posts.sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        if (elAlienObserveDetailList) {
-          elAlienObserveDetailList.textContent = '';
-          posts.slice(0, 20).forEach(function (p) {
-            renderAlienObservePreviewRow(p, oppTid, elAlienObserveDetailList);
-          });
-        }
-        if (elAlienObserveDetailEmpty) {
-          elAlienObserveDetailEmpty.hidden = posts.length > 0;
-        }
-      }
-
-      function renderAlienSignalToday() {
-        if (!elAlienSignalToday) return;
-        var leftN = getPosts(ALIEN_SIGNAL_LEFT, 1).length;
-        var rightN = getPosts(ALIEN_SIGNAL_RIGHT, 1).length;
-        var freeN = getPosts('KANTAPBIYA', 1).length;
-        elAlienSignalToday.textContent =
-          '라운지 ' +
-          freeN +
-          ' · 개혁 신호 ' +
-          leftN +
-          ' · 질서 신호 ' +
-          rightN +
-          ' — 오늘의 흐름은 신호구역 내부에서 유지됩니다.';
+      function renderAlienHubStats() {
+        if (!elAlienHubStats) return;
+        var hubN = getPosts('KANTAPBIYA', 1).length;
+        elAlienHubStats.textContent =
+          '허브 게시글 ' + hubN + ' · 행동 관측 기지 · 정치 성향과 분리';
       }
 
       function ensureAlienFreeIfEmpty() {
@@ -16282,10 +15562,10 @@
           normalizePost(
             {
               id: 'seed_alien_free_welcome',
-              title: '외계 라운지에 오신 것을 환영합니다',
+              title: '외계행성 게시판에 오신 것을 환영합니다',
               body:
-                '잡담·밈·유머·일상 이야기를 나누는 공간입니다.\n진영 싸움보다 생활권 분위기를 유지해 주세요.',
-              category: 'lounge',
+                '자유게시판·관측기록·밈·생존일지로 나눕니다.\n행동 관측 체류 구역 — 정치 성향과 무관합니다.',
+              category: 'free',
               images: [],
               authorId: '관측소',
               createdAt: new Date().toISOString(),
@@ -16315,27 +15595,14 @@
       function renderAlienHub() {
         if (!isAlienHubVisible()) return;
         var me = uid();
-        var homeTid = getAlienUiHomeSignalTerritory(me);
-        var oppTid = getAlienUiOpponentSignalTerritory(me);
 
         if (elAlienHubStatus) {
           elAlienHubStatus.textContent = alienPlanetHeaderStatusForUser(me);
         }
 
-        if (elAlienHubMain) elAlienHubMain.hidden = alienObserveDetailOpen;
-        if (elAlienObserveDetailWrap) elAlienObserveDetailWrap.hidden = !alienObserveDetailOpen;
-
-        if (alienObserveDetailOpen) {
-          renderAlienObserveDetail(oppTid);
-          return;
-        }
-
+        renderAlienHubStats();
         renderAlienFreeSection();
-        renderAlienSignalToday();
         renderAlienHotSection();
-        renderAlienFactionHotSection(homeTid);
-        renderAlienOwnSignalFeed(homeTid);
-        renderAlienOpponentObservePreview(oppTid);
       }
 
       function refreshBoardHeaderMeta() {
@@ -16344,10 +15611,7 @@
           if (window.__scTerritoryPop && typeof window.__scTerritoryPop.get === 'function') {
             var pg = window.__scTerritoryPop.get();
             if (isAlienPlanetHub(currentTerritory)) {
-              pop =
-                Math.floor(Number(pg.KANTAPBIYA) || 0) +
-                Math.floor(Number(pg.KANTAPBIYA_LEFT) || 0) +
-                Math.floor(Number(pg.KANTAPBIYA_RIGHT) || 0);
+              pop = Math.floor(Number(pg.KANTAPBIYA) || 0);
             } else {
               pop = Math.floor(Number(pg[currentTerritory]) || 0);
             }
@@ -16358,9 +15622,6 @@
           var kt = String(currentTerritory || '');
           if (isAlienPlanetHub(kt) && KANTA_BOARD_TAGLINES.KANTAPBIYA) {
             elBoardKantaTagline.textContent = KANTA_BOARD_TAGLINES.KANTAPBIYA;
-            elBoardKantaTagline.hidden = false;
-          } else if (isKantaTerritory(kt) && KANTA_BOARD_TAGLINES[kt]) {
-            elBoardKantaTagline.textContent = KANTA_BOARD_TAGLINES[kt];
             elBoardKantaTagline.hidden = false;
           } else {
             elBoardKantaTagline.textContent = '';
@@ -16499,19 +15760,9 @@
 
           if (st === 1) {
             t.classList.remove('board__stage-tab--locked');
-            var homeTab = getForcedTerritory(uid());
-            if (
-              !un &&
-              isKantaTerritory(String(currentTerritory || '')) &&
-              homeTab &&
-              String(currentTerritory) !== homeTab
-            ) {
-              t.title = '소속이 아닌 상대 외계행성 1단계 — 읽기·공감만 가능합니다.';
-            } else {
-              t.title = un
-                ? ''
-                : '성향 미해금 — 목록·본문은 열람(눈팅)만 가능합니다. 해금 시 글쓰기·댓글·반응이 열립니다.';
-            }
+            t.title = un
+              ? ''
+              : '성향 미해금 — 목록·본문은 열람(눈팅)만 가능합니다. 해금 시 글쓰기·댓글·반응이 열립니다.';
           } else if (st === 2 && !un && isFactionStageUnlocked(currentTerritory, 1)) {
             t.classList.remove('board__stage-tab--locked');
             t.title =
@@ -16565,9 +15816,8 @@
         if (isAlienPlanetHub(currentTerritory)) {
           try {
             ensureAlienFreeIfEmpty();
-            var alienL = getPosts(ALIEN_SIGNAL_LEFT, 1).length;
-            var alienR = getPosts(ALIEN_SIGNAL_RIGHT, 1).length;
-            if (alienL < 3 || alienR < 3) ensureFactionStageDemos();
+            var alienHub = getPosts('KANTAPBIYA', 1).length;
+            if (alienHub < 3) ensureFactionStageDemos();
           } catch (_) {}
         }
 
@@ -16730,9 +15980,7 @@
                 '부터 1단계 눈팅만 가능.'
               : elLocked && !elLocked.hidden
                 ? currentStage === 2
-                  ? isKantaTerritory(currentTerritory)
-                    ? '외계행성 2단계: 사람 성향 60% 이상. 고강도 토론 구역 이동은 운영자 승인입니다.'
-                    : '2단계: 해당 사람 성향 60% 이상. 3·4단계는 추후 공개.'
+                  ? '2단계: 해당 사람 성향 60% 이상. 3·4단계는 추후 공개.'
                   : '3·4단계 해금 조건은 추후 공개됩니다.'
                 : '';
           } else {
@@ -16775,11 +16023,6 @@
 
       function openModal(writeTarget) {
         alienWriteTargetTerritory = writeTarget || null;
-        if (alienWriteTargetTerritory && isAlienOpponentSignalReadOnly(alienWriteTargetTerritory)) {
-          alert('상대 신호를 관측 중입니다. 읽기 전용 구역입니다.');
-          alienWriteTargetTerritory = null;
-          return;
-        }
         if (isPlanetResidentEarthQuarantineBoard(currentTerritory, effectiveStage())) {
           alert(
             '외계행성 소속 중에는 이곳(중앙광장·진영 1단계)에서 글·댓글을 쓸 수 없습니다. 공감·추천(좋아요)만 가능합니다.',
@@ -16820,11 +16063,7 @@
               alert('이 영토는 성향이 40%에 도달해야 1단계에서 글을 쓸 수 있습니다. 먼저 중앙광장에서 활동해 보세요.');
             }
           } else if (currentStage === 2) {
-            if (isKantaTerritory(currentTerritory)) {
-              alert('외계행성 2단계: 사람 성향 60% 이상이 필요합니다. 고강도 토론 구역 이동은 운영자 승인입니다.');
-            } else {
-              alert('2단계는 해당 사람 성향 60% 이상이 필요합니다.');
-            }
+            alert('2단계는 해당 사람 성향 60% 이상이 필요합니다.');
           } else {
             alert('3·4단계는 아직 해금되지 않았습니다.');
           }
@@ -16850,7 +16089,7 @@
           elCategoryInput.value = pick;
         } else if (elCategoryInput && showAlienFreeCat) {
           fillAlienCategorySelect();
-          elCategoryInput.value = 'lounge';
+          elCategoryInput.value = 'free';
         }
         if (titleIn) titleIn.focus();
       }
@@ -16865,8 +16104,8 @@
         if (!isOperatorUser(uid())) return;
         var id = String(userId || '').trim();
         if (!id) return;
-        var t = String(tid || '');
-        if (t !== ALIEN_SIGNAL_LEFT && t !== ALIEN_SIGNAL_RIGHT) return;
+        var t = String(tid || 'KANTAPBIYA');
+        if (t !== 'KANTAPBIYA') return;
         var nextStage = computeNextExileStage(id);
         var dayN = EXILE_STAGE_DAYS[nextStage] || 3;
         var until = new Date(Date.now() + dayN * 24 * 60 * 60 * 1000).toISOString();
@@ -16881,7 +16120,7 @@
           at: ms.lastExileAt,
           stage: nextStage,
           until: until,
-          signal: t,
+          signal: 'KANTAPBIYA',
           by: uid(),
         });
         if (ms.exileHistory.length > 24) ms.exileHistory = ms.exileHistory.slice(-24);
@@ -16889,8 +16128,7 @@
           conservative: sc.conservative,
           centrist: sc.centrist,
           progressive: sc.progressive,
-          planetPct: getPlanetPct(id),
-          forcedTerritory: t,
+          forcedTerritory: 'KANTAPBIYA',
           moderationStage: 'EXILE_STAGE_' + nextStage,
           isUnderObservation: true,
           userModerationState: ms,
@@ -16910,7 +16148,7 @@
           userId: id,
           reason: nextStage + '차 체류 ' + dayN + '일 승인',
           previous: prev.forcedTerritory || null,
-          next: t,
+          next: 'KANTAPBIYA',
         });
         root.candidates = (root.candidates || []).filter(function (c) {
           return String(c.userId || '') !== id;
@@ -17070,18 +16308,11 @@
             cAct.className = 'moderation-actions';
             var nextSt = computeNextExileStage(id);
             var dayN = EXILE_STAGE_DAYS[nextSt] || 3;
-            var bL = document.createElement('button');
-            bL.type = 'button';
-            bL.textContent = '개혁 신호 체류 (' + nextSt + '차·' + dayN + '일)';
-            bL.addEventListener('click', function () {
-              approveAlienStayByAdmin(id, ALIEN_SIGNAL_LEFT);
-              renderModerationDashboard();
-            });
-            var bR = document.createElement('button');
-            bR.type = 'button';
-            bR.textContent = '질서 신호 체류 (' + nextSt + '차·' + dayN + '일)';
-            bR.addEventListener('click', function () {
-              approveAlienStayByAdmin(id, ALIEN_SIGNAL_RIGHT);
+            var bK = document.createElement('button');
+            bK.type = 'button';
+            bK.textContent = '외계행성 체류 (' + nextSt + '차·' + dayN + '일)';
+            bK.addEventListener('click', function () {
+              approveAlienStayByAdmin(id, 'KANTAPBIYA');
               renderModerationDashboard();
             });
             var bH = document.createElement('button');
@@ -17098,8 +16329,7 @@
               rejectAlienStayByAdmin(id, '운영자 기각');
               renderModerationDashboard();
             });
-            cAct.appendChild(bL);
-            cAct.appendChild(bR);
+            cAct.appendChild(bK);
             cAct.appendChild(bH);
             cAct.appendChild(bX);
             cli.appendChild(cNick);
@@ -17236,8 +16466,7 @@
           registerToxicEvent(uid(), 2, 'profanity-post');
         }
         var writeTid = alienWriteTargetTerritory || currentTerritory;
-        var writeStage =
-          writeTid === 'KANTAPBIYA' || isKantaTerritory(writeTid) ? 1 : effectiveStage();
+        var writeStage = writeTid === 'KANTAPBIYA' ? 1 : effectiveStage();
         var writeCat;
         if (writeTid === 'KANTAPBIYA') {
           writeCat = canonicalAlienFreeCategoryId(
@@ -17293,22 +16522,6 @@
           openModal('KANTAPBIYA');
         });
       }
-      if (btnAlienMySignalWrite) {
-        btnAlienMySignalWrite.addEventListener('click', function () {
-          var tid = btnAlienMySignalWrite.dataset.alienWriteSignal || getAlienUiHomeSignalTerritory(uid());
-          if (tid) openModal(tid);
-        });
-      }
-      if (btnAlienOppObserveMore) {
-        btnAlienOppObserveMore.addEventListener('click', function () {
-          openAlienObserveDetail();
-        });
-      }
-      if (btnAlienObserveDetailBack) {
-        btnAlienObserveDetailBack.addEventListener('click', function () {
-          closeAlienObserveDetail();
-        });
-      }
       btnCancel.addEventListener('click', closeModal);
       if (moderationModalClose && moderationModal) {
         moderationModalClose.addEventListener('click', function () {
@@ -17341,7 +16554,6 @@
 
       window.__scBoardSyncTerritorySelect = function (tid) {
         var v = normalizeBoardTerritoryId(tid);
-        if (!isAlienPlanetHub(v) && alienObserveDetailOpen) alienObserveDetailOpen = false;
         currentTerritory = v;
         currentStage = 1;
         if (isFourTier(v)) {
@@ -17394,7 +16606,7 @@
         var ft = getForcedTerritory(uidStr);
         var aff;
         if (ft) {
-          aff = { tid: 'KANTAPBIYA', label: KANTA_AFFIL_LABELS[ft] || ALIEN_UI.planet };
+          aff = pickAffiliationFromPct(null, uidStr);
           p.affiliationTerritoryId = aff.tid;
           p.territoryId = aff.tid;
           p.affiliationDisplay = aff.label;
@@ -17418,7 +16630,7 @@
           progressive: pct.progressive,
         });
         if (typeof window.__scDockSetAlienBar === 'function') {
-          window.__scDockSetAlienBar(getPlanetPct(uidStr), uidStr);
+          window.__scDockSetAlienBar(uidStr);
         }
         if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
         if (typeof window.__scTendencyTrendsOnAlignmentRefresh === 'function') window.__scTendencyTrendsOnAlignmentRefresh();
@@ -17461,6 +16673,7 @@
       })();
 
       migrateLegacy();
+      migrateLegacyKantaPostsInBundle();
       migrateLegacyPermanentExile();
       migrateKantaCenterInScoresMap();
       seedAllTerritories();
@@ -17500,13 +16713,14 @@
 
       function mergeKantaCenterPopIntoSides(obj) {
         if (!obj || typeof obj !== 'object') return;
-        var kc = clampPop(obj.KANTAPBIYA_CENTER);
-        if (kc <= 0) {
-          obj.KANTAPBIYA_CENTER = 0;
-          return;
-        }
-        obj.KANTAPBIYA_LEFT = clampPop(obj.KANTAPBIYA_LEFT + Math.floor(kc / 2));
-        obj.KANTAPBIYA_RIGHT = clampPop(obj.KANTAPBIYA_RIGHT + (kc - Math.floor(kc / 2)));
+        var total =
+          clampPop(obj.KANTAPBIYA || 0) +
+          clampPop(obj.KANTAPBIYA_LEFT || 0) +
+          clampPop(obj.KANTAPBIYA_RIGHT || 0) +
+          clampPop(obj.KANTAPBIYA_CENTER || 0);
+        obj.KANTAPBIYA = total;
+        obj.KANTAPBIYA_LEFT = 0;
+        obj.KANTAPBIYA_RIGHT = 0;
         obj.KANTAPBIYA_CENTER = 0;
       }
 
@@ -17531,6 +16745,7 @@
                 CONSERVATIVE: clampPop(o.CONSERVATIVE),
                 CENTRIST: clampPop(o.CENTRIST),
                 PROGRESSIVE: clampPop(o.PROGRESSIVE),
+                KANTAPBIYA: clampPop(o.KANTAPBIYA),
                 KANTAPBIYA_LEFT: clampPop(o.KANTAPBIYA_LEFT),
                 KANTAPBIYA_CENTER: clampPop(o.KANTAPBIYA_CENTER),
                 KANTAPBIYA_RIGHT: clampPop(o.KANTAPBIYA_RIGHT),
@@ -17545,6 +16760,7 @@
           CONSERVATIVE: 0,
           CENTRIST: 0,
           PROGRESSIVE: 0,
+          KANTAPBIYA: 0,
           KANTAPBIYA_LEFT: 0,
           KANTAPBIYA_CENTER: 0,
           KANTAPBIYA_RIGHT: 0,
@@ -17556,6 +16772,7 @@
         } catch (_) {}
         try {
           var k = JSON.parse(localStorage.getItem(KANTA_KEY) || '{}');
+          out.KANTAPBIYA = clampPop(k.KANTAPBIYA);
           out.KANTAPBIYA_LEFT = clampPop(k.KANTAPBIYA_LEFT);
           out.KANTAPBIYA_CENTER = clampPop(k.KANTAPBIYA_CENTER);
           out.KANTAPBIYA_RIGHT = clampPop(k.KANTAPBIYA_RIGHT);
@@ -17574,10 +16791,7 @@
           );
           localStorage.setItem(
             KANTA_KEY,
-            JSON.stringify({
-              KANTAPBIYA_LEFT: o.KANTAPBIYA_LEFT,
-              KANTAPBIYA_RIGHT: o.KANTAPBIYA_RIGHT,
-            })
+            JSON.stringify({ KANTAPBIYA: o.KANTAPBIYA || 0 })
           );
         } catch (_) {}
       }
@@ -17609,14 +16823,11 @@
           if (patch && typeof patch === 'object') {
             if (patch.CONSERVATIVE != null) o.CONSERVATIVE = clampPop(patch.CONSERVATIVE);
             if (patch.PROGRESSIVE != null) o.PROGRESSIVE = clampPop(patch.PROGRESSIVE);
-            if (patch.KANTAPBIYA_LEFT != null) o.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
-            if (patch.KANTAPBIYA_CENTER != null) {
-              var leg = clampPop(patch.KANTAPBIYA_CENTER);
-              o.KANTAPBIYA_LEFT = clampPop(o.KANTAPBIYA_LEFT + Math.floor(leg / 2));
-              o.KANTAPBIYA_RIGHT = clampPop(o.KANTAPBIYA_RIGHT + (leg - Math.floor(leg / 2)));
-            }
-            if (patch.KANTAPBIYA_RIGHT != null) o.KANTAPBIYA_RIGHT = clampPop(patch.KANTAPBIYA_RIGHT);
             if (patch.COMMON != null) o.COMMON = clampPop(patch.COMMON);
+            if (patch.KANTAPBIYA != null) o.KANTAPBIYA = clampPop(patch.KANTAPBIYA);
+            if (patch.KANTAPBIYA_LEFT != null) o.KANTAPBIYA_LEFT = clampPop(patch.KANTAPBIYA_LEFT);
+            if (patch.KANTAPBIYA_CENTER != null) o.KANTAPBIYA_CENTER = clampPop(patch.KANTAPBIYA_CENTER);
+            if (patch.KANTAPBIYA_RIGHT != null) o.KANTAPBIYA_RIGHT = clampPop(patch.KANTAPBIYA_RIGHT);
           }
           saveMapPop(o);
           applyCentristHeroArt();
@@ -17798,67 +17009,8 @@
           wrap.style.right = 'auto';
           wrap.style.bottom = 'auto';
         });
-        if (typeof window.__scSyncTerritoryAlienOverlayFit === 'function') {
-          window.__scSyncTerritoryAlienOverlayFit();
-        }
       }
       window.__scSyncTerritoryHitZonesFit = syncTerritoryHitZonesFit;
-
-      function applyTerritoryAlienOverlay(cfg) {
-        window.__scTerritoryAlienOverlay = cfg && typeof cfg === 'object' ? cfg : null;
-        var wrap = el('territory-alien-overlay-wrap');
-        var img = el('territory-alien-overlay-img');
-        if (!wrap || !img) return;
-        if (!cfg || cfg.enabled === false) {
-          wrap.hidden = true;
-          wrap.setAttribute('aria-hidden', 'true');
-          return;
-        }
-        wrap.hidden = false;
-        wrap.setAttribute('aria-hidden', 'false');
-        var src = String(cfg.image || '/assets/territory-alien-overlay.png');
-        if (img.getAttribute('src') !== src) img.setAttribute('src', src);
-        img.style.left = (Number(cfg.left) || 0) + '%';
-        img.style.top = (Number(cfg.top) || 0) + '%';
-        img.style.width = (Number(cfg.width) || 20) + '%';
-        img.style.height = (Number(cfg.height) || 20) + '%';
-        img.style.opacity = String(cfg.opacity != null && isFinite(cfg.opacity) ? cfg.opacity : 1);
-        if (typeof window.__scSyncTerritoryAlienOverlayFit === 'function') {
-          window.__scSyncTerritoryAlienOverlayFit();
-        }
-      }
-
-      function loadTerritoryAlienOverlay() {
-        var url = '/territories/territory-alien-overlay.json?cb=' + String(Date.now());
-        return fetch(url, { cache: 'no-store' })
-          .then(function (r) {
-            if (!r.ok) throw new Error('alien-overlay');
-            return r.json();
-          })
-          .then(function (j) {
-            applyTerritoryAlienOverlay(j);
-          })
-          .catch(function () {
-            applyTerritoryAlienOverlay(null);
-          });
-      }
-      window.__scReloadTerritoryAlienOverlay = loadTerritoryAlienOverlay;
-
-      function syncTerritoryAlienOverlayFit() {
-        var wrap = el('territory-alien-overlay-wrap');
-        var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
-        if (!wrap || wrap.hidden || !frame) return;
-        scEnsureTerritoryMapNatural(function (nat) {
-          var L = scContainBoxLayout(frame, nat.w, nat.h);
-          wrap.style.left = L.ox + 'px';
-          wrap.style.top = L.oy + 'px';
-          wrap.style.width = L.dw + 'px';
-          wrap.style.height = L.dh + 'px';
-          wrap.style.right = 'auto';
-          wrap.style.bottom = 'auto';
-        });
-      }
-      window.__scSyncTerritoryAlienOverlayFit = syncTerritoryAlienOverlayFit;
 
       function initScTerritoryHitZonesFitObservers() {
         var frame = document.querySelector('.territory-centrist-hero__frame--island-map');
@@ -18016,7 +17168,6 @@
         Promise.all([
           loadTerritoryLayoutOverrides().catch(function () {}),
           loadTerritoryHitZones().catch(function () {}),
-          loadTerritoryAlienOverlay().catch(function () {}),
         ]).then(function () {
           applyCentristHeroArt();
           if (typeof window.__scTendencyTrendsInit === 'function') window.__scTendencyTrendsInit();

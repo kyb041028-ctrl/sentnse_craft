@@ -286,8 +286,9 @@
       CONSERVATIVE: '질서',
       PROGRESSIVE: '개혁',
       KANTAPBIYA: '외계행성',
-      KANTAPBIYA_LEFT: '개혁 신호구역',
-      KANTAPBIYA_RIGHT: '질서 신호구역',
+      KANTAPBIYA_LEFT: '외계행성',
+      KANTAPBIYA_RIGHT: '외계행성',
+      KANTAPBIYA_CENTER: '외계행성',
       UNASSIGNED: '미편입',
     };
     return m[tid] || tid || '영토';

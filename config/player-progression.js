@@ -137,7 +137,7 @@ function absoluteRankTierFromStats(level, stats) {
   if (meetsAbsoluteThreshold(4, stats)) return 4;
   if (meetsAbsoluteThreshold(3, stats)) return 3;
   if (meetsAbsoluteThreshold(2, stats)) return 2;
-  return 0;
+  return 1;
 }
 
 /** @deprecated */

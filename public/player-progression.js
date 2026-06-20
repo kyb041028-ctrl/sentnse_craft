@@ -57,8 +57,6 @@
     CENTRIST: '중앙광장',
     PROGRESSIVE: '개혁',
     KANTAPBIYA: '외계행성',
-    KANTAPBIYA_LEFT: '개혁 신호구역',
-    KANTAPBIYA_RIGHT: '질서 신호구역',
   };
 
   var LEADERBOARD_MAX = 100;
@@ -179,7 +177,7 @@
     if (meetsAbsoluteThreshold(4, postLikes, commentLikes, followers)) return 4;
     if (meetsAbsoluteThreshold(3, postLikes, commentLikes, followers)) return 3;
     if (meetsAbsoluteThreshold(2, postLikes, commentLikes, followers)) return 2;
-    return 0;
+    return 1;
   }
 
   function countTerritoryMembers(territoryId, map, excludeUserId) {
@@ -411,14 +409,15 @@
         rankProgressHint(level, st.receivedPostLikes, st.receivedCommentLikes, st.receivedFollowers, st.rankTier);
     } else {
       rankLabel =
-        '명성 · 논객 조건 미달' +
+        '시민' +
         rankProgressHint(level, st.receivedPostLikes, st.receivedCommentLikes, st.receivedFollowers, st.rankTier);
     }
     rankLabel = formatRankWithAffiliation(rankLabel);
     var rankShortOut = null;
     if (rankUnlocked) {
       if (st.rankTier >= 1) rankShortOut = getRankTierRow(st.rankTier).shortKo;
-      else if (st.rankTier === 0) rankShortOut = '참여 중';
+    } else {
+      rankShortOut = '참여자';
     }
     var xpLegend = prog.isMaxLevel
       ? 'MAX · 누적 ' + st.totalXp.toLocaleString('ko-KR') + ' XP'
@@ -455,7 +454,7 @@
     if (level < RANK_UNLOCK_LEVEL) return '레벨 ' + level;
     if (row.rankTier === 1) return '시민';
     if (row.rankTier >= 2) return getRankTierRow(row.rankTier).shortKo;
-    return '논객 미달';
+    return '참여자';
   }
 
   function loadAllStatesMap() {

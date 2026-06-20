@@ -48,18 +48,19 @@
   }
 
   function renderLevelPanel(d) {
+    var lurkLv = d.lurkUnlockLevel || 3;
     var rows = '';
     for (var lv = 1; lv <= d.maxLevel; lv++) {
       var cum = d.levelCumulativeXp[lv - 1] || 0;
       var need = d.xpPerLevel[lv - 1] || 0;
       var perks = [];
       if (lv === 1) perks.push('중앙광장 글·댓글·반응');
-      if (lv < (d.lurkUnlockLevel || 3)) perks.push('영토 게시판은 성향 해금 필요');
-      if (lv === (d.lurkUnlockLevel || 3)) {
-        perks.push('다른 영토 1단계 눈팅(읽기만, 중립이어도)');
+      if (lv < lurkLv) perks.push('타 영토 1단계 읽기(누구나) · 쓰기는 성향 40% 필요');
+      if (lv === lurkLv) {
+        perks.push('타 영토 탐색 UX(잠금 배너 해제) · 1단계 눈팅 정리');
       }
       if (lv === d.rankUnlockLevel) {
-        perks.push('명성 등급 표시·집계 시작');
+        perks.push('명성 등급(참여자→시민) 표시·집계 시작');
       }
       rows +=
         '<tr><td>Lv.' +
@@ -78,11 +79,11 @@
       d.maxLevel +
       '</h3>' +
       '<p class="perm-guide__lead">글쓰기·댓글·데일리 이슈 댓글로 경험치를 쌓습니다. <strong>Lv.' +
-      (d.lurkUnlockLevel || 3) +
-      '</strong>에 타 영토 눈팅, <strong>Lv.' +
+      lurkLv +
+      '</strong>부터 타 영토 탐색이 편해지고, <strong>Lv.' +
       d.rankUnlockLevel +
-      '</strong>에 <strong>명성 등급·집계</strong>가 열립니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>레벨</th><th>이번 단계 XP</th><th>누적 XP</th><th>주요 권한</th></tr></thead><tbody>' +
+      '</strong>에 <strong>명성 등급</strong>이 열립니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>레벨</th><th>이번 단계 XP</th><th>누적 XP</th><th>주요 효과</th></tr></thead><tbody>' +
       rows +
       '</tbody></table>' +
       '<ul class="perm-guide__list">' +
@@ -95,7 +96,7 @@
       '<li>데일리 이슈 댓글: <strong>+' +
       d.xpRewards.issue_comment +
       ' XP</strong></li>' +
-      '<li>받은 좋아요는 레벨이 아니라 <strong>명성 등급</strong>에 반영됩니다.</li>' +
+      '<li>받은 좋아요·팔로워는 <strong>명성 등급</strong>에만 반영됩니다.</li>' +
       '</ul></section>'
     );
   }
@@ -131,21 +132,23 @@
       '<h3 class="perm-guide__h">명성·등급 (Lv.' +
       d.rankUnlockLevel +
       ' 이후)</h3>' +
-      '<p class="perm-guide__lead"><strong>명성 등급</strong>(논객~지도자)은 <strong>받은 좋아요·팔로워 절대 기준</strong>과 <strong>영토당 인구 캡</strong>으로 정해집니다. 소속 내 순위로 등급을 깎지 않습니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>명성 등급</th><th>절대 조건 (동시 충족)</th><th>비고</th></tr></thead><tbody>' +
-      '<tr><td><strong>참여 중</strong></td><td>—</td><td>Lv.' +
+      '<p class="perm-guide__lead"><strong>명성 등급</strong>은 받은 좋아요·팔로워 <strong>절대 기준</strong>과 영토당 인구 캡으로 정합니다. 정치 성향·외계 체류와 무관합니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>등급</th><th>절대 조건 (동시 충족)</th><th>비고</th></tr></thead><tbody>' +
+      '<tr><td><strong>참여자</strong></td><td>—</td><td>Lv.' +
       d.rankUnlockLevel +
-      '+ 이고 논객 수치 미달(티어 0). 자동 강등 없음.</td></tr>' +
-      rowTier(2, '논객', '위 조건 충족 시 부여(인구 캡으로 한 단계 낮아질 수 있음)') +
+      ' 미만 · 명성 미집계</td></tr>' +
+      '<tr><td><strong>시민</strong></td><td>—</td><td>Lv.' +
+      d.rankUnlockLevel +
+      '+ 기본 등급 · 논객 조건 미달</td></tr>' +
+      rowTier(2, '논객', '인구 캡으로 한 단계 낮아질 수 있음') +
       rowTier(3, '대표', '영토당 최대 약 ' + capPct + '% 인원') +
       rowTier(4, '지도자', '영토당 최대 ' + (d.rankCaps.chiefsMaxCount || 5) + '명') +
       '</tbody></table>' +
       '<ul class="perm-guide__list">' +
-      '<li>리더보드 정렬용 명성 = 받은 글 좋아요 + 댓글 좋아요×2 + 팔로워×' +
+      '<li>리더보드 명성 점수 = 글♥ + 댓글♥×2 + 팔로워×' +
       (d.rankFollowerWeight || 5) +
-      ' (등급 결정과 별개로 참고용)</li>' +
+      ' (등급 결정과 별개)</li>' +
       '<li>대표·지도자 자리가 꽉 차면 한 단계 낮은 등급으로 조정될 수 있습니다.</li>' +
-      '<li>명성·등급은 <strong>게시판 해금</strong>과 별개입니다. 영토 1단계 글쓰기는 성향 %가 필요합니다.</li>' +
       '</ul></section>'
     );
   }
@@ -156,39 +159,34 @@
     return (
       '<section class="perm-guide__section">' +
       '<h3 class="perm-guide__h">게시판 · 성향</h3>' +
-      '<p class="perm-guide__lead">중앙광장은 누구나 이용합니다. 영토 게시판은 <strong>성향(또는 외계인 %)</strong>으로 단계가 열립니다.</p>' +
+      '<p class="perm-guide__lead">중앙광장은 <strong>모든 성향</strong>의 공용 공간입니다. 개혁·질서 영토는 <strong>성향 %</strong>로 단계가 열립니다. 외계행성은 정치와 분리된 <strong>행동 관측 기지</strong>입니다.</p>' +
       '<table class="perm-guide__table"><thead><tr><th>구역</th><th>읽기</th><th>글·댓글·반응</th></tr></thead><tbody>' +
-      '<tr><td><strong>중앙광장</strong></td><td>전원</td><td>전원 (1단계)</td></tr>' +
-      '<tr><td><strong>질서·개혁</strong> 1단계</td><td>Lv.' +
-      lurkLv +
-      ' 눈팅 또는 해당 축 40%+</td><td>해당 축 40%+</td></tr>' +
-      '<tr><td><strong>질서·개혁</strong> 2단계</td><td>해당 축 60%+</td><td>해당 축 60%+</td></tr>' +
-      '<tr><td><strong>외계행성</strong> 1단계</td><td>Lv.' +
-      lurkLv +
-      ' 눈팅 또는 외계인 50%+</td><td>외계인 50%+</td></tr>' +
-      '<tr><td><strong>외계행성</strong> 2단계</td><td>외계인 50% + 사람 축 60%+</td><td>동일</td></tr>' +
-      '<tr><td><strong>3·4단계</strong> (전 영토)</td><td colspan="2">추후 공개</td></tr>' +
+      '<tr><td><strong>중앙광장</strong></td><td>전원</td><td>전원 (외계 체류 중에는 글·댓글 제한, 공감·읽기 가능)</td></tr>' +
+      '<tr><td><strong>개혁·질서</strong> 1단계</td><td>전원</td><td>해당 축 <strong>40%+</strong></td></tr>' +
+      '<tr><td><strong>개혁·질서</strong> 2단계</td><td>1단계 해금(40%+) 시</td><td>해당 축 <strong>60%+</strong></td></tr>' +
+      '<tr><td><strong>외계행성</strong></td><td>허브 열람 가능</td><td><strong>행동 관측 체류(유배) 중</strong>만 글·댓글 · 자유·관측·밈·생존일지</td></tr>' +
+      '<tr><td><strong>3·4단계</strong></td><td colspan="2">추후 공개</td></tr>' +
       '</tbody></table>' +
-      '<h4 class="perm-guide__subh">Lv.' +
-      lurkLv +
-      ' 눈팅 모드</h4>' +
+      '<h4 class="perm-guide__subh">눈팅 모드 (성향 미달 · 읽기만)</h4>' +
       '<ul class="perm-guide__list">' +
+      '<li>개혁·질서 <strong>1·2단계</strong>: 목록·본문 <strong>읽기만</strong> 가능 (성향 해금 전).</li>' +
+      '<li>글쓰기·댓글·좋아요·싫어요·공감은 <strong>불가</strong>.</li>' +
       '<li><strong>Lv.' +
       lurkLv +
-      ' 이상</strong>이면 중립(질서·개혁 격차 12 미만)이어도 <strong>모든 영토 1단계</strong> 글·댓글을 <strong>읽기만</strong> 할 수 있습니다.</li>' +
-      '<li>글쓰기·댓글·좋아요·싫어요·외계인 표시는 불가 (버튼 숨김).</li>' +
-      '<li>2단계 이상은 눈팅 없이 기존 해금 규칙만 적용됩니다.</li>' +
+      '+</strong>이면 타 영토 탐색 시 잠금 배너가 정리되어 관측자 UX가 편해집니다.</li>' +
       '</ul>' +
-      '<h4 class="perm-guide__subh">성향 표시 (사람)</h4>' +
+      '<h4 class="perm-guide__subh">성향 (사람 축)</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>프로필에는 <strong>질서−개혁 격차</strong>만 표시: 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
-      '<li>영토 해금·소속은 질서·개혁 두 게시판 축과 중도(균형) %를 함께 봅니다. 두 축 모두 40% 미만이면 중앙광장 소속입니다.</li>' +
-      '<li>공감은 성향에 영향 없음. 엄지 좋아요/싫어요만 성향 시뮬에 반영.</li>' +
+      '<li>표시: 질서−개혁 격차 — 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
+      '<li>소속: 질서·개혁 각 40% 미만이면 <strong>중앙광장</strong>. (정치 성향은 제재 대상 아님)</li>' +
+      '<li>게시판 공감은 성향 무영향 · 좋아요/싫어요만 반영.</li>' +
       '</ul>' +
-      '<h4 class="perm-guide__subh">외계행성 소속 시</h4>' +
+      '<h4 class="perm-guide__subh">외계행성 · 행동 관측</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>지구(중앙광장·일반 영토)에 쓴 글·댓글은 블라인드 + 「외계인의 언어입니다」 안내.</li>' +
-      '<li>외계행성 안에서는 정상적으로 읽고 쓸 수 있습니다.</li>' +
+      '<li>입장 조건: <strong>반복 신고·도배·과열·쿨다운 위반</strong> 등 운영/행동 기반 체류만.</li>' +
+      '<li>체류 단계: 3·7·14·30·90일 등 (외계 N차 문화).</li>' +
+      '<li>지구 게시판의 외계 유저 글: 블라인드 + 「외계 관측구역 전용 표현입니다」.</li>' +
+      '<li><strong>planetPct·외계인 %·진보/보수 신호구역 없음.</strong></li>' +
       '</ul></section>'
     );
   }

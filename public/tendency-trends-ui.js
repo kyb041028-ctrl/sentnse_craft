@@ -85,10 +85,7 @@
   }
 
   function getPlanetPct(userId) {
-    var b = readBucket(userId);
-    var n = Number(b.planetPct);
-    if (!isFinite(n)) return 0;
-    return Math.max(0, Math.min(100, Math.round(n)));
+    return 0;
   }
 
   function loadRoot() {

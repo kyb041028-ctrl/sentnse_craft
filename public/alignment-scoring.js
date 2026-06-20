@@ -12,7 +12,7 @@
  *    - 좋아요: 반응자 단위벡터 방향으로 가산
  *    - 싫어요: 반응자 단위벡터 반대로 가산(빼기)
  * 5) 게시판 스크립트(index.html)에서 싫어요는 사람 축 델타를 추가로 약하게(DISLIKE_ALIGN_SCALE) 하고,
- *    planetPct(외계인·사회 과열) 쪽 가중은 좋아요보다 크게 둔다.
+ *    외계행성(planetPct) 축은 제거 — 정치 성향과 행동 moderation 분리.
  */
 (function (global) {
   var EPS = 1e-6;

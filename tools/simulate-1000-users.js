@@ -5,7 +5,7 @@
  * 옵션:
  *   --seed=123          결정적 난수 (기본: 42)
  *   --legacy-tendency   구버전: 편향 분포(보수/진보/중도 비율 고정)
- *   (기본)              축별 독립 균등 난수 + planetPct 0~100 + 소수 기간제 외계 체류 랜덤
+ *   (기본)              축별 독립 균등 난수 + 소수 기간제 외계 체류(행동 moderation) 랜덤
  */
 'use strict';
 
@@ -48,7 +48,7 @@ const FACTION_UNLOCK_PCT = 40;
 const EXILE_STAGE_DAYS = [0, 3, 7, 14, 30, 90];
 const PLANET_DELTA = 14;
 const EMPATHY_POP_BUMP = 4;
-const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE', 'KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT'];
+const FOUR_TIER_IDS = ['CONSERVATIVE', 'PROGRESSIVE'];
 const FREE_MEGA_CATS = ['all', 'mega_debate', 'mega_light', 'mega_info'];
 const FREE_MEGA_SUBS = {
   mega_debate: ['debate'],
@@ -146,22 +146,22 @@ function readUserModerationState(prev) {
 function isActiveAlienExile(prev) {
   if (!prev || typeof prev !== 'object') return false;
   const ft = prev.forcedTerritory;
-  if (ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return false;
+  if (ft !== 'KANTAPBIYA' && ft !== 'KANTAPBIYA_LEFT' && ft !== 'KANTAPBIYA_RIGHT') return false;
   const ms = readUserModerationState(prev);
   if (!ms.exileUntil) return false;
   const until = new Date(ms.exileUntil).getTime();
   return Number.isFinite(until) && Date.now() < until;
 }
 
-function makeTimedExileBucket(sc, signal, stage, days) {
+function makeTimedExileBucket(sc, stage, days) {
   const until = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
   return {
     ...sc,
-    forcedTerritory: signal,
+    forcedTerritory: 'KANTAPBIYA',
     userModerationState: {
       exileStage: stage,
       exileUntil: until,
-      exileHistory: [{ at: new Date().toISOString(), stage, until, signal, note: 'sim-seed' }],
+      exileHistory: [{ at: new Date().toISOString(), stage, until, signal: 'KANTAPBIYA', note: 'sim-seed' }],
       lastExileAt: new Date().toISOString(),
     },
   };
@@ -174,10 +174,11 @@ function bucketScores(prev) {
     conservative: Number.isFinite(prev.conservative) ? prev.conservative : init.conservative,
     centrist: Number.isFinite(prev.centrist) ? prev.centrist : init.centrist,
     progressive: Number.isFinite(prev.progressive) ? prev.progressive : init.progressive,
-    planetPct: Number.isFinite(prev.planetPct) ? Math.max(0, Math.min(100, prev.planetPct)) : 0,
     forcedTerritory:
-      prev.forcedTerritory === 'KANTAPBIYA_LEFT' || prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
-        ? prev.forcedTerritory
+      prev.forcedTerritory === 'KANTAPBIYA' ||
+      prev.forcedTerritory === 'KANTAPBIYA_LEFT' ||
+      prev.forcedTerritory === 'KANTAPBIYA_RIGHT'
+        ? 'KANTAPBIYA'
         : null,
     userModerationState: prev.userModerationState,
   };
@@ -200,17 +201,13 @@ function pickAffiliationFromPct(pct, userId, getForced) {
   return { tid: 'COMMON' };
 }
 
-function isFactionTier1Unlocked(tid, pct, userId, getForced, getPlanetPct) {
+function isFactionTier1Unlocked(tid, pct, userId, getForced) {
   if (isCommonSpace(tid)) return true;
   if (!isFourTier(tid)) return true;
   if (!pct) return false;
   if (tid === 'CONSERVATIVE') return pct.conservative >= FACTION_UNLOCK_PCT;
   if (tid === 'PROGRESSIVE') return pct.progressive >= FACTION_UNLOCK_PCT;
-  if (tid === 'KANTAPBIYA_LEFT' || tid === 'KANTAPBIYA_RIGHT') {
-    const home = getForced(userId);
-    if (!home) return false;
-    return home === tid;
-  }
+  if (tid === 'KANTAPBIYA') return !!getForced(userId);
   return false;
 }
 
@@ -234,8 +231,7 @@ const mapPop = {
   COMMON: 0,
   CONSERVATIVE: 0,
   PROGRESSIVE: 0,
-  KANTAPBIYA_LEFT: 0,
-  KANTAPBIYA_RIGHT: 0,
+  KANTAPBIYA: 0,
 };
 const followGraph = { following: {}, followers: {} };
 let postIdSeq = 0;
@@ -254,11 +250,7 @@ function getPct(userId) {
 
 function getForced(userId) {
   const raw = scoresMap[userId];
-  return isActiveAlienExile(raw) ? raw.forcedTerritory : null;
-}
-
-function getPlanetPct(userId) {
-  return getScores(userId).planetPct;
+  return isActiveAlienExile(raw) ? 'KANTAPBIYA' : null;
 }
 
 function setScores(userId, scores) {
@@ -378,14 +370,12 @@ function randomBucketScores(rndFn) {
   const n = lo + rndFn() * (hi - lo);
   const p = lo + rndFn() * (hi - lo);
   const sc = bucketScores({ conservative: c, centrist: n, progressive: p });
-  const planetPct = Math.floor(rndFn() * 101);
   if (rndFn() < 0.12) {
-    const signal = rndFn() < 0.5 ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
     const stage = 1 + Math.floor(rndFn() * 3);
     const days = EXILE_STAGE_DAYS[stage] || 3;
-    return { ...makeTimedExileBucket(sc, signal, stage, days), planetPct };
+    return makeTimedExileBucket(sc, stage, days);
   }
-  return { ...sc, planetPct, forcedTerritory: null };
+  return { ...sc, forcedTerritory: null };
 }
 
 function simulate() {
@@ -407,19 +397,10 @@ function simulate() {
         base.progressive += rnd() * 3;
       }
       if (rnd() < 0.08) {
-        const planet = 50 + Math.floor(rnd() * 40);
         const sc = bucketScores(base);
-        const unit = A.unit3(sc);
-        const ft = unit.progressive >= unit.conservative ? 'KANTAPBIYA_LEFT' : 'KANTAPBIYA_RIGHT';
-        scoresMap[u] = {
-          ...makeTimedExileBucket(sc, ft, 1, EXILE_STAGE_DAYS[1]),
-          planetPct: planet,
-        };
+        scoresMap[u] = makeTimedExileBucket(sc, 1, EXILE_STAGE_DAYS[1]);
       } else {
         scoresMap[u] = bucketScores(base);
-        if (rnd() < 0.15) {
-          scoresMap[u].planetPct = Math.floor(rnd() * 100);
-        }
       }
     } else {
       scoresMap[u] = randomBucketScores(rnd);
@@ -450,7 +431,7 @@ function simulate() {
       const boardTid = rnd() < 0.55 ? 'COMMON' : pick([...FOUR_TIER_IDS]);
       const stage = 1;
 
-      if (!isFactionTier1Unlocked(boardTid, pct, u, getForced, getPlanetPct)) {
+      if (!isFactionTier1Unlocked(boardTid, pct, u, getForced)) {
         if (!isCommonSpace(boardTid)) {
           stats.blockedFactionWrites++;
           continue;
@@ -519,13 +500,12 @@ function simulate() {
   }
 
   // 해금 통계
-  let unlocked = { CONSERVATIVE: 0, PROGRESSIVE: 0, KANTA_L: 0, KANTA_R: 0, COMMON_only: 0 };
+  let unlocked = { CONSERVATIVE: 0, PROGRESSIVE: 0, KANTAPBIYA: 0, COMMON_only: 0 };
   for (let i = 0; i < USER_COUNT; i++) {
     const u = uid(i);
     const pct = getPct(u);
     const ft = getForced(u);
-    if (ft === 'KANTAPBIYA_LEFT') unlocked.KANTA_L++;
-    else if (ft === 'KANTAPBIYA_RIGHT') unlocked.KANTA_R++;
+    if (ft === 'KANTAPBIYA') unlocked.KANTAPBIYA++;
     else if (pct.conservative >= 40 && pct.conservative >= pct.centrist && pct.conservative >= pct.progressive)
       unlocked.CONSERVATIVE++;
     else if (pct.progressive >= 40 && pct.progressive >= pct.centrist && pct.progressive >= pct.conservative)
@@ -540,11 +520,10 @@ function simulate() {
     const sum = pct.conservative + pct.centrist + pct.progressive;
     if (sum < 98 || sum > 102) err(`성향 합 ${sum}% (${id})`);
     const raw = getScores(id);
-    for (const k of ['conservative', 'centrist', 'progressive', 'planetPct']) {
+    for (const k of ['conservative', 'centrist', 'progressive']) {
       const v = raw[k];
       if (!Number.isFinite(v)) err(`${id} ${k} 비유한수: ${v}`);
     }
-    if (raw.planetPct < 0 || raw.planetPct > 100) err(`${id} planetPct 범위 밖: ${raw.planetPct}`);
   }
 
   // 팔로우 그래프 양방향 일관성

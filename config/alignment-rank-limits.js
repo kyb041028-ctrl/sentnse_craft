@@ -2,11 +2,9 @@
  * =============================================================================
  * 랭크별 성향치 상한 + 단일 게시물 누적 상한
  * =============================================================================
- * - **메인 벨트(질서·개혁)** 축과 **외계행성(좌·우)** 축에 같은 랭크 표를 적용한다.
- * - 설계 가정: 동시에 활동하는 유저 대략 **10만 명** 규모에서도 숫자가 포화되지 않게
- *   “축당 최대치”는 랭크가 오를수록 크게 벌려 둠.
- * - 한 게시물에서 작자에게 들어가는 성향치는 **게시물당 캡**으로 제한 (다계정·끌올 방지).
- * - 실제 DB/서버에서 적용할 때: 이벤트마다 min(남은캡, 가중점수) 형태로 클램프.
+ * - **메인 벨트(질서·개혁)** 축에 랭크 표를 적용한다.
+ * - 외계행성(KANTAPBIYA)은 정치 성향 축과 분리 — 행동 moderation 체류만.
+ * - 한 게시물에서 작자에게 들어가는 성향치는 **게시물당 캡**으로 제한.
  * =============================================================================
  */
 
@@ -14,11 +12,10 @@
 
 /**
  * @typedef {Object} RankAlignmentRow
- * @property {number} rank                 1 = 최저 랭크
- * @property {string} labelKo            표기용 (나중에 랭크 테이블과 합치기)
- * @property {number} maxAxisScore       해당 구역에서 쓰는 **양 극단 축** 각각의 **최대 누적치**
- *                                       (메인: 질서·개혁 / 외계행성: 좌·우)
- * @property {number} perPostAxisCap     **한 게시물**에서 해당 축으로 작자에게 더해질 수 있는 **최대 합계**
+ * @property {number} rank
+ * @property {string} labelKo
+ * @property {number} maxAxisScore
+ * @property {number} perPostAxisCap
  */
 
 /** @type {ReadonlyArray<RankAlignmentRow>} */
@@ -35,13 +32,8 @@ const RANK_ALIGNMENT_TABLE = Object.freeze([
   { rank: 10, labelKo: '10티어(상한 완화)', maxAxisScore: 1_000_000, perPostAxisCap: 3_000 },
 ]);
 
-/** MAU 가정 (문서·밸런스 메모용, 런타임 로직에는 필수 아님) */
 const DESIGN_ASSUMPTION_MAU = 100_000;
 
-/**
- * @param {number} rank
- * @returns {RankAlignmentRow | null}
- */
 function getRankAlignmentRow(rank) {
   var r = Math.floor(Number(rank));
   if (!isFinite(r) || r < 1) return RANK_ALIGNMENT_TABLE[0] || null;
@@ -49,35 +41,24 @@ function getRankAlignmentRow(rank) {
   return RANK_ALIGNMENT_TABLE[r - 1] || null;
 }
 
-/**
- * 외계행성 개혁·질서 행성: 메인 벨트와 **동일 랭크 표**를 두 영토 축에 적용.
- * (축 이름만 다르고 maxAxisScore·perPostAxisCap 숫자는 공유)
- */
+/** 외계행성 단일 허브 — 정치 축 클램프 없음(행동 moderation만) */
 function getKantapbiyaRankAlignmentLimits() {
   return Object.freeze({
-    poleAxisTerritoryIds: Object.freeze(['KANTAPBIYA_LEFT', 'KANTAPBIYA_RIGHT']),
-    poleAxisLabelKo: Object.freeze({
-      KANTAPBIYA_LEFT: '개혁 신호구역 축',
-      KANTAPBIYA_RIGHT: '질서 신호구역 축',
-    }),
+    hubTerritoryId: 'KANTAPBIYA',
     ranks: RANK_ALIGNMENT_TABLE,
-    noteKo:
-      '메인 벨트(질서·개혁)와 같은 랭크별 maxAxisScore·perPostAxisCap을, 외계행성 두 행성 영토 성향 축에 그대로 적용한다.',
+    noteKo: '외계행성은 행동 관측 기지. planetPct·좌우 신호구역 없음.',
   });
 }
 
 function getPublicRankAlignmentLimits() {
   return Object.freeze({
     designAssumptionMau: DESIGN_ASSUMPTION_MAU,
-    /** 메인 벨트: 질서·개혁 축 (기존 필드명 `ranks` 유지) */
     ranks: RANK_ALIGNMENT_TABLE,
-    /** 외계행성: 개혁·질서 행성 축 */
     kantapbiya: getKantapbiyaRankAlignmentLimits(),
     notesKo: [
       '질서·개혁를 “각각의 축”으로 둘 때: 각 축이 maxAxisScore를 넘지 못하게 클램프.',
-      '한 게시물에서 작자에게 쌓이는 “그 축 합”은 perPostAxisCap을 넘지 못하게 클램프(글·댓글·반응 합산).',
-      '외계행성 두 행성도 동일 랭크 표를 쓴다 — territoryId가 KANTAPBIYA_LEFT/RIGHT일 때 축 클램프에 적용.',
-      '랭크 정의(이름·승급 조건)는 별도 랭크 테이블과 합칠 것 — 여기서는 숫자만.',
+      '한 게시물에서 작자에게 쌓이는 “그 축 합”은 perPostAxisCap을 넘지 못하게 클램프.',
+      '외계행성(KANTAPBIYA)은 정치 성향 축과 분리 — moderation 체류만.',
     ],
   });
 }

@@ -1,10 +1,10 @@
 /**
  * =============================================================================
- * 외계행성 — 예전 KANTAPBIYA_RULES + 영토(개혁·질서 행성) 맵을 한 이름으로 묶음
+ * 외계행성 — 행동 관측 기지 (정치 성향과 분리)
  * =============================================================================
- * - 극단 성향 행성 + 개혁·질서 행성 영토(게시판 4단계)
- * - 유배지 규칙(자동 사면 없음, 지구 귀환 티켓 가격, 내부 재축출 등)
- * 가격 숫자만 바꾸려면 app-config.js 의 PAYMENT_PRODUCTS 와 맞추면 됩니다.
+ * - 단일 허브 KANTAPBIYA: 자유게시판·관측기록·밈·생존일지 등
+ * - 입장·체류: moderation exile(운영/행동 기반)만 사용
+ * - planetPct·LEFT/RIGHT 신호구역 없음
  * =============================================================================
  */
 
@@ -18,39 +18,26 @@ const alignmentRankLimits = require('./alignment-rank-limits');
 function buildKantapbiya(earthReturnTicketKrw) {
   const price = Number(earthReturnTicketKrw);
   return Object.freeze({
-    /** DB·이벤트용 구역 키 (예전 zoneKey 와 동일 의미) */
     id: 'KANTAPBIYA',
     labelKo: '외계행성',
-
-    /** 개혁·질서 행성 (각 4단계 게시판) */
-    territory: Object.freeze({
-      left: Object.freeze({
-        id: 'KANTAPBIYA_LEFT',
-        labelKo: '개혁 신호구역',
-        forumTierCount: 4,
-      }),
-      right: Object.freeze({
-        id: 'KANTAPBIYA_RIGHT',
-        labelKo: '질서 신호구역',
-        forumTierCount: 4,
-      }),
+    hub: Object.freeze({
+      id: 'KANTAPBIYA',
+      labelKo: '외계행성 · 행동 관측 기지',
+      boardCategories: Object.freeze([
+        { id: 'free', labelKo: '자유게시판' },
+        { id: 'observe', labelKo: '관측기록' },
+        { id: 'meme', labelKo: '밈·드립' },
+        { id: 'diary', labelKo: '생존일지' },
+      ]),
     }),
-
-    /** 유배지 특수 규칙 (예전 KANTAPBIYA_RULES 내용) */
     exile: Object.freeze({
-      noAutoTimer: true,
-      noFreePardon: true,
+      noAutoTimer: false,
+      stageDays: Object.freeze([0, 3, 7, 14, 30, 90]),
+      noteKo: '반복 신고·도배·과열 등 행동 패턴에 따른 관측 체류. 정치 성향과 무관.',
       returnToCitizenLand: Object.freeze({
         payEarthReturnTicketKrw: price,
-        reExileByDislikesInsideZone: Object.freeze({
-          enabled: true,
-          noteKo:
-            '외계행성 내부에서 유저들에게 싫어요를 받아 재축출되면 일반 시민 땅으로 복귀할 수 있음(세부 수치는 기획 확정 후 조정)',
-        }),
       }),
     }),
-
-    /** 메인 벨트와 동일 랭크별 성향치 상한·게시물당 캡 → 두 행성 축에 적용 */
     rankAlignment: alignmentRankLimits.getKantapbiyaRankAlignmentLimits(),
   });
 }
