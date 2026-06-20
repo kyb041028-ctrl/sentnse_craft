@@ -156,11 +156,11 @@
     }
     .view-login__subtitle {
       margin: 0 auto 1rem;
-      max-width: 20rem;
-      font-size: clamp(0.92rem, 2.4vw, 1.1rem);
+      max-width: 22rem;
+      font-size: clamp(0.95rem, 2.5vw, 1.12rem);
       font-weight: 600;
-      letter-spacing: 0.06em;
-      color: rgba(186, 230, 253, 0.9);
+      letter-spacing: 0.03em;
+      color: rgba(186, 230, 253, 0.95);
       line-height: 1.45;
     }
     .view-login__world-panel {
@@ -173,26 +173,32 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
-      text-align: center;
+      text-align: left;
     }
     .view-login__world-panel p {
-      margin: 0.42rem 0;
-      font-size: clamp(0.8rem, 2.1vw, 0.9rem);
-      line-height: 1.55;
+      margin: 0;
+      padding: 0.48rem 0;
+      font-size: clamp(0.82rem, 2.1vw, 0.92rem);
+      line-height: 1.58;
       color: #cbd5e1;
+      letter-spacing: 0.01em;
+    }
+    .view-login__world-panel p + p {
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
     }
     .view-login__world-panel p:first-of-type {
-      margin-top: 0;
+      padding-top: 0;
     }
     .view-login__world-panel p:last-of-type {
-      margin-bottom: 0;
+      padding-bottom: 0;
     }
     .view-login__auth-hint {
-      margin: 0 0 0.65rem;
-      font-size: 0.86rem;
-      line-height: 1.5;
-      color: #94a3b8;
+      margin: 0 0 0.85rem;
+      font-size: clamp(0.88rem, 2.2vw, 0.98rem);
+      line-height: 1.55;
+      color: #e2e8f0;
       text-align: center;
+      letter-spacing: 0.01em;
     }
     .view-login__auth-hint-accent {
       font-weight: 700;
@@ -356,6 +362,30 @@
     }
     .perm-guide__list li + li {
       margin-top: 0.35rem;
+    }
+    .perm-guide__world-grid {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 0.75rem;
+    }
+    .perm-guide__world-card {
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.35);
+    }
+    .perm-guide__world-card .perm-guide__subh {
+      margin: 0 0 0.35rem;
+    }
+    .perm-guide__world-text {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #cbd5e1;
+    }
+    .perm-guide__footnote {
+      margin: 1rem 0 0;
+      font-size: 0.82rem;
     }
     #app-user-status {
       font-size: 0.85rem;
@@ -4973,13 +5003,14 @@
   <div id="view-login" class="view-login">
     <aside class="view-login__intro" aria-label="인트로 영역">
       <div class="view-login__intro-inner">
-        <header class="view-login__hero" aria-label="센텐스크래프트 소개">
+        <header class="view-login__hero" aria-label="센텐스크래프트 세계관">
           <h1 class="view-login__title">센텐스크래프트</h1>
-          <p class="view-login__subtitle">의견이 세력을 만든다</p>
+          <p class="view-login__subtitle">의견의 흐름이 영토를 만든다</p>
           <div class="view-login__world-panel">
-            <p>데일리 이슈에 참여하며 성향이 변화합니다</p>
-            <p>성향에 따라 새로운 영토가 열립니다</p>
-            <p>고강도 토론은 분리 토론 구역에서 이어집니다</p>
+            <p>의견은 서로 다른 영토를 만든다</p>
+            <p>성향은 흐름이고, 제재는 행동으로 결정된다</p>
+            <p>개혁과 질서는 각자의 생각이 모이는 공간</p>
+            <p>과열된 토론은 외계행성에서 관측된다</p>
           </div>
         </header>
         <div class="view-login__intro-media" role="region" aria-label="로그인 인트로 영상">
@@ -5000,7 +5031,7 @@
     <div class="view-login__column">
       <div class="view-login__inner">
       <p class="view-login__auth-hint">
-        정치·사회 이슈를 <span class="view-login__auth-hint-accent">관점·영토 세계</span>로 읽는 소셜 시뮬레이션입니다. 아래에서 입장하세요.
+        토론과 반응이 <span class="view-login__auth-hint-accent">세계를 변화</span>시킨다.<br />아래에서 입장하세요.
       </p>
 
       <section class="card view-login__auth-card" aria-labelledby="login-title">
@@ -5030,7 +5061,7 @@
       </div>
       <nav class="app-primary-nav" role="tablist" aria-label="메인 메뉴">
         <button type="button" id="app-tab-main" class="is-active" role="tab" aria-selected="true">영토</button>
-        <button type="button" id="app-tab-guide" role="tab" aria-selected="false">레벨·명성 안내</button>
+        <button type="button" id="app-tab-guide" role="tab" aria-selected="false">성장·영토 안내</button>
         <button type="button" id="app-tab-history" role="tab" aria-selected="false">히스토리</button>
       </nav>
     </header>
@@ -5148,15 +5179,17 @@
 
       <div id="screen-guide" class="app-screen" hidden>
         <section class="card perm-guide" aria-labelledby="perm-guide-title">
-          <h2 id="perm-guide-title" style="margin: 0 0 0.5rem; font-size: 1.15rem">레벨 · 명성 · 게시판 권한</h2>
+          <h2 id="perm-guide-title" style="margin: 0 0 0.5rem; font-size: 1.15rem">성장 · 명성 · 영토 안내</h2>
           <p class="perm-guide__intro">
-            아래 표는 현재 베타 클라이언트에 적용된 규칙입니다. 숫자는 밸런스 패치로 바뀔 수 있으며, 프로필 패널의
-            <strong>레벨·명성</strong>과 함께 보면 이해하기 쉽습니다.
+            이곳은 센텐스크래프트 <strong>세계 규칙</strong>을 짧게 정리한 안내입니다.
+            <strong>레벨</strong>은 성장, <strong>명성</strong>은 커뮤니티 영향력,
+            <strong>영토</strong>는 활동 공간 — 서로 다른 이야기입니다.
           </p>
           <div id="perm-guide-subnav" class="perm-guide__subnav" role="tablist" aria-label="권한 안내 분류">
             <button type="button" data-perm-sub="level" class="is-active" role="tab" aria-selected="true">레벨</button>
             <button type="button" data-perm-sub="rank" role="tab" aria-selected="false">명성</button>
-            <button type="button" data-perm-sub="board" role="tab" aria-selected="false">게시판·성향</button>
+            <button type="button" data-perm-sub="board" role="tab" aria-selected="false">이용 안내</button>
+            <button type="button" data-perm-sub="world" role="tab" aria-selected="false">영토</button>
           </div>
           <div id="perm-guide-panel" class="perm-guide__panel" role="tabpanel" aria-live="polite"></div>
         </section>

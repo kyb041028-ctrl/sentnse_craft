@@ -1,5 +1,5 @@
 /**
- * 레벨·명성·게시판 권한 안내 (상단 탭 화면)
+ * 레벨·명성·영토 안내 (상단 탭 화면 — 세계관 규칙 중심)
  */
 (function (global) {
   'use strict';
@@ -7,7 +7,8 @@
   var SUB_TABS = [
     { id: 'level', label: '레벨' },
     { id: 'rank', label: '명성' },
-    { id: 'board', label: '게시판·성향' },
+    { id: 'board', label: '이용 안내' },
+    { id: 'world', label: '영토' },
   ];
 
   var activeSub = 'level';
@@ -32,12 +33,6 @@
       xpRewards: { post_write: 25, board_comment: 12, issue_comment: 10 },
       xpPerLevel: [40, 50, 60, 70, 80],
       levelCumulativeXp: [0, 40, 90, 150, 220, 300],
-      rankTiers: [
-        { tier: 1, labelKo: '시민' },
-        { tier: 2, labelKo: '논객' },
-        { tier: 3, labelKo: '대표' },
-        { tier: 4, labelKo: '지도자' },
-      ],
       rankAbsolute: {
         2: { postLikes: 3, commentLikes: 2, followers: 2 },
         3: { postLikes: 15, commentLikes: 8, followers: 8 },
@@ -48,146 +43,167 @@
   }
 
   function renderLevelPanel(d) {
-    var lurkLv = d.lurkUnlockLevel || 3;
+    var observeLv = d.lurkUnlockLevel || 3;
+    var rankLv = d.rankUnlockLevel || 4;
     var rows = '';
     for (var lv = 1; lv <= d.maxLevel; lv++) {
       var cum = d.levelCumulativeXp[lv - 1] || 0;
       var need = d.xpPerLevel[lv - 1] || 0;
-      var perks = [];
-      if (lv === 1) perks.push('중앙광장 글·댓글·반응');
-      if (lv < lurkLv) perks.push('타 영토 1단계 읽기(누구나) · 쓰기는 성향 40% 필요');
-      if (lv === lurkLv) {
-        perks.push('타 영토 탐색 UX(잠금 배너 해제) · 1단계 눈팅 정리');
-      }
-      if (lv === d.rankUnlockLevel) {
-        perks.push('명성 등급(참여자→시민) 표시·집계 시작');
+      var growth = '';
+      if (lv === 1) {
+        growth = '중앙광장에서 활동 시작 · 글·댓글·반응';
+      } else if (lv === 2) {
+        growth = '영토 활동 지속 · 경험 축적';
+      } else if (lv === observeLv) {
+        growth = '타 영토 관측 가능 · 다른 영토 게시글 열람';
+      } else if (lv === rankLv) {
+        growth = '명성 체계 개방 · 명성 등급 표시 시작';
+      } else if (lv === d.maxLevel) {
+        growth = '성장의 정점 · 활동 범위 최대';
+      } else if (lv > observeLv && lv < rankLv) {
+        growth = '관측·활동 범위 확장';
+      } else if (lv < observeLv) {
+        growth = '중앙광장 중심 활동';
       }
       rows +=
         '<tr><td>Lv.' +
         lv +
         '</td><td>' +
         need +
-        ' XP</td><td>' +
+        '</td><td>' +
         cum +
         '+</td><td>' +
-        esc(perks.join(' · ') || '—') +
+        esc(growth || '—') +
         '</td></tr>';
     }
     return (
       '<section class="perm-guide__section">' +
-      '<h3 class="perm-guide__h">레벨 1~' +
-      d.maxLevel +
-      '</h3>' +
-      '<p class="perm-guide__lead">글쓰기·댓글·데일리 이슈 댓글로 경험치를 쌓습니다. <strong>Lv.' +
-      lurkLv +
-      '</strong>부터 타 영토 탐색이 편해지고, <strong>Lv.' +
-      d.rankUnlockLevel +
-      '</strong>에 <strong>명성 등급</strong>이 열립니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>레벨</th><th>이번 단계 XP</th><th>누적 XP</th><th>주요 효과</th></tr></thead><tbody>' +
+      '<h3 class="perm-guide__h">성장 — 레벨</h3>' +
+      '<p class="perm-guide__lead">글·댓글·이슈에 참여하며 쌓인 <strong>경험</strong>이 레벨을 올립니다. 레벨이 오를수록 <strong>더 넓은 영토</strong>를 탐색하고, <strong>명성 체계</strong>에 닿을 수 있습니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>레벨</th><th>필요 경험</th><th>누적</th><th>열리는 것</th></tr></thead><tbody>' +
       rows +
       '</tbody></table>' +
       '<ul class="perm-guide__list">' +
-      '<li>자유 글 작성: <strong>+' +
-      d.xpRewards.post_write +
-      ' XP</strong></li>' +
-      '<li>게시판 댓글: <strong>+' +
-      d.xpRewards.board_comment +
-      ' XP</strong></li>' +
-      '<li>데일리 이슈 댓글: <strong>+' +
-      d.xpRewards.issue_comment +
-      ' XP</strong></li>' +
-      '<li>받은 좋아요·팔로워는 <strong>명성 등급</strong>에만 반영됩니다.</li>' +
+      '<li><strong>Lv.' +
+      observeLv +
+      '</strong> — 질서·개혁 영토의 글을 <strong>관측(열람)</strong>할 수 있습니다.</li>' +
+      '<li><strong>Lv.' +
+      rankLv +
+      '</strong> — <strong>명성 등급</strong>이 프로필에 표시되고, 순위에 반영됩니다.</li>' +
+      '<li>레벨과 성향은 별개입니다. 영토 깊숙이 <strong>참여(글·댓글)</strong>하려면 해당 영토에서의 활동이 더 필요합니다.</li>' +
       '</ul></section>'
     );
   }
 
   function renderRankPanel(d) {
     var abs = d.rankAbsolute;
-    function rowTier(tier, label, extra) {
+    function condText(tier) {
       var th = abs[tier];
-      var cond = '—';
-      if (th) {
-        cond =
-          '글 좋아요 ' +
-          th.postLikes +
-          '+ · 댓글 좋아요 ' +
-          th.commentLikes +
-          '+ · 팔로워 ' +
-          th.followers +
-          '+';
-      }
+      if (!th) return '—';
       return (
-        '<tr><td><strong>' +
-        esc(label) +
-        '</strong></td><td>' +
-        cond +
-        '</td><td>' +
-        esc(extra || '') +
-        '</td></tr>'
+        '글 호응 ' +
+        th.postLikes +
+        '+ · 댓글 호응 ' +
+        th.commentLikes +
+        '+ · 팔로워 ' +
+        th.followers +
+        '+'
       );
     }
-    var capPct = Math.round((d.rankCaps.politicianMaxRatio || 0.1) * 100);
     return (
       '<section class="perm-guide__section">' +
-      '<h3 class="perm-guide__h">명성·등급 (Lv.' +
+      '<h3 class="perm-guide__h">명성 — 커뮤니티 영향력</h3>' +
+      '<p class="perm-guide__lead">명성은 <strong>받은 호응</strong>으로 쌓입니다. 영토 안에서 영향력이 커질수록 더 높은 등급이 주어집니다. <strong>정치 성향</strong>이나 <strong>외계행성 체류</strong>와는 무관합니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>등급</th><th>필요 조건</th><th>안내</th></tr></thead><tbody>' +
+      '<tr><td><strong>참여 중</strong></td><td>—</td><td>Lv.' +
       d.rankUnlockLevel +
-      ' 이후)</h3>' +
-      '<p class="perm-guide__lead"><strong>명성 등급</strong>은 받은 좋아요·팔로워 <strong>절대 기준</strong>과 영토당 인구 캡으로 정합니다. 정치 성향·외계 체류와 무관합니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>등급</th><th>절대 조건 (동시 충족)</th><th>비고</th></tr></thead><tbody>' +
-      '<tr><td><strong>참여자</strong></td><td>—</td><td>Lv.' +
-      d.rankUnlockLevel +
-      ' 미만 · 명성 미집계</td></tr>' +
-      '<tr><td><strong>시민</strong></td><td>—</td><td>Lv.' +
-      d.rankUnlockLevel +
-      '+ 기본 등급 · 논객 조건 미달</td></tr>' +
-      rowTier(2, '논객', '인구 캡으로 한 단계 낮아질 수 있음') +
-      rowTier(3, '대표', '영토당 최대 약 ' + capPct + '% 인원') +
-      rowTier(4, '지도자', '영토당 최대 ' + (d.rankCaps.chiefsMaxCount || 5) + '명') +
+      ' 전이거나, 명성 여정을 막 시작한 단계</td></tr>' +
+      '<tr><td><strong>논객</strong></td><td>' +
+      esc(condText(2)) +
+      '</td><td>의견이 주목받기 시작한 단계</td></tr>' +
+      '<tr><td><strong>대표</strong></td><td>' +
+      esc(condText(3)) +
+      '</td><td>영토 정원에 따라 자리 조정될 수 있음</td></tr>' +
+      '<tr><td><strong>지도자</strong></td><td>' +
+      esc(condText(4)) +
+      '</td><td>영토당 정해진 자리 · 만석 시 자리 조정</td></tr>' +
       '</tbody></table>' +
       '<ul class="perm-guide__list">' +
-      '<li>리더보드 명성 점수 = 글♥ + 댓글♥×2 + 팔로워×' +
-      (d.rankFollowerWeight || 5) +
-      ' (등급 결정과 별개)</li>' +
-      '<li>대표·지도자 자리가 꽉 차면 한 단계 낮은 등급으로 조정될 수 있습니다.</li>' +
+      '<li>명성 순위는 커뮤니티 호응을 바탕으로 정해집니다.</li>' +
+      '<li>대표·지도자 자리가 꽉 차면 한 단계 낮은 등급으로 <strong>자리 조정</strong>될 수 있습니다.</li>' +
+      '<li>남을 깎아 올리는 방식의 순위 경쟁은 없습니다.</li>' +
       '</ul></section>'
     );
   }
 
   function renderBoardPanel() {
-    var d = guideData();
-    var lurkLv = d.lurkUnlockLevel || 3;
     return (
       '<section class="perm-guide__section">' +
-      '<h3 class="perm-guide__h">게시판 · 성향</h3>' +
-      '<p class="perm-guide__lead">중앙광장은 <strong>모든 성향</strong>의 공용 공간입니다. 개혁·질서 영토는 <strong>성향 %</strong>로 단계가 열립니다. 외계행성은 정치와 분리된 <strong>행동 관측 기지</strong>입니다.</p>' +
-      '<table class="perm-guide__table"><thead><tr><th>구역</th><th>읽기</th><th>글·댓글·반응</th></tr></thead><tbody>' +
-      '<tr><td><strong>중앙광장</strong></td><td>전원</td><td>전원 (외계 체류 중에는 글·댓글 제한, 공감·읽기 가능)</td></tr>' +
-      '<tr><td><strong>개혁·질서</strong> 1단계</td><td>전원</td><td>해당 축 <strong>40%+</strong></td></tr>' +
-      '<tr><td><strong>개혁·질서</strong> 2단계</td><td>1단계 해금(40%+) 시</td><td>해당 축 <strong>60%+</strong></td></tr>' +
-      '<tr><td><strong>외계행성</strong></td><td>허브 열람 가능</td><td><strong>행동 관측 체류(유배) 중</strong>만 글·댓글 · 자유·관측·밈·생존일지</td></tr>' +
+      '<h3 class="perm-guide__h">영토별 이용</h3>' +
+      '<p class="perm-guide__lead"><strong>정치 성향</strong>(개혁·질서·중앙광장)과 <strong>외계행성</strong>(행동 관측)은 완전히 별개입니다. 아래는 각 공간이 <strong>어떤 곳인지</strong>, <strong>언제 열리는지</strong>만 안내합니다.</p>' +
+      '<table class="perm-guide__table"><thead><tr><th>영토</th><th>어떤 공간인가</th><th>어떻게 열리나</th></tr></thead><tbody>' +
+      '<tr><td><strong>중앙광장</strong></td><td>모두가 모이는 공용 광장</td><td>처음부터 자유롭게 이용</td></tr>' +
+      '<tr><td><strong>질서영토</strong></td><td>안정과 구조를 중시하는 이용자들의 지역</td><td>질서 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
+      '<tr><td><strong>개혁영토</strong></td><td>변화와 실험을 선호하는 이용자들의 지역</td><td>개혁 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
+      '<tr><td><strong>외계행성</strong></td><td>과열된 행동을 관측·격리하는 특수 구역</td><td>반복적인 과열 행동이 감지되면 일정 기간 이동</td></tr>' +
       '<tr><td><strong>3·4단계</strong></td><td colspan="2">추후 공개</td></tr>' +
       '</tbody></table>' +
-      '<h4 class="perm-guide__subh">눈팅 모드 (성향 미달 · 읽기만)</h4>' +
+      '<h4 class="perm-guide__subh">성향 — 개혁 · 질서 · 중앙광장</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>개혁·질서 <strong>1·2단계</strong>: 목록·본문 <strong>읽기만</strong> 가능 (성향 해금 전).</li>' +
-      '<li>글쓰기·댓글·좋아요·싫어요·공감은 <strong>불가</strong>.</li>' +
-      '<li><strong>Lv.' +
-      lurkLv +
-      '+</strong>이면 타 영토 탐색 시 잠금 배너가 정리되어 관측자 UX가 편해집니다.</li>' +
+      '<li>중앙광장·질서·개혁에서의 활동이 <strong>나의 성향</strong>을 형성합니다.</li>' +
+      '<li>질서·개혁 영토는 <strong>해당 성향 활동</strong>이 이어질수록 더 깊은 단계 게시판이 열립니다.</li>' +
+      '<li>아직 열리지 않은 단계는 <strong>관측(열람)</strong>만 가능할 수 있습니다.</li>' +
+      '<li><strong>공감</strong>은 성향에 영향을 주지 않습니다. <strong>좋아요·싫어요</strong>만 성향에 반영됩니다.</li>' +
       '</ul>' +
-      '<h4 class="perm-guide__subh">성향 (사람 축)</h4>' +
+      '<h4 class="perm-guide__subh">외계행성 — 행동 관측</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>표시: 질서−개혁 격차 — 12 미만 <strong>중립</strong>, 12~24 약한 한쪽, 25+ 분명한 한쪽.</li>' +
-      '<li>소속: 질서·개혁 각 40% 미만이면 <strong>중앙광장</strong>. (정치 성향은 제재 대상 아님)</li>' +
-      '<li>게시판 공감은 성향 무영향 · 좋아요/싫어요만 반영.</li>' +
-      '</ul>' +
-      '<h4 class="perm-guide__subh">외계행성 · 행동 관측</h4>' +
-      '<ul class="perm-guide__list">' +
-      '<li>입장 조건: <strong>반복 신고·도배·과열·쿨다운 위반</strong> 등 운영/행동 기반 체류만.</li>' +
-      '<li>체류 단계: 3·7·14·30·90일 등 (외계 N차 문화).</li>' +
-      '<li>지구 게시판의 외계 유저 글: 블라인드 + 「외계 관측구역 전용 표현입니다」.</li>' +
-      '<li><strong>planetPct·외계인 %·진보/보수 신호구역 없음.</strong></li>' +
+      '<li>정치 성향과 <strong>무관</strong>합니다. 도배·과열·반복 신고 등 <strong>행동</strong>이 문제일 때만 이동합니다.</li>' +
+      '<li>체류 중에는 지구 영토 일부에서 <strong>글·댓글 작성이 제한</strong>되고, 기록은 외계행성에서 이어집니다.</li>' +
+      '<li>지구 게시판에 남은 흔적은 「외계 관측구역 전용 표현입니다」로 표시될 수 있습니다.</li>' +
       '</ul></section>'
+    );
+  }
+
+  function renderWorldPanel() {
+    var cards = [
+      {
+        name: '중앙광장',
+        body: '모든 이용자가 자유롭게 모이는 공용 공간입니다. 처음 만나는 사람들의 이야기, 일상, 논쟁이 이곳에서 시작됩니다.',
+      },
+      {
+        name: '질서영토',
+        body: '안정과 구조를 중시하는 이용자들이 모이는 지역입니다. 질서 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
+      },
+      {
+        name: '개혁영토',
+        body: '변화와 실험을 선호하는 이용자들이 모이는 지역입니다. 개혁 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
+      },
+      {
+        name: '외계행성',
+        body: '과열된 행동을 관측·격리하는 특수 구역입니다. 정치 성향과는 별개로, 커뮤니티 질서를 지키기 위한 공간입니다.',
+      },
+    ];
+    var html = '';
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      html +=
+        '<article class="perm-guide__world-card">' +
+        '<h4 class="perm-guide__subh">' +
+        esc(c.name) +
+        '</h4>' +
+        '<p class="perm-guide__world-text">' +
+        esc(c.body) +
+        '</p></article>';
+    }
+    return (
+      '<section class="perm-guide__section">' +
+      '<h3 class="perm-guide__h">영토 소개</h3>' +
+      '<p class="perm-guide__lead">센텐스크래프트는 <strong>영토</strong>마다 다른 분위기와 규칙을 가진 커뮤니티입니다. 어디서 활동하느냐에 따라 열리는 공간이 달라집니다.</p>' +
+      '<div class="perm-guide__world-grid">' +
+      html +
+      '</div>' +
+      '<p class="perm-guide__footnote muted">3·4단계 영토와 추가 공간은 추후 공개됩니다.</p>' +
+      '</section>'
     );
   }
 
@@ -195,6 +211,7 @@
     var d = guideData();
     if (sub === 'rank') return renderRankPanel(d);
     if (sub === 'board') return renderBoardPanel();
+    if (sub === 'world') return renderWorldPanel();
     return renderLevelPanel(d);
   }
 
