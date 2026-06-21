@@ -24,9 +24,14 @@
       --text: #e8eefc;
       --text-strong: #f8fafc;
       --muted: #8b9cb8;
-      --chat-panel-width: 220px;
-      --chat-panel-height: min(42vh, 240px);
+      --chat-panel-width: 275px;
+      --chat-panel-height: min(48vh, 276px);
       --chat-tab-width: 2.35rem;
+      --avatar-panel-width: 25rem;
+      --hud-map-inset: 1.5rem;
+      --dock-tab-width: 3rem;
+      --map-app-chrome: 11.25rem;
+      --map-hud-tabs-inset: 1.25rem;
       /* PC에서 좌우 여백 줄이고 본문 넓게 (모바일은 calc로 자동 축소) */
       --app-content-max: 96rem;
     }
@@ -63,45 +68,75 @@
     /* ----- 화면 전환: 로그인 / 앱(메인·게시판) ----- */
     .view-login {
       min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: stretch;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .view-login__intro {
-      margin: 1.25rem 0.75rem 1.25rem 1.25rem;
-      border-radius: 14px;
-      border: 1px dashed rgba(255, 255, 255, 0.18);
-      background: rgba(0, 0, 0, 0.22);
-      min-height: min(72vh, 32rem);
       display: flex;
       align-items: center;
+      justify-content: center;
+      padding: clamp(1rem, 2vw, 1.75rem);
+      box-sizing: border-box;
+      background: radial-gradient(ellipse 88% 72% at 50% 42%, rgba(30, 58, 95, 0.2) 0%, transparent 58%);
+    }
+    .view-login__shell {
+      width: 100%;
+      max-width: 94rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.24fr) minmax(0, 0.76fr);
+      grid-template-rows: auto auto;
+      gap: 0 clamp(1.25rem, 2.4vw, 2.1rem);
+      align-items: start;
+      box-sizing: border-box;
+    }
+    .view-login__brand-head {
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+      max-width: 48rem;
+      margin: 0 auto 1.75rem;
+      padding: 0 0.15rem;
+      box-sizing: border-box;
+      text-align: center;
+      animation: view-login-hero-in 0.65s ease forwards;
+    }
+    .view-login__brand-head .view-login__brand-en {
+      margin-bottom: 0.55rem;
+    }
+    .view-login__brand-head .view-login__tagline {
+      margin: 0 auto;
+      max-width: 22rem;
+    }
+    .view-login__intro {
+      grid-column: 1;
+      grid-row: 2;
+      align-self: center;
+      margin: 0;
+      border: none;
+      background: transparent;
+      min-height: 0;
+      display: flex;
+      align-items: stretch;
       justify-content: center;
       box-sizing: border-box;
     }
     .view-login__intro-inner {
       text-align: center;
-      padding: 0.75rem 1rem 1rem;
+      padding: 0;
       width: 100%;
-      max-width: none;
+      max-width: 48rem;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       min-height: 0;
-      gap: 0.75rem;
+      gap: 0;
     }
     .view-login__intro-media {
       position: relative;
       width: 100%;
-      max-width: min(42rem, 100%);
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
       background: rgba(0, 0, 0, 0.5);
       aspect-ratio: 16 / 9;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.48);
     }
     .view-login__intro-video {
       position: absolute;
@@ -109,21 +144,60 @@
       top: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       opacity: 1;
       pointer-events: none;
       background: #000;
     }
+    .view-login__world-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      min-height: 38%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 2.1rem 1.25rem 1.05rem;
+      background: linear-gradient(
+        180deg,
+        rgba(15, 23, 42, 0) 0%,
+        rgba(15, 23, 42, 0.35) 28%,
+        rgba(15, 23, 42, 0.82) 62%,
+        rgba(15, 23, 42, 0.96) 100%
+      );
+      text-align: center;
+      pointer-events: none;
+    }
+    .view-login__world-overlay p {
+      margin: 0 0 0.15rem;
+      max-width: 26rem;
+      margin-inline: auto;
+      font-size: clamp(0.92rem, 1.65vw, 1.06rem);
+      font-weight: 600;
+      line-height: 1.5;
+      color: #f8fafc;
+      letter-spacing: 0.02em;
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.85),
+        0 0 18px rgba(15, 23, 42, 0.65);
+    }
     .view-login__column {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 1.5rem 1.5rem 1.5rem 0.75rem;
+      padding: 0;
       min-width: 0;
       box-sizing: border-box;
+      margin-top: 1.75rem;
     }
     .view-login__inner {
-      width: min(28rem, 100%);
+      width: 100%;
+      max-width: 28rem;
       margin: 0 auto;
     }
     @keyframes view-login-hero-in {
@@ -138,91 +212,158 @@
     }
     .view-login__hero {
       width: 100%;
-      max-width: min(28rem, 100%);
-      margin: 0 auto;
-      padding: 0 0.35rem;
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       text-align: center;
-      animation: view-login-hero-in 0.65s ease forwards;
     }
     .view-login__title {
-      margin: 0 0 0.45rem;
-      font-size: clamp(1.65rem, 4.5vw, 2.45rem);
+      margin: 0 0 0.28rem;
+      font-size: clamp(2.15rem, 4.2vw, 3.1rem);
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.12;
+      line-height: 1.08;
       color: #f0f9ff;
       text-shadow: 0 0 32px rgba(56, 189, 248, 0.2), 0 1px 0 rgba(15, 23, 42, 0.85);
     }
-    .view-login__subtitle {
-      margin: 0 auto 1rem;
-      max-width: 22rem;
-      font-size: clamp(0.95rem, 2.5vw, 1.12rem);
+    .view-login__brand-en {
+      margin: 0 0 0.75rem;
+      font-size: clamp(0.78rem, 1.95vw, 0.88rem);
       font-weight: 600;
-      letter-spacing: 0.03em;
-      color: rgba(186, 230, 253, 0.95);
-      line-height: 1.45;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(186, 230, 253, 0.72);
     }
-    .view-login__world-panel {
+    .view-login__tagline {
       margin: 0 auto;
-      max-width: min(26rem, 100%);
-      padding: 0.9rem 1.05rem 1rem;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
-      text-align: left;
+      max-width: 22rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      font-size: clamp(0.92rem, 2.2vw, 1.05rem);
+      font-weight: 600;
+      line-height: 1.45;
+      color: rgba(186, 230, 253, 0.88);
+      letter-spacing: 0.02em;
     }
-    .view-login__world-panel p {
-      margin: 0;
-      padding: 0.48rem 0;
-      font-size: clamp(0.82rem, 2.1vw, 0.92rem);
-      line-height: 1.58;
-      color: #cbd5e1;
-      letter-spacing: 0.01em;
-    }
-    .view-login__world-panel p + p {
-      border-top: 1px solid rgba(148, 163, 184, 0.14);
-    }
-    .view-login__world-panel p:first-of-type {
-      padding-top: 0;
-    }
-    .view-login__world-panel p:last-of-type {
-      padding-bottom: 0;
-    }
-    .view-login__auth-hint {
-      margin: 0 0 0.85rem;
-      font-size: clamp(0.88rem, 2.2vw, 0.98rem);
-      line-height: 1.55;
-      color: #e2e8f0;
-      text-align: center;
-      letter-spacing: 0.01em;
-    }
-    .view-login__auth-hint-accent {
+    .view-login__auth-lead {
+      margin: 0 0 1.25rem;
+      font-size: clamp(1.06rem, 1.8vw, 1.18rem);
       font-weight: 700;
-      color: #bae6fd;
+      line-height: 1.45;
+      color: #f0f9ff;
+      text-align: center;
+      letter-spacing: 0.015em;
+    }
+    .view-login__auth-divider {
+      margin: 1.35rem 0 1.05rem;
+      border: none;
+      border-top: 1px solid rgba(148, 163, 184, 0.22);
+      height: 0;
+    }
+    .view-login__auth-guest-hint {
+      margin: 0 0 0.7rem;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: #94a3b8;
+      text-align: center;
     }
     .view-login .view-login__auth-card {
-      margin-top: 0.35rem;
-      border-color: rgba(56, 189, 248, 0.22);
+      padding: 1.75rem 1.6rem 1.65rem;
+      margin-top: 0;
+      border-color: rgba(56, 189, 248, 0.32);
       box-shadow:
-        0 0 0 1px rgba(56, 189, 248, 0.12),
-        0 18px 44px rgba(0, 0, 0, 0.38);
+        0 0 0 1px rgba(56, 189, 248, 0.16),
+        0 24px 56px rgba(0, 0, 0, 0.46);
     }
-    @media (max-width: 720px) {
+    .view-login .oauth-grid {
+      gap: 0.75rem;
+      margin-top: 0;
+    }
+    .view-login .oauth-grid a {
+      padding: 0.72rem 0.95rem;
+      min-height: 2.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      background: rgba(56, 189, 248, 0.14);
+      font-size: 0.94rem;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+    .view-login .oauth-grid a:hover {
+      background: rgba(56, 189, 248, 0.24);
+      border-color: rgba(125, 211, 252, 0.65);
+      box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.25), 0 0 18px rgba(56, 189, 248, 0.18);
+    }
+    .view-login .view-login__auth-card .muted {
+      font-size: 0.82rem;
+    }
+    .view-login #auth-guest-btn {
+      margin-top: 0;
+      padding: 0.62rem 0.85rem;
+      font-size: 0.88rem;
+      border-radius: 10px;
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+      transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+    .view-login #auth-guest-btn:hover {
+      color: #e2e8f0;
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.1);
+    }
+    .view-login #auth-status-login {
+      margin: 0.55rem 0 0;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      min-height: 0;
+    }
+    .view-login #auth-status-login:empty {
+      display: none;
+      margin: 0;
+    }
+    @media (max-width: 820px) {
       .view-login {
-        grid-template-columns: 1fr;
+        align-items: flex-start;
         padding: 1rem;
+        background: radial-gradient(ellipse 100% 55% at 50% 18%, rgba(30, 58, 95, 0.16) 0%, transparent 62%);
+      }
+      .view-login__shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        max-width: min(100%, 29rem);
+        gap: 0 0;
+        row-gap: 1.1rem;
+      }
+      .view-login__brand-head {
+        grid-column: 1;
+        grid-row: 1;
+        margin-bottom: 0;
+        max-width: 100%;
       }
       .view-login__intro {
-        margin: 0 0 0.75rem;
-        min-height: 0;
+        grid-column: 1;
+        grid-row: 2;
+        align-self: auto;
+      }
+      .view-login__intro-inner {
+        max-width: 100%;
       }
       .view-login__column {
-        padding: 0;
-        justify-content: flex-start;
+        grid-column: 1;
+        grid-row: 3;
+        align-self: auto;
+        margin-top: 0;
+      }
+      .view-login__inner {
+        max-width: 100%;
       }
     }
     .view-app-main {
@@ -277,6 +418,10 @@
       background: linear-gradient(180deg, rgba(56, 189, 248, 0.22), rgba(56, 189, 248, 0.08));
       color: #f0f9ff;
       box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    /* 메인 영토: 지도만 한 화면에 — 불필요한 세로 스크롤 방지 */
+    body.sc-app-mode #screen-main {
+      overflow: hidden;
     }
     /* 게시판·글 상세에서는 상단 영토/안내/히스토리 탭 숨김 */
     body.sc-app-mode.sc-hide-primary-nav .app-primary-nav {
@@ -718,27 +863,45 @@
 
     /* ----- 영토 맵: 단일 PNG(contain) + SVG 히트존(개혁·광장·질서·외계행성) ----- */
     .territory-centrist-hero {
-      margin-top: 1rem;
+      margin-top: 2rem;
+      width: 100%;
     }
     .territory-centrist-hero__frame {
       position: relative;
       width: 100%;
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: visible;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      min-height: min(58vh, 26rem);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      min-height: min(65vh, 29rem);
       background: #060d18;
       box-shadow:
-        inset 0 0 80px rgba(0, 0, 0, 0.55),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 16px 48px rgba(0, 0, 0, 0.45);
+        inset 0 0 100px rgba(0, 12, 28, 0.72),
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        inset 0 2px 28px rgba(56, 189, 248, 0.07),
+        0 20px 56px rgba(0, 0, 0, 0.52),
+        0 0 0 1px rgba(56, 189, 248, 0.14);
+      transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+    .territory-centrist-hero__frame:hover {
+      border-color: rgba(56, 189, 248, 0.42);
+      box-shadow:
+        inset 0 0 100px rgba(0, 12, 28, 0.72),
+        inset 0 0 0 1px rgba(56, 189, 248, 0.16),
+        inset 0 2px 32px rgba(56, 189, 248, 0.1),
+        0 24px 64px rgba(0, 0, 0, 0.55),
+        0 0 24px rgba(56, 189, 248, 0.08);
     }
     @media (min-width: 640px) {
       .territory-centrist-hero__frame {
-        min-height: min(62vh, 32rem);
+        min-height: min(69vh, 36rem);
       }
     }
     @media (min-width: 960px) {
+      :root {
+        --map-app-chrome: 12rem;
+      }
       body {
         padding: 1.5rem 1rem 2rem;
       }
@@ -809,7 +972,7 @@
         width: min(44rem, 100%);
       }
       .territory-centrist-hero__frame {
-        min-height: min(66vh, 40rem);
+        min-height: min(74vh, 45rem);
       }
       .territory-mainland__bg {
         max-height: 34rem;
@@ -839,16 +1002,13 @@
       background-position: center center;
     }
     .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-      min-height: min(72vh, 32rem);
+      min-height: min(20rem, calc((100vh - var(--map-app-chrome)) * 0.94));
+      height: calc((100vh - var(--map-app-chrome)) * 0.94);
+      max-height: calc((100vh - var(--map-app-chrome)) * 0.94);
     }
     @media (min-width: 640px) {
       .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-        min-height: min(78vh, 44rem);
-      }
-    }
-    @media (min-width: 960px) {
-      .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-        min-height: min(84vh, 58rem);
+        min-height: min(24rem, calc((100vh - var(--map-app-chrome)) * 0.94));
       }
     }
     /* 중앙광장: 고원 절벽/울타리 둘레 근사(벡터 path). 픽셀에 정확히 맞추려면 common-space-hero 위에 path 트레이스 후 아래 SVG의 d만 교체 가능 */
@@ -1401,7 +1561,7 @@
       pointer-events: none !important;
     }
 
-    /* ----- 왼쪽 하단 프로필(아바타) 도킹 ----- */
+    /* ----- 왼쪽 하단 프로필(아바타) 도킹 — 지도 위 HUD ----- */
     .avatar-dock {
       position: fixed;
       z-index: 50;
@@ -1409,12 +1569,19 @@
       left: 0;
       display: flex;
       align-items: flex-end;
-      max-width: min(24rem, calc(100vw - 0.75rem));
+      max-width: min(calc(var(--avatar-panel-width) + 3rem), calc(100vw - 0.75rem));
       transition: transform 0.22s ease;
-      filter: drop-shadow(0 -4px 12px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 -4px 16px rgba(0, 0, 0, 0.42));
+    }
+    body.sc-app-mode .avatar-dock:not([hidden]) {
+      left: var(--hud-map-inset);
+    }
+    body.sc-app-mode .avatar-dock.is-collapsed:not([hidden]) {
+      left: 0;
     }
     .avatar-dock.is-collapsed {
-      transform: translateX(calc(-100% + 3rem));
+      transform: translateX(calc(-100% + var(--dock-tab-width)));
+      max-width: var(--dock-tab-width);
     }
     .avatar-dock.is-collapsed .avatar-dock__panel {
       pointer-events: none;
@@ -1426,25 +1593,146 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      width: min(19rem, calc(100vw - 1rem));
-      min-height: 10.35rem;
+      width: min(var(--avatar-panel-width), calc(100vw - 1rem));
+      min-height: 11.5rem;
       padding: 0;
-      padding-bottom: 0.45rem;
-      background: linear-gradient(135deg, rgba(18, 26, 51, 0.97), rgba(15, 23, 42, 0.98));
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 0.55rem;
+      background: linear-gradient(160deg, rgba(18, 26, 51, 0.94), rgba(10, 16, 32, 0.96));
+      border: 1px solid rgba(56, 189, 248, 0.22);
       border-left: none;
-      border-radius: 0 12px 0 0;
+      border-radius: 0 14px 14px 14px;
       min-width: 0;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 -8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(56, 189, 248, 0.06);
+      backdrop-filter: blur(10px);
+    }
+    body.sc-app-mode .avatar-dock:not([hidden]) .avatar-dock__panel {
+      border-left: 1px solid rgba(56, 189, 248, 0.18);
+    }
+    .avatar-dock__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.5rem 0.6rem 0.35rem;
+      flex-shrink: 0;
+    }
+    .avatar-dock__panel-title {
+      margin: 0;
+      padding: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #bae6fd;
     }
     .avatar-dock__topbar {
-      flex-shrink: 0;
-      align-self: flex-start;
-      width: 100%;
-      padding: 0.35rem 0.5rem 0.28rem;
+      display: none;
+    }
+    .avatar-dock__social .avatar-dock__follow-summary {
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      text-align: left;
+    }
+    .avatar-dock__hero {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 0.35rem;
+      align-items: center;
+      text-align: center;
+      gap: 0.3rem;
+      margin: 0 0.55rem 0.45rem;
+      padding: 0.7rem 0.65rem 0.65rem;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, 0.1), transparent 70%),
+        linear-gradient(180deg, rgba(22, 34, 58, 0.72), rgba(8, 12, 24, 0.88));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .avatar-dock__identity {
+      margin: 0.15rem 0 0;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #f8fafc;
+      word-break: break-word;
+      line-height: 1.35;
+      max-width: 100%;
+    }
+    .avatar-dock__summary {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .avatar-dock__rank-line {
+      margin: 0;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #86efac;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+    }
+    .avatar-dock__divider {
+      margin: 0 0.65rem;
+      border: none;
+      border-top: 1px solid rgba(148, 163, 184, 0.16);
+      height: 0;
+      flex-shrink: 0;
+    }
+    .avatar-dock__stat {
+      padding: 0.55rem 0.65rem 0.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .avatar-dock__stat-label {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .avatar-dock__stat-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 0;
+    }
+    .avatar-dock__social {
+      padding: 0.55rem 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .avatar-dock__tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      padding: 0.5rem 0.65rem 0.2rem;
+    }
+    .avatar-dock__sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .avatar-dock__details {
+      display: none;
     }
     .avatar-dock__toolbar {
       display: flex;
@@ -1453,15 +1741,15 @@
       flex-shrink: 0;
     }
     .avatar-dock__toolbar button {
-      width: 2rem;
-      height: 2rem;
+      width: 2.25rem;
+      height: 2.25rem;
       padding: 0;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       background: rgba(0, 0, 0, 0.3);
       color: var(--text);
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.05rem;
       line-height: 1;
     }
     .avatar-dock__toolbar button:hover {
@@ -1469,31 +1757,49 @@
       color: var(--accent);
     }
     .avatar-dock__stage {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.15rem 0.6rem 0.38rem;
-      min-height: 7.35rem;
+      display: none;
+    }
+    .avatar-dock__hero .avatar-dock__photo-card {
+      width: min(7.5rem, 38vw);
+      gap: 0;
+      margin: 0;
+    }
+    .avatar-dock__hero .avatar-dock__photo-frame {
+      border-radius: 50%;
+      border-width: 3px;
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow:
+        0 0 0 2px rgba(8, 12, 24, 0.8),
+        0 0 20px rgba(56, 189, 248, 0.18),
+        inset 0 0 12px rgba(0, 0, 0, 0.35);
+    }
+    .avatar-dock__hero .avatar-dock__photo-ph {
+      min-height: 0;
+      font-size: 0.62rem;
+      padding: 0.35rem;
+    }
+    .avatar-dock__hero .avatar-dock__photo-ph svg {
+      width: 1.75rem;
+      height: 1.75rem;
     }
     .avatar-dock__visuals {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      max-width: 12rem;
+      max-width: 16rem;
     }
     .avatar-dock__photo-card {
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.3rem;
-      width: min(8.75rem, 46vw);
+      gap: 0.45rem;
+      width: min(13.5rem, 52vw);
     }
     .avatar-dock__photo-k {
       margin: 0;
-      font-size: 0.62rem;
+      font-size: 0.68rem;
       font-weight: 600;
       letter-spacing: 0.04em;
       color: var(--muted);
@@ -1520,42 +1826,45 @@
     .avatar-dock__photo-ph {
       width: 100%;
       height: 100%;
-      min-height: 5.5rem;
+      min-height: 7.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.25rem;
-      padding: 0.4rem;
+      gap: 0.35rem;
+      padding: 0.5rem;
       box-sizing: border-box;
       color: rgba(148, 163, 184, 0.95);
-      font-size: 0.62rem;
-      line-height: 1.3;
+      font-size: 0.72rem;
+      line-height: 1.35;
       text-align: center;
     }
     .avatar-dock__photo-ph svg {
-      width: 2rem;
-      height: 2rem;
+      width: 2.5rem;
+      height: 2.5rem;
       opacity: 0.72;
     }
     .avatar-dock__upload-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.25rem;
+      gap: 0.35rem;
       justify-content: center;
     }
     .avatar-dock__upload-btn {
       display: inline-block;
-      padding: 0.22rem 0.45rem;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(0, 0, 0, 0.28);
+      padding: 0.4rem 0.72rem;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      background: rgba(56, 189, 248, 0.1);
       color: #e0f2fe;
-      font-size: 0.64rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
       line-height: 1.25;
       text-align: center;
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
     }
     .avatar-dock__upload-btn:hover {
       border-color: rgba(56, 189, 248, 0.5);
@@ -1611,42 +1920,39 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-      font-size: 0.68rem;
-      line-height: 1.32;
+      gap: 0;
+      font-size: 0.78rem;
+      line-height: 1.38;
     }
-    .avatar-dock__meta-row {
+    .avatar-dock__meta-row,
+    .avatar-dock__detail-card {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 0.35rem 0.5rem;
+      gap: 0.45rem 0.65rem;
       align-items: start;
-      padding: 0.4rem 0.5rem;
+      padding: 0.58rem 0.68rem;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.18);
     }
-    .avatar-dock__meta-row--userid {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: rgba(56, 189, 248, 0.22);
+    .avatar-dock__detail-card--tendency {
+      border-color: rgba(167, 139, 250, 0.24);
+      background: rgba(91, 33, 182, 0.08);
     }
-    .avatar-dock__meta-row--tendency {
-      background: rgba(167, 139, 250, 0.1);
-      border-color: rgba(167, 139, 250, 0.22);
-    }
-    .avatar-dock__meta-row--territory {
-      background: rgba(148, 163, 184, 0.12);
-      border-color: rgba(148, 163, 184, 0.22);
-    }
-    .avatar-dock__meta-row--level {
-      background: rgba(56, 189, 248, 0.1);
+    .avatar-dock__detail-card--xp {
       border-color: rgba(56, 189, 248, 0.28);
+      background: rgba(56, 189, 248, 0.06);
     }
-    .avatar-dock__meta-row--rank {
-      background: rgba(52, 211, 153, 0.1);
-      border-color: rgba(52, 211, 153, 0.22);
-    }
-    .avatar-dock__meta-row--followers {
-      background: rgba(251, 191, 36, 0.08);
+    .avatar-dock__detail-card--followers {
       border-color: rgba(251, 191, 36, 0.22);
+      background: rgba(251, 191, 36, 0.05);
+    }
+    .avatar-dock__upload-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      padding: 0.45rem 0.5rem 0.15rem;
     }
     .sc-rank-modal {
       position: fixed;
@@ -1768,18 +2074,18 @@
       padding: 0.5rem;
       font-size: 0.68rem;
     }
-    /* ----- 영토 맵 우상단 탭(명성=명성 순위 모달·통계=성향 추이 모달·설정·알람) ----- */
+    /* ----- 영토 맵 우상단 HUD (랭킹·기록·설정·알림) ----- */
     .sc-map-top-tabs {
       position: absolute;
-      top: 0.4rem;
-      right: 0.4rem;
+      top: 0.55rem;
+      right: var(--map-hud-tabs-inset);
       z-index: 12;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 0.28rem;
-      max-width: min(100%, 20rem);
+      gap: 0.42rem;
+      max-width: min(100%, 24rem);
       pointer-events: auto;
     }
     .sc-map-tab {
@@ -1787,26 +2093,44 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.15rem;
-      min-width: 2.65rem;
-      padding: 0.32rem 0.38rem 0.35rem;
+      gap: 0.18rem;
+      min-width: 3.25rem;
+      min-height: 2.35rem;
+      padding: 0.42rem 0.5rem 0.45rem;
       margin: 0;
-      border-radius: 8px;
-      border: 1px solid rgba(148, 163, 184, 0.32);
-      background: rgba(15, 23, 42, 0.88);
-      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.38);
+      background: rgba(12, 20, 38, 0.88);
+      backdrop-filter: blur(8px);
+      box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.25);
       cursor: pointer;
-      color: #cbd5e1;
-      font-size: 0.52rem;
+      color: #e2e8f0;
+      font-size: 0.66rem;
       font-weight: 800;
-      letter-spacing: 0.02em;
-      line-height: 1.05;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        color 0.2s ease;
     }
     .sc-map-tab:hover,
     .sc-map-tab:focus-visible {
-      border-color: rgba(56, 189, 248, 0.5);
-      color: #e2e8f0;
+      border-color: rgba(56, 189, 248, 0.58);
+      background: rgba(15, 30, 52, 0.96);
+      color: #f0f9ff;
+      box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.45),
+        0 0 16px rgba(56, 189, 248, 0.12);
       outline: none;
+    }
+    .sc-map-tab:active:not(.sc-map-tab--soon) {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     }
     .sc-map-tab--soon {
       cursor: default;
@@ -1818,10 +2142,10 @@
       color: #cbd5e1;
     }
     .sc-map-tab--stats {
-      min-width: 2.85rem;
+      min-width: 3.45rem;
     }
     .sc-map-tab--ranking {
-      min-width: 2.85rem;
+      min-width: 3.45rem;
     }
     .sc-tendency-modal {
       position: fixed;
@@ -1963,22 +2287,24 @@
     .avatar-xpbar {
       display: block;
       width: 100%;
-      height: 11px;
-      border-radius: 7px;
+      height: 16px;
+      border-radius: 8px;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
     }
     .avatar-xpbar__fill {
       height: 100%;
       width: 0%;
       border-radius: 6px;
-      background: linear-gradient(90deg, rgba(34, 211, 238, 0.85), rgba(56, 189, 248, 0.95), rgba(129, 140, 248, 0.9));
+      background: linear-gradient(90deg, rgba(34, 211, 238, 0.95), rgba(56, 189, 248, 1), rgba(129, 140, 248, 0.95));
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
       transition: width 0.35s ease;
     }
     .avatar-xpbar__legend {
-      font-size: 0.58rem;
-      color: #94a3b8;
+      font-size: 0.68rem;
+      color: #cbd5e1;
       font-weight: 600;
       line-height: 1.35;
     }
@@ -2271,16 +2597,18 @@
     }
     .avatar-dock__k {
       margin: 0;
-      color: #cbd5e1;
+      color: #94a3b8;
       font-weight: 700;
-      font-size: 0.62rem;
-      letter-spacing: 0.02em;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       white-space: nowrap;
-      padding-top: 0.08rem;
+      padding-top: 0.12rem;
     }
     .avatar-dock__v {
       margin: 0;
       font-weight: 600;
+      font-size: 0.84rem;
       color: #f1f5f9;
       word-break: break-word;
       overflow-wrap: anywhere;
@@ -2294,18 +2622,19 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.45rem;
     }
     .avatar-tbar {
       display: flex;
       flex-direction: row;
       width: 100%;
-      height: 11px;
-      border-radius: 7px;
+      height: 16px;
+      border-radius: 8px;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       position: relative;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
     }
     .avatar-tbar__split {
       display: flex;
@@ -2341,7 +2670,7 @@
       background: linear-gradient(180deg, rgba(96, 165, 250, 0.95), rgba(29, 78, 216, 0.85));
     }
     .avatar-tbar__legend {
-      font-size: 0.58rem;
+      font-size: 0.64rem;
       color: #94a3b8;
       font-weight: 600;
       line-height: 1.35;
@@ -2391,8 +2720,8 @@
       background: rgba(91, 33, 182, 0.2);
     }
     .avatar-tbar--alien {
-      height: 11px;
-      border-radius: 7px;
+      height: 14px;
+      border-radius: 8px;
       overflow: hidden;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(167, 139, 250, 0.25);
@@ -2420,9 +2749,13 @@
     .avatar-alien-warn[hidden] {
       display: none !important;
     }
+    .avatar-dock.is-collapsed .avatar-dock__tab {
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 0 10px 0 0;
+    }
     .avatar-dock__tab {
       flex-shrink: 0;
-      width: 3rem;
+      width: var(--dock-tab-width);
       min-height: 3.65rem;
       padding: 0.28rem 0.22rem;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -4788,7 +5121,7 @@
       opacity: 0.88;
     }
 
-    /* ----- 오른쪽 하단 채팅 (클릭으로만 숨김·펼침, 프로필처럼 자동 X) ----- */
+    /* ----- 오른쪽 하단 채팅 — 지도 위 HUD ----- */
     .chat-dock {
       position: fixed;
       z-index: 40;
@@ -4797,7 +5130,13 @@
       display: flex;
       flex-direction: row;
       align-items: flex-end;
-      filter: drop-shadow(-2px 2px 12px rgba(0, 0, 0, 0.45));
+      filter: drop-shadow(-2px 2px 16px rgba(0, 0, 0, 0.42));
+    }
+    body.sc-app-mode .chat-dock:not([hidden]) {
+      right: var(--hud-map-inset);
+    }
+    body.sc-app-mode .chat-dock.chat-dock--collapsed:not([hidden]) {
+      right: 0;
     }
     .chat-dock__sheet {
       width: var(--chat-panel-width);
@@ -4814,36 +5153,48 @@
       opacity: 0;
       pointer-events: none;
     }
+    .chat-dock.chat-dock--collapsed {
+      max-width: var(--chat-tab-width);
+    }
     .chat-rail__panel {
       position: relative;
       width: var(--chat-panel-width);
       height: var(--chat-panel-height);
-      background: linear-gradient(200deg, rgba(18, 26, 51, 0.98), rgba(15, 23, 42, 0.99));
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(200deg, rgba(18, 26, 51, 0.94), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(56, 189, 248, 0.18);
       border-right: none;
       border-radius: 12px 0 0 12px;
       display: flex;
       flex-direction: column;
       min-height: 0;
+      backdrop-filter: blur(10px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(56, 189, 248, 0.06);
+    }
+    body.sc-app-mode .chat-dock:not([hidden]) .chat-rail__panel {
+      border-right: 1px solid rgba(56, 189, 248, 0.14);
+      border-radius: 12px;
     }
     .chat-rail__head {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.4rem 0.45rem 0.4rem 0.35rem;
+      gap: 0.45rem;
+      padding: 0.55rem 0.55rem 0.55rem 0.4rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
     }
     .chat-rail__head h2 {
       margin: 0;
-      font-size: 0.82rem;
-      font-weight: 700;
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
       min-width: 0;
     }
     .chat-rail__resize-handle {
-      width: 1.4rem;
-      height: 1.55rem;
+      width: 1.65rem;
+      height: 1.75rem;
       padding: 0;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -4871,15 +5222,15 @@
       flex-shrink: 0;
     }
     .chat-rail__head-actions button {
-      width: 1.75rem;
-      height: 1.75rem;
+      width: 2rem;
+      height: 2rem;
       padding: 0;
-      border-radius: 6px;
+      border-radius: 7px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       background: rgba(0, 0, 0, 0.3);
       color: var(--text);
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 1rem;
       line-height: 1;
     }
     .chat-rail__head-actions button:hover {
@@ -4888,47 +5239,71 @@
     }
     .chat-rail__tabs {
       display: flex;
-      gap: 0.2rem;
-      padding: 0.28rem 0.4rem;
+      gap: 0.35rem;
+      padding: 0.4rem 0.5rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       flex-shrink: 0;
     }
     .chat-rail__tabs button {
       flex: 1;
-      padding: 0.3rem 0.25rem;
-      font-size: 0.65rem;
+      padding: 0.54rem 0.4rem;
+      min-height: 2.35rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.24);
       color: var(--muted);
       cursor: pointer;
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
     }
     .chat-rail__tabs button.is-active {
-      border-color: rgba(56, 189, 248, 0.45);
+      border-color: rgba(56, 189, 248, 0.55);
       color: #e0f2fe;
-      background: rgba(56, 189, 248, 0.12);
+      background: rgba(56, 189, 248, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
     .chat-rail__hint {
+      display: none;
+    }
+    .chat-rail__empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 100%;
+      padding: 1rem 0.75rem;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .chat-rail__empty-lead {
       margin: 0;
-      padding: 0.28rem 0.45rem;
-      font-size: 0.62rem;
-      color: var(--muted);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-      line-height: 1.35;
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+    .chat-rail__empty-sub {
+      margin: 0;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: #64748b;
     }
     .chat-rail__messages {
       flex: 1;
       min-height: 0;
       overflow-y: auto;
-      padding: 0.4rem 0.5rem;
-      font-size: 0.72rem;
+      padding: 0.6rem 0.65rem;
+      font-size: 0.82rem;
     }
     .chat-rail__line {
-      margin: 0 0 0.38rem;
+      margin: 0 0 0.48rem;
       padding: 0;
-      line-height: 1.4;
+      line-height: 1.45;
       word-break: break-word;
       color: #cbd5e1;
     }
@@ -4942,30 +5317,46 @@
     }
     .chat-rail__form {
       display: flex;
-      gap: 0.3rem;
-      padding: 0.4rem 0.45rem 0.5rem;
+      gap: 0.4rem;
+      padding: 0.55rem 0.55rem 0.65rem;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
     }
     .chat-rail__form input[type="text"] {
       flex: 1;
       min-width: 0;
-      padding: 0.35rem 0.45rem;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(0, 0, 0, 0.35);
+      padding: 0.58rem 0.62rem;
+      min-height: 2.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.38);
       color: var(--text);
-      font-size: 0.74rem;
+      font-size: 0.84rem;
     }
     .chat-rail__form button[type="submit"] {
-      padding: 0 0.5rem;
-      border-radius: 6px;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      background: rgba(56, 189, 248, 0.15);
+      padding: 0 0.9rem;
+      min-height: 2.5rem;
+      min-width: 3.25rem;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      background: rgba(56, 189, 248, 0.18);
       color: #e0f2fe;
       font-weight: 700;
-      font-size: 0.72rem;
+      font-size: 0.82rem;
       cursor: pointer;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+    .chat-rail__form button[type="submit"]:hover {
+      background: rgba(56, 189, 248, 0.24);
+      border-color: rgba(125, 211, 252, 0.6);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.14);
+    }
+    .chat-dock--collapsed .chat-rail__tab {
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px 0 0 10px;
     }
     .chat-rail__tab {
       width: var(--chat-tab-width);
@@ -4997,58 +5388,97 @@
     .chat-dock:not(.chat-dock--collapsed) .chat-rail__tab {
       display: none;
     }
+    .chat-rail__tab-label--short {
+      display: none;
+    }
+    .chat-dock--collapsed .chat-rail__tab-label--full {
+      display: none;
+    }
+    .chat-dock--collapsed .chat-rail__tab-label--short {
+      display: inline;
+    }
+    @media (max-width: 820px) {
+      :root {
+        --avatar-panel-width: min(22rem, calc(100vw - 1.25rem));
+        --chat-panel-width: min(275px, calc(100vw - 3rem));
+        --chat-panel-height: min(44vh, 260px);
+        --hud-map-inset: 0.5rem;
+      }
+      .territory-centrist-hero {
+        margin-top: 1.25rem;
+      }
+      :root {
+        --map-app-chrome: 10.5rem;
+      }
+      .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+        min-height: min(18rem, calc((100vh - var(--map-app-chrome)) * 0.92));
+        height: calc((100vh - var(--map-app-chrome)) * 0.92);
+        max-height: calc((100vh - var(--map-app-chrome)) * 0.92);
+      }
+      .avatar-dock__hero .avatar-dock__photo-card {
+        width: min(6.5rem, 34vw);
+      }
+      .sc-map-top-tabs {
+        top: 0.4rem;
+        right: 0.85rem;
+        gap: 0.32rem;
+      }
+      .sc-map-tab {
+        min-width: 2.85rem;
+        min-height: 2rem;
+        padding: 0.36rem 0.42rem;
+        font-size: 0.6rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="view-login" class="view-login">
-    <aside class="view-login__intro" aria-label="인트로 영역">
-      <div class="view-login__intro-inner">
-        <header class="view-login__hero" aria-label="센텐스크래프트 세계관">
-          <h1 class="view-login__title">센텐스크래프트</h1>
-          <p class="view-login__subtitle">의견의 흐름이 영토를 만든다</p>
-          <div class="view-login__world-panel">
-            <p>의견은 서로 다른 영토를 만든다</p>
-            <p>성향은 흐름이고, 제재는 행동으로 결정된다</p>
-            <p>개혁과 질서는 각자의 생각이 모이는 공간</p>
-            <p>과열된 토론은 외계행성에서 관측된다</p>
-          </div>
-        </header>
-        <div class="view-login__intro-media" role="region" aria-label="로그인 인트로 영상">
-          <video
-            id="login-intro-video"
-            class="view-login__intro-video"
-            playsinline
-            muted
-            preload="auto"
-            tabindex="-1"
-            aria-hidden="true"
-          >
-            <source src="/assets/login-intro/intro.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-    </aside>
-    <div class="view-login__column">
-      <div class="view-login__inner">
-      <p class="view-login__auth-hint">
-        토론과 반응이 <span class="view-login__auth-hint-accent">세계를 변화</span>시킨다.<br />아래에서 입장하세요.
-      </p>
-
-      <section class="card view-login__auth-card" aria-labelledby="login-title">
-        <h2 id="login-title" style="margin: 0 0 0.35rem; font-size: 1.05rem">로그인</h2>
-        <p class="muted" style="margin: 0 0 0.5rem">
-          Supabase에서 Google·Apple·Kakao·Naver 제공사를 켠 뒤 사용하세요. 설정은
-          <code>docs/SUPABASE_소셜로그인_한글안내.md</code> 를 참고합니다.
+    <div class="view-login__shell">
+      <header class="view-login__brand-head view-login__hero" aria-label="센텐스크래프트">
+        <h1 class="view-login__title">센텐스크래프트</h1>
+        <p class="view-login__brand-en">Sentence Craft</p>
+        <p class="view-login__tagline">
+          <span>문장이 영토를 만들고</span>
+          <span>토론이 세계를 움직인다</span>
         </p>
-        <div class="oauth-grid" id="oauth-buttons" role="group" aria-label="소셜 로그인">
-          <a href="/api/auth/oauth/google">Google</a>
-          <a href="/api/auth/oauth/apple">Apple</a>
-          <a href="/api/auth/oauth/kakao">Kakao</a>
-          <a href="/api/auth/oauth/naver">Naver</a>
+      </header>
+      <aside class="view-login__intro" aria-label="세계관 인트로">
+        <div class="view-login__intro-inner">
+          <div class="view-login__intro-media" role="region" aria-label="세계관 인트로 영상">
+            <video
+              id="login-intro-video"
+              class="view-login__intro-video"
+              playsinline
+              muted
+              preload="auto"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <source src="/assets/login-intro/intro.mp4" type="video/mp4" />
+            </video>
+            <div class="view-login__world-overlay" aria-hidden="true">
+              <p>성향은 흐름일 뿐,<br />제재의 기준은 행동입니다.</p>
+            </div>
+          </div>
         </div>
-        <p id="auth-status-login" class="muted" aria-live="polite"></p>
-        <button type="button" id="auth-guest-btn">게스트로 입장 (로컬에서 메인·게시판만 둘러보기)</button>
-      </section>
+      </aside>
+      <div class="view-login__column">
+        <div class="view-login__inner">
+          <section class="card view-login__auth-card" aria-labelledby="login-auth-lead">
+            <p id="login-auth-lead" class="view-login__auth-lead">의견의 세계에 입장하세요.</p>
+            <div class="oauth-grid" id="oauth-buttons" role="group" aria-label="소셜 로그인">
+              <a href="/api/auth/oauth/google">Google</a>
+              <a href="/api/auth/oauth/apple">Apple</a>
+              <a href="/api/auth/oauth/kakao">Kakao</a>
+              <a href="/api/auth/oauth/naver">Naver</a>
+            </div>
+            <hr class="view-login__auth-divider" aria-hidden="true" />
+            <p class="view-login__auth-guest-hint">계정 없이 둘러볼 수도 있습니다.</p>
+            <button type="button" id="auth-guest-btn">게스트로 둘러보기</button>
+            <p id="auth-status-login" class="muted" aria-live="polite"></p>
+          </section>
+        </div>
       </div>
     </div>
   </div>
@@ -5075,22 +5505,22 @@
                 type="button"
                 id="sc-map-tab-ranking"
                 class="sc-map-tab sc-map-tab--ranking"
-                aria-label="명성 순위 (1~100위)"
-                title="명성 순위 (1~100위)"
+                aria-label="랭킹 (명성 순위)"
+                title="랭킹 · 명성 순위"
               >
-                명성
+                랭킹
               </button>
               <button
                 type="button"
                 id="sc-tendency-mini"
                 class="sc-map-tab sc-map-tab--stats"
-                aria-label="통계: 성향 변화 추이"
-                title="통계 · 성향 변화 추이"
+                aria-label="기록 · 성향 변화 추이"
+                title="기록 · 성향 변화 추이"
               >
-                통계
+                기록
               </button>
               <button type="button" class="sc-map-tab sc-map-tab--soon" disabled title="준비 중">설정</button>
-              <button type="button" class="sc-map-tab sc-map-tab--soon" disabled title="준비 중">알람</button>
+              <button type="button" class="sc-map-tab sc-map-tab--soon" disabled title="준비 중">알림</button>
             </div>
             <div id="territory-hit-zones-wrap" class="territory-hit-zones-wrap">
               <svg
@@ -5158,23 +5588,6 @@
             </div>
           </div>
         </section>
-
-        <div class="card">
-          <p><strong>지금 이 화면이 보이면 정상입니다.</strong></p>
-          <p class="muted">
-            예전에 섞였던 “다른 실험 화면”은 빼 두었습니다. 앞으로 화면 파일은
-            <code>public</code> 폴더만 보면 됩니다.
-          </p>
-          <ul>
-            <li>서버 실행: 터미널에서 <code>npm start</code></li>
-            <li>주소창: <code>http://localhost:3000</code> (파일을 더블클릭해서 열면 안 됩니다)</li>
-            <li>기획 정리 문서: 프로젝트 안 <code>docs/PRODUCT_센텐스크래프트_기획.md</code></li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <p class="muted">규칙 표(API로도 내려감): <code>/api/public-config</code></p>
-        </div>
       </div>
 
       <div id="screen-guide" class="app-screen" hidden>
@@ -5640,156 +6053,144 @@
     hidden
   >
     <div class="avatar-dock__panel">
-      <div class="avatar-dock__topbar">
+      <header class="avatar-dock__head">
+        <h2 class="avatar-dock__panel-title">내 정보</h2>
         <div class="avatar-dock__toolbar">
           <button type="button" id="avatar-dock-hide" aria-label="프로필 패널 숨기기" title="숨기기">
             ⟨
           </button>
         </div>
-        <div class="avatar-dock__meta" role="group" aria-label="프로필 정보">
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--userid">
-            <span class="avatar-dock__k">유저 ID</span>
-            <span class="avatar-dock__v" id="avatar-meta-userid">—</span>
-          </div>
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--tendency">
-            <span class="avatar-dock__k">성향</span>
-            <div class="avatar-dock__vstack">
-              <span class="avatar-dock__v" id="avatar-meta-tendency">—</span>
-              <div class="avatar-tbar-row">
-                <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향">
-                  <img
-                    id="avatar-tbar-emblem-human"
-                    class="avatar-tbar-emblem"
-                    src="assets/emblems/square-emblem-32.png"
-                    alt=""
-                    width="18"
-                    height="18"
-                    decoding="async"
-                  />
-                </span>
-                <div class="avatar-tbar-row__bar">
-                  <div
-                    id="avatar-tbar-track"
-                    class="avatar-tbar"
-                    role="img"
-                    aria-label="사람 성향 스펙트럼 막대"
-                  >
-                    <div id="avatar-tbar-none" class="avatar-tbar__none"></div>
-                    <div id="avatar-tbar-split" class="avatar-tbar__split">
-                      <div id="avatar-tbar-r" class="avatar-tbar__seg avatar-tbar__seg--r" style="width: 0%"></div>
-                      <div id="avatar-tbar-c" class="avatar-tbar__seg avatar-tbar__seg--c" style="width: 0%"></div>
-                      <div id="avatar-tbar-l" class="avatar-tbar__seg avatar-tbar__seg--l" style="width: 0%"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="avatar-tbar-legend-human" class="avatar-tbar__legend"></div>
-              <p id="avatar-exile-status" class="avatar-exile-status muted" hidden></p>
+      </header>
+      <section class="avatar-dock__hero" aria-label="캐릭터 요약">
+        <figure class="avatar-dock__photo-card" aria-label="프로필 사진">
+          <div class="avatar-dock__photo-frame">
+            <img id="avatar-profile-img" alt="" width="200" height="200" hidden />
+            <div id="avatar-profile-placeholder" class="avatar-dock__photo-ph">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="9" cy="11" r="1.8" fill="currentColor" />
+                <path
+                  d="M5 18l3.2-3.2a2 2 0 0 1 2.8 0L19 18"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <span>프로필<br />사진</span>
             </div>
           </div>
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--level">
-            <span class="avatar-dock__k">레벨</span>
-            <div class="avatar-dock__vstack">
-              <span class="avatar-dock__v" id="avatar-meta-level">Lv. 1</span>
+        </figure>
+        <p class="avatar-dock__identity" id="avatar-meta-userid">—</p>
+        <p class="avatar-dock__summary" id="avatar-meta-summary">Lv. 1 · 중앙광장 주민</p>
+        <p class="avatar-dock__rank-line" id="avatar-meta-rank">명성 : 참여자</p>
+        <span id="avatar-meta-level" class="avatar-dock__sr-only" aria-hidden="true">Lv. 1</span>
+        <span id="avatar-meta-territory" class="avatar-dock__sr-only" aria-hidden="true">—</span>
+      </section>
+      <div class="avatar-dock__divider" role="separator" aria-hidden="true"></div>
+      <section class="avatar-dock__stat" aria-label="성향">
+        <h3 class="avatar-dock__stat-label">성향</h3>
+        <div class="avatar-dock__stat-body">
+          <span class="avatar-dock__sr-only" id="avatar-meta-tendency">—</span>
+          <div class="avatar-tbar-row">
+            <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향">
+              <img
+                id="avatar-tbar-emblem-human"
+                class="avatar-tbar-emblem"
+                src="assets/emblems/square-emblem-32.png"
+                alt=""
+                width="18"
+                height="18"
+                decoding="async"
+              />
+            </span>
+            <div class="avatar-tbar-row__bar">
               <div
-                id="avatar-xpbar-track"
-                class="avatar-xpbar"
-                role="progressbar"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-valuenow="0"
-                aria-label="현재 레벨 경험치 진행"
+                id="avatar-tbar-track"
+                class="avatar-tbar"
+                role="img"
+                aria-label="사람 성향 스펙트럼 막대"
               >
-                <div id="avatar-xpbar-fill" class="avatar-xpbar__fill" style="width: 0%"></div>
-              </div>
-              <div id="avatar-xpbar-legend" class="avatar-xpbar__legend">0 / 80 XP (0%)</div>
-            </div>
-          </div>
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--territory">
-            <span class="avatar-dock__k">소속 영토</span>
-            <span class="avatar-dock__v" id="avatar-meta-territory">—</span>
-          </div>
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--rank">
-            <span class="avatar-dock__k">명성</span>
-            <span class="avatar-dock__v" id="avatar-meta-rank">명성 · 레벨 4 달성 후 해금</span>
-          </div>
-          <div class="avatar-dock__meta-row avatar-dock__meta-row--followers">
-            <span class="avatar-dock__k">팔로워 · 팔로우</span>
-            <div class="avatar-dock__followers-with-notify">
-              <p class="avatar-dock__v avatar-dock__follow-summary" id="avatar-dock-follow-summary">
-                팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명, 팔로우
-                <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
-              </p>
-              <div class="sc-follow-notify-wrap sc-follow-notify-wrap--profile">
-                <button
-                  type="button"
-                  id="sc-follow-notify-toggle"
-                  class="sc-follow-notify-toggle sc-follow-notify-toggle--bell"
-                  aria-label="활동 알림"
-                  title="팔로우 변동 · 새 글 알림"
-                  aria-expanded="false"
-                >
-                  <svg class="sc-follow-notify-bell" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M12 3a5.5 5.5 0 0 0-5.5 5.5v2.8c0 .5-.2 1-.5 1.4L4.8 15h14.4l-1.2-2.3c-.3-.4-.5-.9-.5-1.4V8.5A5.5 5.5 0 0 0 12 3Z"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linejoin="round"
-                    />
-                    <path d="M9 18h6a2 2 0 0 1-4 0Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
-                  </svg>
-                  <span id="sc-follow-notify-badge" class="sc-follow-notify-badge" hidden>0</span>
-                </button>
-                <div id="sc-follow-notify-panel" class="sc-follow-notify-panel" hidden>
-                  <div class="sc-follow-notify__head">
-                    <div class="sc-follow-notify__head-left">
-                      <span class="sc-follow-notify__head-title">활동 알림</span>
-                      <span class="sc-follow-notify__head-note">팔로우 변동 · 새 글</span>
-                    </div>
-                    <div class="sc-follow-notify__head-actions">
-                      <button type="button" id="sc-follow-notify-read" title="목록의 알림을 모두 읽음 처리">전체 읽음</button>
-                      <button type="button" id="sc-follow-notify-clear" title="알림 기록을 비웁니다">목록 지우기</button>
-                    </div>
-                  </div>
-                  <ul id="sc-follow-notify-list" class="sc-follow-notify-list"></ul>
+                <div id="avatar-tbar-none" class="avatar-tbar__none"></div>
+                <div id="avatar-tbar-split" class="avatar-tbar__split">
+                  <div id="avatar-tbar-r" class="avatar-tbar__seg avatar-tbar__seg--r" style="width: 0%"></div>
+                  <div id="avatar-tbar-c" class="avatar-tbar__seg avatar-tbar__seg--c" style="width: 0%"></div>
+                  <div id="avatar-tbar-l" class="avatar-tbar__seg avatar-tbar__seg--l" style="width: 0%"></div>
                 </div>
               </div>
             </div>
           </div>
+          <div id="avatar-tbar-legend-human" class="avatar-tbar__legend"></div>
+          <p id="avatar-exile-status" class="avatar-exile-status muted" hidden></p>
         </div>
-      </div>
-      <div class="avatar-dock__stage">
-        <div class="avatar-dock__visuals">
-          <figure class="avatar-dock__photo-card" aria-label="프로필 사진">
-            <figcaption class="avatar-dock__photo-k">프로필 사진</figcaption>
-            <div class="avatar-dock__photo-frame">
-              <img id="avatar-profile-img" alt="" width="200" height="200" hidden />
-              <div id="avatar-profile-placeholder" class="avatar-dock__photo-ph">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
-                  <circle cx="9" cy="11" r="1.8" fill="currentColor" />
-                  <path
-                    d="M5 18l3.2-3.2a2 2 0 0 1 2.8 0L19 18"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                  />
-                </svg>
-                <span>글·댓글<br />작성자 옆에 표시</span>
+      </section>
+      <section class="avatar-dock__stat" aria-label="경험치">
+        <h3 class="avatar-dock__stat-label">경험치</h3>
+        <div class="avatar-dock__stat-body">
+          <div
+            id="avatar-xpbar-track"
+            class="avatar-xpbar"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            aria-label="현재 레벨 경험치 진행"
+          >
+            <div id="avatar-xpbar-fill" class="avatar-xpbar__fill" style="width: 0%"></div>
+          </div>
+          <div id="avatar-xpbar-legend" class="avatar-xpbar__legend">0 / 80 XP (0%)</div>
+        </div>
+      </section>
+      <div class="avatar-dock__divider" role="separator" aria-hidden="true"></div>
+      <section class="avatar-dock__social" aria-label="팔로워">
+        <p class="avatar-dock__v avatar-dock__follow-summary" id="avatar-dock-follow-summary">
+          팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명 · 팔로우
+          <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
+        </p>
+        <div class="sc-follow-notify-wrap sc-follow-notify-wrap--profile">
+          <button
+            type="button"
+            id="sc-follow-notify-toggle"
+            class="sc-follow-notify-toggle sc-follow-notify-toggle--bell"
+            aria-label="활동 알림"
+            title="팔로우 변동 · 새 글 알림"
+            aria-expanded="false"
+          >
+            <svg class="sc-follow-notify-bell" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 3a5.5 5.5 0 0 0-5.5 5.5v2.8c0 .5-.2 1-.5 1.4L4.8 15h14.4l-1.2-2.3c-.3-.4-.5-.9-.5-1.4V8.5A5.5 5.5 0 0 0 12 3Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+              <path d="M9 18h6a2 2 0 0 1-4 0Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+            <span id="sc-follow-notify-badge" class="sc-follow-notify-badge" hidden>0</span>
+          </button>
+          <div id="sc-follow-notify-panel" class="sc-follow-notify-panel" hidden>
+            <div class="sc-follow-notify__head">
+              <div class="sc-follow-notify__head-left">
+                <span class="sc-follow-notify__head-title">활동 알림</span>
+                <span class="sc-follow-notify__head-note">팔로우 변동 · 새 글</span>
+              </div>
+              <div class="sc-follow-notify__head-actions">
+                <button type="button" id="sc-follow-notify-read" title="목록의 알림을 모두 읽음 처리">전체 읽음</button>
+                <button type="button" id="sc-follow-notify-clear" title="알림 기록을 비웁니다">목록 지우기</button>
               </div>
             </div>
-            <div class="avatar-dock__upload-row">
-              <label class="avatar-dock__upload-btn">
-                사진 올리기
-                <input type="file" id="avatar-profile-input" accept="image/*" hidden />
-              </label>
-              <button type="button" id="avatar-profile-clear" class="avatar-dock__upload-btn avatar-dock__upload-btn--ghost" hidden>
-                삭제
-              </button>
-            </div>
-          </figure>
+            <ul id="sc-follow-notify-list" class="sc-follow-notify-list"></ul>
+          </div>
         </div>
-      </div>
+      </section>
+      <div class="avatar-dock__divider" role="separator" aria-hidden="true"></div>
+      <section class="avatar-dock__tools" aria-label="프로필 사진">
+        <label class="avatar-dock__upload-btn">
+          사진 올리기
+          <input type="file" id="avatar-profile-input" accept="image/*" hidden />
+        </label>
+        <button type="button" id="avatar-profile-clear" class="avatar-dock__upload-btn avatar-dock__upload-btn--ghost" hidden>
+          삭제
+        </button>
+      </section>
     </div>
     <button type="button" id="avatar-dock-tab" class="avatar-dock__tab" aria-label="프로필 패널 펼치기" title="클릭하면 프로필 패널이 펼쳐집니다">
       <svg viewBox="0 0 48 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -5870,7 +6271,7 @@
     </div>
   </div>
 
-  <div id="chat-rail" class="chat-dock" role="complementary" aria-label="실시간 채팅" hidden>
+  <div id="chat-rail" class="chat-dock" role="complementary" aria-label="광장 대화" hidden>
     <div class="chat-dock__sheet">
       <div class="chat-rail__panel" id="chat-rail-panel">
         <div class="chat-rail__head">
@@ -5883,7 +6284,7 @@
           >
             ⤡
           </button>
-          <h2>채팅</h2>
+          <h2>광장 대화</h2>
           <div class="chat-rail__head-actions">
             <button type="button" id="chat-rail-size-reset" aria-label="채팅창 기본 크기로 초기화" title="기본 크기">
               ⟲
@@ -5901,7 +6302,6 @@
             해당소속채팅
           </button>
         </div>
-        <p id="chat-rail-hint" class="chat-rail__hint">왼쪽 위 ⤡ 를 끌면 크기 조절 · ⟲ 는 기본 크기. 베타: 인메모리·폴링(~2.5초).</p>
         <div id="chat-messages" class="chat-rail__messages" aria-live="polite"></div>
         <form id="chat-form" class="chat-rail__form" autocomplete="off">
           <input id="chat-input" type="text" maxlength="500" placeholder="메시지…" aria-label="채팅 입력" />
@@ -5909,8 +6309,9 @@
         </form>
       </div>
     </div>
-    <button type="button" id="chat-rail-tab" class="chat-rail__tab" aria-label="채팅 패널 펼치기" title="채팅 열기">
-      채팅
+    <button type="button" id="chat-rail-tab" class="chat-rail__tab" aria-label="광장 대화 패널 펼치기" title="광장 대화 열기">
+      <span class="chat-rail__tab-label chat-rail__tab-label--full">광장 대화</span>
+      <span class="chat-rail__tab-label chat-rail__tab-label--short">대화</span>
     </button>
   </div>
 
@@ -6317,7 +6718,6 @@
             enterGuestApp();
             return;
           }
-          if (statusLogin) statusLogin.textContent = '로그인하지 않은 상태입니다.';
           if (window.__scApp) window.__scApp.showLoginOnly();
           return;
         }
@@ -6625,6 +7025,25 @@
       var elTen = document.getElementById('avatar-meta-tendency');
       var elTerr = document.getElementById('avatar-meta-territory');
       var elRank = document.getElementById('avatar-meta-rank');
+      var elSummary = document.getElementById('avatar-meta-summary');
+      var elLevelHidden = document.getElementById('avatar-meta-level');
+
+      function territoryResidentLabel(territory) {
+        var s = String(territory || '').trim();
+        if (!s || s === '미편입' || s === '—') return '중앙광장 주민';
+        var part = s.indexOf('·') >= 0 ? s.split('·').slice(1).join('·').trim() : s;
+        if (!part) part = '중앙광장';
+        if (part.indexOf('주민') < 0) part = part + ' 주민';
+        return part;
+      }
+
+      function syncHeroSummary(levelLabel, territory) {
+        if (!elSummary) return;
+        var lv = String(levelLabel || (elLevelHidden && elLevelHidden.textContent) || 'Lv. 1').trim();
+        elSummary.textContent = lv + ' · ' + territoryResidentLabel(territory);
+      }
+
+      window.__scSyncAvatarHeroSummary = syncHeroSummary;
       var elTbarR = document.getElementById('avatar-tbar-r');
       var elTbarC = document.getElementById('avatar-tbar-c');
       var elTbarL = document.getElementById('avatar-tbar-l');
@@ -6787,11 +7206,18 @@
         );
       }
 
+      function formatHeroRank(rank) {
+        var s = String(rank || '').trim();
+        if (s.indexOf('명성 :') === 0) return s;
+        return '명성 : 참여자';
+      }
+
       function setMeta(userId, tendency, territory, rank, tendencyPct) {
         if (elUser) elUser.textContent = userId;
         if (elTen) elTen.textContent = tendency;
         if (elTerr) elTerr.textContent = territory;
-        if (elRank) elRank.textContent = rank;
+        if (elRank) elRank.textContent = formatHeroRank(rank);
+        syncHeroSummary(elLevelHidden && elLevelHidden.textContent, territory);
 
         var hasPct = hasMeasuredTendency(tendencyPct);
         if (!hasPct) {
@@ -7019,10 +7445,25 @@
         tabT.setAttribute('aria-selected', room === 'territory' ? 'true' : 'false');
       }
 
+      function renderChatEmpty() {
+        box.innerHTML = '';
+        var wrap = document.createElement('div');
+        wrap.className = 'chat-rail__empty';
+        var lead = document.createElement('p');
+        lead.className = 'chat-rail__empty-lead';
+        lead.textContent = '광장의 짧은 대화가 이곳에 흐릅니다.';
+        var sub = document.createElement('p');
+        sub.className = 'chat-rail__empty-sub';
+        sub.textContent = '첫 인사를 남겨보세요.';
+        wrap.appendChild(lead);
+        wrap.appendChild(sub);
+        box.appendChild(wrap);
+      }
+
       function resetRoomView() {
         lastId = 0;
         seen.clear();
-        box.textContent = '';
+        renderChatEmpty();
       }
 
       function switchRoom(next) {
@@ -7041,6 +7482,9 @@
       });
 
       function appendMessages(items) {
+        if (!items || !items.length) return;
+        var emptyEl = box.querySelector('.chat-rail__empty');
+        if (emptyEl) emptyEl.remove();
         var scroll = box.scrollTop + box.clientHeight >= box.scrollHeight - 24;
         items.forEach(function (m) {
           if (!m || seen.has(m.id)) return;
@@ -7110,6 +7554,7 @@
       });
 
       syncTabs();
+      renderChatEmpty();
       pollOnce();
       startPoll();
     })();

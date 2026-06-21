@@ -566,13 +566,20 @@
     var standings = getMyStandings(uid);
 
     if (elLevel) elLevel.textContent = d.levelLabel;
+    if (typeof global.__scSyncAvatarHeroSummary === 'function') {
+      var elTerrHidden = document.getElementById('avatar-meta-territory');
+      global.__scSyncAvatarHeroSummary(
+        d.levelLabel,
+        elTerrHidden ? elTerrHidden.textContent : '',
+      );
+    }
     if (elXpFill) elXpFill.style.width = d.progress.pct + '%';
     if (elXpTrack) {
       elXpTrack.setAttribute('aria-valuenow', String(d.progress.pct));
       elXpTrack.setAttribute('aria-label', '레벨 ' + d.level + ' 경험치 ' + d.progress.pct + '퍼센트');
     }
     if (elXpLegend) elXpLegend.textContent = d.xpLegend;
-    if (elRank) elRank.textContent = d.rankLabel;
+    if (elRank) elRank.textContent = '명성 : ' + (d.rankShort || '참여자');
     if (elFollowers) {
       elFollowers.textContent = standings.followers.toLocaleString('ko-KR');
     }
