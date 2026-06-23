@@ -24,14 +24,16 @@
       --text: #e8eefc;
       --text-strong: #f8fafc;
       --muted: #8b9cb8;
-      --chat-panel-width: 275px;
-      --chat-panel-height: min(48vh, 276px);
-      --chat-tab-width: 2.35rem;
+      --chat-panel-width: 252px;
+      --chat-panel-height: min(38vh, 240px);
+      --chat-tab-width: 3.1rem;
       --avatar-panel-width: 25rem;
       --hud-map-inset: 1.5rem;
-      --dock-tab-width: 3rem;
+      --dock-tab-width: 3.6rem;
       --map-app-chrome: 11.25rem;
       --map-hud-tabs-inset: 1.25rem;
+      --map-aspect-w: 1024;
+      --map-aspect-h: 682;
       /* PC에서 좌우 여백 줄이고 본문 넓게 (모바일은 calc로 자동 축소) */
       --app-content-max: 96rem;
     }
@@ -52,7 +54,13 @@
       background-attachment: fixed;
     }
     body.sc-app-mode {
-      padding-bottom: 7.25rem;
+      padding-top: 0.5rem;
+      padding-left: 0;
+      padding-right: 0;
+      padding-bottom: 0;           /* 하단 패널은 fixed overlay — body 여백 불필요 */
+      /* 상단바+탭+미세 간격만 제외하고 나머지 세로는 지도에 할당 */
+      --map-app-chrome: 6.75rem;
+      --map-viewport-pad-x: 1.5rem;
     }
     .zone--clickable {
       cursor: pointer;
@@ -200,6 +208,18 @@
       max-width: 28rem;
       margin: 0 auto;
     }
+    /* 게임 로비 배경 안개 흐름 */
+    @keyframes scLobbyFogDrift {
+      0%   { opacity: 0.65; transform: scaleX(1.00) translateY(0px); }
+      50%  { opacity: 0.85; transform: scaleX(1.03) translateY(-6px); }
+      100% { opacity: 0.65; transform: scaleX(1.00) translateY(0px); }
+    }
+    @keyframes scLobbyGlowPulse {
+      0%   { opacity: 0.7; }
+      50%  { opacity: 1.0; }
+      100% { opacity: 0.7; }
+    }
+
     @keyframes view-login-hero-in {
       from {
         opacity: 0;
@@ -419,9 +439,36 @@
       color: #f0f9ff;
       box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    /* 메인 영토: 지도만 한 화면에 — 불필요한 세로 스크롤 방지 */
+    /* 메인 영토: 지도 중심 — 세로 스크롤은 허용(지도 크기 우선) */
     body.sc-app-mode #screen-main {
-      overflow: hidden;
+      overflow: visible;
+      margin-bottom: 0;
+      padding: 0;
+      /* 지도 뒤 전체 어두운 배경 — body 배경보다 약간 더 진하게 덮어 로비감 강조 */
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 40%,
+          rgba(8, 28, 64, 0.45) 0%,
+          transparent 70%),
+        linear-gradient(180deg,
+          rgba(2, 8, 22, 0.0) 0%,
+          rgba(2, 8, 22, 0.55) 100%);
+      /* 화면 전체를 감싸도록 확장 */
+      min-height: calc(100vh - var(--map-app-chrome));
+      position: relative;
+    }
+    /* 앱 모드: view-app-main은 뷰포트 너비 전체 */
+    body.sc-app-mode .view-app-main {
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    /* 앱 모드: app-chrome(헤더)에는 좌우 여백 유지 */
+    body.sc-app-mode .app-chrome {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin-bottom: 0.25rem;
     }
     /* 게시판·글 상세에서는 상단 영토/안내/히스토리 탭 숨김 */
     body.sc-app-mode.sc-hide-primary-nav .app-primary-nav {
@@ -863,8 +910,126 @@
 
     /* ----- 영토 맵: 단일 PNG(contain) + SVG 히트존(개혁·광장·질서·외계행성) ----- */
     .territory-centrist-hero {
-      margin-top: 2rem;
+      margin-top: 1rem;
       width: 100%;
+      /* 게임 로비 배경: 섹션 전체를 어두운 월드 배경으로 */
+      position: relative;
+    }
+    /* 앱 모드(메인 화면)에서는 지도와 헤더 사이 여백 최소화 + 배경을 뷰포트 끝까지 확장 */
+    body.sc-app-mode #screen-main .territory-centrist-hero {
+      margin-top: 0.25rem;
+      margin-bottom: 0;
+      /* 좌우 배경 장식을 뷰포트 끝까지 확장 (지도 __frame은 안쪽에서 중앙 정렬됨) */
+      margin-left: calc(-1 * (100vw - 100%) / 2 - 0.75rem);
+      margin-right: calc(-1 * (100vw - 100%) / 2 - 0.75rem);
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      /* overflow clip은 x 방향만 — ::before/::after 음수 inset이 위아래로도 번질 수 있도록 */
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+
+    /* ── 게임 로비 배경 레이어 ───────────────────────────────────────────────
+       히트존/이미지 wrapper(.__frame)와 완전히 분리된 ::before / ::after 레이어.
+       pointer-events: none 으로 클릭 방해 없음. z-index 는 frame(z-index 0) 아래로.
+    ─────────────────────────────────────────────────────────────────────── */
+    body.sc-app-mode #screen-main .territory-centrist-hero::before {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset: -3rem -6rem -2rem;      /* 섹션 바깥까지 번짐 */
+      z-index: -1;
+      border-radius: 2rem;
+      /* 깊은 우주/세계 배경 */
+      background:
+        /* 중앙 지도에서 퍼지는 푸른 빛 */
+        radial-gradient(ellipse 55% 60% at 50% 55%,
+          rgba(30, 80, 140, 0.28) 0%,
+          transparent 70%),
+        /* 좌측 진보(파랑) 진영 분위기 */
+        radial-gradient(ellipse 38% 70% at 8% 45%,
+          rgba(14, 116, 144, 0.20) 0%,
+          rgba(2, 52, 90, 0.12) 40%,
+          transparent 75%),
+        /* 우측 보수(붉은) 진영 분위기 */
+        radial-gradient(ellipse 38% 70% at 92% 45%,
+          rgba(127, 29, 29, 0.18) 0%,
+          rgba(88, 12, 12, 0.10) 40%,
+          transparent 75%),
+        /* 외계행성 상단 보라빛 번짐 */
+        radial-gradient(ellipse 30% 30% at 72% 10%,
+          rgba(109, 40, 217, 0.14) 0%,
+          transparent 65%),
+        /* 전체 어두운 바탕 */
+        radial-gradient(ellipse 100% 80% at 50% 60%,
+          rgba(4, 16, 38, 0.55) 0%,
+          rgba(2, 6, 18, 0.78) 100%);
+      animation: scLobbyGlowPulse 6s ease-in-out infinite;
+    }
+    /* 좌우 안개/실루엣 레이어 */
+    body.sc-app-mode #screen-main .territory-centrist-hero::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset: -1rem -5rem -1rem;
+      z-index: -1;
+      /* 좌우에서 중앙 지도 쪽으로 사라지는 안개 */
+      background:
+        linear-gradient(
+          to right,
+          rgba(5, 18, 42, 0.72) 0%,
+          rgba(5, 18, 42, 0.28) 15%,
+          transparent 30%,
+          transparent 70%,
+          rgba(8, 12, 26, 0.28) 85%,
+          rgba(8, 12, 26, 0.72) 100%
+        ),
+        /* 하단 그림자 — 지도가 공중에 뜬 느낌 */
+        linear-gradient(
+          to top,
+          rgba(2, 6, 18, 0.65) 0%,
+          transparent 35%
+        );
+      animation: scLobbyFogDrift 8s ease-in-out infinite;
+    }
+
+    /* 지도 frame: 앱 모드에서는 액자감을 줄이고 배경과 자연스럽게 이어짐 (wrapper 크기·좌표계 불변) */
+    body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+      border: 1px solid rgba(56, 189, 248, 0.06);
+      border-radius: 10px;
+      background: transparent;
+      box-shadow:
+        inset 0 0 48px rgba(0, 8, 20, 0.35),
+        0 12px 40px rgba(0, 0, 0, 0.28);
+    }
+    body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map:hover {
+      border-color: rgba(56, 189, 248, 0.08);
+      box-shadow:
+        inset 0 0 48px rgba(0, 8, 20, 0.35),
+        0 12px 40px rgba(0, 0, 0, 0.28);
+    }
+    /* 가장자리 비네팅 — 지도 PNG와 히트존 위에 얹되 pointer-events 없음 */
+    body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: inherit;
+      background:
+        linear-gradient(to right,
+          rgba(2, 8, 22, 0.38) 0%,
+          transparent 10%,
+          transparent 90%,
+          rgba(2, 8, 22, 0.38) 100%),
+        linear-gradient(to bottom,
+          rgba(2, 8, 22, 0.28) 0%,
+          transparent 8%,
+          transparent 92%,
+          rgba(2, 8, 22, 0.32) 100%);
+    }
+    body.sc-app-mode .territory-centrist-hero__frame--island-map .territory-centrist-hero__bg {
+      background-color: transparent;
     }
     .territory-centrist-hero__frame {
       position: relative;
@@ -904,6 +1069,10 @@
       }
       body {
         padding: 1.5rem 1rem 2rem;
+      }
+      body.sc-app-mode {
+        padding: 0.5rem 0 0;
+        --map-app-chrome: 7rem;
       }
       .view-app-main {
         max-width: min(108rem, calc(100vw - 1.5rem));
@@ -996,19 +1165,33 @@
       pointer-events: none;
       transition: filter 0.2s ease;
     }
-    /* 섬 RTS 맵: cover는 창 비율·브라우저마다 잘림이 달라짐 → 전체가 보이도록 contain + 세로 여유 */
+    /* 섬 RTS 맵: contain만 사용 — JS(scContainBoxLayout)가 이 기준으로 히트존 좌표를 계산함
+       background-size를 contain 외의 값으로 바꾸면 이미지↔히트존 좌표가 어긋남 */
     .territory-centrist-hero__frame--island-map .territory-centrist-hero__bg {
       background-size: contain;
       background-position: center center;
     }
     .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-      min-height: min(20rem, calc((100vh - var(--map-app-chrome)) * 0.94));
-      height: calc((100vh - var(--map-app-chrome)) * 0.94);
-      max-height: calc((100vh - var(--map-app-chrome)) * 0.94);
+      /* 기본(비앱) 폴백 — 앱 모드에서는 아래 body.sc-app-mode 규칙이 우선 */
+      min-height: min(28rem, calc(100vh - var(--map-app-chrome)));
+      height: calc(100vh - var(--map-app-chrome));
+    }
+    /* 앱 모드: PNG 비율(1024×682)에 맞춘 wrapper — contain 여백 없이 이미지·SVG 동일 확대 */
+    body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+      --map-slot-h: calc(100vh - var(--map-app-chrome));
+      --map-slot-w: calc(100vw - var(--map-viewport-pad-x));
+      width: min(var(--map-slot-w), calc(var(--map-slot-h) * var(--map-aspect-w) / var(--map-aspect-h)));
+      height: min(var(--map-slot-h), calc(var(--map-slot-w) * var(--map-aspect-h) / var(--map-aspect-w)));
+      min-height: 0;
+      max-height: none;
+      margin-inline: auto;
     }
     @media (min-width: 640px) {
       .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-        min-height: min(24rem, calc((100vh - var(--map-app-chrome)) * 0.94));
+        min-height: min(32rem, calc(100vh - var(--map-app-chrome)));
+      }
+      body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
+        min-height: 0;
       }
     }
     /* 중앙광장: 고원 절벽/울타리 둘레 근사(벡터 path). 픽셀에 정확히 맞추려면 common-space-hero 위에 path 트레이스 후 아래 SVG의 d만 교체 가능 */
@@ -1108,6 +1291,41 @@
       overflow: visible;
       pointer-events: none;
       display: none;
+      z-index: 2;
+    }
+    /* 영토 분위기: pseudo-element (히트존 좌표계와 분리) — hover보다 약하게 유지 */
+    body.sc-app-mode #screen-main .territory-hit-zones-wrap::before {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.18;
+      background:
+        radial-gradient(circle at 18% 28%, rgba(56, 189, 248, 0.08) 0%, transparent 24%),
+        radial-gradient(circle at 82% 28%, rgba(248, 113, 113, 0.07) 0%, transparent 24%),
+        radial-gradient(circle at 72% 12%, rgba(167, 139, 250, 0.06) 0%, transparent 18%);
+      animation: none;
+      mix-blend-mode: screen;
+    }
+    body.sc-app-mode #screen-main .territory-hit-zones-wrap::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      width: 18%;
+      height: 13%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      border-radius: 50%;
+      opacity: 0.22;
+      background: radial-gradient(circle,
+        rgba(250, 204, 21, 0.1) 0%,
+        rgba(234, 179, 8, 0.04) 45%,
+        transparent 70%);
+      animation: none;
+      mix-blend-mode: screen;
     }
     .territory-hit-zones-svg.territory-hit-zones-svg--active {
       display: block;
@@ -1119,15 +1337,19 @@
     }
     .territory-hit-zones-svg .territory-hit-zone--prog .territory-hit-zone__fill {
       fill: url(#sc-territory-grad-prog);
+      opacity: 0.34;
     }
     .territory-hit-zones-svg .territory-hit-zone--con .territory-hit-zone__fill {
       fill: url(#sc-territory-grad-con);
+      opacity: 0.32;
     }
     .territory-hit-zones-svg .territory-hit-zone--plaza .territory-hit-zone__fill {
       fill: url(#sc-territory-grad-plaza);
+      opacity: 0.36;
     }
     .territory-hit-zones-svg .territory-hit-zone--kanta .territory-hit-zone__fill {
       fill: url(#sc-territory-grad-kanta);
+      opacity: 0.33;
     }
     @keyframes sc-hit-sparkle-prog {
       0%,
@@ -1183,7 +1405,7 @@
     .territory-hit-zones-svg .territory-hit-zone__hit:focus {
       outline: none;
     }
-    /* 개혁·질서·광장·외계행성: 테두리 없이 글로우만 번쩍 (호버·포커스) */
+    /* 개혁·질서·광장·외계행성: hover 시 명확한 광원 반응 */
     .territory-hit-zones-svg .territory-hit-zone--prog .territory-hit-zone__hit:hover,
     .territory-hit-zones-svg .territory-hit-zone--prog .territory-hit-zone__hit:focus-visible {
       stroke: none;
@@ -1205,6 +1427,10 @@
       animation: sc-hit-sparkle-kanta 0.75s ease-in-out infinite;
     }
     @media (prefers-reduced-motion: reduce) {
+      body.sc-app-mode #screen-main .territory-hit-zones-wrap::before,
+      body.sc-app-mode #screen-main .territory-hit-zones-wrap::after {
+        animation: none;
+      }
       .territory-hit-zones-svg .territory-hit-zone__hit {
         transition: none;
       }
@@ -1578,13 +1804,23 @@
     }
     body.sc-app-mode .avatar-dock.is-collapsed:not([hidden]) {
       left: 0;
+      filter: none;
     }
     .avatar-dock.is-collapsed {
+      /* 탭 너비만큼만 화면에 노출, 나머지는 왼쪽으로 숨김 */
       transform: translateX(calc(-100% + var(--dock-tab-width)));
       max-width: var(--dock-tab-width);
+      overflow: hidden; /* 패널 내용이 탭 밖으로 새어나오지 않도록 */
     }
     .avatar-dock.is-collapsed .avatar-dock__panel {
       pointer-events: none;
+      /* 패널 내부 콘텐츠를 완전히 숨김 — 글자 누출 방지 */
+      visibility: hidden;
+      overflow: hidden;
+    }
+    /* 접힘 탭만 다시 보이게 (visibility 상속 차단) */
+    .avatar-dock.is-collapsed .avatar-dock__tab {
+      visibility: visible;
     }
     .avatar-dock:not(.is-collapsed) .avatar-dock__tab {
       display: none;
@@ -2750,14 +2986,23 @@
       display: none !important;
     }
     .avatar-dock.is-collapsed .avatar-dock__tab {
-      border-left: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 0 10px 0 0;
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+    }
+    body.sc-app-mode .avatar-dock.is-collapsed .avatar-dock__tab {
+      min-height: 4.75rem;
+      background: linear-gradient(180deg, rgba(22, 36, 62, 0.96), rgba(8, 12, 26, 0.94));
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.38);
     }
     .avatar-dock__tab {
+      position: relative;
       flex-shrink: 0;
       width: var(--dock-tab-width);
-      min-height: 3.65rem;
-      padding: 0.28rem 0.22rem;
+      min-height: 4.35rem;
+      padding: 0.38rem 0.28rem;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-left: none;
       border-radius: 0 10px 0 0;
@@ -2770,7 +3015,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
-      font-size: 0.65rem;
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.02em;
     }
@@ -2783,8 +3028,8 @@
       outline: none;
     }
     .avatar-dock__tab svg {
-      width: 1.35rem;
-      height: 1.9rem;
+      width: 1.5rem;
+      height: 2.1rem;
       opacity: 0.9;
     }
 
@@ -5137,6 +5382,7 @@
     }
     body.sc-app-mode .chat-dock.chat-dock--collapsed:not([hidden]) {
       right: 0;
+      filter: none;
     }
     .chat-dock__sheet {
       width: var(--chat-panel-width);
@@ -5175,6 +5421,16 @@
     body.sc-app-mode .chat-dock:not([hidden]) .chat-rail__panel {
       border-right: 1px solid rgba(56, 189, 248, 0.14);
       border-radius: 12px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(56, 189, 248, 0.06),
+        0 8px 28px rgba(0, 0, 0, 0.38);
+    }
+    body.sc-app-mode .avatar-dock:not([hidden]) .avatar-dock__panel {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 -8px 28px rgba(0, 0, 0, 0.38),
+        0 0 0 1px rgba(56, 189, 248, 0.06);
     }
     .chat-rail__head {
       display: grid;
@@ -5355,12 +5611,22 @@
       box-shadow: 0 0 14px rgba(56, 189, 248, 0.14);
     }
     .chat-dock--collapsed .chat-rail__tab {
-      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      border-right: none;
       border-radius: 10px 0 0 10px;
     }
+    body.sc-app-mode .chat-dock--collapsed .chat-rail__tab {
+      min-height: 5.85rem;
+      background: linear-gradient(180deg, rgba(22, 36, 62, 0.96), rgba(8, 12, 26, 0.94));
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-right: none;
+      border-left: none;
+      border-radius: 10px 0 0 10px;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.38);
+    }
     .chat-rail__tab {
+      position: relative;
       width: var(--chat-tab-width);
-      min-height: 5rem;
+      min-height: 5.75rem;
       flex-shrink: 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-left: none;
@@ -5373,12 +5639,36 @@
       align-items: center;
       justify-content: center;
       gap: 0.25rem;
-      font-size: 0.58rem;
+      font-size: 0.66rem;
       font-weight: 800;
       letter-spacing: 0.06em;
       writing-mode: vertical-rl;
       text-orientation: mixed;
       line-height: 1.15;
+    }
+    .chat-rail__unread-badge {
+      position: absolute;
+      top: 0.4rem;
+      left: 0.42rem;
+      min-width: 1.1rem;
+      height: 1.1rem;
+      padding: 0 0.28rem;
+      border-radius: 999px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      line-height: 1.1rem;
+      text-align: center;
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      letter-spacing: 0;
+      box-shadow: 0 0 0 2px rgba(8, 12, 26, 0.9), 0 0 10px rgba(239, 68, 68, 0.45);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .chat-rail__unread-badge[hidden] {
+      display: none;
     }
     .chat-rail__tab:hover,
     .chat-rail__tab:focus-visible {
@@ -5400,20 +5690,38 @@
     @media (max-width: 820px) {
       :root {
         --avatar-panel-width: min(22rem, calc(100vw - 1.25rem));
-        --chat-panel-width: min(275px, calc(100vw - 3rem));
-        --chat-panel-height: min(44vh, 260px);
+        --chat-panel-width: min(238px, calc(100vw - 3rem));
+        --chat-panel-height: min(36vh, 220px);
         --hud-map-inset: 0.5rem;
       }
       .territory-centrist-hero {
-        margin-top: 1.25rem;
+        margin-top: 1rem;
+      }
+      body.sc-app-mode #screen-main .territory-centrist-hero {
+        margin-top: 0.25rem;
+        margin-bottom: 0;
+      }
+      /* 모바일에서는 좌우 여백 유지 */
+      body.sc-app-mode {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-bottom: 0;
+        --map-app-chrome: 7.5rem;
+        --map-viewport-pad-x: 1.5rem;
+      }
+      body.sc-app-mode .view-app-main {
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
       }
       :root {
         --map-app-chrome: 10.5rem;
       }
       .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-        min-height: min(18rem, calc((100vh - var(--map-app-chrome)) * 0.92));
-        height: calc((100vh - var(--map-app-chrome)) * 0.92);
-        max-height: calc((100vh - var(--map-app-chrome)) * 0.92);
+        min-height: min(20rem, calc(100vh - var(--map-app-chrome)));
+        height: calc(100vh - var(--map-app-chrome));
+        max-height: none;
       }
       .avatar-dock__hero .avatar-dock__photo-card {
         width: min(6.5rem, 34vw);
@@ -6047,7 +6355,7 @@
 
   <div
     id="avatar-dock"
-    class="avatar-dock"
+    class="avatar-dock is-collapsed"
     role="region"
     aria-label="내 프로필"
     hidden
@@ -6271,7 +6579,7 @@
     </div>
   </div>
 
-  <div id="chat-rail" class="chat-dock" role="complementary" aria-label="광장 대화" hidden>
+  <div id="chat-rail" class="chat-dock chat-dock--collapsed" role="complementary" aria-label="광장 대화" hidden>
     <div class="chat-dock__sheet">
       <div class="chat-rail__panel" id="chat-rail-panel">
         <div class="chat-rail__head">
@@ -6312,6 +6620,7 @@
     <button type="button" id="chat-rail-tab" class="chat-rail__tab" aria-label="광장 대화 패널 펼치기" title="광장 대화 열기">
       <span class="chat-rail__tab-label chat-rail__tab-label--full">광장 대화</span>
       <span class="chat-rail__tab-label chat-rail__tab-label--short">대화</span>
+      <span id="chat-rail-unread-badge" class="chat-rail__unread-badge" hidden aria-hidden="true">0</span>
     </button>
   </div>
 
@@ -7354,15 +7663,40 @@
           affiliationDisplay: 'COMMON · 중앙광장',
         };
 
-      var collapsed = false;
+      var collapsed = true;
       var room = 'global';
       var lastId = 0;
       var seen = new Set();
       var pollTimer = null;
+      var unreadCount = 0;
+      var chatPollReady = false;
+      var badgeUnread = document.getElementById('chat-rail-unread-badge');
+
+      function updateChatUnreadBadge() {
+        if (!badgeUnread) return;
+        if (unreadCount <= 0) {
+          badgeUnread.hidden = true;
+          badgeUnread.textContent = '0';
+          badgeUnread.setAttribute('aria-hidden', 'true');
+          btnTab.setAttribute('aria-label', '광장 대화 패널 펼치기');
+        } else {
+          badgeUnread.hidden = false;
+          badgeUnread.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+          badgeUnread.setAttribute('aria-hidden', 'false');
+          btnTab.setAttribute(
+            'aria-label',
+            '광장 대화 패널 펼치기, 새 메시지 ' + unreadCount + '건',
+          );
+        }
+      }
 
       function setCollapsed(on) {
         collapsed = Boolean(on);
         rail.classList.toggle('chat-dock--collapsed', collapsed);
+        if (!collapsed) {
+          unreadCount = 0;
+          updateChatUnreadBadge();
+        }
       }
 
       btnHide.addEventListener('click', function () {
@@ -7470,6 +7804,7 @@
         if (room === next) return;
         room = next;
         syncTabs();
+        chatPollReady = false;
         resetRoomView();
         pollOnce();
       }
@@ -7486,15 +7821,21 @@
         var emptyEl = box.querySelector('.chat-rail__empty');
         if (emptyEl) emptyEl.remove();
         var scroll = box.scrollTop + box.clientHeight >= box.scrollHeight - 24;
+        var added = 0;
         items.forEach(function (m) {
           if (!m || seen.has(m.id)) return;
           seen.add(m.id);
           if (m.id > lastId) lastId = m.id;
+          added++;
           var p = document.createElement('p');
           p.className = 'chat-rail__line';
           p.textContent = m.userId + '(' + m.affiliation + ') : ' + m.text;
           box.appendChild(p);
         });
+        if (added > 0 && collapsed && chatPollReady) {
+          unreadCount += added;
+          updateChatUnreadBadge();
+        }
         if (scroll || lastId === 0) box.scrollTop = box.scrollHeight;
       }
 
@@ -7517,6 +7858,9 @@
           if (!j.ok) return;
           appendMessages(j.messages || []);
         } catch (_) {}
+        finally {
+          chatPollReady = true;
+        }
       }
 
       function startPoll() {
@@ -7553,6 +7897,8 @@
         input.focus();
       });
 
+      setCollapsed(true);
+      updateChatUnreadBadge();
       syncTabs();
       renderChatEmpty();
       pollOnce();
