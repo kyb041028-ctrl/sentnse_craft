@@ -1,10 +1,10 @@
-/**
+﻿/**
  * =============================================================================
- * 랭크별 성향치 상한 + 단일 게시물 누적 상한
+ * ??겕蹂??깊뼢移??곹븳 + ?⑥씪 寃뚯떆臾??꾩쟻 ?곹븳
  * =============================================================================
- * - **메인 벨트(질서·개혁)** 축에 랭크 표를 적용한다.
- * - 외계행성(KANTAPBIYA)은 정치 성향 축과 분리 — 행동 moderation 체류만.
- * - 한 게시물에서 작자에게 들어가는 성향치는 **게시물당 캡**으로 제한.
+ * - **硫붿씤 踰⑦듃(吏덉꽌쨌媛쒗쁺)** 異뺤뿉 ??겕 ?쒕? ?곸슜?쒕떎.
+ * - ?멸퀎?됱꽦(KANTAPBIYA)? ?뺤튂 ?깊뼢 異뺢낵 遺꾨━ ???됰룞 moderation 泥대쪟留?
+ * - ??寃뚯떆臾쇱뿉???묒옄?먭쾶 ?ㅼ뼱媛???깊뼢移섎뒗 **寃뚯떆臾쇰떦 罹?*?쇰줈 ?쒗븳.
  * =============================================================================
  */
 
@@ -20,16 +20,16 @@
 
 /** @type {ReadonlyArray<RankAlignmentRow>} */
 const RANK_ALIGNMENT_TABLE = Object.freeze([
-  { rank: 1, labelKo: '1티어(시작)', maxAxisScore: 3_000, perPostAxisCap: 120 },
-  { rank: 2, labelKo: '2티어', maxAxisScore: 8_000, perPostAxisCap: 200 },
-  { rank: 3, labelKo: '3티어', maxAxisScore: 20_000, perPostAxisCap: 320 },
-  { rank: 4, labelKo: '4티어', maxAxisScore: 45_000, perPostAxisCap: 480 },
-  { rank: 5, labelKo: '5티어', maxAxisScore: 90_000, perPostAxisCap: 720 },
-  { rank: 6, labelKo: '6티어', maxAxisScore: 160_000, perPostAxisCap: 1_000 },
-  { rank: 7, labelKo: '7티어', maxAxisScore: 260_000, perPostAxisCap: 1_400 },
-  { rank: 8, labelKo: '8티어', maxAxisScore: 400_000, perPostAxisCap: 1_800 },
-  { rank: 9, labelKo: '9티어', maxAxisScore: 600_000, perPostAxisCap: 2_200 },
-  { rank: 10, labelKo: '10티어(상한 완화)', maxAxisScore: 1_000_000, perPostAxisCap: 3_000 },
+  { rank: 1, labelKo: '1?곗뼱(?쒖옉)', maxAxisScore: 3_000, perPostAxisCap: 120 },
+  { rank: 2, labelKo: '2?곗뼱', maxAxisScore: 8_000, perPostAxisCap: 200 },
+  { rank: 3, labelKo: '3?곗뼱', maxAxisScore: 20_000, perPostAxisCap: 320 },
+  { rank: 4, labelKo: '4?곗뼱', maxAxisScore: 45_000, perPostAxisCap: 480 },
+  { rank: 5, labelKo: '5?곗뼱', maxAxisScore: 90_000, perPostAxisCap: 720 },
+  { rank: 6, labelKo: '6?곗뼱', maxAxisScore: 160_000, perPostAxisCap: 1_000 },
+  { rank: 7, labelKo: '7?곗뼱', maxAxisScore: 260_000, perPostAxisCap: 1_400 },
+  { rank: 8, labelKo: '8?곗뼱', maxAxisScore: 400_000, perPostAxisCap: 1_800 },
+  { rank: 9, labelKo: '9?곗뼱', maxAxisScore: 600_000, perPostAxisCap: 2_200 },
+  { rank: 10, labelKo: '10?곗뼱(?곹븳 ?꾪솕)', maxAxisScore: 1_000_000, perPostAxisCap: 3_000 },
 ]);
 
 const DESIGN_ASSUMPTION_MAU = 100_000;
@@ -41,12 +41,12 @@ function getRankAlignmentRow(rank) {
   return RANK_ALIGNMENT_TABLE[r - 1] || null;
 }
 
-/** 외계행성 단일 허브 — 정치 축 클램프 없음(행동 moderation만) */
+/** ?멸퀎?됱꽦 ?⑥씪 ?덈툕 ???뺤튂 異??대옩???놁쓬(?됰룞 moderation留? */
 function getKantapbiyaRankAlignmentLimits() {
   return Object.freeze({
     hubTerritoryId: 'KANTAPBIYA',
     ranks: RANK_ALIGNMENT_TABLE,
-    noteKo: '외계행성은 행동 관측 기지. planetPct·좌우 신호구역 없음.',
+    noteKo: '?멸퀎?됱꽦? ?됰룞 愿痢?湲곗?. planetPct쨌醫뚯슦 ?좏샇援ъ뿭 ?놁쓬.',
   });
 }
 
@@ -56,9 +56,9 @@ function getPublicRankAlignmentLimits() {
     ranks: RANK_ALIGNMENT_TABLE,
     kantapbiya: getKantapbiyaRankAlignmentLimits(),
     notesKo: [
-      '질서·개혁를 “각각의 축”으로 둘 때: 각 축이 maxAxisScore를 넘지 못하게 클램프.',
-      '한 게시물에서 작자에게 쌓이는 “그 축 합”은 perPostAxisCap을 넘지 못하게 클램프.',
-      '외계행성(KANTAPBIYA)은 정치 성향 축과 분리 — moderation 체류만.',
+      '吏덉꽌쨌媛쒗쁺瑜??쒓컖媛곸쓽 異뺚앹쑝濡????? 媛?異뺤씠 maxAxisScore瑜??섏? 紐삵븯寃??대옩??',
+      '??寃뚯떆臾쇱뿉???묒옄?먭쾶 ?볦씠???쒓렇 異??⒱앹? perPostAxisCap???섏? 紐삵븯寃??대옩??',
+      '?멸퀎?됱꽦(KANTAPBIYA)? ?뺤튂 ?깊뼢 異뺢낵 遺꾨━ ??moderation 泥대쪟留?',
     ],
   });
 }
@@ -70,3 +70,4 @@ module.exports = Object.freeze({
   getKantapbiyaRankAlignmentLimits,
   getPublicRankAlignmentLimits,
 });
+

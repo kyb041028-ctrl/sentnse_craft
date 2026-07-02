@@ -140,18 +140,18 @@
     return (
       '<section class="perm-guide__section">' +
       '<h3 class="perm-guide__h">영토별 이용</h3>' +
-      '<p class="perm-guide__lead"><strong>정치 성향</strong>(개혁·질서·중앙광장)과 <strong>외계행성</strong>(행동 관측)은 완전히 별개입니다. 아래는 각 공간이 <strong>어떤 곳인지</strong>, <strong>언제 열리는지</strong>만 안내합니다.</p>' +
+      '<p class="perm-guide__lead"><strong>정치 성향</strong>(개척·수호·중앙광장)과 <strong>외계행성</strong>(행동 관측)은 완전히 별개입니다. 아래는 각 공간이 <strong>어떤 곳인지</strong>, <strong>언제 열리는지</strong>만 안내합니다.</p>' +
       '<table class="perm-guide__table"><thead><tr><th>영토</th><th>어떤 공간인가</th><th>어떻게 열리나</th></tr></thead><tbody>' +
       '<tr><td><strong>중앙광장</strong></td><td>모두가 모이는 공용 광장</td><td>처음부터 자유롭게 이용</td></tr>' +
-      '<tr><td><strong>질서영토</strong></td><td>안정과 구조를 중시하는 이용자들의 지역</td><td>질서 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
-      '<tr><td><strong>개혁영토</strong></td><td>변화와 실험을 선호하는 이용자들의 지역</td><td>개혁 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
+      '<tr><td><strong>수호영토</strong></td><td>안정과 구조를 중시하는 이용자들의 지역</td><td>수호 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
+      '<tr><td><strong>개척영토</strong></td><td>변화와 실험을 선호하는 이용자들의 지역</td><td>개척 쪽 활동이 쌓일수록 단계가 열림</td></tr>' +
       '<tr><td><strong>외계행성</strong></td><td>과열된 행동을 관측·격리하는 특수 구역</td><td>반복적인 과열 행동이 감지되면 일정 기간 이동</td></tr>' +
       '<tr><td><strong>3·4단계</strong></td><td colspan="2">추후 공개</td></tr>' +
       '</tbody></table>' +
-      '<h4 class="perm-guide__subh">성향 — 개혁 · 질서 · 중앙광장</h4>' +
+      '<h4 class="perm-guide__subh">성향 — 개척 · 수호 · 중앙광장</h4>' +
       '<ul class="perm-guide__list">' +
-      '<li>중앙광장·질서·개혁에서의 활동이 <strong>나의 성향</strong>을 형성합니다.</li>' +
-      '<li>질서·개혁 영토는 <strong>해당 성향 활동</strong>이 이어질수록 더 깊은 단계 게시판이 열립니다.</li>' +
+      '<li>중앙광장·수호·개척에서의 활동이 <strong>나의 성향</strong>을 형성합니다.</li>' +
+      '<li>수호·개척 영토는 <strong>해당 성향 활동</strong>이 이어질수록 더 깊은 단계 게시판이 열립니다.</li>' +
       '<li>아직 열리지 않은 단계는 <strong>관측(열람)</strong>만 가능할 수 있습니다.</li>' +
       '<li><strong>공감</strong>은 성향에 영향을 주지 않습니다. <strong>좋아요·싫어요</strong>만 성향에 반영됩니다.</li>' +
       '</ul>' +
@@ -171,12 +171,12 @@
         body: '모든 이용자가 자유롭게 모이는 공용 공간입니다. 처음 만나는 사람들의 이야기, 일상, 논쟁이 이곳에서 시작됩니다.',
       },
       {
-        name: '질서영토',
-        body: '안정과 구조를 중시하는 이용자들이 모이는 지역입니다. 질서 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
+        name: '수호영토',
+        body: '안정과 구조를 중시하는 이용자들이 모이는 지역입니다. 수호 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
       },
       {
-        name: '개혁영토',
-        body: '변화와 실험을 선호하는 이용자들이 모이는 지역입니다. 개혁 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
+        name: '개척영토',
+        body: '변화와 실험을 선호하는 이용자들이 모이는 지역입니다. 개척 쪽 성향이 두드러질수록 더 깊은 공간이 열립니다.',
       },
       {
         name: '외계행성',

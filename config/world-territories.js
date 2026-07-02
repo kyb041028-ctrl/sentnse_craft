@@ -13,7 +13,7 @@
 const MAIN_BELT = Object.freeze({
   CONSERVATIVE: {
     id: 'CONSERVATIVE',
-    labelKo: '질서 진영',
+    labelKo: '수호영토',
     /** 게시판 단계 수 (1~4) */
     forumTierCount: 4,
   },
@@ -25,7 +25,7 @@ const MAIN_BELT = Object.freeze({
   },
   PROGRESSIVE: {
     id: 'PROGRESSIVE',
-    labelKo: '개혁 진영',
+    labelKo: '개척영토',
     forumTierCount: 4,
   },
 });
