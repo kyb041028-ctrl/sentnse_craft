@@ -27,14 +27,15 @@
       --chat-panel-width: 252px;
       --chat-panel-height: min(38vh, 240px);
       --chat-tab-width: 3.1rem;
-      --avatar-panel-width: 48rem;
+      --avatar-panel-width: 56rem;
       --avatar-left-col-w: 18.5rem;
+      --profile-sidebar-w: 10rem;
       --hud-map-inset: 1.5rem;
       --dock-tab-width: 3.6rem;
       --map-app-chrome: 11.25rem;
       --map-hud-tabs-inset: 1.25rem;
       --map-aspect-w: 1024;
-      --map-aspect-h: 682;
+      --map-aspect-h: 576;
       /* PC에서 좌우 여백 줄이고 본문 넓게 (모바일은 calc로 자동 축소) */
       --app-content-max: 96rem;
 
@@ -131,13 +132,43 @@
       padding-right: 0;
       padding-bottom: 0;           /* 하단 패널은 fixed overlay — body 여백 불필요 */
       /* 상단바+탭+미세 간격만 제외하고 나머지 세로는 지도에 할당 */
-      --map-app-chrome: 6.75rem;
-      --map-viewport-pad-x: 1.5rem;
+      --map-app-chrome: 5.5rem;
+      --map-viewport-pad-x: 0rem;
       /* 하단 HUD(프로필·대화 탭) 전용 영역 — 펼친 패널과 분리 */
       --sc-hud-safe-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
       --sc-hud-tab-h: 5.85rem;
       --sc-hud-panel-gap: 1.375rem; /* 22px — 패널 하단 ↔ HUD 탭 간격 */
       --sc-hud-content-pad: calc(var(--sc-hud-safe-bottom) + var(--sc-hud-tab-h) + 1.5rem);
+    }
+    /* 메인 영토(#screen-main) 표시 중에만 페이지 세로 스크롤 잠금 — 게시판·안내·히스토리는 제외 */
+    html:has(body.sc-app-mode #screen-main:not([hidden])),
+    body.sc-app-mode:has(#screen-main:not([hidden])) {
+      overflow: hidden;
+      overscroll-behavior: none;
+      height: 100%;
+      max-height: 100dvh;
+    }
+    body.sc-app-mode:has(#screen-main:not([hidden])) {
+      padding-top: 0;
+      min-height: 100dvh;
+      max-height: 100dvh;
+    }
+    body.sc-app-mode:has(#screen-main:not([hidden])) #view-app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+    }
+    body.sc-app-mode:has(#screen-main:not([hidden])) .app-chrome.view-app-main {
+      flex: 0 0 auto;
+    }
+    body.sc-app-mode:has(#screen-main:not([hidden])) main.view-app-main {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .zone--clickable {
       cursor: pointer;
@@ -516,9 +547,9 @@
       color: #f0f9ff;
       box-shadow: var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    /* 메인 영토: 지도 중심 — 세로 스크롤은 허용(지도 크기 우선) */
+    /* 메인 영토: 지도 중심 — 페이지 스크롤 없음(게임 로비) */
     body.sc-app-mode #screen-main {
-      overflow: visible;
+      overflow: hidden;
       margin-bottom: 0;
       padding: 0;
       /* 지도 뒤 전체 어두운 배경 — body 배경보다 약간 더 진하게 덮어 로비감 강조 */
@@ -529,8 +560,9 @@
         linear-gradient(180deg,
           rgba(2, 8, 22, 0.0) 0%,
           rgba(2, 8, 22, 0.55) 100%);
-      /* 화면 전체를 감싸도록 확장 */
-      min-height: calc(100vh - var(--map-app-chrome));
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: calc(100dvh - var(--map-app-chrome));
       position: relative;
     }
     /* 앱 모드: view-app-main은 뷰포트 너비 전체 */
@@ -545,7 +577,13 @@
     body.sc-app-mode .app-chrome {
       padding-left: 1rem;
       padding-right: 1rem;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.1rem;
+    }
+    body.sc-app-mode .app-topbar {
+      margin-bottom: 0.1rem;
+    }
+    body.sc-app-mode .app-primary-nav {
+      margin-top: 0.25rem;
     }
     /* 게시판·글 상세에서는 상단 영토/안내/히스토리 탭 숨김 */
     body.sc-app-mode.sc-hide-primary-nav .app-primary-nav {
@@ -1005,16 +1043,17 @@
     }
     /* 앱 모드(메인 화면)에서는 지도와 헤더 사이 여백 최소화 + 배경을 뷰포트 끝까지 확장 */
     body.sc-app-mode #screen-main .territory-centrist-hero {
-      margin-top: 0.25rem;
+      margin-top: 0;
       margin-bottom: 0;
+      height: 100%;
       /* 좌우 배경 장식을 뷰포트 끝까지 확장 (지도 __frame은 안쪽에서 중앙 정렬됨) */
-      margin-left: calc(-1 * (100vw - 100%) / 2 - 0.75rem);
-      margin-right: calc(-1 * (100vw - 100%) / 2 - 0.75rem);
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      /* overflow clip은 x 방향만 — ::before/::after 음수 inset이 위아래로도 번질 수 있도록 */
+      margin-left: calc(-1 * (100vw - 100%) / 2 - 0.25rem);
+      margin-right: calc(-1 * (100vw - 100%) / 2 - 0.25rem);
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      /* ::before/::after 음수 inset이 페이지 스크롤을 만들지 않도록 clip */
       overflow-x: clip;
-      overflow-y: visible;
+      overflow-y: clip;
     }
 
     /* ── 게임 로비 배경 레이어 ───────────────────────────────────────────────
@@ -1159,8 +1198,8 @@
         padding: 1.5rem 1rem 2rem;
       }
       body.sc-app-mode {
-        padding: 0.5rem 0 0;
-        --map-app-chrome: 7rem;
+        padding: 0.25rem 0 0;
+        --map-app-chrome: 5.75rem;
       }
       .view-app-main {
         max-width: min(108rem, calc(100vw - 1.5rem));
@@ -1266,7 +1305,7 @@
     }
     /* 앱 모드: PNG 비율(1024×682)에 맞춘 wrapper — contain 여백 없이 이미지·SVG 동일 확대 */
     body.sc-app-mode .territory-centrist-hero__frame.territory-centrist-hero__frame--island-map {
-      --map-slot-h: calc(100vh - var(--map-app-chrome));
+      --map-slot-h: calc(100dvh - var(--map-app-chrome));
       --map-slot-w: calc(100vw - var(--map-viewport-pad-x));
       width: min(var(--map-slot-w), calc(var(--map-slot-h) * var(--map-aspect-w) / var(--map-aspect-h)));
       height: min(var(--map-slot-h), calc(var(--map-slot-w) * var(--map-aspect-h) / var(--map-aspect-w)));
@@ -1913,9 +1952,7 @@
     body.sc-app-mode .avatar-dock:not(.is-collapsed) .avatar-dock__panel {
       max-height: calc(100dvh - var(--sc-hud-tab-h) - var(--sc-hud-panel-gap) - var(--sc-hud-safe-bottom) - 0.75rem);
       max-width: min(var(--avatar-panel-width), calc(100vw - var(--chat-tab-width) - 1.5rem));
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden;
       border-radius: 14px;
     }
     .avatar-dock.is-collapsed {
@@ -1942,9 +1979,11 @@
       flex-direction: column;
       align-items: stretch;
       width: min(var(--avatar-panel-width), calc(100vw - 1rem));
+      max-height: calc(100dvh - var(--sc-hud-safe-bottom) - 0.5rem);
       min-height: 11.5rem;
       padding: 0;
       padding-bottom: 0;
+      overflow: hidden;
       background: linear-gradient(160deg, rgba(18, 26, 51, 0.94), rgba(10, 16, 32, 0.96));
       border: 1px solid rgba(56, 189, 248, 0.22);
       border-left: none;
@@ -1963,8 +2002,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.5rem 0.6rem 0.35rem;
+      gap: 0.35rem;
+      padding: 0.28rem 0.5rem 0.2rem;
       flex-shrink: 0;
     }
     .avatar-dock__panel-title {
@@ -2425,7 +2464,7 @@
     /* ----- 영토 맵 우상단 HUD (랭킹·기록·설정·알림) ----- */
     .sc-map-top-tabs {
       position: absolute;
-      top: 0.55rem;
+      top: 0.3rem;
       right: var(--map-hud-tabs-inset);
       z-index: 12;
       display: flex;
@@ -6332,7 +6371,7 @@
         margin-top: 1rem;
       }
       body.sc-app-mode #screen-main .territory-centrist-hero {
-        margin-top: 0.25rem;
+        margin-top: 0;
         margin-bottom: 0;
       }
       /* 모바일에서는 좌우 여백 유지 */
@@ -6340,8 +6379,8 @@
         padding-left: 0.75rem;
         padding-right: 0.75rem;
         padding-bottom: 0;
-        --map-app-chrome: 7.5rem;
-        --map-viewport-pad-x: 1.5rem;
+        --map-app-chrome: 6.5rem;
+        --map-viewport-pad-x: 0rem;
       }
       body.sc-app-mode .view-app-main {
         padding-left: 0;
@@ -7321,9 +7360,20 @@
       border-bottom: 1px solid rgba(56, 189, 248, 0.14);
     }
     .avatar-player-card__territory-icon {
-      font-size: 0.82rem;
-      line-height: 1;
+      display: inline-block;
+      width: 1.1rem;
+      height: 1.1rem;
+      background-image: url('/assets/territory-icons/centrist.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-size: 0;
+      line-height: 0;
+      flex-shrink: 0;
     }
+    [data-territory="reform"] .avatar-player-card__territory-icon { background-image: url('/assets/territory-icons/reform.png'); }
+    [data-territory="order"]  .avatar-player-card__territory-icon { background-image: url('/assets/territory-icons/order.png'); }
+    [data-territory="alien"]  .avatar-player-card__territory-icon { background-image: url('/assets/territory-icons/alien.png'); }
     .avatar-player-card__territory-name {
       font-size: 0.68rem;
       font-weight: 700;
@@ -7611,7 +7661,21 @@
         background var(--sc-ease),
         color var(--sc-ease);
     }
-    .avatar-territory-badge__icon { font-size: 1.1em; line-height: 1; }
+    .avatar-territory-badge__icon {
+      display: inline-block;
+      width: 1.6rem;
+      height: 1.6rem;
+      background-image: url('/assets/territory-icons/centrist.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-size: 0;
+      line-height: 0;
+      flex-shrink: 0;
+    }
+    .avatar-territory-badge[data-territory="reform"] .avatar-territory-badge__icon  { background-image: url('/assets/territory-icons/reform.png'); }
+    .avatar-territory-badge[data-territory="order"]  .avatar-territory-badge__icon  { background-image: url('/assets/territory-icons/order.png'); }
+    .avatar-territory-badge[data-territory="alien"]  .avatar-territory-badge__icon  { background-image: url('/assets/territory-icons/alien.png'); }
     .avatar-territory-badge__suffix { font-weight: 600; opacity: 0.75; font-size: 0.82em; }
 
     /* 영토별 배너 색상 (data-territory) */
@@ -7657,18 +7721,37 @@
     }
     /* 영토 엠블럼 워터마크 */
     .avatar-territory-creed::before {
-      content: "🏛";
+      content: "";
       position: absolute;
-      font-size: 7rem;    /* 12rem → 7rem */
+      width: 7rem;
+      height: 7rem;
+      background-image: url('/assets/territory-icons/centrist.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
       opacity: 0.07;
       top: 50%;
-      right: 1rem;        /* 우측 배경에 배치 */
+      right: 1rem;
       left: auto;
       transform: translateY(-50%);
       pointer-events: none;
       user-select: none;
       filter: blur(0.5px);
-      line-height: 1;
+    }
+
+    /* 신념 HUD 내 가시 아이콘 */
+    .avatar-territory-creed__emblem {
+      display: block;
+      width: 2.8rem;
+      height: 2.8rem;
+      background-image: url('/assets/territory-icons/centrist.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 8px rgba(61, 255, 179, 0.45));
     }
     /* 신념 문장 */
     /* JS가 현재 영토 신념 1개만 주입 — display 제어 불필요 */
@@ -7706,7 +7789,8 @@
         linear-gradient(160deg, rgba(5, 10, 25, 0.65), rgba(3, 6, 18, 0.8));
       box-shadow: 0 0 18px rgba(90, 168, 255, 0.18);
     }
-    [data-territory="reform"] .avatar-territory-creed::before { content: "⚡"; }
+    [data-territory="reform"] .avatar-territory-creed::before  { background-image: url('/assets/territory-icons/reform.png'); }
+    [data-territory="reform"] .avatar-territory-creed__emblem  { background-image: url('/assets/territory-icons/reform.png'); filter: drop-shadow(0 0 8px rgba(90, 168, 255, 0.45)); }
     [data-territory="reform"] .avatar-territory-creed__motto { color: #5AA8FF; text-shadow: 0 0 10px rgba(90, 168, 255, 0.35); }
     [data-territory="reform"] .avatar-territory-creed__sub   { color: #5AA8FF; }
 
@@ -7718,7 +7802,8 @@
         linear-gradient(160deg, rgba(22, 5, 5, 0.65), rgba(14, 3, 3, 0.8));
       box-shadow: 0 0 18px rgba(255, 90, 90, 0.18);
     }
-    [data-territory="order"] .avatar-territory-creed::before { content: "🛡"; }
+    [data-territory="order"] .avatar-territory-creed::before  { background-image: url('/assets/territory-icons/order.png'); }
+    [data-territory="order"] .avatar-territory-creed__emblem  { background-image: url('/assets/territory-icons/order.png'); filter: drop-shadow(0 0 8px rgba(255, 90, 90, 0.45)); }
     [data-territory="order"] .avatar-territory-creed__motto  { color: #FF5A5A; text-shadow: 0 0 10px rgba(255, 90, 90, 0.35); }
     [data-territory="order"] .avatar-territory-creed__sub    { color: #FF5A5A; }
 
@@ -7730,7 +7815,8 @@
         linear-gradient(160deg, rgba(14, 5, 22, 0.65), rgba(9, 3, 14, 0.8));
       box-shadow: 0 0 18px rgba(199, 125, 255, 0.18);
     }
-    [data-territory="alien"] .avatar-territory-creed::before { content: "🪐"; }
+    [data-territory="alien"] .avatar-territory-creed::before  { background-image: url('/assets/territory-icons/alien.png'); }
+    [data-territory="alien"] .avatar-territory-creed__emblem  { background-image: url('/assets/territory-icons/alien.png'); filter: drop-shadow(0 0 8px rgba(199, 125, 255, 0.45)); }
     [data-territory="alien"] .avatar-territory-creed__motto  { color: #C77DFF; text-shadow: 0 0 10px rgba(199, 125, 255, 0.35); }
     [data-territory="alien"] .avatar-territory-creed__sub    { color: #C77DFF; }
 
@@ -7790,13 +7876,14 @@
       gap: 0;
       border-top: 1px solid rgba(56, 189, 248, 0.1);
       background: rgba(6, 10, 20, 0.5);
+      flex-shrink: 0;
     }
     .avatar-deco-panel__slot {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.1rem;
-      padding: 0.38rem 0.3rem 0.32rem;
+      gap: 0.06rem;
+      padding: 0.22rem 0.22rem 0.18rem;
       border-right: 1px solid rgba(56, 189, 248, 0.08);
       transition: background var(--sc-ease);
     }
@@ -7805,17 +7892,17 @@
       opacity: 0.65;   /* 0.45 → 0.65: 잠긴 슬롯 가독성 향상 */
     }
     .avatar-deco-panel__icon {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       line-height: 1;
     }
     .avatar-deco-panel__label {
-      font-size: 0.52rem;
+      font-size: 0.48rem;
       font-weight: 600;
       color: #64748b;   /* #334155(거의 불가시) → #64748b */
       letter-spacing: 0.04em;
     }
     .avatar-deco-panel__value {
-      font-size: 0.65rem;
+      font-size: 0.58rem;
       font-weight: 700;
       color: #7dd3fc;
       letter-spacing: 0.02em;
@@ -7904,25 +7991,25 @@
     }
     /* 실제 1열 전환: avatar-dock 패널 폭이 좁을 때 */
     @container avatar-panel (max-width: 260px) {
-      .avatar-panel-body { grid-template-columns: 1fr; }
-      .avatar-panel-left { border-right: none; border-bottom: 1px solid rgba(56,189,248,0.1); flex-direction: row; flex-wrap: wrap; }
-      .avatar-slot-box { width: 6rem; }
+      .profile-main { grid-template-columns: 1fr; }
+      .profile-summaries { grid-template-columns: 1fr; }
     }
 
     /* ── 패널 하단 접기 버튼 ── */
     .avatar-panel-close-row {
       display: flex;
       justify-content: flex-end;
-      padding: 0.5rem 0.7rem 0.6rem;   /* 상하 여백 소폭 증가 */
-      margin-top: 0.15rem;             /* deco 패널과 간격 확보 */
+      padding: 0.22rem 0.45rem 0.28rem;
+      margin-top: 0;
       border-top: 1px solid rgba(56, 189, 248, 0.1);
+      flex-shrink: 0;
     }
     .avatar-panel-close-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
-      height: 2rem;
-      padding: 0 0.85rem;
+      gap: 0.25rem;
+      height: 1.65rem;
+      padding: 0 0.65rem;
       border-radius: var(--sc-r-md);
       border: 1px solid rgba(56, 189, 248, 0.22);
       background: rgba(56, 189, 248, 0.06);
@@ -8069,6 +8156,445 @@
     .avatar-player-summary,
     .avatar-player-rank   { font-size: 0.67rem; }
     .avatar-player-follow { font-size: 0.63rem; margin-top: 0.06rem; }
+
+    /* ══════════════════════════════════════════
+       PROFILE LAYOUT — 설계도 기준 그리드
+       ══════════════════════════════════════════ */
+
+    .profile-layout {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      flex: 1 1 auto;
+      gap: 0.35rem;
+      padding: 0.28rem 0.45rem 0.3rem;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── 상단: 사이드바 | 메인 ── */
+    .profile-main {
+      display: grid;
+      grid-template-columns: var(--profile-sidebar-w) minmax(0, 1fr);
+      gap: 0.45rem;
+      align-items: stretch;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .profile-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    /* 아바타 */
+    .profile-avatar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.28rem 0.28rem 0.24rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid #1e293b;
+      background: #111827;
+      flex-shrink: 0;
+    }
+    .profile-avatar__slot {
+      position: relative;
+      width: min(100%, 4.6rem);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border-radius: var(--sc-r-sm);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      background: rgba(6, 10, 20, 0.85);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-avatar__slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-avatar__ph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      color: rgba(56, 189, 248, 0.35);
+    }
+    .profile-avatar__ph svg {
+      width: 1.85rem;
+      height: 1.85rem;
+    }
+    .profile-avatar__ph-label {
+      font-size: 0.52rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+    .profile-avatar__change {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.12rem 0.42rem;
+      border-radius: var(--sc-r-sm);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: transparent;
+      color: #64748b;
+      font-size: 0.62rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .profile-avatar__change:hover {
+      color: #94a3b8;
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    /* 성향 레이더 */
+    .profile-radar {
+      flex: 0 0 auto;
+      padding: 0.22rem 0.25rem 0.18rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid #1e293b;
+      background: #111827;
+      min-height: 0;
+    }
+    .profile-radar__title {
+      margin: 0 0 0.08rem;
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: rgba(148, 163, 184, 0.8);
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    .profile-radar__chart {
+      width: 100%;
+      max-width: 8.5rem;
+      margin: 0 auto;
+    }
+    .profile-radar__svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .profile-radar__grid {
+      fill: none;
+      stroke: rgba(148, 163, 184, 0.14);
+      stroke-width: 0.6;
+    }
+    .profile-radar__axis {
+      stroke: rgba(148, 163, 184, 0.2);
+      stroke-width: 0.5;
+    }
+    .profile-radar__fill {
+      fill: rgba(59, 166, 255, 0.2);
+      stroke: rgba(59, 166, 255, 0.55);
+      stroke-width: 1.1;
+    }
+    [data-territory="reform"] .profile-radar__fill {
+      fill: rgba(59, 166, 255, 0.2);
+      stroke: rgba(59, 166, 255, 0.55);
+    }
+    [data-territory="order"] .profile-radar__fill {
+      fill: rgba(255, 92, 92, 0.18);
+      stroke: rgba(255, 92, 92, 0.5);
+    }
+    [data-territory="alien"] .profile-radar__fill {
+      fill: rgba(182, 107, 255, 0.18);
+      stroke: rgba(182, 107, 255, 0.5);
+    }
+    [data-territory="centrist"] .profile-radar__fill {
+      fill: rgba(245, 197, 66, 0.14);
+      stroke: rgba(245, 197, 66, 0.45);
+    }
+    .profile-radar__label {
+      font-size: 7px;
+      font-weight: 700;
+    }
+    .profile-radar__label--reform { fill: #3ba6ff; }
+    .profile-radar__label--centrist { fill: #f5c542; }
+    .profile-radar__label--order { fill: #ff5c5c; }
+    .profile-radar__label--alien { fill: #b66bff; }
+    .profile-radar__hint {
+      margin: 0.08rem 0 0;
+      font-size: 0.48rem;
+      color: #475569;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    /* ── 우측 메인 ── */
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+    .profile-header__name {
+      margin: 0;
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: #e6edf3;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profile-header__stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.25rem;
+    }
+    .profile-stat-block {
+      display: flex;
+      align-items: center;
+      gap: 0.22rem;
+      min-height: 1.75rem;
+      padding: 0.22rem 0.32rem;
+      border-radius: var(--sc-r-sm);
+      border: 1px solid #1e293b;
+      background: #111827;
+    }
+    .profile-stat-block__icon {
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      line-height: 1;
+      opacity: 0.9;
+    }
+    .profile-stat-block__value {
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #e6edf3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profile-stat-block--lv .profile-stat-block__value { color: #3ba6ff; }
+    .profile-stat-block--rep .profile-stat-block__value { color: #f5c542; }
+    .profile-stat-block--citizen .profile-stat-block__value { color: #b66bff; }
+    .profile-header__follow {
+      margin: 0;
+      font-size: 0.56rem;
+      color: #64748b;
+      line-height: 1.2;
+    }
+
+    .profile-belief.avatar-territory-creed {
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0.35rem;
+      align-items: center;
+      min-height: 3.4rem;
+      padding: 0.32rem 0.42rem;
+      margin-bottom: 0;
+      flex-shrink: 0;
+      border-radius: var(--sc-r-md);
+      border: 1px solid #1e293b;
+      background: #111827;
+      text-align: left;
+    }
+    .profile-belief.avatar-territory-creed::before {
+      display: none;
+    }
+    .profile-belief__emblem-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding-right: 0.28rem;
+    }
+    .profile-belief .avatar-territory-creed__emblem {
+      width: 1.75rem;
+      height: 1.75rem;
+      filter: none;
+    }
+    .profile-belief__text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      justify-content: center;
+      min-width: 0;
+    }
+    .profile-belief .avatar-territory-creed__motto {
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: left;
+      text-shadow: none;
+      max-height: none;
+    }
+    .profile-belief .avatar-territory-creed__sub {
+      font-size: 0.56rem;
+      text-align: left;
+      opacity: 0.72;
+    }
+    [data-territory="reform"] .profile-belief {
+      border-color: rgba(59, 166, 255, 0.22);
+    }
+    [data-territory="order"] .profile-belief {
+      border-color: rgba(255, 92, 92, 0.22);
+    }
+    [data-territory="alien"] .profile-belief {
+      border-color: rgba(182, 107, 255, 0.22);
+    }
+    [data-territory="centrist"] .profile-belief {
+      border-color: rgba(245, 197, 66, 0.2);
+    }
+
+    .profile-belief ~ .profile-xp {
+      margin-top: 0;
+    }
+
+    /* 경험치 — 신념 카드 바로 아래 */
+    .profile-xp {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      margin-top: 0;
+      padding-top: 0;
+      flex-shrink: 0;
+    }
+    .profile-xp__label {
+      margin: 0;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: rgba(148, 163, 184, 0.85);
+    }
+    .profile-xp__legend-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.35rem;
+      font-size: 0.68rem;
+      color: #94a3b8;
+    }
+    .profile-xp__legend-right {
+      font-size: 0.62rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    .profile-xp .avatar-xpbar {
+      height: 11px;
+      border-radius: 6px;
+    }
+    .profile-xp .avatar-xpbar__fill {
+      border-radius: 5px;
+    }
+
+    /* ── 하단 3열 요약 ── */
+    .profile-summaries {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.32rem;
+      padding-top: 0.28rem;
+      border-top: 1px solid #1e293b;
+      flex-shrink: 0;
+    }
+    .profile-summary {
+      margin: 0;
+      padding: 0.28rem 0.32rem 0.24rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid #1e293b;
+      background: #111827;
+      min-width: 0;
+    }
+    .profile-summary__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.22rem;
+      margin-bottom: 0.16rem;
+    }
+    .profile-summary__title {
+      margin: 0;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #e6edf3;
+    }
+    .profile-summary__more {
+      font-size: 0.52rem;
+      color: #475569;
+    }
+    .profile-summary__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .profile-summary__list li {
+      display: flex;
+      align-items: center;
+      gap: 0.22rem;
+      font-size: 0.58rem;
+      color: #94a3b8;
+      line-height: 1.25;
+    }
+    .profile-summary__icon {
+      flex-shrink: 0;
+      width: 0.82rem;
+      text-align: center;
+    }
+    .profile-summary__text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .profile-summary__meta {
+      flex-shrink: 0;
+      font-size: 0.52rem;
+      color: #64748b;
+    }
+    .profile-summary__text--dim { color: #64748b; }
+    .profile-summary-activity .profile-summary__head .sc-follow-notify-wrap--profile {
+      margin-left: 0.25rem;
+    }
+
+    .avatar-tbar-compatibility {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* 반응형 — 설계도 브레이크포인트 */
+    @media (max-width: 767px) {
+      :root { --avatar-panel-width: min(100%, calc(100vw - 0.75rem)); }
+      .profile-main { grid-template-columns: 1fr; }
+      .profile-header__stats { grid-template-columns: 1fr; }
+      .profile-summaries { grid-template-columns: 1fr; }
+      .profile-radar__chart { max-width: 8.5rem; }
+    }
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .profile-summaries {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .profile-summary-territory {
+        grid-column: 1 / -1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -8165,7 +8691,7 @@
               <svg
                 id="territory-hit-zones"
                 class="territory-hit-zones-svg"
-                viewBox="0 0 100 100"
+                viewBox="0 0 1600 900"
                 preserveAspectRatio="none"
                 width="100%"
                 height="100%"
@@ -8703,149 +9229,150 @@
         <h2 class="avatar-dock__panel-title">플레이어 정보</h2>
       </header>
 
-      <!-- ── 패널 본문: 2열 (좌: 아바타/장식 | 우: 정보/성장/활동) ── -->
-      <div class="avatar-panel-body">
+      <!-- ── 프로필 레이아웃 (설계도: 상단 2열 + 하단 3카드) ── -->
+      <div class="profile-layout">
 
-        <!-- ◀ 왼쪽: 플레이어 카드 + 명예 장식 -->
-        <!-- data-territory: JS에서 소속 영토 ID를 설정하면 향후 영토별 테마 적용 가능 -->
-        <!-- ◀ 왼쪽: 캐릭터 카드만 (장식 정보는 패널 하단으로 분리) -->
-        <div class="avatar-panel-left" id="avatar-player-card-wrap" data-territory="centrist">
+        <div class="profile-main">
 
-          <!-- 플레이어 카드: 영토 → 아바타 → 타입/업로드만 담당 -->
-          <div class="avatar-player-card">
+          <!-- ◀ 사이드바: 아바타 + 성향 레이더 -->
+          <aside class="profile-sidebar" id="avatar-player-card-wrap" data-territory="centrist">
 
-            <!-- 카드 상단: 소속 영토 -->
-            <div class="avatar-player-card__territory-bar" id="avatar-card-territory-bar">
-              <span class="avatar-player-card__territory-icon" id="avatar-card-territory-icon">🏛</span>
-              <span class="avatar-player-card__territory-name" id="avatar-card-territory-name">중앙광장</span>
+            <div class="profile-avatar sc-panel">
+              <div class="profile-avatar__slot">
+                <img id="avatar-profile-img" alt="아바타" width="200" height="200" hidden />
+                <div id="avatar-profile-placeholder" class="profile-avatar__ph">
+                  <svg viewBox="0 0 40 56" fill="none" aria-hidden="true">
+                    <ellipse cx="20" cy="15" rx="8" ry="9" stroke="currentColor" stroke-width="1.4" opacity="0.45"/>
+                    <path d="M4 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.45"/>
+                  </svg>
+                  <span class="profile-avatar__ph-label">AVATAR</span>
+                </div>
+              </div>
+              <label class="profile-avatar__change" title="아바타 이미지 변경">
+                아바타 변경
+                <input type="file" id="avatar-profile-input" accept="image/*" hidden />
+              </label>
+              <button type="button" id="avatar-profile-clear" class="avatar-dock__sr-only" hidden title="기본 아바타로 초기화">↺</button>
+              <span class="avatar-dock__sr-only" id="avatar-card-type-badge">시민형 기본</span>
+              <span class="avatar-dock__sr-only" id="avatar-card-territory-name">중앙광장</span>
             </div>
 
-            <!-- 아바타 슬롯 (오라 → 프레임 → 이미지) -->
-            <div class="avatar-player-card__slot-wrap">
-              <div class="avatar-player-card__aura" data-aura="none" aria-hidden="true"></div>
-              <div class="avatar-player-card__frame-ring" data-frame="default" aria-hidden="true"></div>
-              <figure class="avatar-slot-box" aria-label="아바타 슬롯" role="img">
-                <div class="avatar-slot-box__frame">
-                  <img id="avatar-profile-img" alt="아바타" width="200" height="200" hidden />
-                  <div id="avatar-profile-placeholder" class="avatar-slot-box__empty">
-                    <!-- 향후 영토별 기본 아바타 SVG로 교체 예정 -->
-                    <svg viewBox="0 0 40 56" fill="none" aria-hidden="true">
-                      <ellipse cx="20" cy="15" rx="8" ry="9" stroke="currentColor" stroke-width="1.4" opacity="0.45"/>
-                      <path d="M4 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.45"/>
-                    </svg>
-                    <span class="avatar-slot-box__label">AVATAR</span>
+            <section class="profile-radar" aria-label="성향 지도">
+              <h3 class="profile-radar__title">성향 지도</h3>
+              <div class="profile-radar__chart">
+                <svg id="avatar-tendency-radar-chart" class="profile-radar__svg" viewBox="0 0 200 200" role="img" aria-label="성향 지도">
+                  <polygon class="profile-radar__grid" points="100,32 168,100 100,168 32,100" />
+                  <polygon class="profile-radar__grid" points="100,52 148,100 100,148 52,100" opacity="0.7" />
+                  <polygon class="profile-radar__grid" points="100,72 128,100 100,128 72,100" opacity="0.5" />
+                  <line class="profile-radar__axis" x1="100" y1="32" x2="100" y2="168" />
+                  <line class="profile-radar__axis" x1="32" y1="100" x2="168" y2="100" />
+                  <polygon id="avatar-tendency-radar-fill" class="profile-radar__fill" points="100,82 118,100 100,118 82,100" />
+                  <text class="profile-radar__label profile-radar__label--alien" x="100" y="24" text-anchor="middle">외계</text>
+                  <text class="profile-radar__label profile-radar__label--order" x="176" y="103" text-anchor="start">수호</text>
+                  <text class="profile-radar__label profile-radar__label--centrist" x="100" y="182" text-anchor="middle">중앙</text>
+                  <text class="profile-radar__label profile-radar__label--reform" x="24" y="103" text-anchor="end">개척</text>
+                </svg>
+              </div>
+              <p class="profile-radar__hint muted">상세 수치는 차트에 마우스를 올리면 표시됩니다.</p>
+            </section>
+
+          </aside><!-- /.profile-sidebar -->
+
+          <!-- ▶ 메인: 헤더 + 신념 + 경험치 -->
+          <div class="profile-content">
+
+            <header class="profile-header">
+              <h3 class="profile-header__name" id="avatar-meta-userid">—</h3>
+              <div class="profile-header__stats">
+                <div class="profile-stat-block profile-stat-block--lv">
+                  <span class="profile-stat-block__icon" aria-hidden="true">★</span>
+                  <span class="profile-stat-block__value" id="avatar-meta-level">Lv. 1</span>
+                </div>
+                <div class="profile-stat-block profile-stat-block--rep">
+                  <span class="profile-stat-block__icon" aria-hidden="true">👑</span>
+                  <span class="profile-stat-block__value" id="avatar-meta-rank">명성 : 참여자</span>
+                </div>
+                <div class="profile-stat-block profile-stat-block--citizen">
+                  <span class="profile-stat-block__icon" aria-hidden="true">◆</span>
+                  <span class="profile-stat-block__value" id="avatar-meta-citizen">시민</span>
+                </div>
+              </div>
+              <div class="avatar-territory-badge avatar-dock__sr-only" id="avatar-territory-badge" data-territory="centrist" aria-hidden="true">
+                <span class="avatar-territory-badge__icon" aria-hidden="true"></span>
+                <span id="avatar-meta-territory">—</span>
+                <span class="avatar-territory-badge__suffix">주민</span>
+              </div>
+              <p class="profile-header__follow" id="avatar-dock-follow-summary">
+                팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명
+                · 팔로우 <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
+              </p>
+              <span id="avatar-meta-summary" class="avatar-dock__sr-only" aria-hidden="true">Lv. 1 · 중앙광장 주민</span>
+              <span id="avatar-meta-tendency" class="avatar-dock__sr-only" aria-hidden="true">—</span>
+            </header>
+
+            <div class="profile-belief avatar-territory-creed" id="avatar-territory-creed" data-territory="centrist">
+              <div class="profile-belief__emblem-col">
+                <span class="avatar-territory-creed__emblem" aria-hidden="true"></span>
+              </div>
+              <div class="profile-belief__text-col">
+                <div class="avatar-territory-creed__motto" id="avatar-creed-motto"></div>
+                <div class="avatar-territory-creed__sub" id="avatar-creed-sub"></div>
+              </div>
+            </div>
+
+            <div class="avatar-tbar-compatibility" aria-hidden="true">
+              <div class="avatar-tbar-row">
+                <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향">
+                  <img id="avatar-tbar-emblem-human" class="avatar-tbar-emblem" src="assets/territory-icons/centrist.png" alt="" width="18" height="18" decoding="async" />
+                </span>
+                <div class="avatar-tbar-row__bar">
+                  <div id="avatar-tbar-track" class="avatar-tbar" role="img" aria-label="사람 성향 스펙트럼 막대">
+                    <div id="avatar-tbar-none" class="avatar-tbar__none"></div>
+                    <div id="avatar-tbar-split" class="avatar-tbar__split">
+                      <div id="avatar-tbar-r" class="avatar-tbar__seg avatar-tbar__seg--r" style="width: 0%"></div>
+                      <div id="avatar-tbar-c" class="avatar-tbar__seg avatar-tbar__seg--c" style="width: 0%"></div>
+                      <div id="avatar-tbar-l" class="avatar-tbar__seg avatar-tbar__seg--l" style="width: 0%"></div>
+                    </div>
                   </div>
                 </div>
-              </figure>
-            </div>
-
-            <!-- 카드 하단: 아바타 타입 + 업로드/초기화 -->
-            <div class="avatar-player-card__footer">
-              <span class="avatar-player-card__type-badge" id="avatar-card-type-badge">시민형 기본</span>
-              <div class="avatar-photo-tools avatar-photo-tools--footer">
-                <label class="avatar-upload-sm" title="아바타 이미지 변경">
-                  ↑ 변경
-                  <input type="file" id="avatar-profile-input" accept="image/*" hidden />
-                </label>
-                <button type="button" id="avatar-profile-clear" class="avatar-upload-sm avatar-upload-sm--ghost" hidden title="기본 아바타로 초기화">↺</button>
               </div>
-            </div>
-
-          </div><!-- /.avatar-player-card -->
-
-        </div><!-- /.avatar-panel-left -->
-
-        <!-- ▶ 오른쪽: 플레이어 신원 + 성장 + 업적 + 활동 -->
-        <div class="avatar-panel-right">
-
-          <!-- 플레이어 신원 -->
-          <div class="avatar-player-info">
-            <!-- 닉네임 -->
-            <p class="avatar-player-name" id="avatar-meta-userid">—</p>
-
-            <!-- ① 소속 영토 뱃지 (핵심 정보) -->
-            <!-- data-territory: JS에서 영토 ID를 설정하면 색상 자동 변환 -->
-            <div class="avatar-territory-badge" id="avatar-territory-badge" data-territory="centrist" aria-label="소속 영토">
-              <span class="avatar-territory-badge__icon" aria-hidden="true">🏛</span>
-              <span id="avatar-meta-territory">—</span>
-              <span class="avatar-territory-badge__suffix">주민</span>
-            </div>
-
-            <!-- ② Lv + 명성 + 팔로워 (보조 정보) -->
-            <div class="avatar-player-info-sub">
-              <span class="avatar-player-lv" id="avatar-meta-level">Lv. 1</span>
-              <span class="avatar-player-info-sep" aria-hidden="true">·</span>
-              <span class="avatar-player-rank" id="avatar-meta-rank">명성 : 참여자</span>
-            </div>
-            <p class="avatar-player-follow" id="avatar-dock-follow-summary">
-              팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명
-              · 팔로우 <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
-            </p>
-
-            <!-- SR-only: JS가 summary 전체 문자열 참조용 (기능 유지) -->
-            <span id="avatar-meta-summary" class="avatar-dock__sr-only" aria-hidden="true">Lv. 1 · 중앙광장 주민</span>
-          </div>
-
-          <!-- 영토 신념 HUD ─ JS가 현재 유저 영토에 맞는 신념 1개만 렌더링 -->
-          <div class="avatar-territory-creed" id="avatar-territory-creed" aria-hidden="true">
-            <div class="avatar-territory-creed__motto" id="avatar-creed-motto"></div>
-            <div class="avatar-territory-creed__sub"   id="avatar-creed-sub"></div>
-          </div>
-
-          <!-- 성향 바 -->
-          <section class="avatar-dock__stat" aria-label="성향">
-            <h3 class="avatar-dock__stat-label">성향</h3>
-            <div class="avatar-dock__stat-body">
-              <span class="avatar-dock__sr-only" id="avatar-meta-tendency">—</span>
-              <div class="avatar-tbar-row">
-            <span class="avatar-tbar-icon avatar-tbar-icon--human" title="사람 성향">
-              <img id="avatar-tbar-emblem-human" class="avatar-tbar-emblem" src="assets/emblems/square-emblem-32.png" alt="" width="18" height="18" decoding="async" />
-            </span>
-            <div class="avatar-tbar-row__bar">
-              <div id="avatar-tbar-track" class="avatar-tbar" role="img" aria-label="사람 성향 스펙트럼 막대">
-                <div id="avatar-tbar-none" class="avatar-tbar__none"></div>
-                <div id="avatar-tbar-split" class="avatar-tbar__split">
-                  <div id="avatar-tbar-r" class="avatar-tbar__seg avatar-tbar__seg--r" style="width: 0%"></div>
-                  <div id="avatar-tbar-c" class="avatar-tbar__seg avatar-tbar__seg--c" style="width: 0%"></div>
-                  <div id="avatar-tbar-l" class="avatar-tbar__seg avatar-tbar__seg--l" style="width: 0%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
               <div id="avatar-tbar-legend-human" class="avatar-tbar__legend"></div>
               <p id="avatar-exile-status" class="avatar-exile-status muted" hidden></p>
             </div>
-          </section>
 
-          <!-- 경험치 바 -->
-          <section class="avatar-dock__stat" aria-label="경험치">
-            <h3 class="avatar-dock__stat-label">경험치</h3>
-            <div class="avatar-dock__stat-body">
+            <section class="profile-xp" aria-label="경험치">
+              <h4 class="profile-xp__label">경험치</h4>
               <div id="avatar-xpbar-track" class="avatar-xpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="현재 레벨 경험치 진행">
                 <div id="avatar-xpbar-fill" class="avatar-xpbar__fill" style="width: 0%"></div>
               </div>
-              <div id="avatar-xpbar-legend" class="avatar-xpbar__legend">0 / 80 XP (0%)</div>
-            </div>
+              <div class="profile-xp__legend-row">
+                <span id="avatar-xpbar-legend" class="profile-xp__legend-left">0 / 80 XP (0%)</span>
+                <span class="profile-xp__legend-right" id="avatar-xpbar-remain">다음 레벨까지 — XP</span>
+              </div>
+            </section>
+
+          </div><!-- /.profile-content -->
+
+        </div><!-- /.profile-main -->
+
+        <!-- 하단 3열 요약 -->
+        <div class="profile-summaries">
+
+          <section class="profile-summary profile-summary-achievements sc-panel" aria-label="대표 업적">
+            <header class="profile-summary__head">
+              <h3 class="profile-summary__title">대표 업적</h3>
+              <span class="profile-summary__more muted">더보기 ▸</span>
+            </header>
+            <ul class="profile-summary__list">
+              <li><span class="profile-summary__icon">🏆</span><span class="profile-summary__text">개척의 길</span><span class="profile-summary__meta">2025.12</span></li>
+              <li><span class="profile-summary__icon">💬</span><span class="profile-summary__text">열정 토론가</span><span class="profile-summary__meta">2025.11</span></li>
+              <li><span class="profile-summary__icon">🎖</span><span class="profile-summary__text profile-summary__text--dim">시즌 MVP</span><span class="profile-summary__meta">—</span></li>
+            </ul>
           </section>
 
-          <div class="avatar-dock__divider" role="separator" aria-hidden="true"></div>
-
-          <!-- 대표 업적 -->
-          <section class="avatar-dock__stat avatar-dock__stat--compact" aria-label="대표 업적">
-            <h3 class="avatar-dock__stat-label">대표 업적</h3>
-            <div class="avatar-achievements">
-              <span class="avatar-achievement-badge">🏆 전설이 되었다</span>
-              <span class="avatar-achievement-badge">👾 외계 인기인</span>
-              <span class="avatar-achievement-badge avatar-achievement-badge--dim">🎖 시즌 MVP</span>
-            </div>
-          </section>
-
-          <div class="avatar-dock__divider" role="separator" aria-hidden="true"></div>
-
-          <!-- 활동 (2×2 메뉴 + 알림 벨 + 보조 스탯) -->
-          <section class="avatar-dock__stat" aria-label="활동">
-            <div class="avatar-activity-head">
-              <h3 class="avatar-dock__stat-label">활동</h3>
+          <section class="profile-summary profile-summary-activity sc-panel" aria-label="활동 요약">
+            <header class="profile-summary__head">
+              <h3 class="profile-summary__title">활동 요약</h3>
               <div class="sc-follow-notify-wrap sc-follow-notify-wrap--profile">
                 <button
                   type="button"
@@ -8875,32 +9402,33 @@
                   <ul id="sc-follow-notify-list" class="sc-follow-notify-list"></ul>
                 </div>
               </div>
-            </div>
-            <div class="avatar-menu-grid">
-              <button type="button" class="avatar-menu-item" disabled title="준비 중">
-                <span class="avatar-menu-item__count">132</span>
-                <span class="avatar-menu-item__label">내가 쓴 글</span>
-              </button>
-              <button type="button" class="avatar-menu-item" disabled title="준비 중">
-                <span class="avatar-menu-item__count">1,248</span>
-                <span class="avatar-menu-item__label">내 댓글</span>
-              </button>
-              <button type="button" class="avatar-menu-item" disabled title="준비 중">
-                <span class="avatar-menu-item__count">24</span>
-                <span class="avatar-menu-item__label">북마크</span>
-              </button>
-              <button type="button" class="avatar-menu-item" disabled title="준비 중">
-                <span class="avatar-menu-item__count">58</span>
-                <span class="avatar-menu-item__label">팔로우</span>
-              </button>
-            </div>
-            <p class="avatar-activity-footer">
-              받은 공감 <strong>847</strong> · 받은 추천 <strong>329</strong>
-            </p>
+            </header>
+            <ul class="profile-summary__list">
+              <li><span class="profile-summary__icon">📝</span><span class="profile-summary__text">작성 글</span><span class="profile-summary__meta">132</span></li>
+              <li><span class="profile-summary__icon">💬</span><span class="profile-summary__text">댓글</span><span class="profile-summary__meta">1,087</span></li>
+              <li><span class="profile-summary__icon">👍</span><span class="profile-summary__text">받은 공감</span><span class="profile-summary__meta">2,458</span></li>
+              <li><span class="profile-summary__icon">👥</span><span class="profile-summary__text">팔로워</span><span class="profile-summary__meta">128</span></li>
+              <li><span class="profile-summary__icon">✨</span><span class="profile-summary__text">전달한 아우라</span><span class="profile-summary__meta">54</span></li>
+            </ul>
           </section>
 
-        </div><!-- /.avatar-panel-right -->
-      </div><!-- /.avatar-panel-body -->
+          <section class="profile-summary profile-summary-territory sc-panel" aria-label="영토 기록">
+            <header class="profile-summary__head">
+              <h3 class="profile-summary__title">영토 기록</h3>
+              <span class="profile-summary__more muted">더보기 ▸</span>
+            </header>
+            <ul class="profile-summary__list">
+              <li><span class="profile-summary__icon">🏠</span><span class="profile-summary__text">최초 소속</span><span class="profile-summary__meta" id="avatar-territory-first">개척영토</span></li>
+              <li><span class="profile-summary__icon">📍</span><span class="profile-summary__text">현재 소속</span><span class="profile-summary__meta" id="avatar-territory-current">개척영토</span></li>
+              <li><span class="profile-summary__icon">↔</span><span class="profile-summary__text">이동 횟수</span><span class="profile-summary__meta">1</span></li>
+              <li><span class="profile-summary__icon">📊</span><span class="profile-summary__text">영향력 점수</span><span class="profile-summary__meta">2,150</span></li>
+              <li><span class="profile-summary__icon">🛡</span><span class="profile-summary__text">시민 등급</span><span class="profile-summary__meta" id="avatar-territory-grade">엘리트 시민</span></li>
+            </ul>
+          </section>
+
+        </div><!-- /.profile-summaries -->
+
+      </div><!-- /.profile-layout -->
 
       <!-- ── 장식 상태 패널: 2열 아래, 전체 폭 가로형 HUD ── -->
       <!-- 시즌·영토전·업적 보상으로 교체 가능한 외형 장식 슬롯 -->
@@ -9796,10 +10324,11 @@
       var elAlienExileStatus = document.getElementById('avatar-exile-status');
       var elTbarEmblemHuman = document.getElementById('avatar-tbar-emblem-human');
       var SC_EMBLEMS = {
-        order: 'assets/emblems/order-emblem-32.png',
-        reform: 'assets/emblems/reform-emblem-32.png',
-        square: 'assets/emblems/square-emblem-32.png',
-        alien: 'assets/emblems/alien-emblem-32.png',
+        order:    'assets/territory-icons/order.png',
+        reform:   'assets/territory-icons/reform.png',
+        square:   'assets/territory-icons/centrist.png',
+        centrist: 'assets/territory-icons/centrist.png',
+        alien:    'assets/territory-icons/alien.png',
       };
       var SC_EMBLEM_TITLES = {
         order: '수호영토 · 수호 성향',
@@ -9886,6 +10415,7 @@
         if (elTbarTrack) {
           elTbarTrack.setAttribute('aria-label', '정치 성향 없음 (미분류)');
         }
+        updateTendencyRadar(null);
       }
 
       function setTendencyBar(pctIn) {
@@ -9934,6 +10464,7 @@
         if (elTbarLegend) elTbarLegend.textContent = legendText;
         if (elTbarTrack) elTbarTrack.setAttribute('aria-label', ariaText);
         syncHumanTendencyEmblem(p);
+        updateTendencyRadar(p);
       }
 
       function hasMeasuredTendency(pct) {
@@ -9970,6 +10501,77 @@
 
       var elCreedMotto = document.getElementById('avatar-creed-motto');
       var elCreedSub   = document.getElementById('avatar-creed-sub');
+      var elRadarFill  = document.getElementById('avatar-tendency-radar-fill');
+      var elRadarChart = document.getElementById('avatar-tendency-radar-chart');
+      var elCitizen    = document.getElementById('avatar-meta-citizen');
+      var elTerrFirst  = document.getElementById('avatar-territory-first');
+      var elTerrCurrent = document.getElementById('avatar-territory-current');
+
+      function radarPoint(angle, pct, cx, cy, maxR) {
+        var r = maxR * Math.max(0, Math.min(100, pct)) / 100;
+        return {
+          x: cx + r * Math.cos(angle),
+          y: cy + r * Math.sin(angle),
+        };
+      }
+
+      function updateTendencyRadar(pctIn, territoryIdOpt) {
+        if (!elRadarFill) return;
+        var cx = 100;
+        var cy = 100;
+        var maxR = 68;
+        var prog;
+        var cent;
+        var cons;
+        var alien;
+        var has = hasMeasuredTendency(pctIn);
+        if (!has) {
+          prog = cent = cons = alien = 18;
+        } else {
+          var n = normalizeTendency3(pctIn.conservative, pctIn.centrist, pctIn.progressive);
+          prog = n.l;
+          cent = n.c;
+          cons = n.r;
+          alien = 14;
+          var tid = territoryIdOpt || (window.__scPlayer && window.__scPlayer.territoryId) || 'COMMON';
+          var uid = (window.__scPlayer && window.__scPlayer.userId) || 'guest';
+          if (
+            tid === 'KANTAPBIYA' ||
+            (typeof window.__scIsActiveAlienExile === 'function' && window.__scIsActiveAlienExile(uid))
+          ) {
+            alien = Math.max(28, Math.min(85, (prog + cons) * 0.35 + 20));
+          }
+        }
+        var pts = [
+          radarPoint(-Math.PI / 2, alien, cx, cy, maxR),
+          radarPoint(0, cons, cx, cy, maxR),
+          radarPoint(Math.PI / 2, cent, cx, cy, maxR),
+          radarPoint(Math.PI, prog, cx, cy, maxR),
+        ];
+        elRadarFill.setAttribute(
+          'points',
+          pts
+            .map(function (p) {
+              return p.x.toFixed(1) + ',' + p.y.toFixed(1);
+            })
+            .join(' '),
+        );
+        var tip = has
+          ? '개척 ' +
+            Math.round(prog) +
+            '% · 중앙 ' +
+            Math.round(cent) +
+            '% · 수호 ' +
+            Math.round(cons) +
+            '% · 외계 ' +
+            Math.round(alien) +
+            '%'
+          : '아직 분류 없음';
+        elRadarFill.setAttribute('title', tip);
+        if (elRadarChart) {
+          elRadarChart.setAttribute('aria-label', '성향 지도: ' + tip);
+        }
+      }
 
       function renderTerritoryCreed(cssId) {
         var tb = window.TERRITORY_BELIEFS || {};
@@ -9978,6 +10580,11 @@
         if (elCreedMotto) elCreedMotto.textContent = '\u201c' + (belief.belief || '') + '\u201d';
         var subLabel = belief.displayName ? '\u2014 ' + belief.displayName + '\uC758 \uC2E0\uB150 \u2014' : '';
         if (elCreedSub) elCreedSub.textContent = subLabel;
+        if (elCitizen) elCitizen.textContent = belief.subtitle || '시민';
+        if (elTerrFirst) elTerrFirst.textContent = belief.displayName || '—';
+        if (elTerrCurrent) elTerrCurrent.textContent = belief.displayName || '—';
+        var elTerrGrade = document.getElementById('avatar-territory-grade');
+        if (elTerrGrade) elTerrGrade.textContent = belief.subtitle || '시민';
         /* data-territory 동기화 — 색상 테마 자동 전환 */
         var panel = document.querySelector('.avatar-dock__panel');
         if (panel) panel.dataset.territory = cssId;
@@ -9985,6 +10592,10 @@
         if (badge) badge.dataset.territory = cssId;
         var cardWrap = document.getElementById('avatar-player-card-wrap');
         if (cardWrap) cardWrap.dataset.territory = cssId;
+        var creed = document.getElementById('avatar-territory-creed');
+        if (creed) creed.dataset.territory = cssId;
+        var cardName = document.getElementById('avatar-card-territory-name');
+        if (cardName && belief.displayName) cardName.textContent = belief.displayName;
       }
       /* ────────────────────────────────────────────────────────────────── */
 
@@ -10009,6 +10620,7 @@
 
         /* 신념 HUD: 현재 영토에 맞는 신념 1개만 렌더링 */
         renderTerritoryCreed(TERRITORY_CSS_MAP[tid] || 'centrist');
+        updateTendencyRadar(hasPct ? tendencyPct : null, tid);
 
         var n = hasPct
           ? normalizeTendency3(
@@ -20113,7 +20725,7 @@
         try {
           delete window.__scTerritoryMapNat;
         } catch (_) {}
-        layer.style.backgroundImage = "url('/assets/territory-zones-unified.png')";
+        layer.style.backgroundImage = "url('/assets/territory-zones-tribal-s1.png')";
 
         if (typeof window.__scSyncTerritoryHitZonesFit === 'function') window.__scSyncTerritoryHitZonesFit();
       }
@@ -20265,7 +20877,7 @@
         });
       };
 
-      var SC_TERRITORY_MAP_URL = '/assets/territory-zones-unified.png';
+      var SC_TERRITORY_MAP_URL = '/assets/territory-zones-tribal-s1.png';
 
       function scEnsureTerritoryMapNatural(cb) {
         if (window.__scTerritoryMapNat && window.__scTerritoryMapNat.w > 0) {

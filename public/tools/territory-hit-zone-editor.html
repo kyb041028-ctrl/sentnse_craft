@@ -52,11 +52,11 @@
       background-image: none;
     }
     #map-stage.layout-editor--show-island-bg {
-      background-image: url("/assets/territory-zones-unified.png");
+      background-image: url("/assets/territory-zones-tribal-s1.png");
     }
     @media (min-width: 640px) { #frame { min-height: min(78vh, 44rem); } }
     @media (min-width: 960px) { #frame { min-height: min(84vh, 58rem); } }
-    /* 메인과 동일: contain으로 실제 그려지는 맵 사각형 위에만 SVG(좌표 0~100 = 이 박스 기준) */
+    /* 메인과 동일: contain으로 실제 그려지는 맵 사각형 위에만 SVG(viewBox 0 0 1600 900 = 이 박스 기준) */
     .hit-fit-wrap {
       position: absolute; z-index: 2; pointer-events: none;
       left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box;
@@ -85,13 +85,18 @@
       pointer-events: none; fill: none; stroke: rgba(57, 255, 20, 0.82); stroke-width: 0.32;
       stroke-dasharray: 0.9 0.55; stroke-linecap: round; vector-effect: non-scaling-stroke;
     }
+    #overlay-svg .pt-handle-g,
+    #overlay-svg .pt-handle-hit,
     #overlay-svg .pt-handle {
-      pointer-events: auto; cursor: grab; fill: rgba(15, 23, 42, 0.92); stroke: #38bdf8; stroke-width: 0.22;
+      pointer-events: none;
+    }
+    #overlay-svg .pt-handle {
+      fill: rgba(15, 23, 42, 0.92); stroke: #38bdf8; stroke-width: 0.022;
     }
     #overlay-svg .pt-handle--start {
-      stroke: rgba(57, 255, 20, 0.95); stroke-width: 0.28;
+      stroke: rgba(57, 255, 20, 0.95); stroke-width: 0.028;
     }
-    #overlay-svg .pt-handle:active { cursor: grabbing; }
+    #frame.is-dragging-point { cursor: grabbing; }
     code { font-size: 0.82em; background: rgba(0,0,0,0.35); padding: 0.1em 0.35em; border-radius: 4px; }
     a { color: var(--accent); }
     .steps {
@@ -113,7 +118,7 @@
   <div class="steps" role="region" aria-label="사용 순서">
     <strong>마우스로 경계 그리기</strong>
     <ol>
-      <li>위에서 <strong>편집 구역</strong>(개혁·질서·중앙광장·외계행성)을 고릅니다.</li>
+      <li>위에서 <strong>편집 구역</strong>(개척영토·수호영토·중앙광장·외계행성)을 고릅니다.</li>
       <li>아래 맵에서 <strong>클릭할 때마다 꼭짓점</strong>이 생기고, 이전 점과 <strong>실선</strong>으로 이어집니다.</li>
       <li>점이 세 개 이상이면 <strong>녹색 점선</strong>으로 닫힘 미리보기가 보입니다. <strong>첫 점(큰 초록 테두리)</strong> 근처를 다시 클릭하면 닫힌 폴리곤으로 확정됩니다.</li>
       <li>꼭짓점은 <strong>드래그</strong>로 옮길 수 있고, <strong>마지막 점 취소</strong>로 되돌릴 수 있습니다.</li>
@@ -122,7 +127,7 @@
   </div>
   <p>
     <strong>저장:</strong> 아래 JSON을 <code>public/territories/territory-hit-zones.json</code> 에 덮어쓰세요.
-    좌표는 <strong>영토 단일 PNG</strong>(<code>territory-zones-unified.png</code>)가 contain으로 붙은 영역만 기준 <strong>0~100</strong> (검은 여백 제외) — 메인과 동일합니다.
+    좌표는 <strong>맵 이미지</strong>(<code>territory-zones-tribal-s1.png</code>)가 contain으로 붙은 영역 기준 <strong>viewBox 0 0 1600 900</strong> (letterbox 검은 여백 제외, 이미지 실렌더 영역 내부만) — 메인 SVG와 동일합니다.
   </p>
   <p>
     <strong>통합 게시판·외계행성</strong>의 위치·크기는 <code>territory-layout.json</code> +
@@ -133,7 +138,7 @@
   <div class="row" style="align-items: center">
     <label style="display: flex; align-items: center; gap: 0.45rem; cursor: pointer; margin: 0; color: var(--text); font-size: 0.88rem">
       <input type="checkbox" id="chkShowIslandBg" />
-      <span>배경 일러스트(단일 영토 PNG) 표시</span>
+      <span>배경 맵 이미지(territory-zones-tribal-s1.png) 표시</span>
     </label>
     <span id="zoomLabel">100%</span>
     <button type="button" class="secondary" id="btnZoomReset">확대 초기화</button>
@@ -144,8 +149,8 @@
     <div>
       <label for="selLayer">편집 구역</label>
       <select id="selLayer">
-        <option value="progressive">개혁 진영</option>
-        <option value="conservative">질서 진영</option>
+        <option value="progressive">개척영토</option>
+        <option value="conservative">수호영토</option>
         <option value="plaza">중앙광장</option>
         <option value="kantapbiya">외계행성</option>
       </select>
@@ -160,7 +165,7 @@
       <div id="zoom-layer">
         <div id="map-stage">
           <div id="hit-fit-wrap" class="hit-fit-wrap">
-            <svg id="overlay-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <svg id="overlay-svg" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
               <path id="pathFill" class="hit-preview" d="" />
               <path id="pathCloseHint" class="poly-close-hint" d="" />
               <path id="pathChain" class="poly-chain" d="" />
@@ -190,33 +195,37 @@
   <script>
 (function () {
   var KEYS = ['progressive', 'conservative', 'plaza', 'kantapbiya'];
-  var MAP_URL = '/assets/territory-zones-unified.png';
+  var MAP_URL = '/assets/territory-zones-tribal-s1.png';
+  /* 좌표계: viewBox 0 0 1600 900 (16:9, 이미지 contain 영역 기준)
+     x = 0~1600, y = 0~900. 메인 SVG와 동일한 viewBox 사용. */
+  var VB_W = 1600;
+  var VB_H = 900;
   var DEFAULT_POLYGONS = {
     kantapbiya: [
-      [37, 0],
-      [63, 0],
-      [63, 23],
-      [37, 23],
+      [592, 0],
+      [1008, 0],
+      [1008, 207],
+      [592, 207],
     ],
     progressive: [
       [0, 0],
-      [36, 0],
-      [36, 23],
-      [47, 53],
-      [0, 53],
+      [576, 0],
+      [576, 207],
+      [752, 477],
+      [0, 477],
     ],
     conservative: [
-      [64, 0],
-      [100, 0],
-      [100, 53],
-      [53, 53],
-      [64, 23],
+      [1024, 0],
+      [1600, 0],
+      [1600, 477],
+      [848, 477],
+      [1024, 207],
     ],
     plaza: [
-      [3, 46],
-      [97, 46],
-      [99, 100],
-      [1, 100],
+      [48, 414],
+      [1552, 414],
+      [1584, 900],
+      [16, 900],
     ],
   };
   var state = { progressive: [], conservative: [], plaza: [], kantapbiya: [] };
@@ -244,6 +253,13 @@
   var zoomLabel = document.getElementById('zoomLabel');
   var viewZoom = { scale: 1, panX: 0, panY: 0 };
   var panDrag = null;
+  var dragState = null;
+  var pressState = null;
+  /** 기존 점 잡기: viewBox 단위 반경 (드래그 시작 판정용, 클릭 차단 없음) */
+  var GRAB_R = 4;
+  var GRAB_R2 = GRAB_R * GRAB_R;
+  /** 화면 px — 이만큼 움직이면 드래그, 그 미만이면 새 점 추가 */
+  var DRAG_START_PX = 4;
 
   function clamp(v, a, b) {
     return Math.max(a, Math.min(b, v));
@@ -296,7 +312,11 @@
       hitFit.style.top = lastFit.topPct + '%';
       hitFit.style.width = lastFit.widthPct + '%';
       hitFit.style.height = lastFit.heightPct + '%';
-      paint();
+      if (dragState) {
+        syncHandlePositions(selLayer.value);
+      } else {
+        paint();
+      }
     });
   }
 
@@ -359,17 +379,30 @@
     applyIslandBgVisibility();
   }
 
-  /** 맵 이미지(contain 박스) 기준 0~100 — 확대·이동(transform) 역산 포함 */
-  function clientToNorm(clientX, clientY) {
+  /** 좌표 스냅: 0.01 단위 (viewBox 1600×900 기준 약 0.06% 정밀도) */
+  function roundCoord(v) {
+    return Math.round(Number(v) * 100) / 100;
+  }
+
+  /** 맵 이미지(contain 박스) 기준 viewBox 0 0 1600 900 — 확대·이동(transform) 역산 포함
+   *  letterbox 오프셋(leftPct/topPct)을 제거한 뒤 이미지 내부 비율로 변환.
+   *  snap=false 이면 드래그 중 원시 좌표(더 촘촘한 이동). */
+  function clientToNorm(clientX, clientY, snap) {
     var pt = framePointFromClient(clientX, clientY);
     if (!pt) return null;
     var fx = (pt.x / pt.fw) * 100;
     var fy = (pt.y / pt.fh) * 100;
     var wp = lastFit.widthPct > 0.01 ? lastFit.widthPct : 100;
     var hp = lastFit.heightPct > 0.01 ? lastFit.heightPct : 100;
-    var ix = ((fx - lastFit.leftPct) / wp) * 100;
-    var iy = ((fy - lastFit.topPct) / hp) * 100;
-    return [clamp(ix, 0, 100), clamp(iy, 0, 100)];
+    var rx = (fx - lastFit.leftPct) / wp;
+    var ry = (fy - lastFit.topPct) / hp;
+    var x = clamp(rx * VB_W, 0, VB_W);
+    var y = clamp(ry * VB_H, 0, VB_H);
+    if (snap !== false) {
+      x = roundCoord(x);
+      y = roundCoord(y);
+    }
+    return [x, y];
   }
 
   function polygonD(pts, close) {
@@ -398,8 +431,7 @@
     return 'poly-chain';
   }
 
-  function paint() {
-    var k = selLayer.value;
+  function updatePathsForLayer(k) {
     var pts = state[k] || [];
     pathFill.setAttribute('class', previewClass());
     pathChain.setAttribute('class', chainClass());
@@ -426,16 +458,44 @@
       pathCloseHint.setAttribute('d', '');
       pathCloseHint.setAttribute('hidden', 'hidden');
     }
+  }
+
+  function rebuildHandles(k) {
+    var pts = state[k] || [];
     while (handles.firstChild) handles.removeChild(handles.firstChild);
     for (var i = 0; i < pts.length; i++) {
-      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      c.setAttribute('class', i === 0 ? 'pt-handle pt-handle--start' : 'pt-handle');
-      c.setAttribute('data-i', String(i));
-      c.setAttribute('cx', String(pts[i][0]));
-      c.setAttribute('cy', String(pts[i][1]));
-      c.setAttribute('r', i === 0 ? '1.05' : '0.85');
-      handles.appendChild(c);
+      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'pt-handle-g');
+      g.setAttribute('data-i', String(i));
+
+      var vis = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      vis.setAttribute('class', i === 0 ? 'pt-handle pt-handle--start' : 'pt-handle');
+      vis.setAttribute('cx', String(pts[i][0]));
+      vis.setAttribute('cy', String(pts[i][1]));
+      vis.setAttribute('r', i === 0 ? '1.7' : '1.4');
+
+      g.appendChild(vis);
+      handles.appendChild(g);
     }
+  }
+
+  function syncHandlePositions(k) {
+    var pts = state[k] || [];
+    var groups = handles.querySelectorAll('.pt-handle-g');
+    for (var i = 0; i < pts.length; i++) {
+      if (!groups[i]) break;
+      var vis = groups[i].querySelector('.pt-handle');
+      if (!vis) continue;
+      vis.setAttribute('cx', String(pts[i][0]));
+      vis.setAttribute('cy', String(pts[i][1]));
+    }
+    updatePathsForLayer(k);
+  }
+
+  function paint() {
+    var k = selLayer.value;
+    updatePathsForLayer(k);
+    rebuildHandles(k);
   }
 
   function toJson() {
@@ -451,9 +511,9 @@
       }
     });
     return {
-      version: 1,
-      comment: 'territory-hit-zone-editor',
-      viewBox: '0 0 100 100',
+      version: 2,
+      comment: 'territory-hit-zone-editor — viewBox 0 0 1600 900 (16:9). x=0~1600, y=0~900. 이미지 contain 영역 기준, letterbox 제외.',
+      viewBox: '0 0 1600 900',
       zones: zones,
     };
   }
@@ -518,16 +578,29 @@
     return dx * dx + dy * dy;
   }
 
-  /** 첫 점 근처(뷰박스 약 3단위) 클릭 시 닫힘만 — 새 꼭짓점 추가 안 함 */
-  var SNAP_CLOSE_R2 = 3 * 3;
+  /** 첫 점 근처(이미지 약 3% 범위) 클릭 시 닫힘만 — 새 꼭짓점 추가 안 함
+   *  1600 좌표계 기준: 3% × 1600 = 48 → r²=2304 */
+  var SNAP_CLOSE_R2 = 48 * 48;
 
-  frame.addEventListener('click', function (ev) {
-    if (ev.button !== 0) return;
-    if (panDrag && panDrag.moved) return;
-    if (ev.target.closest && ev.target.closest('.pt-handle')) return;
+  function findNearestHandleNorm(nx, ny) {
+    var k = selLayer.value;
+    var pts = state[k] || [];
+    var best = -1;
+    var bestD2 = GRAB_R2;
+    for (var i = 0; i < pts.length; i++) {
+      var d2 = dist2(nx, ny, pts[i][0], pts[i][1]);
+      if (d2 <= bestD2) {
+        bestD2 = d2;
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  function tryAddPoint(clientX, clientY) {
     var k = selLayer.value;
     var pts = state[k];
-    var p = clientToNorm(ev.clientX, ev.clientY);
+    var p = clientToNorm(clientX, clientY, true);
     if (!p) return;
     if (pts.length >= 3 && dist2(p[0], p[1], pts[0][0], pts[0][1]) <= SNAP_CLOSE_R2) {
       paint();
@@ -537,36 +610,85 @@
     pts.push(p);
     paint();
     syncTextarea();
-  });
+  }
 
-  var dragIdx = -1;
-  svg.addEventListener('pointerdown', function (ev) {
-    var t = ev.target;
-    if (!t || !t.classList || !t.classList.contains('pt-handle')) return;
-    dragIdx = parseInt(t.getAttribute('data-i'), 10);
-    if (isNaN(dragIdx)) return;
-    ev.preventDefault();
-    try {
-      t.setPointerCapture(ev.pointerId);
-    } catch (_) {}
-  });
-  svg.addEventListener('pointermove', function (ev) {
-    if (dragIdx < 0) return;
-    var p = clientToNorm(ev.clientX, ev.clientY);
+  function onHandleDragMove(ev) {
+    if (!dragState) return;
+    var p = clientToNorm(ev.clientX, ev.clientY, false);
     if (!p) return;
+    dragState.moved = true;
     var k = selLayer.value;
-    if (state[k][dragIdx]) {
-      state[k][dragIdx][0] = p[0];
-      state[k][dragIdx][1] = p[1];
+    var idx = dragState.idx;
+    if (!state[k] || !state[k][idx]) return;
+    state[k][idx][0] = p[0];
+    state[k][idx][1] = p[1];
+    syncHandlePositions(k);
+  }
+
+  function endHandleDrag() {
+    if (!dragState) return;
+    if (dragState.moved) {
+      var k = selLayer.value;
+      var idx = dragState.idx;
+      if (state[k] && state[k][idx]) {
+        state[k][idx][0] = roundCoord(state[k][idx][0]);
+        state[k][idx][1] = roundCoord(state[k][idx][1]);
+        syncHandlePositions(k);
+        syncTextarea();
+      }
     }
-    paint();
-    syncTextarea();
-  });
-  svg.addEventListener('pointerup', function () {
-    dragIdx = -1;
-  });
-  svg.addEventListener('pointercancel', function () {
-    dragIdx = -1;
+    dragState = null;
+    frame.classList.remove('is-dragging-point');
+  }
+
+  function clearMapPointerSession() {
+    window.removeEventListener('pointermove', onMapPointerMove);
+    window.removeEventListener('pointerup', onMapPointerUp);
+    window.removeEventListener('pointercancel', onMapPointerUp);
+    pressState = null;
+  }
+
+  function onMapPointerMove(ev) {
+    if (dragState) {
+      onHandleDragMove(ev);
+      return;
+    }
+    if (!pressState) return;
+    var dx = ev.clientX - pressState.clientX;
+    var dy = ev.clientY - pressState.clientY;
+    if (dx * dx + dy * dy < DRAG_START_PX * DRAG_START_PX) return;
+    if (pressState.grabIdx < 0) return;
+    dragState = { idx: pressState.grabIdx, moved: false };
+    frame.classList.add('is-dragging-point');
+    onHandleDragMove(ev);
+  }
+
+  function onMapPointerUp(ev) {
+    if (dragState) {
+      endHandleDrag();
+      clearMapPointerSession();
+      return;
+    }
+    if (pressState && ev.button === 0 && !(panDrag && panDrag.moved)) {
+      tryAddPoint(pressState.clientX, pressState.clientY);
+    }
+    clearMapPointerSession();
+  }
+
+  frame.addEventListener('pointerdown', function (ev) {
+    if (ev.button !== 0) return;
+    if (panDrag) return;
+    var p = clientToNorm(ev.clientX, ev.clientY, false);
+    if (!p) return;
+    clearMapPointerSession();
+    pressState = {
+      clientX: ev.clientX,
+      clientY: ev.clientY,
+      grabIdx: findNearestHandleNorm(p[0], p[1]),
+    };
+    window.addEventListener('pointermove', onMapPointerMove);
+    window.addEventListener('pointerup', onMapPointerUp);
+    window.addEventListener('pointercancel', onMapPointerUp);
   });
 
   document.getElementById('btnUndo').addEventListener('click', function () {
@@ -585,7 +707,7 @@
     var k = selLayer.value;
     var pts = state[k];
     if (!pts || pts.length < 2) return;
-    var minX = 100, minY = 100, maxX = 0, maxY = 0;
+    var minX = VB_W, minY = VB_H, maxX = 0, maxY = 0;
     for (var i = 0; i < pts.length; i++) {
       minX = Math.min(minX, pts[i][0]);
       minY = Math.min(minY, pts[i][1]);

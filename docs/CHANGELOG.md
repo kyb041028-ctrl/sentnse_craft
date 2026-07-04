@@ -1,13 +1,47 @@
 ﻿# 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-02
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-04
 
 ---
 
 ## [미배포] — 현 작업 이후
 
-_현재 작업 이후 예정 작업은 TODO.md 참조_
+_다음 우선순위는 TODO.md 참조_
+
+---
+
+## 2026-07-04
+
+### ★ 오늘 작업 요약
+
+- 메인 영토맵을 신규 16:9 원시시대 버전으로 교체
+- 영토 명칭을 **개척영토 / 중앙광장 / 수호영토 / 외계행성**으로 통일
+- `territory-beliefs.js` 기반 공식 신념 시스템 적용
+- 영토 엠블럼 및 신념 이미지 교체
+- 메인맵 레이아웃 확대 및 화면 최적화
+- 프로필 UI를 기존 레이아웃에서 **Grid 기반 구조**로 재설계 시작
+
+### 메인맵 · 영토
+
+- tribal-s1 원시시대 16:9 지도 에셋 적용 (`territory-zones-tribal-s1.png`)
+- `territory-hit-zones.json` — viewBox `0 0 1600 900`, 4영역 좌표 재조정
+  (`progressive` / `conservative` / `plaza` / `kantapbiya`)
+- 메인맵 표시 영역 확대 및 HUD 레이아웃 화면 최적화
+
+### 신념 · 엠블럼
+
+- `public/territory-beliefs.js` — Single Source of Truth, `renderTerritoryCreed()` 연동
+- 영토별 엠블럼 PNG 교체 (`assets/territory-icons/`)
+- 프로필 신념 HUD: 엠블럼 + `belief` 문장 + `displayName`의 신념
+
+### 프로필 UI (Grid 재설계)
+
+- **상단** `profile-main`: 사이드바(아바타+4축 레이더) | 메인(헤더+신념+경험치)
+- **하단** `profile-summaries`: 대표 업적 · 활동 요약 · 영토 기록 3카드
+- 오른쪽 정치 성향 가로 게이지 제거 → 좌측 4축 성향 레이더로 통합
+- 패널 폭 48rem → 56rem, 반응형 브레이크포인트(767/1199px)
+- 뷰포트 높이 최적화: 패널 세로 스크롤 제거, 여백·신념 카드·레이더 축소, 하단 3카드 첫 화면 노출
 
 ---
 
