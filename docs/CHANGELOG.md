@@ -1,11 +1,85 @@
 ﻿# 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-04
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-05 (저녁)
 
 ---
 
 ## [미배포] — 현 작업 이후
+
+### ★ 2026-07-05 저녁 — 프로필 방향·에셋 v1 확정 (문서)
+
+**확정 방향**
+
+- 프로필 스킨(시안 PNG)은 **아직 Cursor 미적용** — 별도 작업으로 보류
+- **영토 시민 카드** 게임형 HUD 유지 · **유저가 주인공**, 영토는 배경
+- 좌 **전신 아바타** · 우 닉네임/Lv/명성/XP/보조배너/레이더
+- 신념 배너는 보조 — 유저보다 주인공처럼 보이면 안 됨
+- 성향 **레이더만** · 가로 게이지·퍼센트 **사용 안 함**
+- **가입일 제외** · **소속 중복 금지**
+
+**항목 명칭 정리**
+
+- 활동 요약: 작성 글 / 댓글 / 받은 공감 / **토론 참여** / **전달한 아우라** (팔로워 우선순위 ↓)
+- 전달한 아우라: 다른 시민에게 남긴 영향력 누적 지표 (글·댓글·토론·공감·상호작용)
+- 영토 기록: 최초·현재 소속 / 이동 횟수 / **시민 영향력** / 시민 등급 (~~명명된 점수~~ 폐기)
+- 성향 지도 아래 **AI 한 줄 설명** 영역 예정 (수치 대신 변화 흐름)
+
+**공식 에셋 v1**
+
+- `public/assets/territories/banners/` — reform · centrist · order · alien `.webp`
+- `public/assets/territories/emblems/` — 동일 4종
+- 매핑: 개척(파랑·검+날개) / 중앙(초록·신전) / 수호(빨강·방패+검) / 외계(보라·수정)
+
+**코드 작업 (오늘)**
+
+- 에셋 WEBP 8종 정리 · CSS 변수 1차 연결 · 시민 카드 2열 골격 · 패널 스크롤 안정화
+
+**내일 TODO:** `docs/TODO.md` §「다음 작업 — 프로필 마무리」1~10
+
+### ★ 프로필 패널 레이아웃 안정화
+
+- `.avatar-dock__panel` 세로 스크롤 허용 (`overflow-y: auto`)
+- flex `min-height: 0` / `overflow: hidden` 압축 제거 → 콘텐츠 자연 높이
+- 보조 배너 72px 고정, 성향 레이더 `min-height: 150px`
+
+### ★ 영토 시민 카드 레이아웃 골격 재정렬 (시안)
+
+- 상단 전체 배너 제거 → `.profile-main-zone` 내부 보조 배너(80~110px)
+- `.profile-citizen-card__body` 2열: `.profile-avatar-zone` | `.profile-main-zone`
+- 좌: 전신 아바타 세로 카드 + `--profile-territory-emblem-url`
+- 우: 닉네임/Lv/명성/XP → 배너 → 레이더+성향 설명
+- 하단 3카드(대표 업적/활동/영토 기록) 유지
+
+### ★ 영토 배너·엠블럼 에셋 1차 UI 연결
+
+- `public/index.html` — `SC_TERRITORY_BANNERS` / `SC_TERRITORY_EMBLEMS` 상수, `applyProfileTerritoryAssets()` 추가
+- `renderTerritoryCreed()` → `#avatar-player-card-wrap`에 `--profile-territory-banner-url`, `--profile-territory-emblem-url` 설정
+- 신념 박스(`.profile-citizen-card__belief`) — 공식 배너 hero 표시 (gradient·워터마크 제거, HTML 텍스트 sr-only)
+- 기존 `territory-icons` PNG 참조 유지
+
+### ★ 영토 배너·엠블럼 에셋 정리
+
+- `public/assets/territories/banners/` — reform / centrist / order / alien `.webp` 4종 추가
+- `public/assets/territories/emblems/` — reform / centrist / order / alien `.webp` 4종 추가
+- PNG 소스 → WEBP 변환 (`tools/convert-territory-assets.py`); HTML/CSS/JS 연결 없음
+
+### ★ 프로필 HUD 최종 다듬기 (Grid 유지)
+
+- Lv / 명성 / 시민등급 → `profile-header__infobar` 단일 정보 바로 통합
+- `profile-main` stretch 제거 → 신념·경험치 아래 빈 공간 축소
+- 신념 카드 높이 ~25% 축소, motto 글자 크기 확대 (`white-space: pre-line` 유지)
+- 아바타 카드 프레임·영토 소속 foot 강화 (`avatar-card-territory-name` 노출)
+- 성향 레이더 제목 시각 숨김, 차트 ~12% 확대 (9.5rem)
+- 하단 3요약 카드 padding/gap/font ~12% 압축
+- 모바일(767px↓)만 프로필 내부 스크롤 허용
+
+### ★ 영토 시민 카드 레이아웃 재정렬
+
+- `profile-citizen-card` 단일 카드: 신념 crest → 아바타·성향·시민정보 body → 시민 기록 footer
+- 영토 신념·엠블럼을 카드 상단 hero로 승격 (워터마크·영토 그라디언트)
+- 아바타·성향 레이더·하단 기록을 카드 내부 구역으로 통합 (개별 패널 테두리 제거)
+- 패널 제목 "영토 시민 카드"로 변경
 
 _다음 우선순위는 TODO.md 참조_
 
