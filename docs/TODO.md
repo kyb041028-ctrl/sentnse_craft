@@ -1,32 +1,47 @@
 ﻿# 센텐스크래프트 — 작업 목록 (TODO)
 
-> 마지막 업데이트: 2026-07-05 (저녁 — 내일 작업 순서 확정)
-> 완료된 것은 체크, 미완료 또는 진행 중인 것은 빈칸.
+> 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템 일일 정리)
 
 ---
 
-## 🔜 다음 작업 — 프로필 마무리 (2026-07-06, 순서대로)
+## 🔜 다음 작업 — 프로필 확장 (순서대로)
 
-> **오늘 확정:** 프로필 스킨(시안 PNG)은 Cursor에 적용하지 않음. 아래 1~9 완료 후 10은 별도.
+> **2026-07-09 완료:** ProfileFrame PNG UI · px 좌표 · `SC_PROFILE_DATA` · `renderProfileData()` · `getCurrentProfileData()` · expGauge  
+> **표준 파이프라인:** `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` → ProfileFrame
 
-1. [ ] 공식 에셋 v1이 올바른 폴더·파일명으로 있는지 확인  
-   (`public/assets/territories/banners/`, `emblems/` — reform / centrist / order / alien)
-2. [ ] 프로필 신념 영역(보조 배너)에 새 영토 **배너** WEBP 연결 확인·정리
-3. [ ] 프로필 내 기존 엠블럼 참조를 새 **emblems** WEBP로 교체 (`territory-icons` PNG 제거는 점진)
-4. [ ] 프로필 **가입일** 표시가 있으면 제거
-5. [ ] **소속 표기** 중복 제거 (아바타 하단 1회 등 — 확정 방향 준수)
-6. [ ] 활동 요약: **팔로워 → 토론 참여**로 변경 (팔로워는 핵심 요약에서 우선순위 낮춤)
-7. [ ] 영토 기록: **영향력 점수 → 시민 영향력** 명칭 변경 (~~명명된 점수~~ 사용 안 함)
-8. [ ] **전달한 아우라** 정의를 코드 주석 또는 docs에 명확히 남김 (PROJECT_CONTEXT §5 참조)
-9. [ ] 성향 지도 아래 **AI 한 줄 설명** 영역 UI 확보 (연동은 추후, placeholder OK)
-10. [ ] 프로필 **스킨 최종 적용** — 별도 작업으로 보류 (시안 PNG)
+1. [ ] **아바타** 구현 (`alignmentMapLayer` 인접 또는 전용 레이어)
+2. [ ] **성향 지도** 구현 (`alignmentMapLayer`)
+3. [ ] **대표 업적** 구현 (`achievementLayer`)
+4. [ ] `getCurrentProfileData()` — 실로그인 / Firebase / API 데이터 소스 연결
+5. [ ] 실제 경험치·활동·영토 기록 집계 로직 연동
+6. [ ] 경험치 게이지 위치 **최종 보정** (좌표 에디터)
+7. [ ] `SC_PROFILE_LAYOUT` **최종 확정** (좌표 에디터 · 4스킨별)
+8. [ ] 4개 영토 스킨 **최종 테스트** (PNG + 좌표 + 데이터 갱신)
+9. [ ] ProfileFrame **모바일 최종 보정**
+10. [ ] 공식 에셋 v1 폴더·파일명 확인 (`banners/`, `emblems/`)
+11. [ ] 프로필 신념 영역(legacy 보조 배너) WEBP 연결 정리
+12. [ ] legacy 엠블럼 → `emblems` WEBP 점진 교체
+13. [ ] legacy **가입일** 제거 · **소속 표기** 중복 제거
+14. [ ] **전달한 아우라** 정의 docs/코드 주석 확정
+15. [ ] 성향 지도 아래 **AI 한 줄 설명** UI (연동 추후)
 
-### 프로필 UI 확정 방향 (참고 — 구현 시 준수)
+### 프로필 UI 확정 방향 (구현 시 준수)
 
 - 유저가 주인공, 영토는 배경 정체성
-- 영토 시민 카드 HUD 유지 · 좌 전신 아바타 · 우 보조 배너(유저보다 앞서지 않음)
-- 성향 **레이더만** · 가로 게이지·퍼센트 노출 **금지**
+- ProfileFrame = PNG + 오버레이 HUD (현재 기본 UI)
+- legacy 영토 시민 카드 — hidden · 향후 아바타·레이더 연동 참고용
+- 성향 **레이더만** · 가로 게이지·퍼센트 노출 **금지** (ProfileFrame exp% 텍스트·expGauge는 예외)
 - 가입일 **금지** · 소속 **중복 금지**
+- 경험치 게이지(expGauge) — **영토 무관** 노란/골드 공통 · 바 100% 배경 · % 텍스트만 실제 값
+
+### ProfileFrame 완료 체크리스트 (2026-07-09) ✅
+
+- [x] PNG 기본 UI · 4종 `territorySkin` · legacy hidden
+- [x] 좌측 하단 HUD · 접기 버튼 · PNG contain · 크기·위치 고정
+- [x] `SC_PROFILE_LAYOUT` px (1024×819) · scale · 좌표 에디터
+- [x] `SC_PROFILE_DATA` · `renderProfileData()` · `getCurrentProfileData()` · `refreshCurrentProfile()`
+- [x] 텍스트 13슬롯 + territorySkin PNG + expGauge
+- [x] expGauge 노란/골드 · `{ x: 392, y: 126, w: 590, h: 10 }`
 
 ---
 ## 완료된 작업 ✅
@@ -93,6 +108,21 @@
 - [x] 영토 엠블럼 PNG 교체 (`assets/territory-icons/`)
 - [x] 영토 배너·엠블럼 WEBP 에셋 정리 (`assets/territories/banners/`, `emblems/`)
 - [x] 영토 배너·엠블럼 WEBP 프로필 신념 박스 1차 연결 (CSS 변수 + 배경)
+
+### ProfileFrame 프로필 시스템 (2026-07-09)
+
+- [x] PNG 기반 ProfileFrame 기본 UI · legacy `hidden`
+- [x] 4종 영토 프로필 PNG (`profiles/center|pioneer|guardian|alien.png`)
+- [x] `territorySkin` → `setProfileTerritorySkin()` PNG 자동 변경
+- [x] 좌측 하단 HUD · 접기 버튼 Frame 내 우하단 · PNG contain
+- [x] `%` 좌표 폐기 → `SC_PROFILE_LAYOUT` px (1024×819) · scale
+- [x] `SC_PROFILE_LAYOUT_BY_SKIN` (center=pioneer · guardian/alien 개별)
+- [x] localhost 좌표 에디터 (드래그 · 방향키 · localStorage v3 · 복사)
+- [x] `SC_PROFILE_DATA` 단일 더미 객체
+- [x] `renderProfileData(data)` — 텍스트 · PNG · expGauge
+- [x] `getCurrentProfileData()` Mock Adapter · `refreshCurrentProfile()`
+- [x] 경험치 게이지 `expGaugeLayer` · 노란/골드 · 100% Fill · expLayer 텍스트 상위
+- [x] `expGauge` 좌표 `{ x: 392, y: 126, w: 590, h: 10 }`
 
 ### 프로필 패널 (2026-07-04 Grid 재설계)
 
@@ -170,17 +200,16 @@
 
 ## 미완료 작업 🔲
 
-### 프로필 패널
+### 프로필 패널 / ProfileFrame
 
-- [ ] *(내일 1~9)* — 위 **「다음 작업 — 프로필 마무리」** 순서 참조
-- [ ] 실제 아바타 이미지 업로드 기능 Supabase 연동 (Supabase Storage)
-- [ ] 영토별 기본 **전신** 아바타 이미지 추가
+- [ ] 위 **「다음 작업 — 프로필 확장」** 1~15 순서 참조
+- [ ] ProfileFrame 아바타 · 성향지도 · 대표 업적 레이어
+- [ ] `getCurrentProfileData()` 실데이터 연결
+- [ ] 실제 아바타 이미지 업로드 (Supabase Storage)
 - [ ] 활동 메뉴 링크 실제 기능 연결
-- [ ] 대표 업적 실제 데이터 연동
 - [ ] 명예 장식 슬롯 실제 아이템 시스템 연동
 - [ ] 프로필 탭 (권한/히스토리/설정/뒤로) 실제 구현
-- [ ] `data-territory` JS 자동 전환 연결 (로그인 후 실제 영토 데이터로 패널 갱신)
-- [ ] 프로필 스킨 최종 적용 (시안 — **보류**, 별도 작업)
+- [x] 프로필 PNG 4종 적용 (ProfileFrame — 2026-07-09)
 
 ### 중앙광장 / 영토
 

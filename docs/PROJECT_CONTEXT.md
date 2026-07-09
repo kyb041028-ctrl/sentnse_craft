@@ -1,7 +1,7 @@
-﻿# 센텐스크래프트 — 프로젝트 컨텍스트
+# 센텐스크래프트 — 프로젝트 컨텍스트
 
 > 다른 Cursor 세션에서 이 문서를 먼저 읽어 프로젝트 전체 맥락을 파악하세요.
-> 마지막 업데이트: 2026-07-05 (저녁 — 프로필 방향·에셋 v1 확정)
+> 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템 완료)
 
 ---
 
@@ -148,9 +148,97 @@ public/assets/territories/emblems/
 - **압축 + 가독성**: 한 화면에 최대한 많은 정보가 들어오되 답답하지 않게
 - **CSS-only 테마**: JS 속성 변경 한 줄로 전체 테마가 전환되도록 CSS 변수와 `data-*` 속성 활용
 
-### 프로필 — 영토 시민 카드 (2026-07-05 확정 방향)
+### 프로필 — ProfileFrame (2026-07-09 기본 UI)
 
-> ⚠️ **프로필 스킨(시안 PNG)은 아직 Cursor에 적용하지 않음.** 레이아웃 골격·에셋 연결만 진행 중.
+> **ProfileFrame이 기본 프로필 UI.** legacy 영토 시민 카드(`.profile-citizen-card__legacy`)는 `hidden` 유지.
+
+#### 레이아웃
+
+| 항목 | 내용 |
+|------|------|
+| 위치 | 좌측 하단 HUD 고정 |
+| 외곽 | 바깥 패널·헤더·테두리 제거 |
+| 접기 | ProfileFrame 내부 우측 하단 (`#avatar-dock-hide`) |
+| PNG | `background-size: contain` · 원본 비율 `1024 / 819` · 크기·위치 고정 |
+
+#### ProfileFrame · territorySkin
+
+| skin key | 영토 | 프로필 PNG 경로 | 상태 |
+|----------|------|-----------------|------|
+| `center` | 중앙광장 | `public/assets/territories/profiles/center.png` | ✅ |
+| `pioneer` | 개척영토 | `public/assets/territories/profiles/pioneer.png` | ✅ |
+| `guardian` | 수호영토 | `public/assets/territories/profiles/guardian.png` | ✅ |
+| `alien` | 외계행성 | `public/assets/territories/profiles/alien.png` | ✅ |
+
+- 기본값: `center` (`data-territory-skin="center"`)
+- `renderProfileData(data).territorySkin` → `setProfileTerritorySkin()` → PNG + 스킨별 좌표 동기화
+
+#### 오버레이 레이어
+
+| ID | 역할 | 상태 |
+|----|------|------|
+| `userIdLayer` | USER ID | ✅ 데이터 출력 |
+| `levelLayer` | LEVEL | ✅ |
+| `fameLayer` | 명성 | ✅ |
+| `expLayer` | 경험치 % 텍스트 | ✅ |
+| `expGaugeLayer` | 경험치 게이지 (배경 바) | ✅ 100% Fill 고정 |
+| `activitySummaryLayer` | 활동 요약 5칸 | ✅ |
+| `territoryRecordLayer` | 영토 기록 4칸 | ✅ |
+| `alignmentMapLayer` | 성향 지도 | ⬜ placeholder |
+| `achievementLayer` | 대표 업적 | ⬜ placeholder |
+
+**정렬:** USER ID 왼쪽 · LEVEL 가운데 · 명성·경험치 오른쪽 · 활동 요약 오른쪽 · 영토 소속·등급 가운데 / 이동·영향력 오른쪽
+
+#### 좌표 체계
+
+- **% 좌표 폐기** → `SC_PROFILE_LAYOUT` / `SC_PROFILE_LAYOUT_BY_SKIN` — **1024×819 px**
+- `applyProfileFramePixelLayout()` — `scale = 프레임 너비 ÷ 1024`
+- center=pioneer 공통 · guardian/alien은 activity·territory 좌표 개별
+- **좌표 에디터 (localhost):** 드래그 · 방향키 · localStorage v3 · 전체 좌표 복사
+
+#### 데이터 파이프라인 (표준 흐름)
+
+```
+SC_PROFILE_DATA
+      ↓
+getCurrentProfileData()    ← Mock Adapter (추후 Firebase/로그인 교체 지점)
+      ↓
+renderProfileData(data)    ← 텍스트 · territorySkin PNG · expGauge
+      ↓
+ProfileFrame
+```
+
+**`SC_PROFILE_DATA` 필드**
+
+```js
+{
+  userId, level, fame, expPercent, territorySkin,
+  activity: { posts, comments, receivedLikes, discussions, aura },
+  territory: { current, moved, influence, rank }
+}
+```
+
+**JS API**
+
+| 전역 | 역할 |
+|------|------|
+| `window.SC_PROFILE_DATA` | 더미 단일 소스 (개발·테스트) |
+| `window.getCurrentProfileData()` | 프로필 객체 반환 (안전 복사) |
+| `window.renderProfileData(data)` | ProfileFrame 렌더 |
+| `window.refreshCurrentProfile()` | get → render 개발용 갱신 |
+| `window.setProfileTerritorySkin(key)` | PNG + 좌표 스킨 전환 |
+| `window.SC_PROFILE_LAYOUT` | 활성 px 좌표 (에디터 가변) |
+
+#### 경험치 게이지 (expGauge)
+
+- **영토 색상 사용 안 함** — 4개 영토 모두 동일 디자인 (유저 성장 수치)
+- Track: `#5a4510` · Fill: `linear-gradient(90deg, #b8860b, #e8b820, #ffd84d)`
+- 게이지 바: **항상 100% Fill** (배경) · 실제 진행률은 `expLayer` 텍스트(`68%` 등)만
+- `expGauge`: `{ x: 392, y: 126, w: 590, h: 10 }` — 좌표 에디터로 조정 가능
+
+#### 영토 시민 카드 확정 방향 (legacy·향후 연동 참고)
+
+> ⚠️ 아래 원칙은 legacy UI 및 향후 아바타·레이더 연동 시 준수. ProfileFrame 단계에서는 PNG+오버레이만 적용.
 
 | 원칙 | 내용 |
 |------|------|
@@ -250,9 +338,9 @@ alien     : rgba(199, 125, 255, 0.08)
 
 ## 7. 현재 구현 상태
 
-> **프로필 UI — 영토 시민 카드 골격 작업 중 (2026-07-05)**  
-> 시안 스킨 미적용. 좌 **전신 아바타** | 우 **닉네임·XP·보조배너·레이더** | 하단 **3카드**.  
-> 패널 내부 스크롤 허용으로 클리핑 안정화. **내일:** 에셋 교체·항목명·중복 정리.
+> **프로필 UI — ProfileFrame 기본 적용 (2026-07-09)**  
+> PNG 4종 · px 좌표 · `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` 파이프라인 · 경험치 게이지 완료.  
+> **다음:** 아바타 · 성향지도 · 대표 업적 · 실유저 데이터 · 좌표 최종 확정 · 모바일 보정.
 
 ### ✅ 구현 완료
 
@@ -263,11 +351,13 @@ alien     : rgba(199, 125, 255, 0.08)
 - 영토 게시판 (개척/수호/외계행성)
 - 게시글 작성/조회/반응 (공감/추천/비추천)
 - 팔로우 시스템 + 알림
-- 플레이어 프로필 패널 — **영토 시민 카드** (`profile-citizen-card`)
-  - body: `.profile-avatar-zone` | `.profile-main-zone` (2열)
-  - 우측: 닉네임·Lv·명성·XP → 보조 신념 배너 → 레이더 + 성향 설명 골격
-  - footer: 시민 기록 (대표 업적 · 활동 요약 · 영토 기록)
-- 레벨/XP/명성 표시
+- **플레이어 프로필 — ProfileFrame (2026-07-09)**
+  - PNG 기반 기본 UI · 4종 `territorySkin` · 좌측 하단 HUD · 접기 버튼 내장
+  - `SC_PROFILE_LAYOUT` px 좌표 (1024×819) · localhost 좌표 에디터
+  - `SC_PROFILE_DATA` · `getCurrentProfileData()` · `renderProfileData()` · `refreshCurrentProfile()`
+  - 출력: USER ID · LEVEL · 명성 · 경험치% · 활동 요약 5 · 영토 기록 4 · expGauge
+  - legacy `.profile-citizen-card__legacy` — hidden 유지
+- 레벨/XP/명성 표시 (legacy 영역 + ProfileFrame 더미)
 - 권한 안내 탭
 - 히스토리 탭
 - 게시글 상세 화면
@@ -276,24 +366,29 @@ alien     : rgba(199, 125, 255, 0.08)
 - 채팅 API (인메모리 베타)
 - **영토 신념 데이터** (`public/territory-beliefs.js`) — Single Source of Truth
 - **공식 에셋 v1** WEBP 8종 (`assets/territories/banners/`, `emblems/`)
-- 프로필 `--profile-territory-banner-url` / `--profile-territory-emblem-url` 1차 연결
+- **프로필 PNG 4종** (`assets/territories/profiles/` — center, pioneer, guardian, alien)
 
 ### ⚠️ 부분 구현 / 뼈대만 있음
 
 - Supabase DB 연동 (테이블 설계됨, 일부 API 미완성)
 - 성향 계산 로직 (config 정의됨, 실제 집계 미구현)
-- 레벨/XP 계산 (config 정의됨, 실제 적용 미완성)
+- 레벨/XP 계산 (config 정의됨, ProfileFrame은 더미 `expPercent`만)
 - 영토 귀속 자동화 (룰 정의됨, 자동 처리 미구현)
-- 프로필 활동/영토 기록 — **더미 라벨** (팔로워·영향력 점수 등, 내일 명칭 정리 예정)
-- 성향 AI 한 줄 설명 — UI 골격만, AI 연동 없음
+- 프로필 활동/영토 기록 — **ProfileFrame 더미 데이터** (`SC_PROFILE_DATA`, 실데이터 미연결)
+- ProfileFrame `alignmentMapLayer` · `achievementLayer` — placeholder
+- 성향 AI 한 줄 설명 — UI 골격만 (legacy), AI 연동 없음
 - 레거시 `territory-icons` PNG — 신규 emblems WEBP와 **혼재**
 
 ### ❌ 미구현
 
-- **프로필 스킨 최종 적용** (시안 PNG — 별도 작업으로 보류)
+- **ProfileFrame 아바타** (전신 이미지 오버레이)
+- **ProfileFrame 성향 지도** (`alignmentMapLayer`)
+- **ProfileFrame 대표 업적** (`achievementLayer`)
+- **실로그인/Firebase → `getCurrentProfileData()` 연결**
+- 실제 경험치·활동 데이터 집계
+- ProfileFrame **모바일 최종 보정**
 - 결제 시스템 (상품 정의됨)
 - 영토전 (배틀 시스템)
-- 실제 전신 아바타 이미지 (현재 SVG placeholder)
 - 업적 시스템 (더미 데이터)
 - 활동 메뉴 링크 (버튼 disabled 상태)
 - AI 데일리 이슈 자동 생성
@@ -330,9 +425,10 @@ sentence-craft/
 │   ├── ui-sounds.js
 │   ├── assets/
 │   │   ├── territory-icons/     # 레거시 PNG (점진 교체 예정)
-│   │   └── territories/         # ★ 공식 에셋 v1 (WEBP)
+│   │   └── territories/         # ★ 공식 에셋 v1 (WEBP + 프로필 PNG)
 │   │       ├── banners/         # reform | centrist | order | alien
-│   │       └── emblems/
+│   │       ├── emblems/
+│   │       └── profiles/        # center | pioneer | guardian | alien (1024×819)
 │   ├── auth/
 │   │   └── callback.html        # OAuth 콜백 페이지
 │   └── territories/             # 영토 맵 PNG, JSON 히트존

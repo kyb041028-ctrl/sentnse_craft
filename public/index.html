@@ -8163,7 +8163,484 @@
     .avatar-player-follow { font-size: 0.63rem; margin-top: 0.06rem; }
 
     /* ══════════════════════════════════════════
-       PROFILE — 영토 시민 카드
+       PROFILE — ProfileFrame (영토 프로필 스킨)
+       중앙광장 PNG 기준 · 원본 비율 contain · 데이터 레이어는 추후
+       ══════════════════════════════════════════ */
+
+    .profile-frame {
+      --profile-frame-chrome-h: 5rem;
+      --profile-frame-aspect: 1024 / 819;
+      --profile-frame-skin-url: url('/assets/territories/profiles/center.png');
+      --profile-frame-max-h: calc(
+        100dvh - var(--sc-hud-safe-bottom) - 0.5rem - var(--profile-frame-chrome-h)
+      );
+      position: relative;
+      display: block;
+      flex: 0 0 auto;
+      width: min(100%, calc(var(--profile-frame-max-h) * 1024 / 819));
+      max-width: 100%;
+      max-height: var(--profile-frame-max-h);
+      aspect-ratio: var(--profile-frame-aspect);
+      margin: 0 auto;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+    }
+    .profile-frame[data-territory-skin="center"] {
+      --profile-frame-skin-url: url('/assets/territories/profiles/center.png');
+    }
+    .profile-frame[data-territory-skin="pioneer"] {
+      --profile-frame-skin-url: url('/assets/territories/profiles/pioneer.png');
+    }
+    .profile-frame[data-territory-skin="guardian"] {
+      --profile-frame-skin-url: url('/assets/territories/profiles/guardian.png');
+    }
+    .profile-frame[data-territory-skin="alien"] {
+      --profile-frame-skin-url: url('/assets/territories/profiles/alien.png');
+    }
+
+    .profile-frame__container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .profile-frame__bg {
+      position: absolute;
+      inset: 0;
+      background-image: var(--profile-frame-skin-url);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    .profile-frame__overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .profile-frame__layer {
+      position: absolute;
+      box-sizing: border-box;
+      overflow: hidden;
+      /* userId/level/fame/exp · activity/territory row — x/y/w/h는 applyProfileFramePixelLayout() */
+    }
+
+    /* ProfileFrame 데이터 오버레이 — 정렬 규칙
+       · USER ID → 왼쪽 · LEVEL → 가운데 · 명성 / 경험치 → 오른쪽
+       · 활동 요약 숫자 → 오른쪽
+       · 영토: 소속·등급 가운데 / 이동·영향력 오른쪽
+       · 공통: 칸 width 고정 · nowrap · ellipsis · overflow hidden */
+    .profile-frame__data {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0 0.2rem;
+      color: #f8f1d8;
+      font-size: clamp(7px, 0.66vw, 11px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      overflow: hidden;
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        0 0 3px rgba(255, 230, 160, 0.28);
+    }
+    .profile-frame__data-text {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: inherit;
+      line-height: inherit;
+    }
+    .profile-frame__data--align-left {
+      justify-content: flex-start;
+      text-align: left;
+    }
+    .profile-frame__data--align-center {
+      justify-content: center;
+      text-align: center;
+      padding-left: 0.12rem;
+      padding-right: 0.12rem;
+    }
+    .profile-frame__data--align-right {
+      justify-content: flex-end;
+      text-align: right;
+    }
+    #userIdLayer .profile-frame__data {
+      justify-content: flex-start;
+      text-align: left;
+    }
+    #fameLayer .profile-frame__data,
+    #expLayer .profile-frame__data {
+      justify-content: flex-end;
+      text-align: right;
+      padding-right: calc(6px * var(--profile-frame-scale, 1));
+    }
+    /* 경험치 게이지 — 영토 무관 공통 노란색 (유저 성장 · 100% 바 고정 배경) */
+    #expGaugeLayer {
+      z-index: 1;
+      border-radius: 999px;
+      background: #5a4510;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+    #expLayer {
+      z-index: 2;
+    }
+    .profile-frame__exp-gauge-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #b8860b, #e8b820, #ffd84d);
+      box-shadow: inset 0 1px 0 rgba(255, 248, 200, 0.45);
+    }
+    #levelLayer .profile-frame__data {
+      justify-content: center;
+      text-align: center;
+      padding-left: 0.12rem;
+      padding-right: 0.12rem;
+    }
+    #activitySummaryLayer .profile-frame__data {
+      justify-content: flex-end;
+      text-align: right;
+      padding-left: 0.12rem;
+      padding-right: 0.28rem;
+    }
+    #territoryRecordLayer .profile-frame__data--align-left {
+      justify-content: flex-start;
+      text-align: left;
+    }
+    #territoryRecordLayer .profile-frame__data--align-center {
+      justify-content: center;
+      text-align: center;
+      padding-left: 0.12rem;
+      padding-right: 0.12rem;
+    }
+    #territoryRecordLayer .profile-frame__data--align-right {
+      justify-content: flex-end;
+      text-align: right;
+      padding-right: calc(6px * var(--profile-frame-scale, 1));
+    }
+    .profile-frame__data-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .profile-frame__data-row {
+      position: absolute;
+      box-sizing: border-box;
+      display: block;
+      overflow: hidden;
+      /* x/y/w/h — applyProfileFramePixelLayout() (1024×819 기준 px × scale) */
+    }
+    #activitySummaryLayer,
+    #territoryRecordLayer {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* alignmentMap · achievement — px 레이아웃 미적용 (추후 SC_PROFILE_LAYOUT 확장) */
+    #alignmentMapLayer {
+      left: 27%;
+      top: 41%;
+      width: 30%;
+      height: 30%;
+    }
+    #achievementLayer {
+      left: 58%;
+      top: 41%;
+      width: 37%;
+      height: 30%;
+    }
+
+    /* ProfileFrame 좌표 에디터 — localhost 개발 모드 전용 */
+    .profile-layout-editor-toggle {
+      display: none;
+      position: fixed;
+      z-index: 12050;
+      left: 0.5rem;
+      bottom: 22rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--sc-r-sm, 0.35rem);
+      border: 1px solid rgba(255, 200, 80, 0.45);
+      background: rgba(12, 10, 8, 0.92);
+      color: #f8f1d8;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    }
+    body.sc-profile-layout-editor-dev .profile-layout-editor-toggle {
+      display: block;
+    }
+    .profile-skin-dev-switcher {
+      display: none;
+      position: fixed;
+      z-index: 12050;
+      left: 0.5rem;
+      bottom: 15.5rem;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      max-width: 8rem;
+    }
+    body.sc-profile-layout-editor-dev .profile-skin-dev-switcher {
+      display: flex;
+    }
+    .profile-skin-dev-switcher__btn {
+      padding: 0.28rem 0.45rem;
+      border-radius: var(--sc-r-sm, 0.35rem);
+      border: 1px solid rgba(255, 200, 80, 0.35);
+      background: rgba(12, 10, 8, 0.92);
+      color: #f8f1d8;
+      font-size: 0.62rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .profile-skin-dev-switcher__btn.is-active {
+      border-color: rgba(120, 200, 255, 0.75);
+      color: #cfe8ff;
+    }
+    .profile-skin-dev-switcher__btn:hover {
+      background: rgba(255, 200, 80, 0.12);
+    }
+    .profile-layout-editor-toggle.is-active {
+      border-color: rgba(255, 120, 80, 0.85);
+      background: rgba(48, 18, 8, 0.95);
+      color: #ffd8a8;
+    }
+    .profile-layout-editor {
+      display: none;
+      position: fixed;
+      z-index: 12060;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: min(18rem, calc(100vw - 1.5rem));
+      padding: 0.65rem 0.75rem;
+      border-radius: var(--sc-r-md, 0.5rem);
+      border: 1px solid rgba(255, 200, 80, 0.35);
+      background: rgba(10, 8, 6, 0.94);
+      color: #f8f1d8;
+      font-size: 0.72rem;
+      line-height: 1.45;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+      pointer-events: auto;
+    }
+    body.sc-profile-layout-editor-active .profile-layout-editor {
+      display: block;
+    }
+    .profile-layout-editor__title {
+      margin: 0 0 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffd8a8;
+    }
+    .profile-layout-editor__selection {
+      margin: 0 0 0.45rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: var(--sc-r-sm, 0.35rem);
+      background: rgba(255, 255, 255, 0.05);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.68rem;
+      word-break: break-all;
+    }
+    .profile-layout-editor__hint {
+      margin: 0 0 0.5rem;
+      color: rgba(248, 241, 216, 0.72);
+      font-size: 0.65rem;
+    }
+    .profile-layout-editor__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .profile-layout-editor__btn {
+      padding: 0.3rem 0.55rem;
+      border-radius: var(--sc-r-sm, 0.35rem);
+      border: 1px solid rgba(255, 200, 80, 0.35);
+      background: rgba(255, 255, 255, 0.06);
+      color: #f8f1d8;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .profile-layout-editor__btn:hover {
+      background: rgba(255, 200, 80, 0.12);
+    }
+    .profile-layout-editor__btn--primary {
+      border-color: rgba(120, 200, 255, 0.55);
+      color: #cfe8ff;
+    }
+    .profile-layout-editor__status {
+      margin: 0.4rem 0 0;
+      min-height: 1em;
+      color: rgba(180, 255, 180, 0.9);
+      font-size: 0.65rem;
+    }
+    .profile-frame.profile-frame--layout-edit #userIdLayer,
+    .profile-frame.profile-frame--layout-edit #levelLayer,
+    .profile-frame.profile-frame--layout-edit #fameLayer,
+    .profile-frame.profile-frame--layout-edit #expLayer,
+    .profile-frame.profile-frame--layout-edit #expGaugeLayer,
+    .profile-frame.profile-frame--layout-edit #activitySummaryLayer,
+    .profile-frame.profile-frame--layout-edit #territoryRecordLayer {
+      pointer-events: none;
+    }
+    .profile-frame.profile-frame--layout-edit #userIdLayer,
+    .profile-frame.profile-frame--layout-edit #levelLayer,
+    .profile-frame.profile-frame--layout-edit #fameLayer,
+    .profile-frame.profile-frame--layout-edit #expLayer,
+    .profile-frame.profile-frame--layout-edit #expGaugeLayer,
+    .profile-frame.profile-frame--layout-edit .profile-frame__data-row {
+      outline: 1px dashed rgba(255, 72, 72, 0.78);
+      outline-offset: -1px;
+      pointer-events: auto;
+      cursor: move;
+      touch-action: none;
+    }
+    .profile-frame.profile-frame--layout-edit .profile-frame__layout-target.is-selected {
+      outline: 2px solid rgba(255, 210, 80, 0.98);
+      outline-offset: -1px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65);
+    }
+
+    .profile-citizen-card__legacy[hidden] {
+      display: none !important;
+    }
+
+    /* ProfileFrame 전용 — PNG만 표시 · 좌하단 HUD 도킹 */
+    .avatar-dock.avatar-dock--profile-frame:not(.is-collapsed) {
+      filter: none;
+      align-items: flex-start;
+      align-self: flex-start;
+      max-width: none;
+    }
+    .avatar-dock.avatar-dock--profile-frame:not(.is-collapsed):not([hidden]) {
+      left: 0.375rem;
+      bottom: 1.375rem;
+    }
+    body.sc-app-mode .avatar-dock.avatar-dock--profile-frame:not(.is-collapsed):not([hidden]) {
+      left: 0.375rem;
+      bottom: var(--sc-hud-safe-bottom);
+    }
+    .avatar-dock__panel--profile-frame {
+      overflow-y: hidden;
+      min-height: 0;
+      width: max-content;
+      max-width: min(var(--avatar-panel-width), calc(100vw - 0.5rem));
+      align-items: flex-start;
+      align-self: flex-start;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    body.sc-app-mode .avatar-dock:not(.is-collapsed) .avatar-dock__panel--profile-frame {
+      overflow-y: hidden;
+      border-radius: 0;
+    }
+    body.sc-app-mode .avatar-dock:not([hidden]) .avatar-dock__panel--profile-frame {
+      border: none;
+      border-left: none;
+      box-shadow: none;
+      background: transparent;
+      backdrop-filter: none;
+    }
+    .avatar-dock__panel--profile-frame .avatar-dock__head {
+      display: none !important;
+    }
+    .avatar-dock__panel--profile-frame .avatar-deco-panel {
+      display: none !important;
+    }
+    .avatar-dock__panel--profile-frame .profile-layout {
+      flex: 0 0 auto;
+      display: block;
+      width: max-content;
+      max-width: min(var(--avatar-panel-width), calc(100vw - 0.5rem));
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    .avatar-dock__panel--profile-frame .profile-frame {
+      --profile-frame-chrome-h: 0rem;
+      --profile-frame-max-h: calc(100dvh - 1.375rem - var(--sc-hud-safe-bottom) - 0.5rem);
+      max-height: var(--profile-frame-max-h);
+      width: calc((100dvh - 1.375rem - var(--sc-hud-safe-bottom) - 0.5rem) * 1024 / 819);
+      max-width: min(var(--avatar-panel-width), calc(100vw - 0.5rem));
+      margin: 0;
+      overflow: visible;
+    }
+    .avatar-dock__panel--profile-frame .profile-frame__close.avatar-panel-close-row {
+      position: absolute;
+      right: 2.25rem;
+      bottom: 0.35rem;
+      z-index: 4;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0;
+      margin: 0;
+      border: none;
+      background: transparent;
+      pointer-events: none;
+    }
+    .avatar-dock__panel--profile-frame .profile-frame__close .avatar-panel-close-btn {
+      height: 1.4rem;
+      padding: 0 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 999px;
+      border: 1px solid rgba(218, 166, 70, 0.75);
+      background: rgba(5, 12, 14, 0.78);
+      color: #f3d37a;
+      box-shadow: 0 0 8px rgba(218, 166, 70, 0.25);
+      backdrop-filter: blur(3px);
+      pointer-events: auto;
+      transition:
+        background var(--sc-ease),
+        border-color var(--sc-ease),
+        color var(--sc-ease),
+        box-shadow var(--sc-ease);
+    }
+    .avatar-dock__panel--profile-frame .profile-frame__close .avatar-panel-close-btn:hover {
+      background: rgba(8, 18, 20, 0.88);
+      border-color: rgba(235, 190, 90, 0.9);
+      color: #ffe08a;
+      box-shadow: 0 0 10px rgba(218, 166, 70, 0.38);
+    }
+    body.sc-app-mode .avatar-dock:not(.is-collapsed) .avatar-dock__panel--profile-frame .profile-frame {
+      --profile-frame-max-h: calc(
+        100dvh - var(--sc-hud-tab-h) - var(--sc-hud-panel-gap) - var(--sc-hud-safe-bottom) - 0.75rem - 1.375rem
+      );
+      max-height: var(--profile-frame-max-h);
+      width: calc(
+        (100dvh - var(--sc-hud-tab-h) - var(--sc-hud-panel-gap) - var(--sc-hud-safe-bottom) - 0.75rem - 1.375rem) * 1024 / 819
+      );
+    }
+
+    /* ══════════════════════════════════════════
+       PROFILE — 영토 시민 카드 (레거시 · JS ID 유지)
        ══════════════════════════════════════════ */
 
     .profile-layout {
@@ -9390,23 +9867,78 @@
 
   <div
     id="avatar-dock"
-    class="avatar-dock is-collapsed"
+    class="avatar-dock avatar-dock--profile-frame is-collapsed"
     role="region"
     aria-label="내 프로필"
     hidden
   >
     <!-- data-territory: JS에서 영토 ID 설정 시 아이콘·게이지 색상 자동 전환 -->
-    <div class="avatar-dock__panel" data-territory="centrist">
+    <div class="avatar-dock__panel avatar-dock__panel--profile-frame" data-territory="centrist">
 
-      <!-- ── 패널 헤더 (sticky) ── -->
-      <header class="avatar-dock__head avatar-dock__head--sticky">
+      <!-- ── 패널 헤더 (sticky) — ProfileFrame 모드에서 CSS로 비표시, JS 호환용 유지 ── -->
+      <header class="avatar-dock__head avatar-dock__head--sticky" hidden aria-hidden="true">
         <h2 class="avatar-dock__panel-title">영토 시민 카드</h2>
       </header>
 
       <!-- ── 영토 시민 카드 (신념 · 아바타 · 성향 · 시민 기록) ── -->
       <div class="profile-layout">
 
-        <article class="profile-citizen-card" id="avatar-player-card-wrap" data-territory="centrist">
+        <article
+          class="profile-citizen-card profile-frame"
+          id="avatar-player-card-wrap"
+          data-territory="centrist"
+          data-territory-skin="center"
+        >
+          <div class="profile-frame__container" role="img" aria-label="중앙광장 시민 프로필 프레임">
+            <div class="profile-frame__bg" aria-hidden="true"></div>
+            <div class="profile-frame__overlay">
+              <div class="profile-frame__layer" id="userIdLayer">
+                <span class="profile-frame__data profile-frame__data--align-left"><span class="profile-frame__data-text"></span></span>
+              </div>
+              <div class="profile-frame__layer" id="levelLayer">
+                <span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span>
+              </div>
+              <div class="profile-frame__layer" id="fameLayer">
+                <span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span>
+              </div>
+              <div class="profile-frame__layer" id="expGaugeLayer" aria-hidden="true">
+                <div class="profile-frame__exp-gauge-fill"></div>
+              </div>
+              <div class="profile-frame__layer" id="expLayer">
+                <span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span>
+              </div>
+              <div class="profile-frame__layer" id="alignmentMapLayer"></div>
+              <div class="profile-frame__layer" id="achievementLayer"></div>
+              <div class="profile-frame__layer" id="activitySummaryLayer">
+                <ul class="profile-frame__data-list">
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                </ul>
+              </div>
+              <div class="profile-frame__layer" id="territoryRecordLayer">
+                <ul class="profile-frame__data-list">
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
+                  <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-frame__close avatar-panel-close-row">
+            <button type="button" id="avatar-dock-hide" class="avatar-panel-close-btn" aria-label="프로필 패널 숨기기" title="프로필 접기">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="11" height="11">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              프로필 접기
+            </button>
+          </div>
+
+          <div class="profile-citizen-card__legacy" hidden aria-hidden="true">
 
           <div class="profile-citizen-card__body">
 
@@ -9614,13 +10146,15 @@
             </div><!-- /.profile-summaries -->
           </footer><!-- /.profile-citizen-card__records -->
 
+          </div><!-- /.profile-citizen-card__legacy -->
+
         </article><!-- /.profile-citizen-card -->
 
       </div><!-- /.profile-layout -->
 
       <!-- ── 장식 상태 패널: 2열 아래, 전체 폭 가로형 HUD ── -->
       <!-- 시즌·영토전·업적 보상으로 교체 가능한 외형 장식 슬롯 -->
-      <div class="avatar-deco-panel" role="region" aria-label="장식 정보">
+      <div class="avatar-deco-panel" role="region" aria-label="장식 정보" hidden aria-hidden="true">
         <div class="avatar-deco-panel__slot">
           <span class="avatar-deco-panel__icon">🖼</span>
           <span class="avatar-deco-panel__label">프레임</span>
@@ -9643,16 +10177,6 @@
         </div>
       </div><!-- /.avatar-deco-panel -->
 
-      <!-- ── 패널 하단 닫기 버튼 ── -->
-      <div class="avatar-panel-close-row">
-        <button type="button" id="avatar-dock-hide" class="avatar-panel-close-btn" aria-label="프로필 패널 숨기기" title="프로필 접기">
-          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="11" height="11">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          프로필 접기
-        </button>
-      </div>
-
     </div><!-- /.avatar-dock__panel -->
 
     <button type="button" id="avatar-dock-tab" class="avatar-dock__tab" aria-label="프로필 패널 펼치기" title="클릭하면 프로필 패널이 펼쳐집니다">
@@ -9661,6 +10185,37 @@
       </svg>
       <span>프로필</span>
     </button>
+  </div>
+
+  <!-- ProfileFrame 좌표 에디터 (localhost 개발 모드 전용) -->
+  <button
+    type="button"
+    id="profile-layout-editor-toggle"
+    class="profile-layout-editor-toggle"
+    hidden
+    aria-pressed="false"
+    title="ProfileFrame 오버레이 좌표 편집"
+  >
+    좌표 에디터
+  </button>
+  <div id="profile-skin-dev-switcher" class="profile-skin-dev-switcher" hidden aria-label="프로필 스킨 전환 (개발용)">
+    <button type="button" class="profile-skin-dev-switcher__btn" data-profile-skin="center">중앙</button>
+    <button type="button" class="profile-skin-dev-switcher__btn" data-profile-skin="pioneer">개척</button>
+    <button type="button" class="profile-skin-dev-switcher__btn" data-profile-skin="guardian">수호</button>
+    <button type="button" class="profile-skin-dev-switcher__btn" data-profile-skin="alien">외계</button>
+  </div>
+  <div id="profile-layout-editor" class="profile-layout-editor" hidden aria-hidden="true">
+    <p class="profile-layout-editor__title">ProfileFrame 좌표 에디터</p>
+    <p id="profile-layout-editor-selection" class="profile-layout-editor__selection">박스를 클릭해 선택하세요.</p>
+    <p class="profile-layout-editor__hint">
+      드래그 이동 · 방향키 1px · Shift+방향키 10px · Alt+←→ w · Alt+↑↓ h<br />
+      「전체 좌표 복사」→ 현재 스킨의 <code>SC_PROFILE_LAYOUT_BY_SKIN</code> 블록
+    </p>
+    <div class="profile-layout-editor__actions">
+      <button type="button" id="profile-layout-editor-copy" class="profile-layout-editor__btn profile-layout-editor__btn--primary">전체 좌표 복사</button>
+      <button type="button" id="profile-layout-editor-reset" class="profile-layout-editor__btn">초기화</button>
+    </div>
+    <p id="profile-layout-editor-status" class="profile-layout-editor__status" aria-live="polite"></p>
   </div>
 
   <div
@@ -10306,6 +10861,11 @@
         if (!collapsed) return;
         collapsed = false;
         setDockClass();
+        if (typeof window.applyProfileFramePixelLayout === 'function') {
+          requestAnimationFrame(function () {
+            window.applyProfileFramePixelLayout();
+          });
+        }
       });
 
       function profileStorageKey(prefix, userId) {
@@ -10523,6 +11083,819 @@
         order: '/assets/territories/emblems/order.webp',
         alien: '/assets/territories/emblems/alien.webp',
       };
+      /* territorySkin — 영토 프로필 PNG 스킨 (4종 · 1024×819 공통 좌표계) */
+      var SC_TERRITORY_PROFILE_SKINS = {
+        center: '/assets/territories/profiles/center.png',
+        pioneer: '/assets/territories/profiles/pioneer.png',
+        guardian: '/assets/territories/profiles/guardian.png',
+        alien: '/assets/territories/profiles/alien.png',
+      };
+      var SC_TERRITORY_SKIN_DEFAULT = 'center';
+      var SC_CSS_TO_TERRITORY_SKIN = {
+        centrist: 'center',
+        reform: 'pioneer',
+        order: 'guardian',
+        alien: 'alien',
+      };
+      var SC_TERRITORY_SKIN_ALIASES = {
+        center: 'center',
+        centrist: 'center',
+        central: 'center',
+        square: 'center',
+        pioneer: 'pioneer',
+        progressive: 'pioneer',
+        reform: 'pioneer',
+        guardian: 'guardian',
+        conservative: 'guardian',
+        order: 'guardian',
+        alien: 'alien',
+        planet: 'alien',
+        kantapbiiya: 'alien',
+      };
+      window.SC_TERRITORY_PROFILE_SKINS = SC_TERRITORY_PROFILE_SKINS;
+      window.SC_TERRITORY_SKIN_DEFAULT = SC_TERRITORY_SKIN_DEFAULT;
+      window.SC_CSS_TO_TERRITORY_SKIN = SC_CSS_TO_TERRITORY_SKIN;
+
+      function resolveProfileTerritorySkinKey(input) {
+        var key = String(input || '').trim().toLowerCase();
+        if (!key) return SC_TERRITORY_SKIN_DEFAULT;
+        if (SC_TERRITORY_PROFILE_SKINS[key]) return key;
+        if (SC_TERRITORY_SKIN_ALIASES[key]) return SC_TERRITORY_SKIN_ALIASES[key];
+        if (SC_CSS_TO_TERRITORY_SKIN[key]) return SC_CSS_TO_TERRITORY_SKIN[key];
+        return SC_TERRITORY_SKIN_DEFAULT;
+      }
+
+      function setProfileTerritorySkin(skinKeyOrCssId) {
+        var cardWrap = document.getElementById('avatar-player-card-wrap');
+        if (!cardWrap) return SC_TERRITORY_SKIN_DEFAULT;
+        var skin = resolveProfileTerritorySkinKey(skinKeyOrCssId);
+        cardWrap.dataset.territorySkin = skin;
+        if (typeof syncActiveProfileLayout === 'function') {
+          syncActiveProfileLayout(skin);
+        }
+        if (typeof window.applyProfileFramePixelLayout === 'function') {
+          window.applyProfileFramePixelLayout(cardWrap);
+        }
+        if (typeof window.__scRefreshProfileSkinDevButtons === 'function') {
+          window.__scRefreshProfileSkinDevButtons(skin);
+        }
+        return skin;
+      }
+      window.resolveProfileTerritorySkinKey = resolveProfileTerritorySkinKey;
+      window.setProfileTerritorySkin = setProfileTerritorySkin;
+
+      /* ProfileFrame 데이터 — Single Source (더미 · renderProfileData()로 출력) */
+      var SC_PROFILE_DATA = {
+        userId: 'Guest_001',
+        level: 12,
+        fame: 3450,
+        expPercent: 68,
+        territorySkin: 'center',
+        activity: {
+          posts: 24,
+          comments: 183,
+          receivedLikes: 421,
+          discussions: 37,
+          aura: 89,
+        },
+        territory: {
+          current: '중앙광장',
+          moved: 2,
+          influence: 1280,
+          rank: '참여자',
+        },
+      };
+      window.SC_PROFILE_DATA = SC_PROFILE_DATA;
+
+      function formatScProfileDisplayNumber(value) {
+        var n = Number(value);
+        if (n !== n) return String(value);
+        return n.toLocaleString('en-US');
+      }
+
+      /** SC_PROFILE_DATA → ProfileFrame 텍스트 · 영토 스킨 출력 (좌표는 SC_PROFILE_LAYOUT · applyProfileFramePixelLayout) */
+      window.renderProfileData = function (data) {
+        if (!data) return;
+        function setLayerText(layerId, text) {
+          var el = document.querySelector('#' + layerId + ' .profile-frame__data-text');
+          if (el) el.textContent = text;
+        }
+        /* USER ID · LEVEL · 명성 · 경험치 */
+        setLayerText('userIdLayer', String(data.userId != null ? data.userId : ''));
+        setLayerText('levelLayer', String(data.level != null ? data.level : ''));
+        setLayerText('fameLayer', formatScProfileDisplayNumber(data.fame));
+        var expPercent = Math.max(0, Math.min(100, Number(data.expPercent) || 0));
+        setLayerText('expLayer', String(Math.round(expPercent)) + '%');
+        var gaugeFill = document.querySelector('#expGaugeLayer .profile-frame__exp-gauge-fill');
+        if (gaugeFill) gaugeFill.style.width = '100%';
+        /* 활동 요약 */
+        var act = data.activity || {};
+        var actValues = [
+          act.posts,
+          act.comments,
+          act.receivedLikes,
+          act.discussions,
+          act.aura,
+        ];
+        var actEls = document.querySelectorAll('#activitySummaryLayer .profile-frame__data-text');
+        for (var ai = 0; ai < actEls.length && ai < actValues.length; ai++) {
+          actEls[ai].textContent = formatScProfileDisplayNumber(actValues[ai]);
+        }
+        /* 영토 기록 */
+        var terr = data.territory || {};
+        var terrValues = [
+          terr.current,
+          formatScProfileDisplayNumber(terr.moved),
+          formatScProfileDisplayNumber(terr.influence),
+          terr.rank,
+        ];
+        var terrEls = document.querySelectorAll('#territoryRecordLayer .profile-frame__data-text');
+        for (var ti = 0; ti < terrEls.length && ti < terrValues.length; ti++) {
+          terrEls[ti].textContent = terrValues[ti] != null ? String(terrValues[ti]) : '';
+        }
+        /* ProfileFrame 영토 PNG 스킨 */
+        if (data.territorySkin) {
+          setProfileTerritorySkin(data.territorySkin);
+        }
+      };
+
+      /** Mock User Profile Adapter — 추후 로그인/Firebase 연동 시 이 함수 내부만 교체 */
+      window.getCurrentProfileData = function () {
+        var source = window.SC_PROFILE_DATA || {};
+        var act = source.activity || {};
+        var terr = source.territory || {};
+        return {
+          userId: source.userId || 'Guest_001',
+          level: source.level != null ? source.level : 1,
+          fame: source.fame != null ? source.fame : 0,
+          expPercent: source.expPercent != null ? source.expPercent : 0,
+          territorySkin: source.territorySkin || 'center',
+          activity: {
+            posts: act.posts != null ? act.posts : 0,
+            comments: act.comments != null ? act.comments : 0,
+            receivedLikes: act.receivedLikes != null ? act.receivedLikes : 0,
+            discussions: act.discussions != null ? act.discussions : 0,
+            aura: act.aura != null ? act.aura : 0,
+          },
+          territory: {
+            current: terr.current || '중앙광장',
+            moved: terr.moved != null ? terr.moved : 0,
+            influence: terr.influence != null ? terr.influence : 0,
+            rank: terr.rank || '참여자',
+          },
+        };
+      };
+
+      window.refreshCurrentProfile = function () {
+        var profileData = window.getCurrentProfileData();
+        window.renderProfileData(profileData);
+        return profileData;
+      };
+
+      /* ProfileFrame 좌표 — 1024×819 PNG 원본 기준 px (영토 스킨별) */
+      var SC_PROFILE_LAYOUT_REF = { w: 1024, h: 819 };
+      var SC_PROFILE_LAYOUT_STORAGE_KEY = 'sc_profile_layout_editor_v3';
+      var SC_PROFILE_LAYOUT_CENTER = {
+        userId: { x: 403, y: 31, w: 246, h: 20 },
+        level: { x: 404, y: 77, w: 53, h: 20 },
+        fame: { x: 731, y: 78, w: 241, h: 20 },
+        exp: { x: 393, y: 121, w: 579, h: 20 },
+        expGauge: { x: 392, y: 126, w: 590, h: 10 },
+        activity: [
+          { x: 308, y: 622, w: 123, h: 20 },
+          { x: 308, y: 651, w: 123, h: 20 },
+          { x: 308, y: 679, w: 123, h: 20 },
+          { x: 308, y: 706, w: 123, h: 20 },
+          { x: 308, y: 734, w: 123, h: 20 },
+        ],
+        territory: [
+          { x: 834, y: 624, w: 123, h: 20, align: 'center' },
+          { x: 834, y: 656, w: 123, h: 20, align: 'right' },
+          { x: 834, y: 687, w: 123, h: 20, align: 'right' },
+          { x: 834, y: 720, w: 123, h: 20, align: 'center' },
+        ],
+      };
+      var SC_PROFILE_LAYOUT_BY_SKIN = {
+        center: SC_PROFILE_LAYOUT_CENTER,
+        pioneer: SC_PROFILE_LAYOUT_CENTER,
+        guardian: {
+          userId: { x: 403, y: 31, w: 246, h: 20 },
+          level: { x: 404, y: 77, w: 53, h: 20 },
+          fame: { x: 731, y: 78, w: 241, h: 20 },
+          exp: { x: 393, y: 121, w: 579, h: 20 },
+          expGauge: { x: 392, y: 126, w: 590, h: 10 },
+          activity: [
+            { x: 310, y: 628, w: 123, h: 20 },
+            { x: 310, y: 658, w: 123, h: 20 },
+            { x: 310, y: 687, w: 123, h: 20 },
+            { x: 310, y: 716, w: 123, h: 20 },
+            { x: 310, y: 746, w: 123, h: 20 },
+          ],
+          territory: [
+            { x: 837, y: 629, w: 123, h: 20, align: 'center' },
+            { x: 837, y: 661, w: 123, h: 20, align: 'right' },
+            { x: 837, y: 695, w: 123, h: 20, align: 'right' },
+            { x: 837, y: 727, w: 123, h: 20, align: 'center' },
+          ],
+        },
+        alien: {
+          userId: { x: 403, y: 31, w: 246, h: 20 },
+          level: { x: 404, y: 77, w: 53, h: 20 },
+          fame: { x: 731, y: 78, w: 241, h: 20 },
+          exp: { x: 393, y: 121, w: 579, h: 20 },
+          expGauge: { x: 392, y: 126, w: 590, h: 10 },
+          activity: [
+            { x: 310, y: 620, w: 123, h: 20 },
+            { x: 310, y: 650, w: 123, h: 20 },
+            { x: 310, y: 678, w: 123, h: 20 },
+            { x: 310, y: 708, w: 123, h: 20 },
+            { x: 310, y: 735, w: 123, h: 20 },
+          ],
+          territory: [
+            { x: 837, y: 622, w: 123, h: 20, align: 'center' },
+            { x: 837, y: 653, w: 123, h: 20, align: 'right' },
+            { x: 837, y: 687, w: 123, h: 20, align: 'right' },
+            { x: 837, y: 719, w: 123, h: 20, align: 'center' },
+          ],
+        },
+      };
+      var SC_PROFILE_LAYOUT_DEFAULT = SC_PROFILE_LAYOUT_CENTER;
+
+      function cloneProfileLayout(src) {
+        return JSON.parse(JSON.stringify(src));
+      }
+
+      function getActiveProfileLayoutSkin() {
+        var frame = document.getElementById('avatar-player-card-wrap');
+        return resolveProfileTerritorySkinKey(frame && frame.dataset.territorySkin);
+      }
+
+      function getProfileLayoutStorageKey(skin) {
+        var key = resolveProfileTerritorySkinKey(skin);
+        return key === 'pioneer' ? 'center' : key;
+      }
+
+      function getProfileLayoutSkinDefaults(skin) {
+        var key = resolveProfileTerritorySkinKey(skin);
+        var layoutKey = key === 'pioneer' ? 'center' : key;
+        var layout = SC_PROFILE_LAYOUT_BY_SKIN[layoutKey] || SC_PROFILE_LAYOUT_CENTER;
+        return cloneProfileLayout(layout);
+      }
+
+      function mergeProfileLayoutOverride(base, parsed) {
+        if (!parsed || typeof parsed !== 'object') return base;
+        ['userId', 'level', 'fame', 'exp', 'expGauge'].forEach(function (key) {
+          if (parsed[key] && typeof parsed[key] === 'object') {
+            Object.assign(base[key], parsed[key]);
+          }
+        });
+        if (Array.isArray(parsed.activity)) {
+          parsed.activity.forEach(function (row, i) {
+            if (!row || !base.activity[i]) return;
+            ['x', 'y', 'w', 'h'].forEach(function (prop) {
+              if (row[prop] !== undefined) base.activity[i][prop] = row[prop];
+            });
+          });
+        }
+        if (Array.isArray(parsed.territory)) {
+          parsed.territory.forEach(function (row, i) {
+            if (!row || !base.territory[i]) return;
+            ['x', 'y', 'w', 'h'].forEach(function (prop) {
+              if (row[prop] !== undefined) base.territory[i][prop] = row[prop];
+            });
+          });
+        }
+        return base;
+      }
+
+      function loadAllProfileLayoutOverrides() {
+        try {
+          var raw = localStorage.getItem(SC_PROFILE_LAYOUT_STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function getProfileLayoutForSkin(skin) {
+        var layoutSkin = resolveProfileTerritorySkinKey(skin);
+        var base = getProfileLayoutSkinDefaults(layoutSkin);
+        var all = loadAllProfileLayoutOverrides();
+        var storeKey = getProfileLayoutStorageKey(layoutSkin);
+        if (all && all[storeKey]) {
+          return mergeProfileLayoutOverride(base, all[storeKey]);
+        }
+        return base;
+      }
+
+      function syncActiveProfileLayout(skinOpt) {
+        var skin = resolveProfileTerritorySkinKey(
+          skinOpt ||
+            (document.getElementById('avatar-player-card-wrap') || {}).dataset.territorySkin,
+        );
+        SC_PROFILE_LAYOUT = getProfileLayoutForSkin(skin);
+        window.SC_PROFILE_LAYOUT = SC_PROFILE_LAYOUT;
+        window.SC_PROFILE_LAYOUT_ACTIVE_SKIN = skin;
+        return SC_PROFILE_LAYOUT;
+      }
+
+      function saveProfileLayoutToStorage(skinOpt) {
+        try {
+          var skin = resolveProfileTerritorySkinKey(skinOpt || getActiveProfileLayoutSkin());
+          var storeKey = getProfileLayoutStorageKey(skin);
+          var all = loadAllProfileLayoutOverrides() || {};
+          all[storeKey] = cloneProfileLayout(SC_PROFILE_LAYOUT);
+          localStorage.setItem(SC_PROFILE_LAYOUT_STORAGE_KEY, JSON.stringify(all));
+        } catch (_) {
+          /* 저장 실패 시 무시 */
+        }
+      }
+
+      var SC_PROFILE_LAYOUT = syncActiveProfileLayout('center');
+      window.SC_PROFILE_LAYOUT_REF = SC_PROFILE_LAYOUT_REF;
+      window.SC_PROFILE_LAYOUT_DEFAULT = SC_PROFILE_LAYOUT_DEFAULT;
+      window.SC_PROFILE_LAYOUT_BY_SKIN = SC_PROFILE_LAYOUT_BY_SKIN;
+      window.SC_PROFILE_LAYOUT = SC_PROFILE_LAYOUT;
+      window.syncActiveProfileLayout = syncActiveProfileLayout;
+      window.getActiveProfileLayoutSkin = getActiveProfileLayoutSkin;
+
+      function applyProfileFrameRect(el, rect, scale) {
+        if (!el || !rect) return;
+        el.style.left = rect.x * scale + 'px';
+        el.style.top = rect.y * scale + 'px';
+        el.style.width = rect.w * scale + 'px';
+        el.style.height = rect.h * scale + 'px';
+      }
+
+      function ensureProfileFrameDataTextWrap(dataEl) {
+        if (!dataEl) return;
+        if (dataEl.querySelector(':scope > .profile-frame__data-text')) return;
+        var text = dataEl.textContent;
+        dataEl.textContent = '';
+        var inner = document.createElement('span');
+        inner.className = 'profile-frame__data-text';
+        inner.textContent = text;
+        dataEl.appendChild(inner);
+      }
+
+      function applyProfileFramePixelLayout(rootOpt) {
+        var frame = rootOpt || document.querySelector('.profile-frame');
+        if (!frame) return;
+        var width = frame.getBoundingClientRect().width;
+        if (!(width > 0)) return;
+        syncActiveProfileLayout(frame.dataset.territorySkin);
+        var scale = width / SC_PROFILE_LAYOUT_REF.w;
+        frame.style.setProperty('--profile-frame-scale', String(scale));
+        var L = SC_PROFILE_LAYOUT;
+        ['userIdLayer', 'levelLayer', 'fameLayer', 'expLayer'].forEach(function (layerId) {
+          var layerEl = document.getElementById(layerId);
+          if (!layerEl) return;
+          var dataEl = layerEl.querySelector('.profile-frame__data');
+          ensureProfileFrameDataTextWrap(dataEl);
+        });
+        applyProfileFrameRect(document.getElementById('userIdLayer'), L.userId, scale);
+        applyProfileFrameRect(document.getElementById('levelLayer'), L.level, scale);
+        applyProfileFrameRect(document.getElementById('fameLayer'), L.fame, scale);
+        applyProfileFrameRect(document.getElementById('expLayer'), L.exp, scale);
+        if (L.expGauge) {
+          applyProfileFrameRect(document.getElementById('expGaugeLayer'), L.expGauge, scale);
+        }
+        var actLayer = document.getElementById('activitySummaryLayer');
+        if (actLayer) {
+          var actRows = actLayer.querySelectorAll('.profile-frame__data-row');
+          for (var ai = 0; ai < L.activity.length && ai < actRows.length; ai++) {
+            ensureProfileFrameDataTextWrap(actRows[ai].querySelector('.profile-frame__data'));
+            applyProfileFrameRect(actRows[ai], L.activity[ai], scale);
+          }
+        }
+        var terrLayer = document.getElementById('territoryRecordLayer');
+        if (terrLayer) {
+          var terrRows = terrLayer.querySelectorAll('.profile-frame__data-row');
+          for (var ti = 0; ti < L.territory.length && ti < terrRows.length; ti++) {
+            applyProfileFrameRect(terrRows[ti], L.territory[ti], scale);
+            var terrData = terrRows[ti].querySelector('.profile-frame__data');
+            ensureProfileFrameDataTextWrap(terrData);
+            if (terrData) {
+              var terrAlign = String(L.territory[ti].align || 'left');
+              terrData.classList.remove(
+                'profile-frame__data--align-left',
+                'profile-frame__data--align-center',
+                'profile-frame__data--align-right',
+              );
+              if (terrAlign === 'right') {
+                terrData.classList.add('profile-frame__data--align-right');
+              } else if (terrAlign === 'center') {
+                terrData.classList.add('profile-frame__data--align-center');
+              } else {
+                terrData.classList.add('profile-frame__data--align-left');
+              }
+            }
+          }
+        }
+      }
+      window.applyProfileFramePixelLayout = applyProfileFramePixelLayout;
+
+      (function initProfileFramePixelLayout() {
+        function boot() {
+          var profileData = getCurrentProfileData();
+          renderProfileData(profileData);
+          var frame = document.querySelector('.profile-frame');
+          if (!frame) return;
+          applyProfileFramePixelLayout(frame);
+          if (typeof ResizeObserver !== 'undefined') {
+            if (!frame.__scProfileLayoutRo) {
+              frame.__scProfileLayoutRo = new ResizeObserver(function () {
+                applyProfileFramePixelLayout(frame);
+              });
+              frame.__scProfileLayoutRo.observe(frame);
+            }
+          } else {
+            window.addEventListener('resize', function () {
+              applyProfileFramePixelLayout(frame);
+            });
+          }
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', boot);
+        } else {
+          boot();
+        }
+      })();
+
+      (function initProfileLayoutEditor() {
+        var SC_PROFILE_LAYOUT_EDITOR_DEV =
+          location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        if (!SC_PROFILE_LAYOUT_EDITOR_DEV) return;
+
+        var toggleBtn = document.getElementById('profile-layout-editor-toggle');
+        var panel = document.getElementById('profile-layout-editor');
+        var selectionEl = document.getElementById('profile-layout-editor-selection');
+        var statusEl = document.getElementById('profile-layout-editor-status');
+        var copyBtn = document.getElementById('profile-layout-editor-copy');
+        var resetBtn = document.getElementById('profile-layout-editor-reset');
+        var frame = document.querySelector('.profile-frame');
+        if (!toggleBtn || !panel || !selectionEl || !copyBtn || !resetBtn || !frame) return;
+
+        document.body.classList.add('sc-profile-layout-editor-dev');
+        toggleBtn.hidden = false;
+
+        var editorActive = false;
+        var selectedTarget = null;
+        var dragState = null;
+        var layoutTargets = [];
+
+        function roundPx(n) {
+          return Math.round(Number(n) || 0);
+        }
+
+        function getTargetRect(target) {
+          if (!target) return null;
+          if (target.key === 'activity') return SC_PROFILE_LAYOUT.activity[target.index];
+          if (target.key === 'territory') return SC_PROFILE_LAYOUT.territory[target.index];
+          return SC_PROFILE_LAYOUT[target.key];
+        }
+
+        function buildLayoutTargets() {
+          layoutTargets = [];
+          var singles = [
+            ['userId', 'userIdLayer', 'USER ID'],
+            ['level', 'levelLayer', 'LEVEL'],
+            ['fame', 'fameLayer', '명성'],
+            ['exp', 'expLayer', '경험치'],
+            ['expGauge', 'expGaugeLayer', '경험치 게이지'],
+          ];
+          singles.forEach(function (item) {
+            var el = document.getElementById(item[1]);
+            if (el) layoutTargets.push({ key: item[0], index: null, label: item[2], el: el });
+          });
+          var actRows = frame.querySelectorAll('#activitySummaryLayer .profile-frame__data-row');
+          for (var ai = 0; ai < actRows.length; ai++) {
+            layoutTargets.push({
+              key: 'activity',
+              index: ai,
+              label: '활동 요약 ' + (ai + 1),
+              el: actRows[ai],
+            });
+          }
+          var terrLabels = ['현재 소속', '이동 횟수', '시민 영향력', '시민 등급'];
+          var terrRows = frame.querySelectorAll('#territoryRecordLayer .profile-frame__data-row');
+          for (var ti = 0; ti < terrRows.length; ti++) {
+            layoutTargets.push({
+              key: 'territory',
+              index: ti,
+              label: terrLabels[ti] || '영토 기록 ' + (ti + 1),
+              el: terrRows[ti],
+            });
+          }
+        }
+
+        function findTargetFromElement(el) {
+          if (!el) return null;
+          for (var i = 0; i < layoutTargets.length; i++) {
+            if (layoutTargets[i].el === el || layoutTargets[i].el.contains(el)) return layoutTargets[i];
+          }
+          return null;
+        }
+
+        function setEditorStatus(msg) {
+          if (statusEl) statusEl.textContent = msg || '';
+        }
+
+        function roundLayoutRect(rect) {
+          if (!rect) return rect;
+          rect.x = roundPx(rect.x);
+          rect.y = roundPx(rect.y);
+          rect.w = roundPx(rect.w);
+          rect.h = roundPx(rect.h);
+          return rect;
+        }
+
+        function snapshotProfileLayoutForCopy() {
+          var snap = cloneProfileLayout(SC_PROFILE_LAYOUT);
+          ['userId', 'level', 'fame', 'exp', 'expGauge'].forEach(function (key) {
+            roundLayoutRect(snap[key]);
+          });
+          snap.activity.forEach(roundLayoutRect);
+          snap.territory.forEach(roundLayoutRect);
+          return snap;
+        }
+
+        function formatRectForCopy(rect) {
+          var parts = [
+            'x: ' + roundPx(rect.x),
+            'y: ' + roundPx(rect.y),
+            'w: ' + roundPx(rect.w),
+            'h: ' + roundPx(rect.h),
+          ];
+          if (rect.align) parts.push("align: '" + rect.align + "'");
+          return '{ ' + parts.join(', ') + ' }';
+        }
+
+        function formatProfileLayoutForCopy(L, skin) {
+          var layoutKey = getProfileLayoutStorageKey(skin);
+          var lines = [
+            '// index.html — SC_PROFILE_LAYOUT_BY_SKIN.' + layoutKey + ' (1024×819 px)',
+            '        ' + layoutKey + ': {',
+            '          userId: ' + formatRectForCopy(L.userId) + ',',
+            '          level: ' + formatRectForCopy(L.level) + ',',
+            '          fame: ' + formatRectForCopy(L.fame) + ',',
+            '          exp: ' + formatRectForCopy(L.exp) + ',',
+            '          expGauge: ' + formatRectForCopy(L.expGauge) + ',',
+            '          activity: [',
+          ];
+          L.activity.forEach(function (row) {
+            lines.push('            ' + formatRectForCopy(row) + ',');
+          });
+          lines.push('          ],');
+          lines.push('          territory: [');
+          L.territory.forEach(function (row) {
+            lines.push('            ' + formatRectForCopy(row) + ',');
+          });
+          lines.push('          ],');
+          lines.push('        },');
+          return lines.join('\n');
+        }
+
+        function updateSelectionPanel() {
+          var skinLabel = getActiveProfileLayoutSkin();
+          if (!selectedTarget) {
+            selectionEl.textContent = '[' + skinLabel + '] 박스를 클릭해 선택하세요.';
+            return;
+          }
+          var rect = getTargetRect(selectedTarget);
+          if (!rect) {
+            selectionEl.textContent = '[' + skinLabel + '] 박스를 클릭해 선택하세요.';
+            return;
+          }
+          selectionEl.textContent =
+            '[' +
+            skinLabel +
+            '] ' +
+            selectedTarget.label +
+            ' · x:' +
+            roundPx(rect.x) +
+            ' y:' +
+            roundPx(rect.y) +
+            ' w:' +
+            roundPx(rect.w) +
+            ' h:' +
+            roundPx(rect.h);
+        }
+
+        function refreshTargetSelectionClasses() {
+          layoutTargets.forEach(function (target) {
+            target.el.classList.toggle(
+              'is-selected',
+              selectedTarget && target.el === selectedTarget.el,
+            );
+            target.el.classList.add('profile-frame__layout-target');
+          });
+        }
+
+        function selectTarget(target) {
+          selectedTarget = target || null;
+          refreshTargetSelectionClasses();
+          updateSelectionPanel();
+        }
+
+        function persistLayout() {
+          saveProfileLayoutToStorage();
+          applyProfileFramePixelLayout(frame);
+          updateSelectionPanel();
+        }
+
+        function getFrameScale() {
+          var width = frame.getBoundingClientRect().width;
+          return width > 0 ? width / SC_PROFILE_LAYOUT_REF.w : 1;
+        }
+
+        function onDragMove(e) {
+          if (!dragState) return;
+          var rect = getTargetRect(dragState.target);
+          if (!rect) return;
+          var dx = (e.clientX - dragState.startX) / dragState.scale;
+          var dy = (e.clientY - dragState.startY) / dragState.scale;
+          rect.x = roundPx(dragState.origX + dx);
+          rect.y = roundPx(dragState.origY + dy);
+          applyProfileFramePixelLayout(frame);
+          updateSelectionPanel();
+        }
+
+        function onDragEnd() {
+          if (!dragState) return;
+          dragState = null;
+          document.removeEventListener('mousemove', onDragMove);
+          document.removeEventListener('mouseup', onDragEnd);
+          persistLayout();
+        }
+
+        function onTargetPointerDown(e) {
+          if (!editorActive || e.button !== 0) return;
+          var target = findTargetFromElement(e.target);
+          if (!target) return;
+          e.preventDefault();
+          e.stopPropagation();
+          selectTarget(target);
+          var rect = getTargetRect(target);
+          if (!rect) return;
+          dragState = {
+            target: target,
+            startX: e.clientX,
+            startY: e.clientY,
+            origX: rect.x,
+            origY: rect.y,
+            scale: getFrameScale(),
+          };
+          document.addEventListener('mousemove', onDragMove);
+          document.addEventListener('mouseup', onDragEnd);
+        }
+
+        function nudgeSelectedTarget(mode, axis, delta) {
+          if (!selectedTarget) return;
+          var rect = getTargetRect(selectedTarget);
+          if (!rect) return;
+          if (mode === 'move') {
+            if (axis === 'x') rect.x = roundPx(rect.x + delta);
+            else rect.y = roundPx(rect.y + delta);
+          } else if (mode === 'size') {
+            if (axis === 'w') rect.w = Math.max(8, roundPx(rect.w + delta));
+            else rect.h = Math.max(8, roundPx(rect.h + delta));
+          }
+          persistLayout();
+        }
+
+        function onEditorKeyDown(e) {
+          if (!editorActive || !selectedTarget) return;
+          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+            return;
+          }
+          var tag = (e.target && e.target.tagName) || '';
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) {
+            return;
+          }
+          e.preventDefault();
+          var step = e.shiftKey ? 10 : 1;
+          if (e.altKey) {
+            if (e.key === 'ArrowLeft') nudgeSelectedTarget('size', 'w', -step);
+            else if (e.key === 'ArrowRight') nudgeSelectedTarget('size', 'w', step);
+            else if (e.key === 'ArrowUp') nudgeSelectedTarget('size', 'h', -step);
+            else if (e.key === 'ArrowDown') nudgeSelectedTarget('size', 'h', step);
+            return;
+          }
+          if (e.key === 'ArrowLeft') nudgeSelectedTarget('move', 'x', -step);
+          else if (e.key === 'ArrowRight') nudgeSelectedTarget('move', 'x', step);
+          else if (e.key === 'ArrowUp') nudgeSelectedTarget('move', 'y', -step);
+          else if (e.key === 'ArrowDown') nudgeSelectedTarget('move', 'y', step);
+        }
+
+        function setEditorActive(active) {
+          editorActive = !!active;
+          document.body.classList.toggle('sc-profile-layout-editor-active', editorActive);
+          frame.classList.toggle('profile-frame--layout-edit', editorActive);
+          toggleBtn.classList.toggle('is-active', editorActive);
+          toggleBtn.setAttribute('aria-pressed', editorActive ? 'true' : 'false');
+          panel.hidden = !editorActive;
+          panel.setAttribute('aria-hidden', editorActive ? 'false' : 'true');
+          if (!editorActive) {
+            dragState = null;
+            selectTarget(null);
+            setEditorStatus('');
+          } else {
+            buildLayoutTargets();
+            refreshTargetSelectionClasses();
+            applyProfileFramePixelLayout(frame);
+          }
+        }
+
+        function copyLayoutToClipboard() {
+          var skin = getActiveProfileLayoutSkin();
+          var text = formatProfileLayoutForCopy(snapshotProfileLayoutForCopy(), skin);
+          function done(ok) {
+            setEditorStatus(
+              ok
+                ? '[' + skin + '] SC_PROFILE_LAYOUT_BY_SKIN 블록을 복사했습니다.'
+                : '복사에 실패했습니다.',
+            );
+          }
+          if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
+            return;
+          }
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            done(document.execCommand('copy'));
+            document.body.removeChild(ta);
+          } catch (_) {
+            done(false);
+          }
+        }
+
+        function resetProfileLayout() {
+          var skin = getActiveProfileLayoutSkin();
+          var storeKey = getProfileLayoutStorageKey(skin);
+          try {
+            var all = loadAllProfileLayoutOverrides() || {};
+            delete all[storeKey];
+            localStorage.setItem(SC_PROFILE_LAYOUT_STORAGE_KEY, JSON.stringify(all));
+          } catch (_) {}
+          syncActiveProfileLayout(skin);
+          selectTarget(null);
+          applyProfileFramePixelLayout(frame);
+          setEditorStatus('[' + skin + '] 기본 좌표로 초기화했습니다.');
+        }
+
+        buildLayoutTargets();
+        layoutTargets.forEach(function (target) {
+          target.el.addEventListener('mousedown', onTargetPointerDown);
+        });
+
+        toggleBtn.addEventListener('click', function () {
+          setEditorActive(!editorActive);
+        });
+        copyBtn.addEventListener('click', copyLayoutToClipboard);
+        resetBtn.addEventListener('click', resetProfileLayout);
+        window.addEventListener('keydown', onEditorKeyDown);
+
+        window.__scProfileLayoutEditor = {
+          setActive: setEditorActive,
+          isActive: function () { return editorActive; },
+          rebuildTargets: buildLayoutTargets,
+        };
+      })();
+
+      (function initProfileSkinDevSwitcher() {
+        var SC_PROFILE_SKIN_DEV =
+          location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        if (!SC_PROFILE_SKIN_DEV) return;
+        document.body.classList.add('sc-profile-layout-editor-dev');
+        var switcher = document.getElementById('profile-skin-dev-switcher');
+        if (!switcher) return;
+        switcher.hidden = false;
+
+        function refreshSkinButtons(activeSkin) {
+          var skin = activeSkin || resolveProfileTerritorySkinKey(
+            (document.getElementById('avatar-player-card-wrap') || {}).dataset.territorySkin,
+          );
+          switcher.querySelectorAll('[data-profile-skin]').forEach(function (btn) {
+            btn.classList.toggle('is-active', btn.getAttribute('data-profile-skin') === skin);
+          });
+        }
+
+        switcher.addEventListener('click', function (e) {
+          var btn = e.target && e.target.closest ? e.target.closest('[data-profile-skin]') : null;
+          if (!btn) return;
+          setProfileTerritorySkin(btn.getAttribute('data-profile-skin'));
+        });
+
+        refreshSkinButtons();
+        window.__scRefreshProfileSkinDevButtons = refreshSkinButtons;
+      })();
 
       function resolveProfileTerritoryKey(cssId) {
         var key = String(cssId || '').trim();
@@ -10819,6 +12192,7 @@
         if (badge) badge.dataset.territory = cssId;
         var cardWrap = document.getElementById('avatar-player-card-wrap');
         if (cardWrap) cardWrap.dataset.territory = cssId;
+        setProfileTerritorySkin(cssId);
         applyProfileTerritoryAssets(cssId);
         var creed = document.getElementById('avatar-territory-creed');
         if (creed) creed.dataset.territory = cssId;

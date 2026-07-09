@@ -1,11 +1,232 @@
 ﻿# 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-05 (저녁)
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템)
 
 ---
 
 ## [미배포] — 현 작업 이후
+
+### ★ 2026-07-09 — 프로필 시스템 (ProfileFrame) 일일 정리
+
+**ProfileFrame 기본 UI 전환**
+- PNG 기반 ProfileFrame을 기본 프로필 UI로 적용 · legacy UI `hidden` 유지
+- 4종 영토 PNG (`center` / `pioneer` / `guardian` / `alien`) · `territorySkin` 자동 변경
+
+**레이아웃**
+- 좌측 하단 HUD 고정 · 패널/헤더/테두리 제거 · 접기 버튼 Frame 내부 우하단 · PNG 비율·크기 고정
+
+**좌표**
+- `%` 폐기 → `SC_PROFILE_LAYOUT` 1024×819 px · `scale = 너비 ÷ 1024`
+- localhost 좌표 에디터 (드래그 · 방향키 · localStorage v3 · 복사)
+
+**데이터 파이프라인**
+- `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` → ProfileFrame
+- `refreshCurrentProfile()` 개발용 갱신
+
+**경험치 게이지**
+- `expGaugeLayer` · 노란/골드 공통 디자인 · 100% Fill 배경 · %는 `expLayer` 텍스트만
+- `expGauge` `{ x: 392, y: 126, w: 590, h: 10 }`
+
+**미구현:** 아바타 · 성향지도 · 대표 업적 · 실유저/Firebase · 모바일 보정
+
+---
+
+### ★ 2026-07-09 (저녁12) — ProfileFrame 경험치 게이지 (expGauge)
+
+- `expGaugeLayer` + `profile-frame__exp-gauge-fill` 추가
+- `expGauge` 좌표 `{ x: 392, y: 126, w: 590, h: 10 }` · 좌표 에디터 대상
+- 색상 회색 메탈 → **노란/골드** (가독성) · 바 100% 고정 · % 텍스트는 `expLayer`만
+
+---
+
+### ★ 2026-07-09 (저녁11) — Mock User Profile Adapter
+
+- `getCurrentProfileData()` — SC_PROFILE_DATA 기반 더미 프로필 반환 (activity/territory 안전 복사)
+- `refreshCurrentProfile()` — 콘솔 테스트용 get → render 파이프라인
+- 초기 렌더: `getCurrentProfileData()` → `renderProfileData()` 흐름으로 통일
+
+---
+
+### ★ 2026-07-09 (저녁10) — renderProfileData() 영토 스킨 연동
+
+- `data.territorySkin` → 기존 `setProfileTerritorySkin()` 호출 (center/pioneer/guardian/alien PNG)
+- 텍스트 출력 + ProfileFrame 배경 스킨 한 함수로 갱신
+
+---
+
+### ★ 2026-07-09 (저녁9) — renderProfileData() ProfileFrame 렌더 파이프라인
+
+- `window.renderProfileData(data)` — SC_PROFILE_DATA → ProfileFrame 13개 텍스트 슬롯 출력
+- 페이지 로드 시 `renderProfileData(window.SC_PROFILE_DATA)` 1회 자동 실행
+- `applyScProfileDataToFrame` 제거 · 좌표/PNG/스킨은 기존 `SC_PROFILE_LAYOUT`·`setProfileTerritorySkin` 유지
+
+---
+
+### ★ 2026-07-09 (저녁8) — SC_PROFILE_DATA 단일 더미 데이터 객체
+
+- `window.SC_PROFILE_DATA` — userId, level, fame, expPercent, territorySkin, activity, territory
+- ProfileFrame 오버레이 텍스트 HTML 하드코딩 제거 → 객체 참조
+
+---
+
+### ★ 2026-07-09 (저녁7) — ProfileFrame 영토별 좌표 분리
+
+- `SC_PROFILE_LAYOUT_BY_SKIN` — center/pioneer 공통 · guardian/alien 개별 activity·territory 좌표
+- 스킨 전환 시 `syncActiveProfileLayout()` + 좌표 자동 재적용
+- localStorage v3 (스킨별 저장) · 에디터 복사/초기화 현재 스킨 기준
+
+---
+
+### ★ 2026-07-09 (저녁6) — ProfileFrame 4종 영토 PNG 스킨 연결
+
+- `pioneer.png` · `guardian.png` · `alien.png` 추가 (`public/assets/territories/profiles/`)
+- `setProfileTerritorySkin()` · `resolveProfileTerritorySkinKey()` — 배경 PNG만 교체, `SC_PROFILE_LAYOUT` 공통
+- `renderTerritoryCreed()` 연동 · localhost 스킨 전환 버튼 (중앙/개척/수호/외계)
+
+---
+
+### ★ 2026-07-09 (저녁5) — ProfileFrame 좌표 확정 (에디터 캘리브레이션)
+
+- `SC_PROFILE_LAYOUT_DEFAULT` 전체 좌표 에디터 최종값 반영 (1024×819 px)
+
+---
+
+### ★ 2026-07-09 (저녁4) — 좌표 에디터 「전체 좌표 복사」
+
+- `SC_PROFILE_LAYOUT_DEFAULT` 전체 블록(index.html 붙여넣기용) 클립보드 복사
+- 복사 시 x/y/w/h 정수 반올림 · territory `align` 포함
+
+---
+
+### ★ 2026-07-09 (저녁3) — ProfileFrame 가운데 정렬 렌더링 수정
+
+- `.profile-frame__data-text` 내부 span — flex + ellipsis 시 가운데 정렬 깨짐 해소
+- localStorage 로드 시 `align`은 기본값 유지 (x/y/w/h만 복원)
+
+---
+
+### ★ 2026-07-09 (저녁2) — ProfileFrame 정렬: 명성·경험치 오른쪽 / 소속·등급 가운데
+
+- `#fameLayer` · `#expLayer` → 박스 오른쪽 정렬
+- 영토 기록 `territory[0]`·`[3]` → `align: 'center'` (현재 소속 · 시민 등급)
+
+---
+
+### ★ 2026-07-09 (저녁) — ProfileFrame 좌표 개발용 에디터
+
+- localhost 전용 좌표 에디터: 드래그·방향키·Shift/Alt 단축키·선택 박스 x/y/w/h 표시
+- `SC_PROFILE_LAYOUT` localStorage 저장·초기화·클립보드 복사
+- `SC_PROFILE_LAYOUT_DEFAULT` 분리 · 운영(비-localhost)에서는 UI 미표시
+
+---
+
+### ★ 2026-07-09 (오후11) — ProfileFrame 하단 y +6px · 영토 기록 행별 정렬
+
+- `activity`·`territory` y 좌표 +6px (632~732 / 632~707)
+- 영토 기록 행별 정렬: 소속·등급 왼쪽 / 이동 횟수·시민 영향력 오른쪽 (`align` + `padding-right: 6px × scale`)
+
+---
+
+### ★ 2026-07-09 (오후10) — ProfileFrame activity·territory y +25px
+
+- `SC_PROFILE_LAYOUT` 활동 요약·영토 기록 행 y 좌표 +25px (대제목 줄 겹침 해소)
+- userId / level / fame / exp 좌표 변경 없음
+
+---
+
+### ★ 2026-07-09 (오후9) — ProfileFrame 좌표 체계 px 전환 (1024×819 기준)
+
+- `%` 좌표 미세조정 중단 — `SC_PROFILE_LAYOUT`에 `{ x, y, w, h }` px 고정
+- `applyProfileFramePixelLayout()` — `scale = 프레임 너비 ÷ 1024`, 화면 좌표 = px × scale
+- USER ID / LEVEL / 명성 / 경험치 / 활동 요약(5) / 영토 기록(4) 적용
+- `ResizeObserver` + 도크 펼침 시 재계산 · 4개 영토 스킨 공통 좌표계
+- alignmentMap · achievement는 % 유지 (추후 `SC_PROFILE_LAYOUT` 확장)
+- 실제 데이터 연결 없음
+
+---
+
+### ★ 2026-07-09 (오후8) — ProfileFrame 오버레이 좌표 3차 캘리브레이션
+
+- 상단 4칸·활동 요약·영토 기록 % 좌표 재조정 (라벨 겹침 해소)
+- 텍스트 `clamp(7px, 0.66vw, 11px)`
+
+---
+
+### ★ 2026-07-09 (오후7) — ProfileFrame 오버레이 색상·좌표 2차 캘리브레이션
+
+- 텍스트 `#f8f1d8` · `clamp(8px, 0.72vw, 12px)` — 가독성 개선
+- 상단 4칸·활동 요약·영토 기록 % 좌표 재조정 (프레임 기준)
+
+---
+
+### ★ 2026-07-09 (오후6) — ProfileFrame 오버레이 정렬 규칙 확정
+
+- USER ID / 명성 / 경험치 / 영토 기록 → 왼쪽 정렬 + ellipsis
+- LEVEL → 가운데 정렬
+- 활동 요약 숫자 → 오른쪽 정렬 (끝선 맞춤)
+- 공통: `position:absolute`, 칸 `width` 고정, `nowrap` + `text-overflow:ellipsis`
+
+---
+
+### ★ 2026-07-09 (오후5) — ProfileFrame 데이터 오버레이 캘리브레이션 (더미)
+
+- 6개 레이어에 더미 텍스트/숫자 출력 (USER ID, LEVEL, 명성, 경험치, 활동 요약, 영토 기록)
+- 금장색 `.profile-frame__data` 스타일 · % 좌표 임시값
+- 실제 데이터 연결 없음 (위치 보정 단계)
+
+---
+
+### ★ 2026-07-09 (오후4) — ProfileFrame 좌측 여백 축소 · 접기 버튼 금장 스타일
+
+- 도킹 `left: 0.375rem` (앱 모드 `--hud-map-inset` 대신 직접 지정)
+- 접기 버튼 `right: 1.25rem; bottom: 0.85rem` — 금장 프레임 비가림
+- 접기 버튼 금장/암색 계열 스타일 적용
+
+---
+
+### ★ 2026-07-09 (오후3) — ProfileFrame 좌하단 HUD 도킹 · 접기 버튼 카드 부착
+
+- ProfileFrame 좌하단 정렬 (`left/bottom: 1.375rem`, center 정렬 제거)
+- 패널 `width: auto` — 카드 너비에 맞춤
+- 접기 버튼 ProfileFrame 내부 `absolute` (right/bottom: 0.5rem)
+
+---
+
+### ★ 2026-07-09 (오후2) — ProfileFrame 크롬 제거 (PNG 단독 표시)
+
+- `avatar-dock__panel--profile-frame` — 패널 배경·테두리·그림자·backdrop 제거
+- "영토 시민 카드" 헤더 숨김
+- 접기 버튼만 PNG 아래 오른쪽에 소형 유지
+
+---
+
+### ★ 2026-07-09 (오후) — ProfileFrame 패널 맞춤 · 레거시 UI 숨김
+
+- `.profile-frame` — `dvh` 기반 `max-height` + `aspect-ratio: 1024/819`로 패널 내 한 화면 표시
+- 패널 내부 세로 스크롤 제거 (`avatar-dock__panel--profile-frame`)
+- `avatar-deco-panel`(기본/참여자/없음/없음) 및 레거시 프로필 DOM `hidden` 유지
+
+---
+
+### ★ 2026-07-09 — ProfileFrame 기본 레이아웃 (중앙광장 스킨)
+
+**구조**
+
+- `ProfileFrame` 컨테이너 추가 — 중앙광장 프로필 PNG를 `contain`으로 원본 비율 표시
+- 오버레이 레이어 8개 placeholder: `userIdLayer`, `levelLayer`, `fameLayer`, `expLayer`, `alignmentMapLayer`, `achievementLayer`, `activitySummaryLayer`, `territoryRecordLayer`
+- `territorySkin` 상수 준비: `center` / `pioneer` / `guardian` / `alien` (center만 실제 PNG)
+- 기존 프로필 HTML·ID는 `profile-citizen-card__legacy`에 보존 (hidden)
+
+**에셋**
+
+- `public/assets/territories/profiles/center.png` — 중앙광장 프로필 기준 이미지 (1024×819)
+
+**미구현 (의도적)**
+
+- 데이터 연결, 텍스트·숫자·게이지, hover/click/animation, 반응형 세부 좌표 조정
+
+---
 
 ### ★ 2026-07-05 저녁 — 프로필 방향·에셋 v1 확정 (문서)
 
