@@ -1,7 +1,9 @@
 # 센텐스크래프트 — 프로젝트 컨텍스트
 
 > 다른 Cursor 세션에서 이 문서를 먼저 읽어 프로젝트 전체 맥락을 파악하세요.
-> 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템 완료)
+> 마지막 업데이트: 2026-07-10 (ProfileFrame · 성향지도 · 업적)
+>
+> **AI 인수인계 요약:** `docs/AI_HANDOFF.md` ← 새 세션 시 이 문서도 함께 읽기
 
 ---
 
@@ -184,8 +186,8 @@ public/assets/territories/emblems/
 | `expGaugeLayer` | 경험치 게이지 (배경 바) | ✅ 100% Fill 고정 |
 | `activitySummaryLayer` | 활동 요약 5칸 | ✅ |
 | `territoryRecordLayer` | 영토 기록 4칸 | ✅ |
-| `alignmentMapLayer` | 성향 지도 | ⬜ placeholder |
-| `achievementLayer` | 대표 업적 | ⬜ placeholder |
+| `alignmentMapLayer` | 성향 지도 SVG | ✅ 데이터 출력 |
+| `achievementLayer` | 대표 업적 3칸 | ✅ 이미지 슬롯 · 좌표 에디터 |
 
 **정렬:** USER ID 왼쪽 · LEVEL 가운데 · 명성·경험치 오른쪽 · 활동 요약 오른쪽 · 영토 소속·등급 가운데 / 이동·영향력 오른쪽
 
@@ -194,7 +196,7 @@ public/assets/territories/emblems/
 - **% 좌표 폐기** → `SC_PROFILE_LAYOUT` / `SC_PROFILE_LAYOUT_BY_SKIN` — **1024×819 px**
 - `applyProfileFramePixelLayout()` — `scale = 프레임 너비 ÷ 1024`
 - center=pioneer 공통 · guardian/alien은 activity·territory 좌표 개별
-- **좌표 에디터 (localhost):** 드래그 · 방향키 · localStorage v3 · 전체 좌표 복사
+- **좌표 에디터 (localhost):** 드래그 · 방향키 · localStorage v3 · 전체 좌표 복사 · 성향지도 캘리브레이션 · **대표 업적 슬롯** (영역+슬롯0~2 · AI 복사)
 
 #### 데이터 파이프라인 (표준 흐름)
 
@@ -214,7 +216,8 @@ ProfileFrame
 {
   userId, level, fame, expPercent, territorySkin,
   activity: { posts, comments, receivedLikes, discussions, aura },
-  territory: { current, moved, influence, rank }
+  territory: { current, moved, influence, rank },
+  alignment: { center, pioneer, guardian, alien }  // 0~100
 }
 ```
 
@@ -228,13 +231,34 @@ ProfileFrame
 | `window.refreshCurrentProfile()` | get → render 개발용 갱신 |
 | `window.setProfileTerritorySkin(key)` | PNG + 좌표 스킨 전환 |
 | `window.SC_PROFILE_LAYOUT` | 활성 px 좌표 (에디터 가변) |
+| `window.__scProfileLayoutEditor` | localhost 좌표 에디터 API (`getAlignmentEditorMax` · `copyAlignmentCalibration` 등) |
 
 #### 경험치 게이지 (expGauge)
 
 - **영토 색상 사용 안 함** — 4개 영토 모두 동일 디자인 (유저 성장 수치)
-- Track: `#5a4510` · Fill: `linear-gradient(90deg, #b8860b, #e8b820, #ffd84d)`
+- Fill: `linear-gradient(90deg, #fff0a0 → #f0d050 → #d4a828 → #a07018 → #6b4512)` — 좌 밝은 노랑 · 우 짙은 갈색
+- Track: `#3d2810`
 - 게이지 바: **항상 100% Fill** (배경) · 실제 진행률은 `expLayer` 텍스트(`68%` 등)만
 - `expGauge`: `{ x: 392, y: 126, w: 590, h: 10 }` — 좌표 에디터로 조정 가능
+
+#### 성향 지도 SVG (alignmentMapLayer)
+
+- `data.alignment` 4축 (0~100) → polygon · polyline · 점
+- fill `rgba(255,215,90,0.22)` · stroke-width 2 · `drop-shadow` gold glow
+- 값 변경 시 `transition 0.28s ease-out`
+- 중심점 circle · 축 점 r 2.8
+- **현재 소속 ♛** — 제거 (PNG 텍스트 가림 방지)
+- `alignmentMap`: center/pioneer `{ x: 305, y: 355 }` · guardian/alien `{ x: 309, y: 360 }` (w/h 190)
+- **캘리브레이션 그룹:** `centerPioneer` (중앙·개척) · `guardianAlien` (수호·외계)
+- `SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP` — 축별 최대 스케일 (게임값 100 → PNG 축 끝)
+- 에디터: 그룹별 `previewMax` · 빨간 점 = 중앙(0) · 「성향지도 복사」
+
+#### 대표 업적 (achievementLayer)
+
+- `data.achievements` — `{ id, title, date }` 객체 배열 (최대 3) · 문자열 id 하위 호환
+- 슬롯 3단: 아이콘 → 이름 → 날짜 (`profile-achievement-title` · `profile-achievement-date`)
+- `SC_PROFILE_LAYOUT.achievement` — 영역 · `achievementSlots[0~2]` — 슬롯 (1024×819 px)
+- 좌표 에디터: 영역+슬롯 드래그 · 스킨별 localStorage · 「업적 슬롯 복사 (AI 전달용)」
 
 #### 영토 시민 카드 확정 방향 (legacy·향후 연동 참고)
 
@@ -375,14 +399,13 @@ alien     : rgba(199, 125, 255, 0.08)
 - 레벨/XP 계산 (config 정의됨, ProfileFrame은 더미 `expPercent`만)
 - 영토 귀속 자동화 (룰 정의됨, 자동 처리 미구현)
 - 프로필 활동/영토 기록 — **ProfileFrame 더미 데이터** (`SC_PROFILE_DATA`, 실데이터 미연결)
-- ProfileFrame `alignmentMapLayer` · `achievementLayer` — placeholder
+- ProfileFrame `alignmentMapLayer` — SVG 더미 연동 완료 · `achievementLayer` placeholder
 - 성향 AI 한 줄 설명 — UI 골격만 (legacy), AI 연동 없음
 - 레거시 `territory-icons` PNG — 신규 emblems WEBP와 **혼재**
 
 ### ❌ 미구현
 
 - **ProfileFrame 아바타** (전신 이미지 오버레이)
-- **ProfileFrame 성향 지도** (`alignmentMapLayer`)
 - **ProfileFrame 대표 업적** (`achievementLayer`)
 - **실로그인/Firebase → `getCurrentProfileData()` 연결**
 - 실제 경험치·활동 데이터 집계

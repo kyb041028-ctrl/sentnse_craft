@@ -2300,10 +2300,16 @@
       object-fit: cover;
       display: block;
     }
-    .board-post-detail__meta .board__author-thumb {
-      width: 2.1rem;
-      height: 2.1rem;
-      margin-top: 0.1rem;
+    #post-detail-root.board-post-detail .board__author-thumb {
+      width: 2.35rem;
+      height: 2.35rem;
+      margin-top: 0;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(56, 189, 248, 0.26);
+      background: rgba(8, 14, 28, 0.75);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.32),
+        0 2px 6px rgba(0, 0, 0, 0.22);
     }
     .avatar-dock__meta {
       margin: 0;
@@ -2534,6 +2540,254 @@
     }
     .sc-map-tab--stats {
       min-width: 3.45rem;
+    }
+    .sc-map-tab--notify {
+      position: relative;
+      min-width: 3.45rem;
+    }
+    .sc-notification-center-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+    .sc-notification-center-wrap--map {
+      z-index: 13;
+    }
+    .sc-notification-badge {
+      position: absolute;
+      top: 0.15rem;
+      right: 0.2rem;
+      min-width: 1rem;
+      height: 1rem;
+      padding: 0 0.22rem;
+      border-radius: 999px;
+      background: rgba(239, 68, 68, 0.92);
+      border: 1px solid rgba(254, 202, 202, 0.55);
+      color: #fff;
+      font-size: 0.52rem;
+      font-weight: 800;
+      line-height: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+      pointer-events: none;
+    }
+    .sc-notification-badge[hidden] {
+      display: none;
+    }
+    .sc-notification-panel {
+      position: absolute;
+      top: calc(100% + 0.35rem);
+      right: 0;
+      z-index: 40;
+      width: min(20rem, calc(100vw - 1.5rem));
+      max-height: min(24rem, 60vh);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--sc-r-md, 10px);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      background: rgba(10, 16, 32, 0.96);
+      backdrop-filter: blur(12px);
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .sc-notification-panel[hidden] {
+      display: none !important;
+    }
+    .sc-notification-panel__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem 0.5rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .sc-notification-panel__title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #e2e8f0;
+    }
+    .sc-notification-panel__read-all {
+      margin: 0;
+      padding: 0.22rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      background: rgba(15, 30, 52, 0.85);
+      color: #bae6fd;
+      font-size: 0.62rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sc-notification-panel__read-all:hover {
+      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(20, 40, 68, 0.95);
+      color: #f0f9ff;
+    }
+    .sc-notification-list {
+      margin: 0;
+      padding: 0.35rem 0;
+      list-style: none;
+      overflow-y: auto;
+      flex: 1 1 auto;
+    }
+    .sc-notification-list__empty {
+      padding: 1.1rem 0.85rem;
+      text-align: center;
+      font-size: 0.68rem;
+      color: #94a3b8;
+    }
+    .sc-notification-item {
+      margin: 0;
+      padding: 0;
+    }
+    .sc-notification-item.is-unread .sc-notification-item__btn {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 2px solid rgba(56, 189, 248, 0.55);
+    }
+    .sc-notification-item__btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.18rem;
+      width: 100%;
+      margin: 0;
+      padding: 0.55rem 0.65rem;
+      border: none;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      background: transparent;
+      color: #cbd5e1;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+    .sc-notification-item__btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .sc-notification-item__title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #e2e8f0;
+    }
+    .sc-notification-item__message {
+      font-size: 0.64rem;
+      line-height: 1.35;
+      color: #94a3b8;
+    }
+    .sc-notification-item__time {
+      font-size: 0.58rem;
+      color: #64748b;
+    }
+    .sc-notification-panel--profile {
+      right: 0;
+      left: auto;
+    }
+    .sc-follow-notify-wrap--profile .sc-notification-panel {
+      width: min(18.5rem, calc(100vw - 2rem));
+    }
+    @media (max-width: 480px) {
+      .sc-notification-panel {
+        right: 0;
+        width: min(18rem, calc(100vw - 1rem));
+      }
+      .sc-map-top-tabs .sc-notification-center-wrap--map {
+        position: static;
+      }
+      .sc-notification-center-wrap--map .sc-notification-panel {
+        position: fixed;
+        top: 3.5rem;
+        right: 0.75rem;
+        left: auto;
+      }
+    }
+    /* ----- 메인 지도 — 최근 세계 활동 피드 ----- */
+    .sc-activity-feed {
+      position: absolute;
+      left: 0.45rem;
+      bottom: 0.42rem;
+      z-index: 11;
+      width: min(16.75rem, calc(100% - 0.9rem));
+      max-height: min(11.5rem, 30vh);
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+      padding: 0.45rem 0.5rem 0.42rem;
+      border-radius: var(--sc-r-md, 10px);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: rgba(8, 14, 28, 0.88);
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      pointer-events: auto;
+      overflow: hidden;
+    }
+    .sc-activity-feed__title {
+      margin: 0;
+      padding: 0 0.1rem;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .sc-activity-feed__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      overflow-y: auto;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .sc-activity-feed__empty {
+      padding: 0.35rem 0.15rem 0.2rem;
+      font-size: 0.62rem;
+      color: #64748b;
+      text-align: center;
+    }
+    .sc-activity-feed__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.38rem;
+      padding: 0.28rem 0.12rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .sc-activity-feed__item:last-child {
+      border-bottom: none;
+    }
+    .sc-activity-feed__icon {
+      flex: 0 0 auto;
+      width: 1rem;
+      font-size: 0.58rem;
+      line-height: 1.35;
+      text-align: center;
+      color: #7dd3fc;
+      opacity: 0.92;
+    }
+    .sc-activity-feed__body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .sc-activity-feed__message {
+      display: block;
+      font-size: 0.62rem;
+      line-height: 1.35;
+      color: #cbd5e1;
+    }
+    .sc-activity-feed__time {
+      display: block;
+      margin-top: 0.08rem;
+      font-size: 0.54rem;
+      color: #64748b;
+    }
+    @media (max-width: 640px) {
+      .sc-activity-feed {
+        left: 0.35rem;
+        bottom: 0.35rem;
+        width: min(15rem, calc(100% - 0.7rem));
+        max-height: min(9.5rem, 26vh);
+      }
     }
     .sc-map-tab--ranking {
       min-width: 3.45rem;
@@ -4172,13 +4426,394 @@
       color: #f8fafc;
     }
     .board-post-detail__meta {
-      margin: 0 0 0.65rem;
-      font-size: 0.78rem;
+      margin: 0 0 0.75rem;
+      font-size: 0.8rem;
       color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.52rem;
+      flex-wrap: nowrap;
+    }
+    /* ── 게시글 상세: 작성자 HUD 카드 (1차 CSS) ── */
+    #post-detail-root.board-post-detail {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+    #post-detail-root.board-post-detail > :not(.board-post-detail__meta):not(.board__follow-btn) {
+      grid-column: 1 / -1;
+    }
+    #post-detail-root.board-post-detail > .board-post-detail__meta {
+      grid-column: 1 / -1;
+      align-items: flex-start;
+      padding: 0.52rem 0.68rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(28, 36, 52, 0.9), rgba(14, 18, 30, 0.85));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 1px 3px rgba(0, 0, 0, 0.18);
+      transition:
+        border-color var(--sc-ease),
+        box-shadow var(--sc-ease);
+    }
+    #post-detail-root.board-post-detail > .board-post-detail__meta:has(+ .board__follow-btn) {
+      padding-right: 5.35rem;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      #post-detail-root.board-post-detail > .board-post-detail__meta:hover,
+      #post-detail-root.board-post-detail:has(> .board__follow-btn:hover) > .board-post-detail__meta {
+        border-color: rgba(56, 189, 248, 0.22);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          0 0 12px rgba(56, 189, 248, 0.08);
+      }
+    }
+    #post-detail-root.board-post-detail > .board-post-detail__meta .board__author-line__text {
+      line-height: 1.48;
+      letter-spacing: 0.01em;
+      word-spacing: 0.05em;
+      color: #a8b8cc;
+    }
+    .board-post-detail__author-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .board-post-detail__author-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #e8edf4;
+      line-height: 1.22;
+      letter-spacing: 0.01em;
+    }
+    .board-post-detail__author-stat {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #9db0c8;
+      line-height: 1.22;
+    }
+    .board-post-detail__author-time {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.28rem;
+      font-size: 0.63rem;
+      color: #64748b;
+      line-height: 1.2;
+      margin-top: 0.02rem;
+    }
+    .board-post-detail__author-time-text {
+      min-width: 0;
+    }
+    .board-post-detail__territory-badge {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 0.04rem 0.34rem;
+      font-size: 0.58rem;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+      border-radius: 4px;
+      border: 1px solid rgba(61, 255, 179, 0.28);
+      background: rgba(61, 255, 179, 0.06);
+      color: #3DFFB3;
+      box-shadow: none;
+    }
+    .board-post-detail__territory-badge[data-territory="reform"] {
+      border-color: rgba(90, 168, 255, 0.30);
+      background: rgba(90, 168, 255, 0.08);
+      color: #5AA8FF;
+    }
+    .board-post-detail__territory-badge[data-territory="order"] {
+      border-color: rgba(255, 90, 90, 0.30);
+      background: rgba(255, 90, 90, 0.08);
+      color: #FF5A5A;
+    }
+    .board-post-detail__territory-badge[data-territory="alien"] {
+      border-color: rgba(199, 125, 255, 0.30);
+      background: rgba(199, 125, 255, 0.08);
+      color: #C77DFF;
+    }
+    #post-detail-root.board-post-detail .board__author-thumb {
+      margin-top: 0.06rem;
+    }
+    #post-detail-root.board-post-detail > .board-post-detail__meta + .board__follow-btn {
+      grid-row: 2;
+      grid-column: 2;
+      align-self: center;
+      justify-self: end;
+      margin: 0 0.62rem 0 0;
+      margin-left: 0;
+      padding: 0.2rem 0.52rem;
+      font-size: 0.64rem;
+      z-index: 1;
+    }
+    #post-detail-root.board-post-detail > .board-post-detail__meta--profile-link {
+      cursor: pointer;
+    }
+    /* ── Hover 미니 프로필 (공통 · ScMiniProfile) ── */
+    .sc-mini-profile {
+      position: fixed;
+      z-index: 12050;
+      width: 13.5rem;
+      max-width: calc(100vw - 1rem);
+      padding: 0.55rem 0.62rem 0.5rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(180deg, rgba(24, 32, 48, 0.97), rgba(12, 16, 28, 0.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 8px 24px rgba(0, 0, 0, 0.42);
+      pointer-events: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(4px);
+      transition:
+        opacity 0.18s ease,
+        visibility 0.18s ease,
+        transform 0.18s ease;
+    }
+    .sc-mini-profile.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .sc-mini-profile__head {
       display: flex;
       align-items: flex-start;
       gap: 0.45rem;
-      flex-wrap: wrap;
+      margin-bottom: 0.42rem;
+    }
+    .sc-mini-profile__avatar {
+      flex: 0 0 auto;
+      width: 2.15rem;
+      height: 2.15rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1.5px solid rgba(56, 189, 248, 0.28);
+      background: rgba(8, 14, 28, 0.75);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.32);
+    }
+    .sc-mini-profile__avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .sc-mini-profile__avatar--empty {
+      background: rgba(51, 65, 85, 0.55);
+    }
+    .sc-mini-profile__identity {
+      min-width: 0;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.08rem;
+    }
+    .sc-mini-profile__name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #eef2f7;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .sc-mini-profile__stat {
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: #9db0c8;
+      line-height: 1.2;
+    }
+    .sc-mini-profile__territory {
+      font-size: 0.62rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #3DFFB3;
+    }
+    .sc-mini-profile__territory[data-territory="reform"] { color: #5AA8FF; }
+    .sc-mini-profile__territory[data-territory="order"]  { color: #FF5A5A; }
+    .sc-mini-profile__territory[data-territory="alien"]  { color: #C77DFF; }
+    .sc-mini-profile__achievements {
+      margin-bottom: 0.38rem;
+      padding-top: 0.32rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-mini-profile__ach-title {
+      margin: 0 0 0.22rem;
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      letter-spacing: 0.03em;
+    }
+    .sc-mini-profile__ach-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+    }
+    .sc-mini-profile__ach-item {
+      font-size: 0.6rem;
+      color: #b6c4d6;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sc-mini-profile__ach-empty {
+      font-size: 0.58rem;
+      color: #64748b;
+    }
+    .sc-mini-profile__metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.22rem;
+      margin-bottom: 0.34rem;
+      padding-top: 0.3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-mini-profile__metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.06rem;
+      min-width: 0;
+    }
+    .sc-mini-profile__metric-label {
+      font-size: 0.54rem;
+      color: #64748b;
+      line-height: 1.15;
+    }
+    .sc-mini-profile__metric-value {
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      line-height: 1.15;
+    }
+    .sc-mini-profile__hint {
+      margin: 0;
+      padding-top: 0.28rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.56rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.25;
+    }
+    /* ── 프로필 모달 (공통 · ScProfileModal) ── */
+    .sc-profile-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 12100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+    }
+    .sc-profile-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .sc-profile-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+    }
+    .sc-profile-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 52rem);
+      max-height: min(92vh, 56rem);
+      padding: 0.85rem 0.85rem 0.75rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(180deg, rgba(28, 36, 52, 0.98), rgba(12, 16, 28, 0.99));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 16px 40px rgba(0, 0, 0, 0.55);
+      transform: translateY(8px);
+      transition: transform 0.2s ease;
+    }
+    .sc-profile-modal.is-open .sc-profile-modal__panel {
+      transform: translateY(0);
+    }
+    .sc-profile-modal__close-x {
+      position: absolute;
+      top: 0.45rem;
+      right: 0.45rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      transition:
+        color var(--sc-ease),
+        border-color var(--sc-ease),
+        background var(--sc-ease);
+    }
+    .sc-profile-modal__close-x:hover {
+      color: #e2e8f0;
+      border-color: rgba(56, 189, 248, 0.28);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .sc-profile-modal__body {
+      min-height: 5.5rem;
+      max-height: calc(92vh - 5.5rem);
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0.35rem 0.25rem 0.5rem;
+    }
+    .sc-profile-modal__frame-mount {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .sc-profile-modal__frame-mount .profile-frame {
+      --profile-frame-chrome-h: 0rem;
+      --profile-frame-max-h: min(78vh, calc(92vw * 819 / 1024));
+      width: min(100%, calc(var(--profile-frame-max-h) * 1024 / 819));
+      max-width: 100%;
+      max-height: var(--profile-frame-max-h);
+      margin: 0 auto;
+    }
+    .sc-profile-modal__loading {
+      margin: 0;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #9db0c8;
+      text-align: center;
+      line-height: 1.45;
+    }
+    .sc-profile-modal__footer {
+      display: flex;
+      justify-content: center;
+      padding-top: 0.55rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-profile-modal__close-btn {
+      min-width: 5.5rem;
+      font-size: 0.72rem;
+    }
+    body.sc-profile-modal-open {
+      overflow: hidden;
     }
     .board-post-detail__body {
       margin: 0.65rem 0 0;
@@ -8292,12 +8927,12 @@
       text-align: right;
       padding-right: calc(6px * var(--profile-frame-scale, 1));
     }
-    /* 경험치 게이지 — 영토 무관 공통 노란색 (유저 성장 · 100% 바 고정 배경) */
+    /* 경험치 게이지 — 영토 무관 공통 (좌 밝은 노랑 → 우 짙은 갈색) */
     #expGaugeLayer {
       z-index: 1;
       border-radius: 999px;
-      background: #5a4510;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+      background: #3d2810;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
     }
     #expLayer {
       z-index: 2;
@@ -8306,8 +8941,17 @@
       height: 100%;
       width: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #b8860b, #e8b820, #ffd84d);
-      box-shadow: inset 0 1px 0 rgba(255, 248, 200, 0.45);
+      background: linear-gradient(
+        90deg,
+        #fff0a0 0%,
+        #f0d050 22%,
+        #d4a828 45%,
+        #a07018 72%,
+        #6b4512 100%
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 245, 190, 0.4),
+        inset 0 -1px 2px rgba(40, 22, 6, 0.35);
     }
     #levelLayer .profile-frame__data {
       justify-content: center;
@@ -8360,21 +9004,144 @@
       pointer-events: none;
     }
 
-    /* alignmentMap · achievement — px 레이아웃 미적용 (추후 SC_PROFILE_LAYOUT 확장) */
+    /* achievement — SC_PROFILE_LAYOUT px (applyProfileFramePixelLayout) */
     #alignmentMapLayer {
-      left: 27%;
-      top: 41%;
-      width: 30%;
-      height: 30%;
+      pointer-events: none;
     }
-    #achievementLayer {
-      left: 58%;
-      top: 41%;
-      width: 37%;
-      height: 30%;
+    .profile-frame__alignment-map svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .profile-frame__alignment-fill {
+      fill: rgb(255, 215, 90);
+      fill-opacity: 0.22;
+      stroke: rgba(255, 228, 140, 0.96);
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 0 3px rgba(255, 210, 90, 0.45));
+      transition: fill-opacity 0.28s ease-out;
+    }
+    .profile-frame__alignment-line {
+      fill: none;
+      stroke: rgba(255, 225, 130, 0.78);
+      stroke-width: 1.4;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 0 2px rgba(255, 210, 90, 0.3));
+    }
+    .profile-frame__alignment-dot {
+      fill: #ffe28a;
+      stroke: rgba(120, 85, 20, 0.45);
+      stroke-width: 0.5;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 0 2px rgba(255, 210, 90, 0.35));
+    }
+    .profile-frame__alignment-center {
+      fill: rgba(255, 235, 170, 0.55);
+      stroke: rgba(255, 220, 120, 0.7);
+      stroke-width: 0.6;
+      vector-effect: non-scaling-stroke;
+      transition: all 0.28s ease-out;
+    }
+    .profile-frame__alignment-min-dot {
+      fill: #ff5a5a;
+      stroke: rgba(255, 255, 255, 0.92);
+      stroke-width: 0.55;
+      vector-effect: non-scaling-stroke;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+    .profile-frame.profile-frame--layout-edit .profile-frame__alignment-min-dot {
+      opacity: 1;
+    }
+    .profile-frame__alignment-map--editor-preview .profile-frame__alignment-fill {
+      stroke-dasharray: 4 3;
+      fill-opacity: 0.14;
+    }
+    .profile-layout-editor__alignment-panel {
+      margin-top: 0.65rem;
+      padding-top: 0.55rem;
+      border-top: 1px solid rgba(255, 200, 80, 0.22);
+    }
+    .profile-layout-editor__subtitle {
+      margin: 0 0 0.35rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #f8e8b8;
+    }
+    .profile-layout-editor__alignment-maxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.28rem 0.45rem;
+      margin: 0.4rem 0 0.5rem;
+      font-size: 0.62rem;
+      color: rgba(248, 241, 216, 0.88);
+    }
+    .profile-layout-editor__alignment-maxes label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+    }
+    .profile-layout-editor__alignment-maxes input {
+      width: 3.1rem;
+      padding: 0.12rem 0.2rem;
+      border-radius: 0.2rem;
+      border: 1px solid rgba(255, 200, 80, 0.35);
+      background: rgba(0, 0, 0, 0.35);
+      color: #f8f1d8;
+      font-size: 0.62rem;
+      text-align: right;
+    }
+    /* achievement — SC_PROFILE_LAYOUT px (applyProfileFramePixelLayout) */
+    .profile-achievement-slot {
+      position: static;
+      width: 0;
+      height: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .profile-achievement-img,
+    .profile-achievement-title,
+    .profile-achievement-date {
+      position: absolute;
+      box-sizing: border-box;
+      pointer-events: none;
+      user-select: none;
+    }
+    .profile-achievement-img {
+      object-fit: contain;
+      -webkit-user-drag: none;
+    }
+    .profile-achievement-title,
+    .profile-achievement-date {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f8f1d8;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    }
+    .profile-achievement-title {
+      font-size: calc(6px * var(--profile-frame-scale, 1));
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .profile-achievement-date {
+      font-size: calc(5px * var(--profile-frame-scale, 1));
+      font-weight: 500;
+      opacity: 0.88;
+      letter-spacing: -0.01em;
     }
 
-    /* ProfileFrame 좌표 에디터 — localhost 개발 모드 전용 */
+    /* ProfileFrame 좌표 에디터 — localhost 전용 · 기본 숨김 */
     .profile-layout-editor-toggle {
       display: none;
       position: fixed;
@@ -8502,6 +9269,8 @@
     .profile-frame.profile-frame--layout-edit #fameLayer,
     .profile-frame.profile-frame--layout-edit #expLayer,
     .profile-frame.profile-frame--layout-edit #expGaugeLayer,
+    .profile-frame.profile-frame--layout-edit #alignmentMapLayer,
+    .profile-frame.profile-frame--layout-edit #achievementLayer,
     .profile-frame.profile-frame--layout-edit #activitySummaryLayer,
     .profile-frame.profile-frame--layout-edit #territoryRecordLayer {
       pointer-events: none;
@@ -8511,6 +9280,11 @@
     .profile-frame.profile-frame--layout-edit #fameLayer,
     .profile-frame.profile-frame--layout-edit #expLayer,
     .profile-frame.profile-frame--layout-edit #expGaugeLayer,
+    .profile-frame.profile-frame--layout-edit #alignmentMapLayer,
+    .profile-frame.profile-frame--layout-edit #achievementLayer,
+    .profile-frame.profile-frame--layout-edit .profile-achievement-img,
+    .profile-frame.profile-frame--layout-edit .profile-achievement-title,
+    .profile-frame.profile-frame--layout-edit .profile-achievement-date,
     .profile-frame.profile-frame--layout-edit .profile-frame__data-row {
       outline: 1px dashed rgba(255, 72, 72, 0.78);
       outline-offset: -1px;
@@ -8637,6 +9411,32 @@
       width: calc(
         (100dvh - var(--sc-hud-tab-h) - var(--sc-hud-panel-gap) - var(--sc-hud-safe-bottom) - 0.75rem - 1.375rem) * 1024 / 819
       );
+    }
+    @keyframes profile-frame-expand-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .profile-frame.profile-frame--expand-in .profile-frame__container {
+      animation: profile-frame-expand-in 0.2s ease-out;
+    }
+    @keyframes profile-frame-collapse-out {
+      from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(8px) scale(0.985);
+      }
+    }
+    .profile-frame.profile-frame--collapse-out .profile-frame__container {
+      animation: profile-frame-collapse-out 0.18s ease-in forwards;
     }
 
     /* ══════════════════════════════════════════
@@ -9336,8 +10136,44 @@
                 기록
               </button>
               <button type="button" class="sc-map-tab sc-map-tab--soon" disabled title="준비 중">설정</button>
-              <button type="button" class="sc-map-tab sc-map-tab--soon" disabled title="준비 중">알림</button>
+              <div class="sc-notification-center-wrap sc-notification-center-wrap--map">
+                <button
+                  type="button"
+                  id="sc-notification-toggle"
+                  class="sc-map-tab sc-map-tab--notify"
+                  aria-label="알림"
+                  title="알림"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  알림
+                  <span id="sc-notification-badge" class="sc-notification-badge" hidden aria-hidden="true">0</span>
+                </button>
+                <div
+                  id="sc-notification-panel"
+                  class="sc-notification-panel sc-panel"
+                  hidden
+                  role="dialog"
+                  aria-label="알림"
+                >
+                  <div class="sc-notification-panel__head">
+                    <span class="sc-notification-panel__title">알림</span>
+                    <button type="button" id="sc-notification-read-all" class="sc-notification-panel__read-all">
+                      모두 읽음
+                    </button>
+                  </div>
+                  <ul id="sc-notification-list" class="sc-notification-list" role="list"></ul>
+                </div>
+              </div>
             </div>
+            <aside
+              id="sc-activity-feed-panel"
+              class="sc-activity-feed sc-panel"
+              aria-label="최근 세계 활동"
+            >
+              <h3 class="sc-activity-feed__title">최근 세계 활동</h3>
+              <ul id="sc-activity-feed-list" class="sc-activity-feed__list" role="list"></ul>
+            </aside>
             <div id="territory-hit-zones-wrap" class="territory-hit-zones-wrap">
               <svg
                 id="territory-hit-zones"
@@ -9892,24 +10728,51 @@
           <div class="profile-frame__container" role="img" aria-label="중앙광장 시민 프로필 프레임">
             <div class="profile-frame__bg" aria-hidden="true"></div>
             <div class="profile-frame__overlay">
-              <div class="profile-frame__layer" id="userIdLayer">
+              <div class="profile-frame__layer" id="userIdLayer" data-pf-layer="userIdLayer">
                 <span class="profile-frame__data profile-frame__data--align-left"><span class="profile-frame__data-text"></span></span>
               </div>
-              <div class="profile-frame__layer" id="levelLayer">
+              <div class="profile-frame__layer" id="levelLayer" data-pf-layer="levelLayer">
                 <span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span>
               </div>
-              <div class="profile-frame__layer" id="fameLayer">
+              <div class="profile-frame__layer" id="fameLayer" data-pf-layer="fameLayer">
                 <span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span>
               </div>
-              <div class="profile-frame__layer" id="expGaugeLayer" aria-hidden="true">
+              <div class="profile-frame__layer" id="expGaugeLayer" data-pf-layer="expGaugeLayer" aria-hidden="true">
                 <div class="profile-frame__exp-gauge-fill"></div>
               </div>
-              <div class="profile-frame__layer" id="expLayer">
+              <div class="profile-frame__layer" id="expLayer" data-pf-layer="expLayer">
                 <span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span>
               </div>
-              <div class="profile-frame__layer" id="alignmentMapLayer"></div>
-              <div class="profile-frame__layer" id="achievementLayer"></div>
-              <div class="profile-frame__layer" id="activitySummaryLayer">
+              <div class="profile-frame__layer profile-frame__alignment-map" id="alignmentMapLayer" data-pf-layer="alignmentMapLayer">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <polygon class="profile-frame__alignment-fill"></polygon>
+                  <polyline class="profile-frame__alignment-line"></polyline>
+                  <circle class="profile-frame__alignment-dot profile-frame__alignment-dot--alien" r="2.8"></circle>
+                  <circle class="profile-frame__alignment-dot profile-frame__alignment-dot--guardian" r="2.8"></circle>
+                  <circle class="profile-frame__alignment-dot profile-frame__alignment-dot--center" r="2.8"></circle>
+                  <circle class="profile-frame__alignment-dot profile-frame__alignment-dot--pioneer" r="2.8"></circle>
+                  <circle class="profile-frame__alignment-center" cx="50" cy="50" r="1.8"></circle>
+                  <circle class="profile-frame__alignment-min-dot" cx="50" cy="50" r="2.6"></circle>
+                </svg>
+              </div>
+              <div class="profile-frame__layer" id="achievementLayer" data-pf-layer="achievementLayer">
+                <div class="profile-achievement-slot" data-slot="0">
+                  <img class="profile-achievement-img" alt="" draggable="false" decoding="async" />
+                  <div class="profile-achievement-title"></div>
+                  <div class="profile-achievement-date"></div>
+                </div>
+                <div class="profile-achievement-slot" data-slot="1">
+                  <img class="profile-achievement-img" alt="" draggable="false" decoding="async" />
+                  <div class="profile-achievement-title"></div>
+                  <div class="profile-achievement-date"></div>
+                </div>
+                <div class="profile-achievement-slot" data-slot="2">
+                  <img class="profile-achievement-img" alt="" draggable="false" decoding="async" />
+                  <div class="profile-achievement-title"></div>
+                  <div class="profile-achievement-date"></div>
+                </div>
+              </div>
+              <div class="profile-frame__layer" id="activitySummaryLayer" data-pf-layer="activitySummaryLayer">
                 <ul class="profile-frame__data-list">
                   <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
                   <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
@@ -9918,7 +10781,7 @@
                   <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
                 </ul>
               </div>
-              <div class="profile-frame__layer" id="territoryRecordLayer">
+              <div class="profile-frame__layer" id="territoryRecordLayer" data-pf-layer="territoryRecordLayer">
                 <ul class="profile-frame__data-list">
                   <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></li>
                   <li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>
@@ -10095,8 +10958,8 @@
                   type="button"
                   id="sc-follow-notify-toggle"
                   class="sc-follow-notify-toggle sc-follow-notify-toggle--bell"
-                  aria-label="활동 알림"
-                  title="팔로우 변동 · 새 글 알림"
+                  aria-label="알림"
+                  title="알림"
                   aria-expanded="false"
                 >
                   <svg class="sc-follow-notify-bell" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -10105,18 +10968,12 @@
                   </svg>
                   <span id="sc-follow-notify-badge" class="sc-follow-notify-badge" hidden>0</span>
                 </button>
-                <div id="sc-follow-notify-panel" class="sc-follow-notify-panel" hidden>
-                  <div class="sc-follow-notify__head">
-                    <div class="sc-follow-notify__head-left">
-                      <span class="sc-follow-notify__head-title">활동 알림</span>
-                      <span class="sc-follow-notify__head-note">팔로우 변동 · 새 글</span>
-                    </div>
-                    <div class="sc-follow-notify__head-actions">
-                      <button type="button" id="sc-follow-notify-read" title="목록의 알림을 모두 읽음 처리">전체 읽음</button>
-                      <button type="button" id="sc-follow-notify-clear" title="알림 기록을 비웁니다">목록 지우기</button>
-                    </div>
+                <div id="sc-follow-notify-panel" class="sc-follow-notify-panel sc-notification-panel sc-notification-panel--profile" hidden role="dialog" aria-label="알림">
+                  <div class="sc-notification-panel__head sc-follow-notify__head">
+                    <span class="sc-notification-panel__title sc-follow-notify__head-title">알림</span>
+                    <button type="button" id="sc-follow-notify-read" class="sc-notification-panel__read-all">모두 읽음</button>
                   </div>
-                  <ul id="sc-follow-notify-list" class="sc-follow-notify-list"></ul>
+                  <ul id="sc-follow-notify-list" class="sc-follow-notify-list sc-notification-list" role="list"></ul>
                 </div>
               </div>
             </header>
@@ -10187,7 +11044,7 @@
     </button>
   </div>
 
-  <!-- ProfileFrame 좌표 에디터 (localhost 개발 모드 전용) -->
+  <!-- ProfileFrame 좌표 에디터 — localhost 전용 · 기본 숨김 · __scShowProfileLayoutEditor() 로 표시 -->
   <button
     type="button"
     id="profile-layout-editor-toggle"
@@ -10214,6 +11071,28 @@
     <div class="profile-layout-editor__actions">
       <button type="button" id="profile-layout-editor-copy" class="profile-layout-editor__btn profile-layout-editor__btn--primary">전체 좌표 복사</button>
       <button type="button" id="profile-layout-editor-reset" class="profile-layout-editor__btn">초기화</button>
+    </div>
+    <div class="profile-layout-editor__alignment-panel">
+      <p class="profile-layout-editor__subtitle">성향 지도 캘리브레이션</p>
+      <p class="profile-layout-editor__hint">
+        <strong id="profile-layout-editor-align-group-label">중앙·개척</strong> 그룹 · 축별 최대치(0~100) 미리보기 · 빨간 점 = 중앙(0)<br />
+        중앙·개척 / 수호·외계 — 스킨 전환 시 그룹별 좌표·축이 각각 적용됩니다.
+      </p>
+      <div class="profile-layout-editor__alignment-maxes">
+        <label>외계 ↑ <input type="number" id="profile-layout-editor-align-alien" min="0" max="100" step="1" value="100" /></label>
+        <label>수호 → <input type="number" id="profile-layout-editor-align-guardian" min="0" max="100" step="1" value="100" /></label>
+        <label>중앙 ↓ <input type="number" id="profile-layout-editor-align-center" min="0" max="100" step="1" value="100" /></label>
+        <label>개척 ← <input type="number" id="profile-layout-editor-align-pioneer" min="0" max="100" step="1" value="100" /></label>
+      </div>
+      <button type="button" id="profile-layout-editor-align-copy" class="profile-layout-editor__btn">성향지도 복사 (AI 전달용)</button>
+    </div>
+    <div class="profile-layout-editor__alignment-panel">
+      <p class="profile-layout-editor__subtitle">대표 업적 (아이콘·이름·날짜)</p>
+      <p class="profile-layout-editor__hint">
+        슬롯 0~2 · 아이콘/이름/날짜 클릭 후 드래그 · 크기 Alt+←→ w · Alt+↑↓ h · 스킨별 저장
+      </p>
+      <button type="button" id="profile-layout-editor-achievement-copy" class="profile-layout-editor__btn">현재 영토 업적 슬롯 복사</button>
+      <button type="button" id="profile-layout-editor-achievement-copy-all" class="profile-layout-editor__btn">전체 영토 업적 슬롯 복사</button>
     </div>
     <p id="profile-layout-editor-status" class="profile-layout-editor__status" aria-live="polite"></p>
   </div>
@@ -10385,6 +11264,787 @@
   <script src="/alignment-scoring.js"></script>
   <script src="/follow-system.js"></script>
   <script src="/player-progression.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var LS_KEY = 'sc_notifications_v1';
+      var MAX_NOTIFY = 50;
+      var DEDUPE_MS = 45000;
+      var AUTH_KEY = 'sc_sb_auth_session';
+
+      var NOTI_DEFAULT_TITLES = {
+        comment: '새 댓글',
+        like: '새 공감',
+        follow: '새 팔로워',
+        level_up: '레벨 상승',
+        alien_warn: '외계행성 경고',
+        alien_move: '외계행성 이동',
+        achievement: '업적 획득',
+      };
+
+      var NOTI_DEFAULT_MESSAGES = {
+        comment: '내 글에 댓글이 달렸습니다.',
+        like: '내 글 또는 댓글에 공감을 받았습니다.',
+        follow: '새로운 팔로워가 생겼습니다.',
+        level_up: '레벨이 올랐습니다.',
+        alien_warn: '외계행성 경고 신호가 감지되었습니다.',
+        alien_move: '외계행성 구역으로 이동했습니다.',
+        achievement: '새 업적을 획득했습니다.',
+      };
+
+      var panelOpen = { map: false, profile: false };
+
+      function genNotiId() {
+        return 'noti_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      }
+
+      function getNotificationUserKey() {
+        try {
+          var raw = sessionStorage.getItem(AUTH_KEY);
+          if (raw) {
+            var auth = JSON.parse(raw);
+            var token = auth && auth.session && auth.session.access_token;
+            if (token) {
+              var u = auth.user || (auth.session && auth.session.user);
+              if (u && u.id) return String(u.id).trim();
+              if (u && u.email) return String(u.email).trim();
+            }
+          }
+        } catch (_) {}
+        var p = window.__scPlayer && window.__scPlayer.userId;
+        var s = String(p || '').trim();
+        if (s && s !== 'guest') return s;
+        return 'guest_demo';
+      }
+
+      function loadNotifyMap() {
+        try {
+          var raw = localStorage.getItem(LS_KEY);
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveNotifyMap(map) {
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(map));
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function loadNotifications(userKeyOpt) {
+        try {
+          var key = String(userKeyOpt || getNotificationUserKey()).trim() || 'guest_demo';
+          var map = loadNotifyMap();
+          var list = map[key];
+          return Array.isArray(list) ? list.slice() : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function saveNotifications(list, userKeyOpt) {
+        try {
+          var key = String(userKeyOpt || getNotificationUserKey()).trim() || 'guest_demo';
+          var arr = Array.isArray(list) ? list.slice(0, MAX_NOTIFY) : [];
+          var map = loadNotifyMap();
+          map[key] = arr;
+          saveNotifyMap(map);
+          return arr;
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function linkTargetKey(lt) {
+        if (!lt || typeof lt !== 'object') return '';
+        try {
+          return JSON.stringify(lt);
+        } catch (_) {
+          return '';
+        }
+      }
+
+      function isDuplicateNotification(list, payload) {
+        var type = String(payload.type || '').trim();
+        var lk = linkTargetKey(payload.linkTarget);
+        var now = Date.now();
+        for (var i = 0; i < list.length && i < 8; i++) {
+          var n = list[i];
+          if (!n) continue;
+          if (String(n.type || '') !== type) continue;
+          if (linkTargetKey(n.linkTarget) !== lk) continue;
+          var ts = Number(n.createdAt) || 0;
+          if (now - ts < DEDUPE_MS) return true;
+        }
+        return false;
+      }
+
+      function formatRelativeTime(ts) {
+        var t = Number(ts) || 0;
+        if (!t) return '';
+        var diff = Date.now() - t;
+        if (diff < 0) diff = 0;
+        if (diff < 60000) return '방금 전';
+        if (diff < 3600000) return Math.floor(diff / 60000) + '분 전';
+        if (diff < 86400000) return Math.floor(diff / 3600000) + '시간 전';
+        return Math.floor(diff / 86400000) + '일 전';
+      }
+
+      function unreadCountForUser(userKeyOpt) {
+        return loadNotifications(userKeyOpt).filter(function (n) {
+          return n && !n.read;
+        }).length;
+      }
+
+      function updateNotificationBadges() {
+        var unread = unreadCountForUser();
+        var badges = [
+          document.getElementById('sc-notification-badge'),
+          document.getElementById('sc-follow-notify-badge'),
+        ];
+        badges.forEach(function (badge) {
+          if (!badge) return;
+          badge.textContent = unread > 99 ? '99+' : String(unread);
+          badge.hidden = unread <= 0;
+          badge.setAttribute('aria-hidden', unread <= 0 ? 'true' : 'false');
+        });
+      }
+
+      function buildNotificationItemElement(n, onClick) {
+        var li = document.createElement('li');
+        li.className = 'sc-notification-item' + (n.read ? '' : ' is-unread');
+        li.setAttribute('role', 'listitem');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sc-notification-item__btn';
+        var title = document.createElement('span');
+        title.className = 'sc-notification-item__title';
+        title.textContent = String(n.title || NOTI_DEFAULT_TITLES[n.type] || '알림');
+        var msg = document.createElement('span');
+        msg.className = 'sc-notification-item__message';
+        msg.textContent = String(n.message || NOTI_DEFAULT_MESSAGES[n.type] || '');
+        var time = document.createElement('span');
+        time.className = 'sc-notification-item__time';
+        time.textContent = formatRelativeTime(n.createdAt);
+        btn.appendChild(title);
+        btn.appendChild(msg);
+        btn.appendChild(time);
+        btn.addEventListener('click', function () {
+          if (typeof onClick === 'function') onClick(n);
+        });
+        li.appendChild(btn);
+        return li;
+      }
+
+      function fillNotificationList(listEl, items) {
+        if (!listEl) return;
+        listEl.textContent = '';
+        if (!items.length) {
+          var empty = document.createElement('li');
+          empty.className = 'sc-notification-list__empty';
+          empty.textContent = '새 알림이 없습니다.';
+          listEl.appendChild(empty);
+          return;
+        }
+        items.forEach(function (n) {
+          listEl.appendChild(
+            buildNotificationItemElement(n, function (item) {
+              markNotificationRead(item.id);
+              navigateFromNotification(item);
+              closeNotificationCenter();
+            }),
+          );
+        });
+      }
+
+      function renderNotifications() {
+        var items = loadNotifications();
+        fillNotificationList(document.getElementById('sc-notification-list'), items);
+        fillNotificationList(document.getElementById('sc-follow-notify-list'), items);
+        updateNotificationBadges();
+      }
+
+      function addNotification(payload, userKeyOpt) {
+        try {
+          var key = String(userKeyOpt || getNotificationUserKey()).trim() || 'guest_demo';
+          var p = payload && typeof payload === 'object' ? payload : {};
+          var type = String(p.type || '').trim();
+          if (!type) return null;
+          if (
+            type.indexOf('territory_') === 0 ||
+            type === 'territory_change' ||
+            type === 'territory_join' ||
+            type === 'territory_unlock'
+          ) {
+            return null;
+          }
+          var list = loadNotifications(key);
+          var item = {
+            id: p.id || genNotiId(),
+            type: type,
+            title: String(p.title || NOTI_DEFAULT_TITLES[type] || '알림'),
+            message: String(p.message || NOTI_DEFAULT_MESSAGES[type] || ''),
+            createdAt: Number(p.createdAt) || Date.now(),
+            read: Boolean(p.read),
+            linkTarget: p.linkTarget && typeof p.linkTarget === 'object' ? p.linkTarget : null,
+          };
+          if (isDuplicateNotification(list, item)) return null;
+          if (type === 'level_up' && item.linkTarget && item.linkTarget.level != null) {
+            var lv = item.linkTarget.level;
+            for (var li = 0; li < list.length; li++) {
+              var prev = list[li];
+              if (
+                prev &&
+                prev.type === 'level_up' &&
+                prev.linkTarget &&
+                prev.linkTarget.level === lv
+              ) {
+                return null;
+              }
+            }
+          }
+          list.unshift(item);
+          if (list.length > MAX_NOTIFY) list.length = MAX_NOTIFY;
+          saveNotifications(list, key);
+          if (key === getNotificationUserKey()) {
+            renderNotifications();
+          }
+          return item;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function markNotificationRead(id) {
+        try {
+          var nid = String(id || '').trim();
+          if (!nid) return;
+          var key = getNotificationUserKey();
+          var list = loadNotifications(key);
+          var changed = false;
+          list.forEach(function (n) {
+            if (n && n.id === nid && !n.read) {
+              n.read = true;
+              changed = true;
+            }
+          });
+          if (changed) saveNotifications(list, key);
+          renderNotifications();
+        } catch (_) {}
+      }
+
+      function markAllNotificationsRead() {
+        try {
+          var key = getNotificationUserKey();
+          var list = loadNotifications(key);
+          list.forEach(function (n) {
+            if (n) n.read = true;
+          });
+          saveNotifications(list, key);
+          renderNotifications();
+        } catch (_) {}
+      }
+
+      function clearNotifications(userKeyOpt) {
+        try {
+          saveNotifications([], userKeyOpt);
+          renderNotifications();
+        } catch (_) {}
+      }
+
+      function navigateFromNotification(n) {
+        try {
+          var lt = n && n.linkTarget;
+          if (!lt || typeof lt !== 'object') return;
+          if (lt.view === 'post' && lt.postId) {
+            if (typeof window.__scBoardNavigateToPost === 'function') {
+              window.__scBoardNavigateToPost(lt.territoryId, lt.stage, lt.postId);
+            }
+            return;
+          }
+          if (lt.view === 'profile') {
+            var dockTab = document.getElementById('avatar-dock-tab');
+            if (dockTab) dockTab.click();
+            return;
+          }
+          if (lt.view === 'board' && lt.territoryId) {
+            if (window.__scApp && typeof window.__scApp.goBoard === 'function') {
+              window.__scApp.goBoard(lt.territoryId);
+            }
+          }
+        } catch (_) {}
+      }
+
+      function setPanelOpen(which, open) {
+        var mapPanel = document.getElementById('sc-notification-panel');
+        var mapToggle = document.getElementById('sc-notification-toggle');
+        var profilePanel = document.getElementById('sc-follow-notify-panel');
+        var profileToggle = document.getElementById('sc-follow-notify-toggle');
+        if (which === 'map' || which === 'all') {
+          panelOpen.map = Boolean(open);
+          if (mapPanel) mapPanel.hidden = !panelOpen.map;
+          if (mapToggle) mapToggle.setAttribute('aria-expanded', panelOpen.map ? 'true' : 'false');
+        }
+        if (which === 'profile' || which === 'all') {
+          panelOpen.profile = Boolean(open);
+          if (profilePanel) profilePanel.hidden = !panelOpen.profile;
+          if (profileToggle) profileToggle.setAttribute('aria-expanded', panelOpen.profile ? 'true' : 'false');
+        }
+      }
+
+      function openNotificationCenter(which) {
+        renderNotifications();
+        setPanelOpen(which || 'all', true);
+      }
+
+      function closeNotificationCenter() {
+        setPanelOpen('all', false);
+      }
+
+      function toggleNotificationCenter(which) {
+        var target = which || 'map';
+        var isOpen = target === 'profile' ? panelOpen.profile : panelOpen.map;
+        if (isOpen) {
+          setPanelOpen(target, false);
+        } else {
+          openNotificationCenter(target);
+        }
+      }
+
+      function initNotificationCenterUi() {
+        var mapToggle = document.getElementById('sc-notification-toggle');
+        var profileToggle = document.getElementById('sc-follow-notify-toggle');
+        var mapPanel = document.getElementById('sc-notification-panel');
+        var profilePanel = document.getElementById('sc-follow-notify-panel');
+        var readAllMap = document.getElementById('sc-notification-read-all');
+        var readAllProfile = document.getElementById('sc-follow-notify-read');
+
+        if (mapToggle) {
+          mapToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleNotificationCenter('map');
+          });
+        }
+        if (profileToggle) {
+          profileToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleNotificationCenter('profile');
+          });
+        }
+        [mapPanel, profilePanel].forEach(function (panel) {
+          if (!panel) return;
+          panel.addEventListener('click', function (e) {
+            e.stopPropagation();
+          });
+        });
+        document.addEventListener('click', function () {
+          if (panelOpen.map || panelOpen.profile) closeNotificationCenter();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && (panelOpen.map || panelOpen.profile)) {
+            closeNotificationCenter();
+          }
+        });
+        if (readAllMap) {
+          readAllMap.addEventListener('click', function (e) {
+            e.stopPropagation();
+            markAllNotificationsRead();
+          });
+        }
+        if (readAllProfile) {
+          readAllProfile.addEventListener('click', function (e) {
+            e.stopPropagation();
+            markAllNotificationsRead();
+          });
+        }
+        renderNotifications();
+      }
+
+      window.getNotificationUserKey = getNotificationUserKey;
+      window.loadNotifications = loadNotifications;
+      window.saveNotifications = saveNotifications;
+      window.addNotification = addNotification;
+      window.markNotificationRead = markNotificationRead;
+      window.markAllNotificationsRead = markAllNotificationsRead;
+      window.clearNotifications = clearNotifications;
+      window.renderNotifications = renderNotifications;
+      window.openNotificationCenter = openNotificationCenter;
+      window.closeNotificationCenter = closeNotificationCenter;
+      window.toggleNotificationCenter = toggleNotificationCenter;
+      window.initNotificationCenterUi = initNotificationCenterUi;
+
+      window.__scAddNotification = function (type, message) {
+        return addNotification({
+          type: String(type || 'comment'),
+          message: String(message || ''),
+        });
+      };
+      window.__scNotifications = function () {
+        return loadNotifications();
+      };
+      window.__scClearNotifications = function () {
+        clearNotifications();
+      };
+
+      window.__scNotifyAlienWarn = function (message, userKeyOpt) {
+        return addNotification(
+          {
+            type: 'alien_warn',
+            title: '외계행성 경고',
+            message: message || NOTI_DEFAULT_MESSAGES.alien_warn,
+            linkTarget: { view: 'board', territoryId: 'KANTAPBIYA' },
+          },
+          userKeyOpt,
+        );
+      };
+      window.__scNotifyAlienMove = function (message, userKeyOpt) {
+        return addNotification(
+          {
+            type: 'alien_move',
+            title: '외계행성 이동',
+            message: message || NOTI_DEFAULT_MESSAGES.alien_move,
+            linkTarget: { view: 'board', territoryId: 'KANTAPBIYA' },
+          },
+          userKeyOpt,
+        );
+      };
+
+      var origGrantXp = window.__scGrantProgressionXp;
+      if (typeof origGrantXp === 'function') {
+        window.__scGrantProgressionXp = function (action) {
+          var res = origGrantXp(action);
+          try {
+            if (res && res.leveledUp && typeof addNotification === 'function') {
+              addNotification({
+                type: 'level_up',
+                title: '레벨 상승',
+                message: '레벨 ' + res.nextLevel + '에 도달했습니다.',
+                linkTarget: { view: 'profile', level: res.nextLevel },
+              });
+            }
+          } catch (_) {}
+          return res;
+        };
+      }
+    })();
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      var LS_KEY = 'sc_activity_feed_v1';
+      var MAX_STORE = 30;
+      var MAX_DISPLAY = 8;
+      var DEDUPE_MS = 30000;
+
+      var ACTIVITY_ICONS = {
+        post_created: '◆',
+        comment_created: '◇',
+        like_received: '✦',
+        empathy_added: '♡',
+        follow_created: '⟡',
+        level_up: '▲',
+        alien_warn: '⚠',
+        alien_move: '✧',
+        achievement: '★',
+      };
+
+      var TERRITORY_LABELS = {
+        COMMON: '중앙광장',
+        CENTRIST: '중앙광장',
+        CONSERVATIVE: '질서',
+        PROGRESSIVE: '개혁',
+        KANTAPBIYA: '외계행성',
+        UNASSIGNED: '미편입',
+      };
+
+      function getActivityFeedKey() {
+        return 'global_demo';
+      }
+
+      function formatActivityTerritoryLabel(tid) {
+        var t = String(tid || 'COMMON').trim() || 'COMMON';
+        if (window.PlayerProgression && typeof window.PlayerProgression.territoryLabelKo === 'function') {
+          var ko = window.PlayerProgression.territoryLabelKo(t);
+          if (ko && ko !== t) return ko;
+        }
+        return TERRITORY_LABELS[t] || TERRITORY_LABELS.COMMON;
+      }
+
+      function defaultActivityMessage(type, territory) {
+        var loc = formatActivityTerritoryLabel(territory);
+        switch (String(type || '').trim()) {
+          case 'post_created':
+            return loc + '에 새 토론이 열렸습니다.';
+          case 'comment_created':
+            return '한 시민이 토론에 의견을 남겼습니다.';
+          case 'like_received':
+            return '누군가의 문장에 반응이 모였습니다.';
+          case 'empathy_added':
+            return '누군가의 문장에 공감이 모였습니다.';
+          case 'follow_created':
+            return '새로운 연결이 생겼습니다.';
+          case 'level_up':
+            return '한 시민이 다음 레벨에 도달했습니다.';
+          case 'alien_warn':
+            return '관측 기지에 경고 신호가 기록되었습니다.';
+          case 'alien_move':
+            return '한 시민이 외계행성 관측 구역으로 이동했습니다.';
+          default:
+            return '세계에 새 활동이 기록되었습니다.';
+        }
+      }
+
+      function genActivityId() {
+        return 'act_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      }
+
+      function loadFeedMap() {
+        try {
+          var raw = localStorage.getItem(LS_KEY);
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveFeedMap(map) {
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(map));
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function loadActivityFeed(keyOpt) {
+        try {
+          var key = String(keyOpt || getActivityFeedKey()).trim() || 'global_demo';
+          var map = loadFeedMap();
+          var list = map[key];
+          return Array.isArray(list) ? list.slice() : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function saveActivityFeed(list, keyOpt) {
+        try {
+          var key = String(keyOpt || getActivityFeedKey()).trim() || 'global_demo';
+          var arr = Array.isArray(list) ? list.slice(0, MAX_STORE) : [];
+          var map = loadFeedMap();
+          map[key] = arr;
+          saveFeedMap(map);
+          return arr;
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function formatActivityRelativeTime(timestamp) {
+        var t = Number(timestamp) || 0;
+        if (!t) return '';
+        var diff = Date.now() - t;
+        if (diff < 0) diff = 0;
+        if (diff < 60000) return '방금 전';
+        if (diff < 3600000) return Math.floor(diff / 60000) + '분 전';
+        if (diff < 86400000) return Math.floor(diff / 3600000) + '시간 전';
+        return Math.floor(diff / 86400000) + '일 전';
+      }
+
+      function isDuplicateActivity(list, item) {
+        var type = String(item.type || '').trim();
+        var msg = String(item.message || '').trim();
+        var now = Date.now();
+        for (var i = 0; i < list.length && i < 6; i++) {
+          var n = list[i];
+          if (!n) continue;
+          if (String(n.type || '') !== type) continue;
+          if (String(n.message || '').trim() !== msg) continue;
+          var ts = Number(n.createdAt) || 0;
+          if (now - ts < DEDUPE_MS) return true;
+        }
+        return false;
+      }
+
+      function renderActivityFeed() {
+        var listEl = document.getElementById('sc-activity-feed-list');
+        if (!listEl) return;
+        var items = loadActivityFeed().slice(0, MAX_DISPLAY);
+        listEl.textContent = '';
+        if (!items.length) {
+          var empty = document.createElement('li');
+          empty.className = 'sc-activity-feed__empty';
+          empty.textContent = '아직 기록된 활동이 없습니다.';
+          listEl.appendChild(empty);
+          return;
+        }
+        items.forEach(function (item) {
+          var li = document.createElement('li');
+          li.className = 'sc-activity-feed__item';
+          li.setAttribute('role', 'listitem');
+          var icon = document.createElement('span');
+          icon.className = 'sc-activity-feed__icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = ACTIVITY_ICONS[item.type] || '·';
+          var body = document.createElement('div');
+          body.className = 'sc-activity-feed__body';
+          var msg = document.createElement('span');
+          msg.className = 'sc-activity-feed__message';
+          msg.textContent = String(item.message || defaultActivityMessage(item.type, item.territory));
+          var time = document.createElement('span');
+          time.className = 'sc-activity-feed__time';
+          time.textContent = formatActivityRelativeTime(item.createdAt);
+          body.appendChild(msg);
+          body.appendChild(time);
+          li.appendChild(icon);
+          li.appendChild(body);
+          listEl.appendChild(li);
+        });
+      }
+
+      function addActivityFeedItem(payload) {
+        try {
+          var p = payload && typeof payload === 'object' ? payload : {};
+          var type = String(p.type || '').trim();
+          if (!type) return null;
+          if (
+            type.indexOf('territory_') === 0 ||
+            type === 'territory_change' ||
+            type === 'territory_join' ||
+            type === 'territory_unlock'
+          ) {
+            return null;
+          }
+          var territory = p.territory != null ? String(p.territory) : '';
+          var message = String(p.message || defaultActivityMessage(type, territory)).trim();
+          var list = loadActivityFeed();
+          var item = {
+            id: p.id || genActivityId(),
+            type: type,
+            message: message,
+            createdAt: Number(p.createdAt) || Date.now(),
+            territory: territory || null,
+            linkTarget: p.linkTarget && typeof p.linkTarget === 'object' ? p.linkTarget : null,
+          };
+          if (isDuplicateActivity(list, item)) return null;
+          if (type === 'level_up' && item.linkTarget && item.linkTarget.level != null) {
+            var lv = item.linkTarget.level;
+            for (var i = 0; i < list.length; i++) {
+              var prev = list[i];
+              if (
+                prev &&
+                prev.type === 'level_up' &&
+                prev.linkTarget &&
+                prev.linkTarget.level === lv
+              ) {
+                return null;
+              }
+            }
+          }
+          list.unshift(item);
+          if (list.length > MAX_STORE) list.length = MAX_STORE;
+          saveActivityFeed(list);
+          renderActivityFeed();
+          return item;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function clearActivityFeed(keyOpt) {
+        try {
+          saveActivityFeed([], keyOpt);
+          renderActivityFeed();
+        } catch (_) {}
+      }
+
+      window.getActivityFeedKey = getActivityFeedKey;
+      window.loadActivityFeed = loadActivityFeed;
+      window.saveActivityFeed = saveActivityFeed;
+      window.addActivityFeedItem = addActivityFeedItem;
+      window.renderActivityFeed = renderActivityFeed;
+      window.formatActivityRelativeTime = formatActivityRelativeTime;
+      window.clearActivityFeed = clearActivityFeed;
+
+      window.__scAddActivity = function (type, message) {
+        return addActivityFeedItem({
+          type: String(type || 'post_created'),
+          message: String(message || ''),
+        });
+      };
+      window.__scActivityFeed = function () {
+        return loadActivityFeed();
+      };
+      window.__scClearActivityFeed = function () {
+        clearActivityFeed();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderActivityFeed);
+      } else {
+        renderActivityFeed();
+      }
+
+      var origXpFeed = window.__scGrantProgressionXp;
+      if (typeof origXpFeed === 'function') {
+        window.__scGrantProgressionXp = function (action) {
+          var res = origXpFeed(action);
+          try {
+            if (res && res.leveledUp && typeof addActivityFeedItem === 'function') {
+              addActivityFeedItem({
+                type: 'level_up',
+                message: '한 시민이 다음 레벨에 도달했습니다.',
+                linkTarget: { view: 'profile', level: res.nextLevel },
+              });
+            }
+          } catch (_) {}
+          return res;
+        };
+      }
+
+      var origAlienWarn = window.__scNotifyAlienWarn;
+      if (typeof origAlienWarn === 'function') {
+        window.__scNotifyAlienWarn = function (message, userKeyOpt) {
+          var r = origAlienWarn(message, userKeyOpt);
+          try {
+            addActivityFeedItem({
+              type: 'alien_warn',
+              message: message || '관측 기지에 경고 신호가 기록되었습니다.',
+              territory: 'KANTAPBIYA',
+              linkTarget: { view: 'board', territoryId: 'KANTAPBIYA' },
+            });
+          } catch (_) {}
+          return r;
+        };
+      }
+
+      var origAlienMove = window.__scNotifyAlienMove;
+      if (typeof origAlienMove === 'function') {
+        window.__scNotifyAlienMove = function (message, userKeyOpt) {
+          var r = origAlienMove(message, userKeyOpt);
+          try {
+            addActivityFeedItem({
+              type: 'alien_move',
+              message: message || '한 시민이 외계행성 관측 구역으로 이동했습니다.',
+              territory: 'KANTAPBIYA',
+              linkTarget: { view: 'board', territoryId: 'KANTAPBIYA' },
+            });
+          } catch (_) {}
+          return r;
+        };
+      }
+    })();
+  </script>
   <script src="/permissions-guide.js"></script>
   <script src="/rank-leaderboard.js"></script>
   <script src="/tendency-trends-ui.js"></script>
@@ -10408,6 +12068,7 @@
         try {
           sessionStorage.removeItem(AUTH_KEY);
         } catch (_) {}
+        window.__scUserProfileCache = null;
       }
 
       function clearGuest() {
@@ -10756,6 +12417,9 @@
           var label = (j.user && j.user.email) || (j.user && j.user.id) || '로그인됨';
           renderAppUserBarLoggedIn(label);
           if (window.__scApp) window.__scApp.enterAppMain();
+          if (typeof window.__scPrefetchUserProfile === 'function') {
+            window.__scPrefetchUserProfile();
+          }
         } catch (_) {
           if (isGuestOk()) {
             enterGuestApp();
@@ -10793,6 +12457,7 @@
       if (gBtn) {
         gBtn.addEventListener('click', function () {
           clearAuth();
+          window.__scUserProfileCache = null;
           try {
             sessionStorage.setItem(GUEST_KEY, '1');
           } catch (_) {}
@@ -10846,6 +12511,46 @@
 
       /** 처음엔 접어 두고 — 왼쪽 탭을 클릭할 때만 펼침 (호버로는 열리지 않음) */
       var collapsed = true;
+      var isProfileFrameCollapsing = false;
+      var profileFrameEl = dock.querySelector('.profile-frame');
+      var PROFILE_FRAME_COLLAPSE_MS = 180;
+
+      function playProfileFrameExpandAnimation() {
+        if (!profileFrameEl) return;
+        profileFrameEl.classList.remove('profile-frame--expand-in', 'profile-frame--collapse-out');
+        void profileFrameEl.offsetWidth;
+        profileFrameEl.classList.add('profile-frame--expand-in');
+      }
+
+      function clearProfileFrameExpandAnimation() {
+        if (profileFrameEl) {
+          profileFrameEl.classList.remove('profile-frame--expand-in', 'profile-frame--collapse-out');
+        }
+      }
+
+      function playProfileFrameCollapseAnimation(done) {
+        if (!profileFrameEl) {
+          if (done) done();
+          return;
+        }
+        var finished = false;
+        function finish() {
+          if (finished) return;
+          finished = true;
+          profileFrameEl.classList.remove('profile-frame--collapse-out');
+          profileFrameEl.removeEventListener('animationend', onCollapseEnd);
+          if (done) done();
+        }
+        function onCollapseEnd(e) {
+          if (e.animationName !== 'profile-frame-collapse-out') return;
+          finish();
+        }
+        profileFrameEl.classList.remove('profile-frame--expand-in', 'profile-frame--collapse-out');
+        void profileFrameEl.offsetWidth;
+        profileFrameEl.classList.add('profile-frame--collapse-out');
+        profileFrameEl.addEventListener('animationend', onCollapseEnd);
+        window.setTimeout(finish, PROFILE_FRAME_COLLAPSE_MS + 40);
+      }
 
       function setDockClass() {
         dock.classList.toggle('is-collapsed', collapsed);
@@ -10853,19 +12558,48 @@
 
       setDockClass();
       btnHide.addEventListener('click', function () {
-        collapsed = true;
-        setDockClass();
+        if (collapsed || isProfileFrameCollapsing) return;
+        isProfileFrameCollapsing = true;
+        playProfileFrameCollapseAnimation(function () {
+          isProfileFrameCollapsing = false;
+          collapsed = true;
+          clearProfileFrameExpandAnimation();
+          setDockClass();
+        });
       });
 
       btnTab.addEventListener('click', function () {
-        if (!collapsed) return;
+        if (!collapsed || isProfileFrameCollapsing) return;
         collapsed = false;
         setDockClass();
-        if (typeof window.applyProfileFramePixelLayout === 'function') {
-          requestAnimationFrame(function () {
+        playProfileFrameExpandAnimation();
+        function runProfileOpenSync() {
+          if (typeof window.refreshCurrentProfile === 'function') {
+            window.refreshCurrentProfile();
+          } else if (typeof window.syncProfileFrameLayoutAfterOpen === 'function') {
+            window.syncProfileFrameLayoutAfterOpen();
+          } else if (typeof window.applyProfileFramePixelLayout === 'function') {
             window.applyProfileFramePixelLayout();
-          });
+          }
         }
+        requestAnimationFrame(function () {
+          runProfileOpenSync();
+        });
+        if (profileFrameEl) {
+          function onExpandLayoutEnd(e) {
+            if (e.animationName !== 'profile-frame-expand-in') return;
+            profileFrameEl.removeEventListener('animationend', onExpandLayoutEnd);
+            if (typeof window.syncProfileFrameLayoutAfterOpen === 'function') {
+              window.syncProfileFrameLayoutAfterOpen();
+            }
+          }
+          profileFrameEl.addEventListener('animationend', onExpandLayoutEnd);
+        }
+        window.setTimeout(function () {
+          if (typeof window.syncProfileFrameLayoutAfterOpen === 'function') {
+            window.syncProfileFrameLayoutAfterOpen();
+          }
+        }, 240);
       });
 
       function profileStorageKey(prefix, userId) {
@@ -11139,10 +12873,33 @@
         if (typeof window.__scRefreshProfileSkinDevButtons === 'function') {
           window.__scRefreshProfileSkinDevButtons(skin);
         }
+        if (
+          window.__scProfileLayoutEditor &&
+          typeof window.__scProfileLayoutEditor.onSkinChanged === 'function'
+        ) {
+          window.__scProfileLayoutEditor.onSkinChanged(skin);
+        }
+        if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+          window.refreshProfileAlignmentMapDisplay();
+        }
         return skin;
       }
       window.resolveProfileTerritorySkinKey = resolveProfileTerritorySkinKey;
       window.setProfileTerritorySkin = setProfileTerritorySkin;
+
+      function setProfileTerritorySkinForFrame(frame, skinKeyOrCssId) {
+        if (!frame) return SC_TERRITORY_SKIN_DEFAULT;
+        var skin = resolveProfileTerritorySkinKey(skinKeyOrCssId);
+        frame.dataset.territorySkin = skin;
+        if (typeof syncActiveProfileLayout === 'function') {
+          syncActiveProfileLayout(skin);
+        }
+        if (typeof window.applyProfileFramePixelLayout === 'function') {
+          window.applyProfileFramePixelLayout(frame);
+        }
+        return skin;
+      }
+      window.setProfileTerritorySkinForFrame = setProfileTerritorySkinForFrame;
 
       /* ProfileFrame 데이터 — Single Source (더미 · renderProfileData()로 출력) */
       var SC_PROFILE_DATA = {
@@ -11164,6 +12921,29 @@
           influence: 1280,
           rank: '참여자',
         },
+        alignment: {
+          center: 80,
+          pioneer: 35,
+          guardian: 25,
+          alien: 10,
+        },
+        achievements: [
+          {
+            id: 'achievement_first_post',
+            title: '첫 글 작성',
+            date: '26.07.10',
+          },
+          {
+            id: 'achievement_popular',
+            title: '인기 시민',
+            date: '26.07.12',
+          },
+          {
+            id: 'achievement_lv5',
+            title: '성장 시작',
+            date: '26.07.15',
+          },
+        ],
       };
       window.SC_PROFILE_DATA = SC_PROFILE_DATA;
 
@@ -11173,11 +12953,485 @@
         return n.toLocaleString('en-US');
       }
 
-      /** SC_PROFILE_DATA → ProfileFrame 텍스트 · 영토 스킨 출력 (좌표는 SC_PROFILE_LAYOUT · applyProfileFramePixelLayout) */
-      window.renderProfileData = function (data) {
+      function clampProfileAlignmentValue(value) {
+        return Math.max(0, Math.min(100, Number(value) || 0));
+      }
+
+      var SC_PROFILE_ALIGNMENT_DISPLAY_DEFAULT = {
+        center: 34,
+        pioneer: 33,
+        guardian: 33,
+        alien: 0,
+      };
+      var SC_POLITICAL_SCORES_LS = 'sc_political_scores_v1';
+
+      function resolveProfilePoliticalScoresUserId() {
+        var id = String((window.__scPlayer && window.__scPlayer.userId) || '').trim();
+        if (id) return id;
+        return 'guest_demo';
+      }
+
+      function readPoliticalScoresBucket(userId) {
+        try {
+          var id = String(userId || '').trim();
+          if (!id) return null;
+          var raw = localStorage.getItem(SC_POLITICAL_SCORES_LS);
+          if (!raw) return null;
+          var map = JSON.parse(raw);
+          if (!map || typeof map !== 'object') return null;
+          var bucket = map[id];
+          return bucket && typeof bucket === 'object' ? bucket : null;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function normalizePoliticalScoresBucket(bucket) {
+        if (!bucket || typeof bucket !== 'object') return null;
+        var A = window.AlignmentScoring;
+        var init = A ? A.initialScores() : { conservative: 12, centrist: 12, progressive: 12 };
+        var hasPolitical =
+          (typeof bucket.conservative === 'number' && isFinite(bucket.conservative)) ||
+          (typeof bucket.centrist === 'number' && isFinite(bucket.centrist)) ||
+          (typeof bucket.progressive === 'number' && isFinite(bucket.progressive));
+        var hasPlanet = typeof bucket.planetPct === 'number' && isFinite(bucket.planetPct);
+        if (!hasPolitical && !hasPlanet) return null;
+        var out = {};
+        if (hasPolitical) {
+          out.conservative =
+            typeof bucket.conservative === 'number' && isFinite(bucket.conservative)
+              ? bucket.conservative
+              : init.conservative;
+          out.centrist =
+            typeof bucket.centrist === 'number' && isFinite(bucket.centrist)
+              ? bucket.centrist
+              : init.centrist;
+          out.progressive =
+            typeof bucket.progressive === 'number' && isFinite(bucket.progressive)
+              ? bucket.progressive
+              : init.progressive;
+        }
+        if (hasPlanet) out.planetPct = bucket.planetPct;
+        return out;
+      }
+
+      function readPoliticalScoresForProfileUser(userIdOpt) {
+        var candidates = [];
+        var primary = String(userIdOpt || resolveProfilePoliticalScoresUserId()).trim();
+        if (primary) candidates.push(primary);
+        if (candidates.indexOf('guest_demo') < 0) candidates.push('guest_demo');
+        if (candidates.indexOf('guest') < 0) candidates.push('guest');
+        var ci;
+        for (ci = 0; ci < candidates.length; ci++) {
+          var bucket = readPoliticalScoresBucket(candidates[ci]);
+          if (bucket) {
+            var normalized = normalizePoliticalScoresBucket(bucket);
+            if (normalized) return normalized;
+          }
+        }
+        return null;
+      }
+
+      function mapPoliticalScoresToProfileAlignment(scores) {
+        var def = SC_PROFILE_ALIGNMENT_DISPLAY_DEFAULT;
+        if (!scores || typeof scores !== 'object') {
+          return {
+            center: def.center,
+            pioneer: def.pioneer,
+            guardian: def.guardian,
+            alien: def.alien,
+          };
+        }
+        var hasPolitical =
+          (typeof scores.conservative === 'number' && isFinite(scores.conservative)) ||
+          (typeof scores.centrist === 'number' && isFinite(scores.centrist)) ||
+          (typeof scores.progressive === 'number' && isFinite(scores.progressive));
+        var hasPlanet = typeof scores.planetPct === 'number' && isFinite(scores.planetPct);
+        if (!hasPolitical && !hasPlanet) {
+          return {
+            center: def.center,
+            pioneer: def.pioneer,
+            guardian: def.guardian,
+            alien: def.alien,
+          };
+        }
+        var center = def.center;
+        var pioneer = def.pioneer;
+        var guardian = def.guardian;
+        var alien = hasPlanet ? clampProfileAlignmentValue(scores.planetPct) : def.alien;
+        var mappedPolitical = false;
+        if (hasPolitical) {
+          try {
+            var A = window.AlignmentScoring;
+            if (A && typeof A.toDisplayPercent === 'function') {
+              var pct = A.toDisplayPercent({
+                conservative: scores.conservative,
+                centrist: scores.centrist,
+                progressive: scores.progressive,
+              });
+              guardian = clampProfileAlignmentValue(pct.conservative);
+              center = clampProfileAlignmentValue(pct.centrist);
+              pioneer = clampProfileAlignmentValue(pct.progressive);
+              mappedPolitical = true;
+            }
+          } catch (_) {}
+          if (!mappedPolitical) {
+            if (typeof scores.conservative === 'number' && isFinite(scores.conservative)) {
+              guardian = clampProfileAlignmentValue(scores.conservative);
+            }
+            if (typeof scores.centrist === 'number' && isFinite(scores.centrist)) {
+              center = clampProfileAlignmentValue(scores.centrist);
+            }
+            if (typeof scores.progressive === 'number' && isFinite(scores.progressive)) {
+              pioneer = clampProfileAlignmentValue(scores.progressive);
+            }
+          }
+        }
+        return { center: center, pioneer: pioneer, guardian: guardian, alien: alien };
+      }
+
+      window.mapPoliticalScoresToProfileAlignment = mapPoliticalScoresToProfileAlignment;
+
+      window.__scPreviewProfileAlignment = function (scores) {
+        var alignment = mapPoliticalScoresToProfileAlignment(scores);
+        var data = window.getCurrentProfileData();
+        data.alignment = alignment;
+        window.renderProfileData(data);
+        return alignment;
+      };
+
+      /* 성향지도 축 최대치 — PNG 그룹별 (중앙·개척 / 수호·외계) */
+      var SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP = {
+        centerPioneer: { alien: 67, guardian: 70, center: 72, pioneer: 69 },
+        guardianAlien: { alien: 67, guardian: 70, center: 72, pioneer: 69 },
+      };
+      var SC_PROFILE_ALIGNMENT_AXIS_MAX_STORAGE_KEY = 'sc_profile_alignment_axis_max_v1';
+
+      function cloneAlignmentAxisMax(src) {
+        return {
+          alien: clampProfileAlignmentValue(src.alien),
+          guardian: clampProfileAlignmentValue(src.guardian),
+          center: clampProfileAlignmentValue(src.center),
+          pioneer: clampProfileAlignmentValue(src.pioneer),
+        };
+      }
+
+      function getProfileAlignmentCalibrationGroup(skinOpt) {
+        var skin = resolveProfileTerritorySkinKey(
+          skinOpt ||
+            (document.getElementById('avatar-player-card-wrap') || {}).dataset.territorySkin,
+        );
+        return skin === 'guardian' || skin === 'alien' ? 'guardianAlien' : 'centerPioneer';
+      }
+
+      function loadAlignmentAxisMaxOverrides() {
+        try {
+          var raw = localStorage.getItem(SC_PROFILE_ALIGNMENT_AXIS_MAX_STORAGE_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function getProfileAlignmentAxisMax(skinOpt) {
+        var group = getProfileAlignmentCalibrationGroup(skinOpt);
+        var base = cloneAlignmentAxisMax(
+          SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP[group] ||
+            SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP.centerPioneer,
+        );
+        var overrides = loadAlignmentAxisMaxOverrides();
+        if (overrides && overrides[group]) {
+          return cloneAlignmentAxisMax(Object.assign({}, base, overrides[group]));
+        }
+        return base;
+      }
+
+      function getProfileAlignmentPoint(axis, value, options) {
+        var opts = options || {};
+        var axisMaxMap = opts.axisMaxMap || null;
+        var axisMax =
+          axisMaxMap && axisMaxMap[axis] != null ? clampProfileAlignmentValue(axisMaxMap[axis]) : 100;
+        var t;
+        if (opts.useRawPosition) {
+          t = clampProfileAlignmentValue(value) / 100;
+        } else {
+          t = (clampProfileAlignmentValue(value) / 100) * (axisMax / 100);
+        }
+        if (axis === 'alien') return { x: 50, y: 50 - 50 * t };
+        if (axis === 'guardian') return { x: 50 + 50 * t, y: 50 };
+        if (axis === 'center') return { x: 50, y: 50 + 50 * t };
+        if (axis === 'pioneer') return { x: 50 - 50 * t, y: 50 };
+        return { x: 50, y: 50 };
+      }
+
+      window.SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP = SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP;
+      window.getProfileAlignmentCalibrationGroup = getProfileAlignmentCalibrationGroup;
+      window.getProfileAlignmentAxisMax = getProfileAlignmentAxisMax;
+
+      var PROFILE_ALIGNMENT_MAP_ANIM_MS = 280;
+      var profileAlignmentMapAnimFrame = null;
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function parseAlignmentMapPointsStr(str) {
+        if (!str || !String(str).trim()) return null;
+        return String(str)
+          .trim()
+          .split(/\s+/)
+          .map(function (pair) {
+            var parts = pair.split(',');
+            return { x: parseFloat(parts[0]), y: parseFloat(parts[1]) };
+          })
+          .filter(function (p) {
+            return isFinite(p.x) && isFinite(p.y);
+          });
+      }
+
+      function formatAlignmentMapPointsStr(pointList) {
+        return pointList
+          .map(function (p) {
+            return p.x + ',' + p.y;
+          })
+          .join(' ');
+      }
+
+      function alignmentMapPointsNearlyEqual(a, b) {
+        if (!a || !b || a.length !== b.length) return false;
+        for (var i = 0; i < a.length; i++) {
+          if (Math.abs(a[i].x - b[i].x) > 0.02 || Math.abs(a[i].y - b[i].y) > 0.02) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function cancelProfileAlignmentMapAnimation() {
+        if (profileAlignmentMapAnimFrame) {
+          cancelAnimationFrame(profileAlignmentMapAnimFrame);
+          profileAlignmentMapAnimFrame = null;
+        }
+      }
+
+      function applyProfileAlignmentMapShapes(layer, polygon, polyline, order, pointList) {
+        var pointsStr = formatAlignmentMapPointsStr(pointList);
+        if (polygon) polygon.setAttribute('points', pointsStr);
+        if (polyline && pointList.length) {
+          polyline.setAttribute(
+            'points',
+            pointsStr + ' ' + pointList[0].x + ',' + pointList[0].y,
+          );
+        }
+        order.forEach(function (k, i) {
+          var dot = layer.querySelector('.profile-frame__alignment-dot--' + k);
+          if (dot && pointList[i]) {
+            dot.setAttribute('cx', String(pointList[i].x));
+            dot.setAttribute('cy', String(pointList[i].y));
+          }
+        });
+      }
+
+      function pulseProfileAlignmentMapFill(polygon) {
+        if (!polygon) return;
+        polygon.style.fillOpacity = '0.18';
+        requestAnimationFrame(function () {
+          polygon.style.fillOpacity = '0.22';
+        });
+      }
+
+      function animateProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList) {
+        cancelProfileAlignmentMapAnimation();
+        var fromList =
+          polygon && polygon.getAttribute('points')
+            ? parseAlignmentMapPointsStr(polygon.getAttribute('points'))
+            : null;
+        if (!fromList || fromList.length !== targetList.length) {
+          applyProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList);
+          pulseProfileAlignmentMapFill(polygon);
+          return;
+        }
+        if (alignmentMapPointsNearlyEqual(fromList, targetList)) {
+          applyProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList);
+          return;
+        }
+        pulseProfileAlignmentMapFill(polygon);
+        var start = performance.now();
+        function tick(now) {
+          var t = Math.min(1, (now - start) / PROFILE_ALIGNMENT_MAP_ANIM_MS);
+          var e = easeOutCubic(t);
+          var interp = fromList.map(function (p, i) {
+            return {
+              x: p.x + (targetList[i].x - p.x) * e,
+              y: p.y + (targetList[i].y - p.y) * e,
+            };
+          });
+          applyProfileAlignmentMapShapes(layer, polygon, polyline, order, interp);
+          if (t < 1) {
+            profileAlignmentMapAnimFrame = requestAnimationFrame(tick);
+          } else {
+            profileAlignmentMapAnimFrame = null;
+            applyProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList);
+            if (polygon) polygon.style.fillOpacity = '';
+          }
+        }
+        profileAlignmentMapAnimFrame = requestAnimationFrame(tick);
+      }
+
+      function renderProfileAlignmentMap(alignment, options) {
+        var opts = options || {};
+        var a = alignment || {};
+        var pointOpts = {};
+        if (opts.useEditorMax && window.SC_PROFILE_ALIGNMENT_EDITOR_MAX) {
+          a = window.SC_PROFILE_ALIGNMENT_EDITOR_MAX;
+          pointOpts.useRawPosition = true;
+        } else {
+          pointOpts.axisMaxMap = getProfileAlignmentAxisMax(opts.skin);
+        }
+        var pts = {
+          alien: getProfileAlignmentPoint('alien', a.alien, pointOpts),
+          guardian: getProfileAlignmentPoint('guardian', a.guardian, pointOpts),
+          center: getProfileAlignmentPoint('center', a.center, pointOpts),
+          pioneer: getProfileAlignmentPoint('pioneer', a.pioneer, pointOpts),
+        };
+        var order = ['alien', 'guardian', 'center', 'pioneer'];
+        var layer = queryProfileFrameLayer(opts.frameRoot, 'alignmentMapLayer');
+        if (!layer) return;
+        layer.classList.toggle(
+          'profile-frame__alignment-map--editor-preview',
+          !!opts.useEditorMax,
+        );
+        var polygon = layer.querySelector('.profile-frame__alignment-fill');
+        var polyline = layer.querySelector('.profile-frame__alignment-line');
+        var targetList = order.map(function (k) {
+          return { x: pts[k].x, y: pts[k].y };
+        });
+        if (opts.useEditorMax) {
+          cancelProfileAlignmentMapAnimation();
+          applyProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList);
+          if (polygon) polygon.style.fillOpacity = '';
+          return;
+        }
+        animateProfileAlignmentMapShapes(layer, polygon, polyline, order, targetList);
+      }
+
+      function refreshProfileAlignmentMapDisplay() {
+        var editorOn =
+          window.__scProfileLayoutEditor &&
+          typeof window.__scProfileLayoutEditor.isActive === 'function' &&
+          window.__scProfileLayoutEditor.isActive();
+        if (editorOn) {
+          renderProfileAlignmentMap(null, { useEditorMax: true });
+          return;
+        }
+        var data =
+          typeof window.getCurrentProfileData === 'function'
+            ? window.getCurrentProfileData()
+            : window.SC_PROFILE_DATA;
+        renderProfileAlignmentMap(data && data.alignment);
+      }
+      window.refreshProfileAlignmentMapDisplay = refreshProfileAlignmentMapDisplay;
+
+      var SC_PROFILE_ACHIEVEMENT_ASSET_BASE = '/assets/achievements/';
+      var SC_PROFILE_ACHIEVEMENT_EMPTY_SRC =
+        SC_PROFILE_ACHIEVEMENT_ASSET_BASE + 'achievement_empty.png';
+      var SC_PROFILE_ACHIEVEMENT_SLOT_COUNT = 3;
+
+      function normalizeProfileAchievementEntry(entry) {
+        if (typeof entry === 'string') {
+          var strId = String(entry || '').trim();
+          return { id: strId, title: '', date: '' };
+        }
+        if (entry && typeof entry === 'object') {
+          return {
+            id: String(entry.id || '').trim(),
+            title: entry.title != null ? String(entry.title) : '',
+            date: entry.date != null ? String(entry.date) : '',
+          };
+        }
+        return { id: '', title: '', date: '' };
+      }
+
+      function normalizeProfileAchievementsList(list) {
+        if (!Array.isArray(list)) return [];
+        var normalized = [];
+        var i;
+        for (i = 0; i < list.length && i < SC_PROFILE_ACHIEVEMENT_SLOT_COUNT; i++) {
+          normalized.push(normalizeProfileAchievementEntry(list[i]));
+        }
+        return normalized;
+      }
+
+      function resolveProfileAchievementSlotElements(frameRoot) {
+        var layer = queryProfileFrameLayer(frameRoot, 'achievementLayer');
+        if (!layer) {
+          console.error('[ProfileFrame] achievementLayer not found');
+          return null;
+        }
+        var slotEls = [];
+        var si;
+        for (si = 0; si < SC_PROFILE_ACHIEVEMENT_SLOT_COUNT; si++) {
+          var slotEl = layer.querySelector('.profile-achievement-slot[data-slot="' + si + '"]');
+          if (!slotEl) slotEl = layer.querySelector('[data-slot="' + si + '"]');
+          if (slotEl) slotEls.push(slotEl);
+        }
+        if (slotEls.length < SC_PROFILE_ACHIEVEMENT_SLOT_COUNT) {
+          console.error(
+            '[ProfileFrame] achievement slots not found (need 3 elements with data-slot)',
+          );
+          return null;
+        }
+        return slotEls;
+      }
+
+      function hasProfileAchievementId(id) {
+        return !!String(id || '').trim() && /^[a-z0-9_]+$/i.test(String(id).trim());
+      }
+
+      function getProfileAchievementIconSrc(achievementId) {
+        var id = String(achievementId || '').trim();
+        if (!id || !/^[a-z0-9_]+$/i.test(id)) {
+          return SC_PROFILE_ACHIEVEMENT_EMPTY_SRC;
+        }
+        return SC_PROFILE_ACHIEVEMENT_ASSET_BASE + id + '.png';
+      }
+
+      function renderProfileAchievements(data, options) {
+        var opts = options || {};
+        var slotEls = resolveProfileAchievementSlotElements(opts.frameRoot);
+        if (!slotEls) return;
+        var source =
+          (data && data.achievements) ||
+          (window.SC_PROFILE_DATA && window.SC_PROFILE_DATA.achievements) ||
+          [];
+        var list = normalizeProfileAchievementsList(source);
+        var i;
+        for (i = 0; i < SC_PROFILE_ACHIEVEMENT_SLOT_COUNT; i++) {
+          var slotEl = slotEls[i];
+          var img = slotEl.querySelector('.profile-achievement-img');
+          var titleEl = slotEl.querySelector('.profile-achievement-title');
+          var dateEl = slotEl.querySelector('.profile-achievement-date');
+          var entry = list[i] || { id: '', title: '', date: '' };
+          var hasAchievement = hasProfileAchievementId(entry.id);
+          if (img) {
+            img.src = hasAchievement
+              ? getProfileAchievementIconSrc(entry.id)
+              : SC_PROFILE_ACHIEVEMENT_EMPTY_SRC;
+          }
+          if (titleEl) titleEl.textContent = hasAchievement ? entry.title : '';
+          if (dateEl) dateEl.textContent = hasAchievement ? entry.date : '';
+        }
+      }
+      window.renderProfileAchievements = renderProfileAchievements;
+
+      /** SC_PROFILE_DATA → ProfileFrame 텍스트 · 영토 스킨 · 성향지도 출력 */
+      window.renderProfileData = function (data, options) {
         if (!data) return;
+        var opts = options || {};
+        var frameRoot = opts.frameRoot || null;
         function setLayerText(layerId, text) {
-          var el = document.querySelector('#' + layerId + ' .profile-frame__data-text');
+          var layer = queryProfileFrameLayer(frameRoot, layerId);
+          var el = layer && layer.querySelector('.profile-frame__data-text');
           if (el) el.textContent = text;
         }
         /* USER ID · LEVEL · 명성 · 경험치 */
@@ -11186,7 +13440,8 @@
         setLayerText('fameLayer', formatScProfileDisplayNumber(data.fame));
         var expPercent = Math.max(0, Math.min(100, Number(data.expPercent) || 0));
         setLayerText('expLayer', String(Math.round(expPercent)) + '%');
-        var gaugeFill = document.querySelector('#expGaugeLayer .profile-frame__exp-gauge-fill');
+        var gaugeLayer = queryProfileFrameLayer(frameRoot, 'expGaugeLayer');
+        var gaugeFill = gaugeLayer && gaugeLayer.querySelector('.profile-frame__exp-gauge-fill');
         if (gaugeFill) gaugeFill.style.width = '100%';
         /* 활동 요약 */
         var act = data.activity || {};
@@ -11197,7 +13452,8 @@
           act.discussions,
           act.aura,
         ];
-        var actEls = document.querySelectorAll('#activitySummaryLayer .profile-frame__data-text');
+        var actLayer = queryProfileFrameLayer(frameRoot, 'activitySummaryLayer');
+        var actEls = actLayer ? actLayer.querySelectorAll('.profile-frame__data-text') : [];
         for (var ai = 0; ai < actEls.length && ai < actValues.length; ai++) {
           actEls[ai].textContent = formatScProfileDisplayNumber(actValues[ai]);
         }
@@ -11209,58 +13465,570 @@
           formatScProfileDisplayNumber(terr.influence),
           terr.rank,
         ];
-        var terrEls = document.querySelectorAll('#territoryRecordLayer .profile-frame__data-text');
+        var terrLayer = queryProfileFrameLayer(frameRoot, 'territoryRecordLayer');
+        var terrEls = terrLayer ? terrLayer.querySelectorAll('.profile-frame__data-text') : [];
         for (var ti = 0; ti < terrEls.length && ti < terrValues.length; ti++) {
           terrEls[ti].textContent = terrValues[ti] != null ? String(terrValues[ti]) : '';
         }
-        /* ProfileFrame 영토 PNG 스킨 */
+        /* ProfileFrame 영토 PNG 스킨 — layout·axis 보정 후 성향지도 (순서 중요) */
         if (data.territorySkin) {
-          setProfileTerritorySkin(data.territorySkin);
+          if (frameRoot) {
+            setProfileTerritorySkinForFrame(frameRoot, data.territorySkin);
+            renderProfileAlignmentMap(data.alignment, {
+              frameRoot: frameRoot,
+              skin: data.territorySkin,
+            });
+          } else {
+            setProfileTerritorySkin(data.territorySkin);
+          }
+        } else if (frameRoot) {
+          renderProfileAlignmentMap(data.alignment, {
+            frameRoot: frameRoot,
+            skin: frameRoot.dataset.territorySkin,
+          });
+        } else if (typeof syncActiveProfileLayout === 'function') {
+          syncActiveProfileLayout(getActiveProfileLayoutSkin());
+          if (typeof window.applyProfileFramePixelLayout === 'function') {
+            window.applyProfileFramePixelLayout();
+          }
+          renderProfileAlignmentMapDisplay();
+        } else {
+          renderProfileAlignmentMapDisplay();
         }
+        renderProfileAchievements(data, { frameRoot: frameRoot });
       };
 
-      /** Mock User Profile Adapter — 추후 로그인/Firebase 연동 시 이 함수 내부만 교체 */
-      window.getCurrentProfileData = function () {
-        var source = window.SC_PROFILE_DATA || {};
-        var act = source.activity || {};
-        var terr = source.territory || {};
-        return {
-          userId: source.userId || 'Guest_001',
-          level: source.level != null ? source.level : 1,
-          fame: source.fame != null ? source.fame : 0,
-          expPercent: source.expPercent != null ? source.expPercent : 0,
-          territorySkin: source.territorySkin || 'center',
-          activity: {
-            posts: act.posts != null ? act.posts : 0,
-            comments: act.comments != null ? act.comments : 0,
-            receivedLikes: act.receivedLikes != null ? act.receivedLikes : 0,
-            discussions: act.discussions != null ? act.discussions : 0,
-            aura: act.aura != null ? act.aura : 0,
-          },
-          territory: {
-            current: terr.current || '중앙광장',
-            moved: terr.moved != null ? terr.moved : 0,
-            influence: terr.influence != null ? terr.influence : 0,
-            rank: terr.rank || '참여자',
-          },
+      function isProfileFrameExpanded() {
+        var dock = document.getElementById('avatar-dock');
+        if (!dock || dock.hidden) return false;
+        return !dock.classList.contains('is-collapsed');
+      }
+
+      function syncProfileFrameLayoutAfterOpen() {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            if (typeof window.applyProfileFramePixelLayout === 'function') {
+              window.applyProfileFramePixelLayout();
+            }
+            if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+              window.refreshProfileAlignmentMapDisplay();
+            }
+          });
+        });
+      }
+      window.isProfileFrameExpanded = isProfileFrameExpanded;
+      window.syncProfileFrameLayoutAfterOpen = syncProfileFrameLayoutAfterOpen;
+
+      var SC_PROFILE_AUTH_KEY = 'sc_sb_auth_session';
+
+      function cloneScProfileDataBase() {
+        try {
+          return JSON.parse(JSON.stringify(window.SC_PROFILE_DATA || {}));
+        } catch (_) {
+          var source = window.SC_PROFILE_DATA || {};
+          return {
+            userId: source.userId,
+            level: source.level,
+            fame: source.fame,
+            expPercent: source.expPercent,
+            territorySkin: source.territorySkin,
+            activity: Object.assign({}, source.activity || {}),
+            territory: Object.assign({}, source.territory || {}),
+            alignment: Object.assign({}, source.alignment || {}),
+            achievements: (source.achievements || []).slice(),
+          };
+        }
+      }
+
+      function readAuthSessionForProfile() {
+        try {
+          var raw = sessionStorage.getItem(SC_PROFILE_AUTH_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function hasAuthenticatedProfileSession() {
+        try {
+          var auth = readAuthSessionForProfile();
+          var token = auth && auth.session && auth.session.access_token;
+          return Boolean(token);
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function resolveAuthUserForProfile() {
+        var auth = readAuthSessionForProfile();
+        if (!auth) return null;
+        var u = auth.user || (auth.session && auth.session.user) || null;
+        var cache = window.__scUserProfileCache;
+        if (cache && cache.authUser && typeof cache.authUser === 'object') {
+          u = Object.assign({}, u || {}, cache.authUser);
+        }
+        return u && typeof u === 'object' ? u : null;
+      }
+
+      function resolveProfileStorageUserId(authUser) {
+        var player = window.__scPlayer || {};
+        var candidates = [];
+        function pushId(v) {
+          var s = String(v || '').trim();
+          if (!s || s === 'guest' || s === 'guest_demo') return;
+          if (candidates.indexOf(s) < 0) candidates.push(s);
+        }
+        pushId(player.userId);
+        if (authUser) {
+          pushId(authUser.id);
+          pushId(authUser.email);
+        }
+        var cache = window.__scUserProfileCache;
+        if (cache && cache.dbProfile) pushId(cache.dbProfile.id);
+        return candidates[0] || String(player.userId || 'guest_demo').trim() || 'guest_demo';
+      }
+
+      function resolveProfileTerritoryCssId(territoryId) {
+        var tid = String(territoryId || 'COMMON').trim() || 'COMMON';
+        var map = {
+          COMMON: 'centrist',
+          PROGRESSIVE: 'reform',
+          CONSERVATIVE: 'order',
+          KANTAPBIYA: 'alien',
         };
+        return map[tid] || 'centrist';
+      }
+
+      function readStoredProfilePhotoDataUrl(userId) {
+        var uid = String(userId || '').trim();
+        if (!uid) return '';
+        try {
+          var key = 'sc_profile_photo_v1:' + uid.replace(/[^a-zA-Z0-9@._-]/g, '_');
+          return localStorage.getItem(key) || '';
+        } catch (_) {
+          return '';
+        }
+      }
+
+      /** 로그인 사용자 → ProfileFrame 데이터 구조 (merge · 오류 없음 · 미로그인 시 Mock) */
+      function loadCurrentUserProfile() {
+        var profile = cloneScProfileDataBase();
+        var scoresUserId = resolveProfilePoliticalScoresUserId();
+
+        if (!hasAuthenticatedProfileSession()) {
+          profile.alignment = mapPoliticalScoresToProfileAlignment(
+            readPoliticalScoresForProfileUser(scoresUserId),
+          );
+          profile.achievements = normalizeProfileAchievementsList(profile.achievements);
+          return profile;
+        }
+
+        var authUser = resolveAuthUserForProfile();
+        var cache = window.__scUserProfileCache || {};
+        var dbProfile =
+          cache.dbProfile && typeof cache.dbProfile === 'object' ? cache.dbProfile : {};
+        var player = window.__scPlayer || {};
+        var storageUid = resolveProfileStorageUserId(authUser);
+        scoresUserId = storageUid;
+
+        var nickname = String(
+          dbProfile.display_name ||
+            (authUser &&
+              authUser.user_metadata &&
+              authUser.user_metadata.display_name) ||
+            (authUser &&
+              authUser.user_metadata &&
+              authUser.user_metadata.full_name) ||
+            '',
+        ).trim();
+        var email = String((authUser && authUser.email) || dbProfile.email || '').trim();
+        var authId = String((authUser && authUser.id) || dbProfile.id || '').trim();
+        var shortId = authId ? authId.slice(0, 8) : '';
+
+        if (nickname && shortId) profile.userId = nickname + ' · ' + shortId;
+        else if (nickname) profile.userId = nickname;
+        else if (email) {
+          var localPart = email.split('@')[0] || email;
+          profile.userId = shortId ? localPart + ' · ' + shortId : localPart;
+        } else if (storageUid && storageUid !== 'guest_demo') {
+          profile.userId = storageUid;
+        }
+
+        if (nickname) profile.nickname = nickname;
+        if (email) profile.email = email;
+        if (authId || storageUid) profile.authUserId = authId || storageUid;
+
+        var avatarUrl = String(dbProfile.avatar_url || '').trim();
+        if (!avatarUrl) avatarUrl = readStoredProfilePhotoDataUrl(storageUid);
+        if (!avatarUrl && authUser && authUser.email) {
+          avatarUrl = readStoredProfilePhotoDataUrl(authUser.email);
+        }
+        if (avatarUrl) profile.profileImageUrl = avatarUrl;
+
+        var P = window.PlayerProgression;
+        var progDisplay = null;
+        if (P && typeof P.getDisplay === 'function') {
+          var progIds = [storageUid];
+          if (authId && progIds.indexOf(authId) < 0) progIds.push(authId);
+          if (email && progIds.indexOf(email) < 0) progIds.push(email);
+          if (player.userId && progIds.indexOf(player.userId) < 0) progIds.push(player.userId);
+          var pi;
+          for (pi = 0; pi < progIds.length; pi++) {
+            progDisplay = P.getDisplay(progIds[pi]);
+            if (progDisplay) {
+              scoresUserId = progIds[pi];
+              break;
+            }
+          }
+        }
+        if (progDisplay) {
+          if (progDisplay.level != null) profile.level = progDisplay.level;
+          if (progDisplay.progress && progDisplay.progress.pct != null) {
+            profile.expPercent = progDisplay.progress.pct;
+          }
+          if (P && typeof P.getMyStandings === 'function') {
+            var standings = P.getMyStandings(scoresUserId);
+            if (standings && typeof standings.score === 'number') {
+              profile.fame = standings.score;
+            }
+          }
+          profile.territory = profile.territory || {};
+          if (progDisplay.rankShort) profile.territory.rank = progDisplay.rankShort;
+        }
+
+        var tid = String(player.territoryId || 'COMMON').trim() || 'COMMON';
+        profile.territorySkin = resolveProfileTerritorySkinKey(resolveProfileTerritoryCssId(tid));
+
+        profile.territory = profile.territory || {};
+        var aff = String(player.affiliationDisplay || '').trim();
+        if (aff) profile.territory.current = aff;
+        else if (P && typeof P.territoryLabelKo === 'function') {
+          var terrLabel = P.territoryLabelKo(tid);
+          if (terrLabel) profile.territory.current = terrLabel;
+        }
+
+        if (P && typeof P.getState === 'function') {
+          var progState = P.getState(scoresUserId);
+          if (progState && progState.receivedPostLikes != null) {
+            profile.activity = profile.activity || {};
+            profile.activity.receivedLikes = progState.receivedPostLikes;
+          }
+        }
+
+        profile.alignment = mapPoliticalScoresToProfileAlignment(
+          readPoliticalScoresForProfileUser(scoresUserId),
+        );
+        profile.achievements = normalizeProfileAchievementsList(profile.achievements);
+        return profile;
+      }
+
+      window.loadCurrentUserProfile = loadCurrentUserProfile;
+
+      window.getCurrentProfileData = function () {
+        return loadCurrentUserProfile();
+      };
+
+      function normalizeProfileTerritoryIdForSkin(raw) {
+        var s = String(raw || '').trim();
+        if (!s) return 'COMMON';
+        var t = s.toLowerCase();
+        if (t.indexOf('kantap') === 0 || t === 'alien') return 'KANTAPBIYA';
+        if (t === 'common' || t === 'centrist' || t === 'center') return 'COMMON';
+        if (t === 'progressive' || t === 'reform' || t === 'pioneer') return 'PROGRESSIVE';
+        if (t === 'conservative' || t === 'order' || t === 'guardian') return 'CONSERVATIVE';
+        var u = s.toUpperCase();
+        if (u.indexOf('KANTAPBIYA') === 0) return 'KANTAPBIYA';
+        if (u === 'COMMON' || u === 'CENTRIST') return 'COMMON';
+        if (u === 'PROGRESSIVE') return 'PROGRESSIVE';
+        if (u === 'CONSERVATIVE') return 'CONSERVATIVE';
+        return 'COMMON';
+      }
+
+      function territoryIdToProfileSkin(tid) {
+        var norm = normalizeProfileTerritoryIdForSkin(tid);
+        var map = {
+          COMMON: 'center',
+          PROGRESSIVE: 'pioneer',
+          CONSERVATIVE: 'guardian',
+          KANTAPBIYA: 'alien',
+        };
+        return map[norm] || 'center';
+      }
+
+      function profileTerritoryDisplayLabel(tid) {
+        var norm = normalizeProfileTerritoryIdForSkin(tid);
+        var labels = {
+          COMMON: '중앙광장',
+          PROGRESSIVE: '개척영토',
+          CONSERVATIVE: '수호영토',
+          KANTAPBIYA: '외계행성',
+        };
+        if (labels[norm]) return labels[norm];
+        var P = window.PlayerProgression;
+        if (P && typeof P.territoryLabelKo === 'function') {
+          var ko = P.territoryLabelKo(norm);
+          if (ko && ko !== norm) return ko;
+        }
+        return labels.COMMON;
+      }
+
+      window.buildUserProfileDataForModal = function (userId) {
+        var id = String(userId || '').trim();
+        var profile = cloneScProfileDataBase();
+        profile.userId = id || profile.userId;
+        var territoryId = 'COMMON';
+        var meR = String((window.__scPlayer && window.__scPlayer.userId) || 'guest').trim();
+
+        if (id && id === meR && typeof window.getCurrentProfileData === 'function') {
+          var current = window.getCurrentProfileData();
+          if (current) {
+            profile = cloneScProfileDataBase();
+            Object.keys(current).forEach(function (k) {
+              if (k === 'activity' || k === 'territory' || k === 'alignment') {
+                profile[k] = Object.assign({}, current[k] || {});
+              } else if (k === 'achievements' && Array.isArray(current.achievements)) {
+                profile.achievements = current.achievements.slice();
+              } else {
+                profile[k] = current[k];
+              }
+            });
+            profile.userId = current.userId || id;
+            profile.achievements = normalizeProfileAchievementsList(profile.achievements);
+            return profile;
+          }
+        }
+
+        var mini =
+          window.ScMiniProfile && typeof window.ScMiniProfile.resolveData === 'function'
+            ? window.ScMiniProfile.resolveData(id, {})
+            : null;
+        if (mini) {
+          if (mini.level != null) profile.level = mini.level;
+          profile.territory = profile.territory || {};
+          if (mini.rankLabel) profile.territory.rank = mini.rankLabel;
+          if (mini.territoryId) territoryId = mini.territoryId;
+          if (mini.territoryLabel) profile.territory.current = mini.territoryLabel;
+          if (mini.influence != null) profile.territory.influence = mini.influence;
+          profile.activity = profile.activity || {};
+          if (mini.posts != null) profile.activity.posts = mini.posts;
+          if (mini.comments != null) profile.activity.comments = mini.comments;
+          if (mini.achievements && mini.achievements.length) {
+            profile.achievements = mini.achievements.slice();
+          }
+        }
+
+        var P = window.PlayerProgression;
+        if (P && id) {
+          if (typeof P.getDisplay === 'function') {
+            var display = P.getDisplay(id);
+            if (display) {
+              profile.level = display.level;
+              if (display.progress && display.progress.pct != null) {
+                profile.expPercent = display.progress.pct;
+              }
+              profile.territory = profile.territory || {};
+              if (display.rankShort) profile.territory.rank = display.rankShort;
+            }
+          }
+          if (typeof P.getState === 'function') {
+            var st = P.getState(id);
+            if (st) {
+              if (st.territoryId) territoryId = st.territoryId;
+              profile.activity = profile.activity || {};
+              if (st.receivedPostLikes != null) {
+                profile.activity.receivedLikes = st.receivedPostLikes;
+              }
+            }
+          }
+          if (typeof P.getMyStandings === 'function') {
+            var standings = P.getMyStandings(id);
+            if (standings && typeof standings.score === 'number') {
+              profile.fame = standings.score;
+            }
+          }
+          if (typeof P.rankReputationScore === 'function' && typeof P.getState === 'function') {
+            var rep = P.rankReputationScore(P.getState(id));
+            profile.territory = profile.territory || {};
+            if (profile.territory.influence == null) profile.territory.influence = rep;
+          }
+        }
+
+        profile.territorySkin = territoryIdToProfileSkin(territoryId);
+        profile.territory = profile.territory || {};
+        if (!profile.territory.current) {
+          profile.territory.current = profileTerritoryDisplayLabel(territoryId);
+        }
+        profile.alignment = mapPoliticalScoresToProfileAlignment(
+          readPoliticalScoresForProfileUser(id),
+        );
+        profile.achievements = normalizeProfileAchievementsList(profile.achievements);
+        return profile;
+      };
+
+      function buildScProfileModalFrameMarkup() {
+        return (
+          '<article class="profile-frame sc-profile-modal__profile-frame" data-territory-skin="center">' +
+          '<div class="profile-frame__container" role="img" aria-label="시민 프로필 프레임">' +
+          '<div class="profile-frame__bg" aria-hidden="true"></div>' +
+          '<div class="profile-frame__overlay">' +
+          '<div class="profile-frame__layer" data-pf-layer="userIdLayer"><span class="profile-frame__data profile-frame__data--align-left"><span class="profile-frame__data-text"></span></span></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="levelLayer"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="fameLayer"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="expGaugeLayer" aria-hidden="true"><div class="profile-frame__exp-gauge-fill"></div></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="expLayer"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></div>' +
+          '<div class="profile-frame__layer profile-frame__alignment-map" data-pf-layer="alignmentMapLayer">' +
+          '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' +
+          '<polygon class="profile-frame__alignment-fill"></polygon>' +
+          '<polyline class="profile-frame__alignment-line"></polyline>' +
+          '<circle class="profile-frame__alignment-dot profile-frame__alignment-dot--alien" r="2.8"></circle>' +
+          '<circle class="profile-frame__alignment-dot profile-frame__alignment-dot--guardian" r="2.8"></circle>' +
+          '<circle class="profile-frame__alignment-dot profile-frame__alignment-dot--center" r="2.8"></circle>' +
+          '<circle class="profile-frame__alignment-dot profile-frame__alignment-dot--pioneer" r="2.8"></circle>' +
+          '<circle class="profile-frame__alignment-center" cx="50" cy="50" r="1.8"></circle>' +
+          '<circle class="profile-frame__alignment-min-dot" cx="50" cy="50" r="2.6"></circle>' +
+          '</svg></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="achievementLayer">' +
+          '<div class="profile-achievement-slot" data-slot="0"><img class="profile-achievement-img" alt="" draggable="false" decoding="async" /><div class="profile-achievement-title"></div><div class="profile-achievement-date"></div></div>' +
+          '<div class="profile-achievement-slot" data-slot="1"><img class="profile-achievement-img" alt="" draggable="false" decoding="async" /><div class="profile-achievement-title"></div><div class="profile-achievement-date"></div></div>' +
+          '<div class="profile-achievement-slot" data-slot="2"><img class="profile-achievement-img" alt="" draggable="false" decoding="async" /><div class="profile-achievement-title"></div><div class="profile-achievement-date"></div></div>' +
+          '</div>' +
+          '<div class="profile-frame__layer" data-pf-layer="activitySummaryLayer"><ul class="profile-frame__data-list">' +
+          '<li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>'.repeat(5) +
+          '</ul></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="territoryRecordLayer"><ul class="profile-frame__data-list">' +
+          '<li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></li>' +
+          '<li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>' +
+          '<li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></li>' +
+          '<li class="profile-frame__data-row"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></li>' +
+          '</ul></div>' +
+          '</div></div></article>'
+        );
+      }
+
+      function restoreHudProfileFrameAfterModal() {
+        var hud = document.getElementById('avatar-player-card-wrap');
+        if (!hud) return;
+        if (typeof syncActiveProfileLayout === 'function') {
+          syncActiveProfileLayout(hud.dataset.territorySkin);
+        }
+        if (typeof window.applyProfileFramePixelLayout === 'function') {
+          window.applyProfileFramePixelLayout(hud);
+        }
+        if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+          window.refreshProfileAlignmentMapDisplay();
+        }
+      }
+      window.restoreHudProfileFrameAfterModal = restoreHudProfileFrameAfterModal;
+
+      window.renderProfileFrameInModal = function (userId) {
+        var mount = document.getElementById('sc-profile-modal-frame-mount');
+        var loading = document.getElementById('sc-profile-modal-loading');
+        if (!mount) return null;
+        if (!mount.firstElementChild) {
+          mount.innerHTML = buildScProfileModalFrameMarkup();
+        }
+        var frame = mount.querySelector('.profile-frame');
+        if (!frame) return null;
+        var data = window.buildUserProfileDataForModal(userId);
+        if (loading) loading.hidden = true;
+        mount.hidden = false;
+        window.renderProfileData(data, { frameRoot: frame });
+        requestAnimationFrame(function () {
+          if (typeof window.applyProfileFramePixelLayout === 'function') {
+            window.applyProfileFramePixelLayout(frame);
+          }
+        });
+        if (typeof ResizeObserver !== 'undefined' && !frame.__scModalLayoutRo) {
+          frame.__scModalLayoutRo = new ResizeObserver(function () {
+            if (typeof window.applyProfileFramePixelLayout === 'function') {
+              window.applyProfileFramePixelLayout(frame);
+            }
+          });
+          frame.__scModalLayoutRo.observe(frame);
+        }
+        return data;
+      };
+
+      window.__scCurrentProfile = function () {
+        return window.getCurrentProfileData();
+      };
+
+      window.__scPrefetchUserProfile = async function () {
+        try {
+          var auth = readAuthSessionForProfile();
+          var token = auth && auth.session && auth.session.access_token;
+          if (!token) {
+            window.__scUserProfileCache = null;
+            return null;
+          }
+          var headers = { Authorization: 'Bearer ' + token };
+          var authUser = resolveAuthUserForProfile();
+          var dbProfile = null;
+          try {
+            var rMe = await fetch('/api/auth/me', { headers: headers });
+            var jMe = await rMe.json();
+            if (jMe.ok && jMe.user) authUser = jMe.user;
+          } catch (_) {}
+          try {
+            var rProf = await fetch('/api/me/profile', { headers: headers });
+            var jProf = await rProf.json();
+            if (jProf.ok && jProf.profile) dbProfile = jProf.profile;
+          } catch (_) {}
+          window.__scUserProfileCache = {
+            authUser: authUser,
+            dbProfile: dbProfile,
+            fetchedAt: Date.now(),
+          };
+          if (typeof window.refreshCurrentProfile === 'function') {
+            window.refreshCurrentProfile();
+          }
+          return window.__scUserProfileCache;
+        } catch (_) {
+          return null;
+        }
       };
 
       window.refreshCurrentProfile = function () {
         var profileData = window.getCurrentProfileData();
+        if (!isProfileFrameExpanded()) {
+          window.__scProfileLayoutPending = true;
+          return profileData;
+        }
+        window.__scProfileLayoutPending = false;
         window.renderProfileData(profileData);
+        syncProfileFrameLayoutAfterOpen();
         return profileData;
       };
 
       /* ProfileFrame 좌표 — 1024×819 PNG 원본 기준 px (영토 스킨별) */
       var SC_PROFILE_LAYOUT_REF = { w: 1024, h: 819 };
       var SC_PROFILE_LAYOUT_STORAGE_KEY = 'sc_profile_layout_editor_v3';
+      var SC_PROFILE_ACHIEVEMENT_LAYOUT_DEFAULT = {
+        achievement: { x: 528, y: 350, w: 469, h: 226 },
+        achievementSlots: [
+          { x: 563, y: 392, w: 81, h: 84 },
+          { x: 715, y: 391, w: 83, h: 87 },
+          { x: 868, y: 390, w: 85, h: 88 },
+        ],
+        achievementTitles: [
+          { x: 550, y: 482, w: 107, h: 58 },
+          { x: 702, y: 481, w: 111, h: 58 },
+          { x: 858, y: 481, w: 108, h: 60 },
+        ],
+        achievementDates: [
+          { x: 577, y: 551, w: 76, h: 12 },
+          { x: 731, y: 551, w: 75, h: 12 },
+          { x: 885, y: 551, w: 74, h: 12 },
+        ],
+      };
       var SC_PROFILE_LAYOUT_CENTER = {
         userId: { x: 403, y: 31, w: 246, h: 20 },
         level: { x: 404, y: 77, w: 53, h: 20 },
         fame: { x: 731, y: 78, w: 241, h: 20 },
         exp: { x: 393, y: 121, w: 579, h: 20 },
         expGauge: { x: 392, y: 126, w: 590, h: 10 },
+        alignmentMap: { x: 305, y: 355, w: 190, h: 190 },
         activity: [
           { x: 308, y: 622, w: 123, h: 20 },
           { x: 308, y: 651, w: 123, h: 20 },
@@ -11274,6 +14042,22 @@
           { x: 834, y: 687, w: 123, h: 20, align: 'right' },
           { x: 834, y: 720, w: 123, h: 20, align: 'center' },
         ],
+        achievement: { x: 528, y: 350, w: 469, h: 226 },
+        achievementSlots: [
+          { x: 563, y: 392, w: 81, h: 84 },
+          { x: 715, y: 391, w: 83, h: 87 },
+          { x: 868, y: 390, w: 85, h: 88 },
+        ],
+        achievementTitles: [
+          { x: 550, y: 482, w: 107, h: 58 },
+          { x: 702, y: 481, w: 111, h: 58 },
+          { x: 858, y: 481, w: 108, h: 60 },
+        ],
+        achievementDates: [
+          { x: 577, y: 551, w: 76, h: 12 },
+          { x: 731, y: 551, w: 75, h: 12 },
+          { x: 885, y: 551, w: 74, h: 12 },
+        ],
       };
       var SC_PROFILE_LAYOUT_BY_SKIN = {
         center: SC_PROFILE_LAYOUT_CENTER,
@@ -11284,6 +14068,7 @@
           fame: { x: 731, y: 78, w: 241, h: 20 },
           exp: { x: 393, y: 121, w: 579, h: 20 },
           expGauge: { x: 392, y: 126, w: 590, h: 10 },
+          alignmentMap: { x: 309, y: 360, w: 190, h: 190 },
           activity: [
             { x: 310, y: 628, w: 123, h: 20 },
             { x: 310, y: 658, w: 123, h: 20 },
@@ -11297,6 +14082,22 @@
             { x: 837, y: 695, w: 123, h: 20, align: 'right' },
             { x: 837, y: 727, w: 123, h: 20, align: 'center' },
           ],
+          achievement: { x: 526, y: 352, w: 476, h: 235 },
+          achievementSlots: [
+            { x: 567, y: 397, w: 82, h: 86 },
+            { x: 721, y: 397, w: 80, h: 86 },
+            { x: 875, y: 396, w: 81, h: 87 },
+          ],
+          achievementTitles: [
+            { x: 553, y: 486, w: 110, h: 57 },
+            { x: 705, y: 486, w: 113, h: 54 },
+            { x: 859, y: 485, w: 111, h: 64 },
+          ],
+          achievementDates: [
+            { x: 582, y: 557, w: 73, h: 12 },
+            { x: 735, y: 556, w: 74, h: 12 },
+            { x: 891, y: 556, w: 70, h: 12 },
+          ],
         },
         alien: {
           userId: { x: 403, y: 31, w: 246, h: 20 },
@@ -11304,6 +14105,7 @@
           fame: { x: 731, y: 78, w: 241, h: 20 },
           exp: { x: 393, y: 121, w: 579, h: 20 },
           expGauge: { x: 392, y: 126, w: 590, h: 10 },
+          alignmentMap: { x: 309, y: 360, w: 190, h: 190 },
           activity: [
             { x: 310, y: 620, w: 123, h: 20 },
             { x: 310, y: 650, w: 123, h: 20 },
@@ -11316,6 +14118,22 @@
             { x: 837, y: 653, w: 123, h: 20, align: 'right' },
             { x: 837, y: 687, w: 123, h: 20, align: 'right' },
             { x: 837, y: 719, w: 123, h: 20, align: 'center' },
+          ],
+          achievement: { x: 521, y: 341, w: 479, h: 236 },
+          achievementSlots: [
+            { x: 563, y: 390, w: 80, h: 85 },
+            { x: 717, y: 390, w: 82, h: 87 },
+            { x: 871, y: 390, w: 82, h: 87 },
+          ],
+          achievementTitles: [
+            { x: 548, y: 478, w: 111, h: 59 },
+            { x: 702, y: 480, w: 110, h: 57 },
+            { x: 855, y: 480, w: 114, h: 57 },
+          ],
+          achievementDates: [
+            { x: 578, y: 550, w: 71, h: 12 },
+            { x: 732, y: 550, w: 72, h: 12 },
+            { x: 885, y: 550, w: 72, h: 12 },
           ],
         },
       };
@@ -11339,12 +14157,45 @@
         var key = resolveProfileTerritorySkinKey(skin);
         var layoutKey = key === 'pioneer' ? 'center' : key;
         var layout = SC_PROFILE_LAYOUT_BY_SKIN[layoutKey] || SC_PROFILE_LAYOUT_CENTER;
-        return cloneProfileLayout(layout);
+        return ensureAchievementLayoutDefaults(cloneProfileLayout(layout));
+      }
+
+      function deriveAchievementTextRectsFromSlots(slots) {
+        var titles = [];
+        var dates = [];
+        (slots || []).forEach(function (slot) {
+          if (!slot) {
+            titles.push({ x: 0, y: 0, w: 80, h: 14 });
+            dates.push({ x: 0, y: 0, w: 80, h: 12 });
+            return;
+          }
+          titles.push({ x: slot.x, y: slot.y + slot.h + 3, w: slot.w, h: 14 });
+          dates.push({ x: slot.x, y: slot.y + slot.h + 19, w: slot.w, h: 12 });
+        });
+        return { titles: titles, dates: dates };
+      }
+
+      function ensureAchievementLayoutDefaults(layout) {
+        if (!layout) return layout;
+        var def = cloneProfileLayout(SC_PROFILE_ACHIEVEMENT_LAYOUT_DEFAULT);
+        if (!layout.achievement) {
+          layout.achievement = def.achievement;
+        }
+        if (!Array.isArray(layout.achievementSlots) || layout.achievementSlots.length < 3) {
+          layout.achievementSlots = def.achievementSlots;
+        }
+        if (!Array.isArray(layout.achievementTitles) || layout.achievementTitles.length < 3) {
+          layout.achievementTitles = deriveAchievementTextRectsFromSlots(layout.achievementSlots).titles.slice(0, 3);
+        }
+        if (!Array.isArray(layout.achievementDates) || layout.achievementDates.length < 3) {
+          layout.achievementDates = deriveAchievementTextRectsFromSlots(layout.achievementSlots).dates.slice(0, 3);
+        }
+        return layout;
       }
 
       function mergeProfileLayoutOverride(base, parsed) {
         if (!parsed || typeof parsed !== 'object') return base;
-        ['userId', 'level', 'fame', 'exp', 'expGauge'].forEach(function (key) {
+        ['userId', 'level', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
           if (parsed[key] && typeof parsed[key] === 'object') {
             Object.assign(base[key], parsed[key]);
           }
@@ -11362,6 +14213,32 @@
             if (!row || !base.territory[i]) return;
             ['x', 'y', 'w', 'h'].forEach(function (prop) {
               if (row[prop] !== undefined) base.territory[i][prop] = row[prop];
+            });
+          });
+        }
+        if (Array.isArray(parsed.achievementSlots)) {
+          parsed.achievementSlots.forEach(function (row, i) {
+            if (!row || !base.achievementSlots[i]) return;
+            ['x', 'y', 'w', 'h'].forEach(function (prop) {
+              if (row[prop] !== undefined) base.achievementSlots[i][prop] = row[prop];
+            });
+          });
+        }
+        if (Array.isArray(parsed.achievementTitles)) {
+          ensureAchievementLayoutDefaults(base);
+          parsed.achievementTitles.forEach(function (row, i) {
+            if (!row || !base.achievementTitles[i]) return;
+            ['x', 'y', 'w', 'h'].forEach(function (prop) {
+              if (row[prop] !== undefined) base.achievementTitles[i][prop] = row[prop];
+            });
+          });
+        }
+        if (Array.isArray(parsed.achievementDates)) {
+          ensureAchievementLayoutDefaults(base);
+          parsed.achievementDates.forEach(function (row, i) {
+            if (!row || !base.achievementDates[i]) return;
+            ['x', 'y', 'w', 'h'].forEach(function (prop) {
+              if (row[prop] !== undefined) base.achievementDates[i][prop] = row[prop];
             });
           });
         }
@@ -11427,6 +14304,14 @@
         el.style.height = rect.h * scale + 'px';
       }
 
+      function applyProfileAchievementChildRect(childEl, childRect, layerRect, scale) {
+        if (!childEl || !childRect || !layerRect) return;
+        childEl.style.left = (childRect.x - layerRect.x) * scale + 'px';
+        childEl.style.top = (childRect.y - layerRect.y) * scale + 'px';
+        childEl.style.width = childRect.w * scale + 'px';
+        childEl.style.height = childRect.h * scale + 'px';
+      }
+
       function ensureProfileFrameDataTextWrap(dataEl) {
         if (!dataEl) return;
         if (dataEl.querySelector(':scope > .profile-frame__data-text')) return;
@@ -11438,6 +14323,14 @@
         dataEl.appendChild(inner);
       }
 
+      function queryProfileFrameLayer(frameRoot, layerId) {
+        if (frameRoot && frameRoot.querySelector) {
+          return frameRoot.querySelector('[data-pf-layer="' + layerId + '"]');
+        }
+        return document.getElementById(layerId);
+      }
+      window.queryProfileFrameLayer = queryProfileFrameLayer;
+
       function applyProfileFramePixelLayout(rootOpt) {
         var frame = rootOpt || document.querySelector('.profile-frame');
         if (!frame) return;
@@ -11448,19 +14341,45 @@
         frame.style.setProperty('--profile-frame-scale', String(scale));
         var L = SC_PROFILE_LAYOUT;
         ['userIdLayer', 'levelLayer', 'fameLayer', 'expLayer'].forEach(function (layerId) {
-          var layerEl = document.getElementById(layerId);
+          var layerEl = queryProfileFrameLayer(frame, layerId);
           if (!layerEl) return;
           var dataEl = layerEl.querySelector('.profile-frame__data');
           ensureProfileFrameDataTextWrap(dataEl);
         });
-        applyProfileFrameRect(document.getElementById('userIdLayer'), L.userId, scale);
-        applyProfileFrameRect(document.getElementById('levelLayer'), L.level, scale);
-        applyProfileFrameRect(document.getElementById('fameLayer'), L.fame, scale);
-        applyProfileFrameRect(document.getElementById('expLayer'), L.exp, scale);
+        applyProfileFrameRect(queryProfileFrameLayer(frame, 'userIdLayer'), L.userId, scale);
+        applyProfileFrameRect(queryProfileFrameLayer(frame, 'levelLayer'), L.level, scale);
+        applyProfileFrameRect(queryProfileFrameLayer(frame, 'fameLayer'), L.fame, scale);
+        applyProfileFrameRect(queryProfileFrameLayer(frame, 'expLayer'), L.exp, scale);
         if (L.expGauge) {
-          applyProfileFrameRect(document.getElementById('expGaugeLayer'), L.expGauge, scale);
+          applyProfileFrameRect(queryProfileFrameLayer(frame, 'expGaugeLayer'), L.expGauge, scale);
         }
-        var actLayer = document.getElementById('activitySummaryLayer');
+        if (L.alignmentMap) {
+          applyProfileFrameRect(queryProfileFrameLayer(frame, 'alignmentMapLayer'), L.alignmentMap, scale);
+        }
+        if (L.achievement) {
+          var achLayer = queryProfileFrameLayer(frame, 'achievementLayer');
+          applyProfileFrameRect(achLayer, L.achievement, scale);
+          if (achLayer && L.achievementSlots) {
+            ensureAchievementLayoutDefaults(L);
+            for (var si = 0; si < L.achievementSlots.length; si++) {
+              var slotEl = achLayer.querySelector('.profile-achievement-slot[data-slot="' + si + '"]');
+              if (!slotEl) continue;
+              var imgEl = slotEl.querySelector('.profile-achievement-img');
+              var titleEl = slotEl.querySelector('.profile-achievement-title');
+              var dateEl = slotEl.querySelector('.profile-achievement-date');
+              if (imgEl && L.achievementSlots[si]) {
+                applyProfileAchievementChildRect(imgEl, L.achievementSlots[si], L.achievement, scale);
+              }
+              if (titleEl && L.achievementTitles && L.achievementTitles[si]) {
+                applyProfileAchievementChildRect(titleEl, L.achievementTitles[si], L.achievement, scale);
+              }
+              if (dateEl && L.achievementDates && L.achievementDates[si]) {
+                applyProfileAchievementChildRect(dateEl, L.achievementDates[si], L.achievement, scale);
+              }
+            }
+          }
+        }
+        var actLayer = queryProfileFrameLayer(frame, 'activitySummaryLayer');
         if (actLayer) {
           var actRows = actLayer.querySelectorAll('.profile-frame__data-row');
           for (var ai = 0; ai < L.activity.length && ai < actRows.length; ai++) {
@@ -11468,7 +14387,7 @@
             applyProfileFrameRect(actRows[ai], L.activity[ai], scale);
           }
         }
-        var terrLayer = document.getElementById('territoryRecordLayer');
+        var terrLayer = queryProfileFrameLayer(frame, 'territoryRecordLayer');
         if (terrLayer) {
           var terrRows = terrLayer.querySelectorAll('.profile-frame__data-row');
           for (var ti = 0; ti < L.territory.length && ti < terrRows.length; ti++) {
@@ -11497,15 +14416,32 @@
 
       (function initProfileFramePixelLayout() {
         function boot() {
-          var profileData = getCurrentProfileData();
-          renderProfileData(profileData);
           var frame = document.querySelector('.profile-frame');
           if (!frame) return;
-          applyProfileFramePixelLayout(frame);
+          var expanded =
+            typeof window.isProfileFrameExpanded === 'function'
+              ? window.isProfileFrameExpanded()
+              : !(document.getElementById('avatar-dock') || {}).classList.contains('is-collapsed');
+          if (expanded) {
+            var profileData = getCurrentProfileData();
+            renderProfileData(profileData);
+            applyProfileFramePixelLayout(frame);
+          } else {
+            window.__scProfileLayoutPending = true;
+          }
           if (typeof ResizeObserver !== 'undefined') {
             if (!frame.__scProfileLayoutRo) {
               frame.__scProfileLayoutRo = new ResizeObserver(function () {
+                if (
+                  typeof window.isProfileFrameExpanded === 'function' &&
+                  !window.isProfileFrameExpanded()
+                ) {
+                  return;
+                }
                 applyProfileFramePixelLayout(frame);
+                if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+                  window.refreshProfileAlignmentMapDisplay();
+                }
               });
               frame.__scProfileLayoutRo.observe(frame);
             }
@@ -11519,6 +14455,9 @@
           document.addEventListener('DOMContentLoaded', boot);
         } else {
           boot();
+        }
+        if (typeof window.__scPrefetchUserProfile === 'function') {
+          window.__scPrefetchUserProfile();
         }
       })();
 
@@ -11536,13 +14475,290 @@
         var frame = document.querySelector('.profile-frame');
         if (!toggleBtn || !panel || !selectionEl || !copyBtn || !resetBtn || !frame) return;
 
-        document.body.classList.add('sc-profile-layout-editor-dev');
-        toggleBtn.hidden = false;
-
         var editorActive = false;
         var selectedTarget = null;
         var dragState = null;
         var layoutTargets = [];
+        var SC_PROFILE_ALIGNMENT_EDITOR_MAX_KEY = 'sc_profile_alignment_axis_max_v1';
+        var ALIGNMENT_CALIBRATION_GROUPS = ['centerPioneer', 'guardianAlien'];
+        var ALIGNMENT_AXIS_KEYS = ['alien', 'guardian', 'center', 'pioneer'];
+        var alignGroupLabelEl = document.getElementById('profile-layout-editor-align-group-label');
+        var alignMaxInputs = {
+          alien: document.getElementById('profile-layout-editor-align-alien'),
+          guardian: document.getElementById('profile-layout-editor-align-guardian'),
+          center: document.getElementById('profile-layout-editor-align-center'),
+          pioneer: document.getElementById('profile-layout-editor-align-pioneer'),
+        };
+        var alignCopyBtn = document.getElementById('profile-layout-editor-align-copy');
+        var achievementCopyBtn = document.getElementById('profile-layout-editor-achievement-copy');
+        var achievementCopyAllBtn = document.getElementById('profile-layout-editor-achievement-copy-all');
+
+        function clampAlignmentEditorMax(value) {
+          return Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
+        }
+
+        function defaultAlignmentEditorMaxForGroup(group) {
+          var base =
+            SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP[group] ||
+            SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP.centerPioneer;
+          return cloneAlignmentAxisMax(base);
+        }
+
+        function defaultAlignmentEditorMaxByGroup() {
+          return {
+            centerPioneer: defaultAlignmentEditorMaxForGroup('centerPioneer'),
+            guardianAlien: defaultAlignmentEditorMaxForGroup('guardianAlien'),
+          };
+        }
+
+        function loadAlignmentEditorMaxByGroup() {
+          var base = defaultAlignmentEditorMaxByGroup();
+          try {
+            var raw = localStorage.getItem(SC_PROFILE_ALIGNMENT_EDITOR_MAX_KEY);
+            if (!raw) return base;
+            var parsed = JSON.parse(raw);
+            if (parsed && (parsed.centerPioneer || parsed.guardianAlien)) {
+              ALIGNMENT_CALIBRATION_GROUPS.forEach(function (group) {
+                if (!parsed[group]) return;
+                ALIGNMENT_AXIS_KEYS.forEach(function (k) {
+                  if (parsed[group][k] != null) {
+                    base[group][k] = clampAlignmentEditorMax(parsed[group][k]);
+                  }
+                });
+              });
+              return base;
+            }
+            if (parsed && parsed.alien != null) {
+              var flat = {};
+              ALIGNMENT_AXIS_KEYS.forEach(function (k) {
+                if (parsed[k] != null) flat[k] = clampAlignmentEditorMax(parsed[k]);
+              });
+              ALIGNMENT_CALIBRATION_GROUPS.forEach(function (group) {
+                base[group] = Object.assign({}, base[group], flat);
+              });
+            }
+          } catch (_) {}
+          return base;
+        }
+
+        function saveAlignmentEditorMaxByGroup(allGroups) {
+          try {
+            localStorage.setItem(SC_PROFILE_ALIGNMENT_EDITOR_MAX_KEY, JSON.stringify(allGroups));
+          } catch (_) {}
+        }
+
+        function getAlignmentEditorGroupLabel(group) {
+          return group === 'guardianAlien' ? '수호·외계' : '중앙·개척';
+        }
+
+        function getActiveAlignmentEditorGroup() {
+          return getProfileAlignmentCalibrationGroup(getActiveProfileLayoutSkin());
+        }
+
+        function syncAlignmentGroupLabel(group) {
+          if (alignGroupLabelEl) {
+            alignGroupLabelEl.textContent = getAlignmentEditorGroupLabel(group || getActiveAlignmentEditorGroup());
+          }
+        }
+
+        function syncAlignmentMaxInputs(maxObj) {
+          ALIGNMENT_AXIS_KEYS.forEach(function (k) {
+            var input = alignMaxInputs[k];
+            if (input) input.value = String(maxObj[k]);
+          });
+        }
+
+        function readAlignmentMaxFromInputs() {
+          var next = defaultAlignmentEditorMaxForGroup(getActiveAlignmentEditorGroup());
+          ALIGNMENT_AXIS_KEYS.forEach(function (k) {
+            var input = alignMaxInputs[k];
+            if (input) next[k] = clampAlignmentEditorMax(input.value);
+          });
+          return next;
+        }
+
+        window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP = loadAlignmentEditorMaxByGroup();
+
+        function syncActiveAlignmentEditorMax(skinOpt) {
+          var group = getProfileAlignmentCalibrationGroup(skinOpt || getActiveProfileLayoutSkin());
+          var all = window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP || defaultAlignmentEditorMaxByGroup();
+          var active = all[group] || defaultAlignmentEditorMaxForGroup(group);
+          window.SC_PROFILE_ALIGNMENT_EDITOR_MAX = active;
+          syncAlignmentMaxInputs(active);
+          syncAlignmentGroupLabel(group);
+          return active;
+        }
+
+        syncActiveAlignmentEditorMax('center');
+
+        function applyAlignmentEditorMaxFromInputs() {
+          var group = getActiveAlignmentEditorGroup();
+          var all = window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP || defaultAlignmentEditorMaxByGroup();
+          all[group] = readAlignmentMaxFromInputs();
+          window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP = all;
+          window.SC_PROFILE_ALIGNMENT_EDITOR_MAX = all[group];
+          syncAlignmentMaxInputs(all[group]);
+          saveAlignmentEditorMaxByGroup(all);
+          if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+            window.refreshProfileAlignmentMapDisplay();
+          }
+        }
+
+        function formatAlignmentCalibrationForCopy() {
+          var skin = getActiveProfileLayoutSkin();
+          var group = getProfileAlignmentCalibrationGroup(skin);
+          var L = snapshotProfileLayoutForCopy();
+          var max =
+            (window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP || {})[group] ||
+            defaultAlignmentEditorMaxForGroup(group);
+          var am = L.alignmentMap;
+          var lines = [
+            '【ProfileFrame 성향지도 캘리브레이션】',
+            'skin: ' + skin,
+            'calibrationGroup: ' + group + ' (' + getAlignmentEditorGroupLabel(group) + ')',
+            'alignmentMap: { x: ' + roundPx(am.x) + ', y: ' + roundPx(am.y) + ', w: ' + roundPx(am.w) + ', h: ' + roundPx(am.h) + ' }',
+            'previewMax: { alien: ' + max.alien + ', guardian: ' + max.guardian + ', center: ' + max.center + ', pioneer: ' + max.pioneer + ' }',
+            '',
+            '※ center/pioneer 스킨 → centerPioneer · guardian/alien → guardianAlien',
+            '※ 에디터 ON 시 polygon = previewMax · 빨간 점 = 중앙(0)',
+          ];
+          return lines.join('\n');
+        }
+
+        function copyTextToClipboard(text, okMsg, failMsg) {
+          function done(ok) {
+            setEditorStatus(ok ? okMsg : failMsg);
+          }
+          if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
+            return;
+          }
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            done(document.execCommand('copy'));
+            document.body.removeChild(ta);
+          } catch (_) {
+            done(false);
+          }
+        }
+
+        function copyAlignmentCalibrationToClipboard() {
+          var text = formatAlignmentCalibrationForCopy();
+          copyTextToClipboard(
+            text,
+            '[' + getActiveProfileLayoutSkin() + '] 성향지도 캘리브레이션을 복사했습니다. Cursor 채팅에 붙여넣으세요.',
+            '복사에 실패했습니다.',
+          );
+        }
+
+        function getProfileSkinCopyMeta(skinOpt) {
+          var skin = resolveProfileTerritorySkinKey(skinOpt || getActiveProfileLayoutSkin());
+          var layoutKey = getProfileLayoutStorageKey(skin);
+          var label = skin;
+          if (skin === 'center') label = '중앙영토';
+          else if (skin === 'pioneer') label = '개척영토';
+          else if (skin === 'guardian') label = '수호영토';
+          else if (skin === 'alien') label = '외계영토';
+          return { skin: skin, layoutKey: layoutKey, label: label };
+        }
+
+        function snapshotAchievementLayoutForSkin(skinOpt) {
+          var L = cloneProfileLayout(getProfileLayoutForSkin(skinOpt));
+          ensureAchievementLayoutDefaults(L);
+          roundLayoutRect(L.achievement);
+          if (L.achievementSlots) L.achievementSlots.forEach(roundLayoutRect);
+          if (L.achievementTitles) L.achievementTitles.forEach(roundLayoutRect);
+          if (L.achievementDates) L.achievementDates.forEach(roundLayoutRect);
+          return L;
+        }
+
+        function formatAchievementSlotsBlock(L, meta) {
+          var ach = L.achievement || {};
+          var lines = [
+            '【ProfileFrame 대표 업적 (아이콘·이름·날짜)】',
+            '영토: ' + meta.label,
+            'skin: ' + meta.skin,
+            'layoutKey: ' + meta.layoutKey,
+            'achievement: { x: ' + roundPx(ach.x) + ', y: ' + roundPx(ach.y) + ', w: ' + roundPx(ach.w) + ', h: ' + roundPx(ach.h) + ' }',
+            'achievementSlots: [',
+          ];
+          (L.achievementSlots || []).forEach(function (row, i) {
+            lines.push(
+              '  { slot: ' + i + ', x: ' + roundPx(row.x) + ', y: ' + roundPx(row.y) + ', w: ' + roundPx(row.w) + ', h: ' + roundPx(row.h) + ' },',
+            );
+          });
+          lines.push(']');
+          lines.push('achievementTitles: [');
+          (L.achievementTitles || []).forEach(function (row, i) {
+            lines.push(
+              '  { slot: ' + i + ', x: ' + roundPx(row.x) + ', y: ' + roundPx(row.y) + ', w: ' + roundPx(row.w) + ', h: ' + roundPx(row.h) + ' },',
+            );
+          });
+          lines.push(']');
+          lines.push('achievementDates: [');
+          (L.achievementDates || []).forEach(function (row, i) {
+            lines.push(
+              '  { slot: ' + i + ', x: ' + roundPx(row.x) + ', y: ' + roundPx(row.y) + ', w: ' + roundPx(row.w) + ', h: ' + roundPx(row.h) + ' },',
+            );
+          });
+          lines.push(']');
+          return lines.join('\n');
+        }
+
+        function formatAchievementSlotsForCopy() {
+          var meta = getProfileSkinCopyMeta();
+          var L = snapshotProfileLayoutForCopy();
+          return (
+            formatAchievementSlotsBlock(L, meta) +
+            '\n\n※ 좌표 1024×819 px · 아이콘/이름/날짜 각각 선택 · 크기 Alt+←→ w · Alt+↑↓ h'
+          );
+        }
+
+        function formatAchievementSlotsAllSkinsForCopy() {
+          var activeStoreKey = getProfileLayoutStorageKey(getActiveProfileLayoutSkin());
+          var skinList = [
+            { skin: 'center', label: '중앙영토 · 개척영토(공유)' },
+            { skin: 'guardian', label: '수호영토' },
+            { skin: 'alien', label: '외계영토' },
+          ];
+          var blocks = skinList.map(function (item) {
+            var meta = {
+              skin: item.skin,
+              layoutKey: getProfileLayoutStorageKey(item.skin),
+              label: item.label,
+            };
+            var L =
+              meta.layoutKey === activeStoreKey
+                ? snapshotProfileLayoutForCopy()
+                : snapshotAchievementLayoutForSkin(item.skin);
+            return formatAchievementSlotsBlock(L, meta);
+          });
+          return blocks.join('\n--------------------------------------------\n');
+        }
+
+        function copyAchievementSlotsToClipboard() {
+          var text = formatAchievementSlotsForCopy();
+          copyTextToClipboard(
+            text,
+            '[' + getActiveProfileLayoutSkin() + '] 대표 업적(아이콘·이름·날짜) 좌표를 복사했습니다. Cursor 채팅에 붙여넣으세요.',
+            '복사에 실패했습니다.',
+          );
+        }
+
+        function copyAchievementSlotsAllSkinsToClipboard() {
+          var text = formatAchievementSlotsAllSkinsForCopy();
+          copyTextToClipboard(
+            text,
+            '전체 영토(3그룹) 대표 업적(아이콘·이름·날짜) 좌표를 복사했습니다.',
+            '복사에 실패했습니다.',
+          );
+        }
 
         function roundPx(n) {
           return Math.round(Number(n) || 0);
@@ -11552,6 +14768,9 @@
           if (!target) return null;
           if (target.key === 'activity') return SC_PROFILE_LAYOUT.activity[target.index];
           if (target.key === 'territory') return SC_PROFILE_LAYOUT.territory[target.index];
+          if (target.key === 'achievementSlot') return SC_PROFILE_LAYOUT.achievementSlots[target.index];
+          if (target.key === 'achievementTitle') return SC_PROFILE_LAYOUT.achievementTitles[target.index];
+          if (target.key === 'achievementDate') return SC_PROFILE_LAYOUT.achievementDates[target.index];
           return SC_PROFILE_LAYOUT[target.key];
         }
 
@@ -11563,6 +14782,8 @@
             ['fame', 'fameLayer', '명성'],
             ['exp', 'expLayer', '경험치'],
             ['expGauge', 'expGaugeLayer', '경험치 게이지'],
+            ['alignmentMap', 'alignmentMapLayer', '성향 지도'],
+            ['achievement', 'achievementLayer', '대표 업적 영역'],
           ];
           singles.forEach(function (item) {
             var el = document.getElementById(item[1]);
@@ -11587,12 +14808,46 @@
               el: terrRows[ti],
             });
           }
+          var achSlots = frame.querySelectorAll('#achievementLayer .profile-achievement-slot');
+          for (var asi = 0; asi < achSlots.length; asi++) {
+            var achImg = achSlots[asi].querySelector('.profile-achievement-img');
+            var achTitle = achSlots[asi].querySelector('.profile-achievement-title');
+            var achDate = achSlots[asi].querySelector('.profile-achievement-date');
+            var slotNo = asi + 1;
+            if (achDate) {
+              layoutTargets.push({
+                key: 'achievementDate',
+                index: asi,
+                label: '획득 날짜 ' + slotNo,
+                el: achDate,
+              });
+            }
+            if (achTitle) {
+              layoutTargets.push({
+                key: 'achievementTitle',
+                index: asi,
+                label: '업적 이름 ' + slotNo,
+                el: achTitle,
+              });
+            }
+            if (achImg) {
+              layoutTargets.push({
+                key: 'achievementSlot',
+                index: asi,
+                label: '업적 아이콘 ' + slotNo,
+                el: achImg,
+              });
+            }
+          }
         }
 
         function findTargetFromElement(el) {
           if (!el) return null;
-          for (var i = 0; i < layoutTargets.length; i++) {
-            if (layoutTargets[i].el === el || layoutTargets[i].el.contains(el)) return layoutTargets[i];
+          /* 자식 슬롯이 부모 achievementLayer보다 우선 선택되도록 역순 탐색 */
+          for (var i = layoutTargets.length - 1; i >= 0; i--) {
+            if (layoutTargets[i].el === el || layoutTargets[i].el.contains(el)) {
+              return layoutTargets[i];
+            }
           }
           return null;
         }
@@ -11612,11 +14867,15 @@
 
         function snapshotProfileLayoutForCopy() {
           var snap = cloneProfileLayout(SC_PROFILE_LAYOUT);
-          ['userId', 'level', 'fame', 'exp', 'expGauge'].forEach(function (key) {
+          ensureAchievementLayoutDefaults(snap);
+          ['userId', 'level', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
             roundLayoutRect(snap[key]);
           });
           snap.activity.forEach(roundLayoutRect);
           snap.territory.forEach(roundLayoutRect);
+          if (snap.achievementSlots) snap.achievementSlots.forEach(roundLayoutRect);
+          if (snap.achievementTitles) snap.achievementTitles.forEach(roundLayoutRect);
+          if (snap.achievementDates) snap.achievementDates.forEach(roundLayoutRect);
           return snap;
         }
 
@@ -11641,8 +14900,31 @@
             '          fame: ' + formatRectForCopy(L.fame) + ',',
             '          exp: ' + formatRectForCopy(L.exp) + ',',
             '          expGauge: ' + formatRectForCopy(L.expGauge) + ',',
-            '          activity: [',
+            '          alignmentMap: ' + formatRectForCopy(L.alignmentMap) + ',',
+            '          achievement: ' + formatRectForCopy(L.achievement) + ',',
+            '          achievementSlots: [',
           ];
+          if (L.achievementSlots) {
+            L.achievementSlots.forEach(function (row) {
+              lines.push('            ' + formatRectForCopy(row) + ',');
+            });
+          }
+          lines.push('          ],');
+          lines.push('          achievementTitles: [');
+          if (L.achievementTitles) {
+            L.achievementTitles.forEach(function (row) {
+              lines.push('            ' + formatRectForCopy(row) + ',');
+            });
+          }
+          lines.push('          ],');
+          lines.push('          achievementDates: [');
+          if (L.achievementDates) {
+            L.achievementDates.forEach(function (row) {
+              lines.push('            ' + formatRectForCopy(row) + ',');
+            });
+          }
+          lines.push('          ],');
+          lines.push('          activity: [');
           L.activity.forEach(function (row) {
             lines.push('            ' + formatRectForCopy(row) + ',');
           });
@@ -11804,6 +15086,10 @@
             buildLayoutTargets();
             refreshTargetSelectionClasses();
             applyProfileFramePixelLayout(frame);
+            syncActiveAlignmentEditorMax();
+          }
+          if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+            window.refreshProfileAlignmentMapDisplay();
           }
         }
 
@@ -11860,12 +15146,89 @@
         });
         copyBtn.addEventListener('click', copyLayoutToClipboard);
         resetBtn.addEventListener('click', resetProfileLayout);
+        if (alignCopyBtn) alignCopyBtn.addEventListener('click', copyAlignmentCalibrationToClipboard);
+        if (achievementCopyBtn) achievementCopyBtn.addEventListener('click', copyAchievementSlotsToClipboard);
+        if (achievementCopyAllBtn) achievementCopyAllBtn.addEventListener('click', copyAchievementSlotsAllSkinsToClipboard);
+        ALIGNMENT_AXIS_KEYS.forEach(function (k) {
+          var input = alignMaxInputs[k];
+          if (!input) return;
+          input.addEventListener('change', applyAlignmentEditorMaxFromInputs);
+          input.addEventListener('input', applyAlignmentEditorMaxFromInputs);
+        });
         window.addEventListener('keydown', onEditorKeyDown);
 
         window.__scProfileLayoutEditor = {
           setActive: setEditorActive,
           isActive: function () { return editorActive; },
           rebuildTargets: buildLayoutTargets,
+          onSkinChanged: function (skinOpt) {
+            syncActiveAlignmentEditorMax(skinOpt);
+            if (editorActive) {
+              buildLayoutTargets();
+              refreshTargetSelectionClasses();
+              applyProfileFramePixelLayout(frame);
+              if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+                window.refreshProfileAlignmentMapDisplay();
+              }
+            }
+          },
+          getAlignmentEditorMax: function (skinOpt) {
+            var group = getProfileAlignmentCalibrationGroup(skinOpt || getActiveProfileLayoutSkin());
+            var all = window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP || defaultAlignmentEditorMaxByGroup();
+            return Object.assign({}, all[group] || defaultAlignmentEditorMaxForGroup(group));
+          },
+          setAlignmentEditorMax: function (maxObj, skinOpt) {
+            var group = getProfileAlignmentCalibrationGroup(skinOpt || getActiveProfileLayoutSkin());
+            var all = window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP || defaultAlignmentEditorMaxByGroup();
+            var next = defaultAlignmentEditorMaxForGroup(group);
+            ALIGNMENT_AXIS_KEYS.forEach(function (axis) {
+              if (maxObj && maxObj[axis] != null) next[axis] = clampAlignmentEditorMax(maxObj[axis]);
+            });
+            all[group] = next;
+            window.SC_PROFILE_ALIGNMENT_EDITOR_MAX_BY_GROUP = all;
+            saveAlignmentEditorMaxByGroup(all);
+            if (group === getActiveAlignmentEditorGroup()) {
+              window.SC_PROFILE_ALIGNMENT_EDITOR_MAX = next;
+              syncAlignmentMaxInputs(next);
+            }
+            if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
+              window.refreshProfileAlignmentMapDisplay();
+            }
+            return next;
+          },
+          copyAlignmentCalibration: copyAlignmentCalibrationToClipboard,
+          formatAlignmentCalibration: formatAlignmentCalibrationForCopy,
+          copyAchievementSlots: copyAchievementSlotsToClipboard,
+          formatAchievementSlots: formatAchievementSlotsForCopy,
+          copyAchievementSlotsAllSkins: copyAchievementSlotsAllSkinsToClipboard,
+          formatAchievementSlotsAllSkins: formatAchievementSlotsAllSkinsForCopy,
+        };
+
+        window.__scShowProfileLayoutEditor = function () {
+          document.body.classList.add('sc-profile-layout-editor-dev');
+          if (toggleBtn) toggleBtn.hidden = false;
+          var switcher = document.getElementById('profile-skin-dev-switcher');
+          if (switcher) switcher.hidden = false;
+        };
+
+        window.__scHideProfileLayoutEditor = function () {
+          if (window.__scProfileLayoutEditor && typeof window.__scProfileLayoutEditor.setActive === 'function') {
+            window.__scProfileLayoutEditor.setActive(false);
+          }
+          document.body.classList.remove('sc-profile-layout-editor-dev');
+          document.body.classList.remove('sc-profile-layout-editor-active');
+          if (toggleBtn) {
+            toggleBtn.hidden = true;
+            toggleBtn.classList.remove('is-active');
+            toggleBtn.setAttribute('aria-pressed', 'false');
+          }
+          if (panel) {
+            panel.hidden = true;
+            panel.setAttribute('aria-hidden', 'true');
+          }
+          var switcher = document.getElementById('profile-skin-dev-switcher');
+          if (switcher) switcher.hidden = true;
+          frame.classList.remove('profile-frame--layout-edit');
         };
       })();
 
@@ -11873,10 +15236,8 @@
         var SC_PROFILE_SKIN_DEV =
           location.hostname === 'localhost' || location.hostname === '127.0.0.1';
         if (!SC_PROFILE_SKIN_DEV) return;
-        document.body.classList.add('sc-profile-layout-editor-dev');
         var switcher = document.getElementById('profile-skin-dev-switcher');
         if (!switcher) return;
-        switcher.hidden = false;
 
         function refreshSkinButtons(activeSkin) {
           var skin = activeSkin || resolveProfileTerritorySkinKey(
@@ -12294,6 +15655,7 @@
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
           if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
+          if (typeof window.refreshCurrentProfile === 'function') window.refreshCurrentProfile();
           return;
         }
         try {
@@ -12314,6 +15676,9 @@
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
           if (typeof window.__scRefreshAlignmentUI === 'function') window.__scRefreshAlignmentUI();
           if (typeof window.__scRefreshProgressionUI === 'function') window.__scRefreshProgressionUI();
+          if (typeof window.__scPrefetchUserProfile === 'function') {
+            window.__scPrefetchUserProfile();
+          }
         } catch (_) {
           applyGuestNeutralMeta();
           if (typeof window.__scApplyStoredKantaAffiliation === 'function') window.__scApplyStoredKantaAffiliation();
@@ -13865,6 +17230,535 @@
           span.setAttribute('aria-hidden', 'true');
         }
         return span;
+      }
+
+      function resolvePostDetailAuthorInfo(authorId, blindKanta) {
+        var id = String(authorId || '').trim();
+        if (blindKanta || !id) {
+          return {
+            level: null,
+            rankLabel: null,
+          };
+        }
+        var level = 1;
+        var rankLabel = '참여자';
+        var P = window.PlayerProgression;
+        if (P && typeof P.getDisplay === 'function') {
+          var display = P.getDisplay(id);
+          if (display) {
+            level = display.level || 1;
+            rankLabel = display.rankShort || rankLabel;
+          }
+        }
+        var meR = uid();
+        if (String(id) === String(meR || '').trim() && typeof window.getCurrentProfileData === 'function') {
+          var prof = window.getCurrentProfileData();
+          if (prof) {
+            if (prof.level != null) level = prof.level;
+            if (prof.territory && prof.territory.rank) rankLabel = prof.territory.rank;
+          }
+        }
+        return {
+          level: level,
+          rankLabel: rankLabel,
+        };
+      }
+
+      function normalizeAuthorTerritoryId(raw) {
+        var s = String(raw || '').trim();
+        if (!s) return '';
+        var t = s.toLowerCase();
+        if (t.indexOf('kantap') === 0 || t === 'alien') return 'KANTAPBIYA';
+        if (t === 'common' || t === 'centrist' || t === 'center') return 'COMMON';
+        if (t === 'progressive' || t === 'reform' || t === 'pioneer') return 'PROGRESSIVE';
+        if (t === 'conservative' || t === 'order' || t === 'guardian') return 'CONSERVATIVE';
+        var u = s.toUpperCase();
+        if (u.indexOf('KANTAPBIYA') === 0) return 'KANTAPBIYA';
+        if (u === 'COMMON' || u === 'CENTRIST') return 'COMMON';
+        if (u === 'PROGRESSIVE') return 'PROGRESSIVE';
+        if (u === 'CONSERVATIVE') return 'CONSERVATIVE';
+        return '';
+      }
+
+      function territoryIdToDataTerritory(tid) {
+        var norm = normalizeAuthorTerritoryId(tid);
+        var map = {
+          COMMON: 'centrist',
+          PROGRESSIVE: 'reform',
+          CONSERVATIVE: 'order',
+          KANTAPBIYA: 'alien',
+        };
+        return map[norm] || 'centrist';
+      }
+
+      function readPostAuthorTerritoryHint(post) {
+        if (!post) return '';
+        var keys = ['territoryId', 'territory', 'faction', 'skin', 'authorTerritoryId', 'authorTerritory'];
+        for (var i = 0; i < keys.length; i++) {
+          var v = post[keys[i]];
+          if (v != null && String(v).trim()) return String(v).trim();
+        }
+        return '';
+      }
+
+      function resolvePostDetailAuthorTerritory(post, authorId, blindKanta) {
+        if (blindKanta) return null;
+        var id = String(authorId || '').trim();
+        var tid = normalizeAuthorTerritoryId(readPostAuthorTerritoryHint(post));
+        if (!tid && id) {
+          var P = window.PlayerProgression;
+          if (P && typeof P.getState === 'function') {
+            var st = P.getState(id);
+            if (st && st.territoryId) tid = normalizeAuthorTerritoryId(st.territoryId);
+          }
+        }
+        if (!tid && id) {
+          var bucket = readUserBucket(id);
+          if (bucket && bucket.forcedTerritory) {
+            tid = normalizeAuthorTerritoryId(bucket.forcedTerritory);
+          }
+        }
+        var meR = uid();
+        if (!tid && id && String(id) === String(meR || '').trim()) {
+          var player = window.__scPlayer || {};
+          tid = normalizeAuthorTerritoryId(player.affiliationTerritoryId || player.territoryId);
+          if (!tid && typeof window.getCurrentProfileData === 'function') {
+            var prof = window.getCurrentProfileData();
+            if (prof && prof.territorySkin) {
+              var skinMap = {
+                center: 'COMMON',
+                centrist: 'COMMON',
+                pioneer: 'PROGRESSIVE',
+                reform: 'PROGRESSIVE',
+                guardian: 'CONSERVATIVE',
+                order: 'CONSERVATIVE',
+                alien: 'KANTAPBIYA',
+              };
+              tid = skinMap[prof.territorySkin] || '';
+            }
+          }
+        }
+        return tid || 'COMMON';
+      }
+
+      function buildPostDetailAuthorInfo(post, authorId, blindKanta) {
+        var col = document.createElement('div');
+        col.className = 'board__author-line__text board-post-detail__author-info';
+        var authorStr = String(authorId || '').trim();
+
+        var nameEl = document.createElement('div');
+        nameEl.className = 'board-post-detail__author-name';
+        nameEl.textContent = blindKanta ? '????' : authorStr || '익명';
+        col.appendChild(nameEl);
+
+        if (!blindKanta) {
+          var info = resolvePostDetailAuthorInfo(authorStr, false);
+          if (info.level != null && info.rankLabel) {
+            var statEl = document.createElement('div');
+            statEl.className = 'board-post-detail__author-stat';
+            statEl.textContent = 'Lv.' + info.level + ' · ' + info.rankLabel;
+            col.appendChild(statEl);
+          }
+        }
+
+        var timeEl = document.createElement('div');
+        timeEl.className = 'board-post-detail__author-time';
+        if (!blindKanta) {
+          var territoryId = resolvePostDetailAuthorTerritory(post, authorStr, false);
+          var badge = document.createElement('span');
+          badge.className = 'board-post-detail__territory-badge sc-badge';
+          badge.dataset.territory = territoryIdToDataTerritory(territoryId);
+          badge.textContent = territoryShortLabel(territoryId);
+          timeEl.appendChild(badge);
+        }
+        var timeTxt = document.createElement('span');
+        timeTxt.className = 'board-post-detail__author-time-text';
+        var timeStr = formatDate(post.createdAt);
+        if (isCommonSpace(currentTerritory) && post.category) {
+          timeStr += ' · ' + freeCategoryLabel(post.category);
+        }
+        timeTxt.textContent = timeStr;
+        timeEl.appendChild(timeTxt);
+        col.appendChild(timeEl);
+
+        return col;
+      }
+
+      /* ── Hover 미니 프로필 (공통 · ScMiniProfile) ── */
+      var scMiniProfileState = {
+        popover: null,
+        showTimer: null,
+        hideTimer: null,
+        activeAnchor: null,
+        activeUserId: null,
+      };
+
+      function ensureScMiniProfilePopover() {
+        if (scMiniProfileState.popover) return scMiniProfileState.popover;
+        var el = document.createElement('div');
+        el.id = 'sc-mini-profile-popover';
+        el.className = 'sc-mini-profile';
+        el.setAttribute('role', 'tooltip');
+        el.setAttribute('aria-hidden', 'true');
+        el.innerHTML =
+          '<div class="sc-mini-profile__head">' +
+          '  <span class="sc-mini-profile__avatar sc-mini-profile__avatar--empty" data-mp="avatar"></span>' +
+          '  <div class="sc-mini-profile__identity">' +
+          '    <div class="sc-mini-profile__name" data-mp="name"></div>' +
+          '    <div class="sc-mini-profile__stat" data-mp="stat"></div>' +
+          '    <div class="sc-mini-profile__territory" data-mp="territory"></div>' +
+          '  </div>' +
+          '</div>' +
+          '<div class="sc-mini-profile__achievements">' +
+          '  <p class="sc-mini-profile__ach-title">대표 업적</p>' +
+          '  <ul class="sc-mini-profile__ach-list" data-mp="ach-list"></ul>' +
+          '</div>' +
+          '<div class="sc-mini-profile__metrics">' +
+          '  <div class="sc-mini-profile__metric"><span class="sc-mini-profile__metric-label">시민 영향력</span><span class="sc-mini-profile__metric-value" data-mp="influence"></span></div>' +
+          '  <div class="sc-mini-profile__metric"><span class="sc-mini-profile__metric-label">게시글</span><span class="sc-mini-profile__metric-value" data-mp="posts"></span></div>' +
+          '  <div class="sc-mini-profile__metric"><span class="sc-mini-profile__metric-label">댓글</span><span class="sc-mini-profile__metric-value" data-mp="comments"></span></div>' +
+          '</div>' +
+          '<p class="sc-mini-profile__hint">클릭하면 프로필 보기</p>';
+        el.addEventListener('mouseenter', function () {
+          clearTimeout(scMiniProfileState.hideTimer);
+        });
+        el.addEventListener('mouseleave', function () {
+          hideScMiniProfile();
+        });
+        document.body.appendChild(el);
+        scMiniProfileState.popover = el;
+        return el;
+      }
+
+      function countAuthorBoardActivity(userId) {
+        var id = String(userId || '').trim();
+        if (!id) return { posts: 0, comments: 0 };
+        var posts = 0;
+        var comments = 0;
+        try {
+          var raw = localStorage.getItem(BUNDLE_KEY);
+          if (!raw) return { posts: 0, comments: 0 };
+          var b = JSON.parse(raw);
+          var pmap = b && b.posts;
+          if (!pmap || typeof pmap !== 'object') return { posts: 0, comments: 0 };
+          Object.keys(pmap).forEach(function (key) {
+            var arr = pmap[key];
+            if (!Array.isArray(arr)) return;
+            arr.forEach(function (p) {
+              if (!p) return;
+              if (String(p.authorId || '').trim() === id) posts += 1;
+              if (Array.isArray(p.comments)) {
+                p.comments.forEach(function (c) {
+                  if (c && String(c.authorId || '').trim() === id) comments += 1;
+                });
+              }
+            });
+          });
+        } catch (_) {}
+        return { posts: posts, comments: comments };
+      }
+
+      function resolveScMiniProfileAchievements(userId) {
+        var meR = uid();
+        if (String(userId || '').trim() === String(meR || '').trim()) {
+          if (typeof window.getCurrentProfileData === 'function') {
+            var prof = window.getCurrentProfileData();
+            if (prof && Array.isArray(prof.achievements)) {
+              return prof.achievements.slice(0, 3);
+            }
+          }
+          if (window.SC_PROFILE_DATA && Array.isArray(window.SC_PROFILE_DATA.achievements)) {
+            return window.SC_PROFILE_DATA.achievements.slice(0, 3);
+          }
+        }
+        return [];
+      }
+
+      function resolveScMiniProfileInfluence(userId) {
+        var meR = uid();
+        if (String(userId || '').trim() === String(meR || '').trim()) {
+          if (typeof window.getCurrentProfileData === 'function') {
+            var prof = window.getCurrentProfileData();
+            if (prof && prof.territory && prof.territory.influence != null) {
+              return Number(prof.territory.influence) || 0;
+            }
+            if (prof && prof.activity && prof.activity.aura != null) {
+              return Number(prof.activity.aura) || 0;
+            }
+          }
+        }
+        var P = window.PlayerProgression;
+        if (P && typeof P.getState === 'function' && typeof P.rankReputationScore === 'function') {
+          return P.rankReputationScore(P.getState(userId));
+        }
+        return 0;
+      }
+
+      function resolveScMiniProfileActivityCounts(userId) {
+        var meR = uid();
+        if (String(userId || '').trim() === String(meR || '').trim()) {
+          if (typeof window.getCurrentProfileData === 'function') {
+            var prof = window.getCurrentProfileData();
+            if (prof && prof.activity) {
+              return {
+                posts: Number(prof.activity.posts) || 0,
+                comments: Number(prof.activity.comments) || 0,
+              };
+            }
+          }
+        }
+        return countAuthorBoardActivity(userId);
+      }
+
+      function resolveScMiniProfileData(userId, opts) {
+        var id = String(userId || '').trim();
+        var ctx = (opts && opts.context) || {};
+        var post = ctx.post || null;
+        var blind = false;
+        var info = resolvePostDetailAuthorInfo(id, blind);
+        var territoryId = resolvePostDetailAuthorTerritory(post, id, blind);
+        var activity = resolveScMiniProfileActivityCounts(id);
+        return {
+          userId: id,
+          nickname: id || '익명',
+          photoUrl:
+            typeof window.__scGetProfilePhotoDataUrl === 'function'
+              ? window.__scGetProfilePhotoDataUrl(id)
+              : '',
+          level: info.level,
+          rankLabel: info.rankLabel,
+          territoryId: territoryId,
+          territoryLabel: territoryShortLabel(territoryId),
+          territoryCss: territoryIdToDataTerritory(territoryId),
+          achievements: resolveScMiniProfileAchievements(id),
+          influence: resolveScMiniProfileInfluence(id),
+          posts: activity.posts,
+          comments: activity.comments,
+        };
+      }
+
+      function renderScMiniProfilePopover(data) {
+        var pop = ensureScMiniProfilePopover();
+        var avatar = pop.querySelector('[data-mp="avatar"]');
+        var nameEl = pop.querySelector('[data-mp="name"]');
+        var statEl = pop.querySelector('[data-mp="stat"]');
+        var terrEl = pop.querySelector('[data-mp="territory"]');
+        var achList = pop.querySelector('[data-mp="ach-list"]');
+        var influenceEl = pop.querySelector('[data-mp="influence"]');
+        var postsEl = pop.querySelector('[data-mp="posts"]');
+        var commentsEl = pop.querySelector('[data-mp="comments"]');
+        if (!avatar || !nameEl || !statEl || !terrEl || !achList) return;
+
+        avatar.textContent = '';
+        avatar.classList.remove('sc-mini-profile__avatar--empty');
+        if (data.photoUrl) {
+          var im = document.createElement('img');
+          im.src = data.photoUrl;
+          im.alt = '';
+          im.className = 'sc-mini-profile__avatar-img';
+          avatar.appendChild(im);
+        } else {
+          avatar.classList.add('sc-mini-profile__avatar--empty');
+        }
+
+        nameEl.textContent = data.nickname || '익명';
+        statEl.textContent =
+          data.level != null && data.rankLabel ? 'Lv.' + data.level + ' · ' + data.rankLabel : '';
+        terrEl.textContent = data.territoryLabel || '중앙광장';
+        terrEl.dataset.territory = data.territoryCss || 'centrist';
+
+        achList.textContent = '';
+        var achs = data.achievements || [];
+        if (achs.length) {
+          achs.forEach(function (a) {
+            var li = document.createElement('li');
+            li.className = 'sc-mini-profile__ach-item';
+            li.textContent = (a && (a.title || a.name || a.id)) || '업적';
+            achList.appendChild(li);
+          });
+        } else {
+          var empty = document.createElement('li');
+          empty.className = 'sc-mini-profile__ach-empty';
+          empty.textContent = '대표 업적 없음';
+          achList.appendChild(empty);
+        }
+
+        if (influenceEl) {
+          influenceEl.textContent = Number(data.influence || 0).toLocaleString('ko-KR');
+        }
+        if (postsEl) postsEl.textContent = String(data.posts != null ? data.posts : 0);
+        if (commentsEl) commentsEl.textContent = String(data.comments != null ? data.comments : 0);
+      }
+
+      function positionScMiniProfilePopover(anchor) {
+        var pop = ensureScMiniProfilePopover();
+        pop.style.left = '0px';
+        pop.style.top = '0px';
+        pop.classList.add('is-visible');
+        var rect = anchor.getBoundingClientRect();
+        var popRect = pop.getBoundingClientRect();
+        var gap = 10;
+        var pad = 8;
+        var left = rect.right + gap;
+        var top = rect.top;
+        if (left + popRect.width > window.innerWidth - pad) {
+          left = rect.left - gap - popRect.width;
+        }
+        if (left < pad) left = pad;
+        if (top + popRect.height > window.innerHeight - pad) {
+          top = window.innerHeight - popRect.height - pad;
+        }
+        if (top < pad) top = pad;
+        pop.style.left = Math.round(left) + 'px';
+        pop.style.top = Math.round(top) + 'px';
+      }
+
+      function showScMiniProfile(anchor, userId, opts) {
+        if (!anchor || !userId) return;
+        clearTimeout(scMiniProfileState.hideTimer);
+        clearTimeout(scMiniProfileState.showTimer);
+        scMiniProfileState.activeAnchor = anchor;
+        scMiniProfileState.activeUserId = userId;
+        var data = resolveScMiniProfileData(userId, opts);
+        renderScMiniProfilePopover(data);
+        var pop = ensureScMiniProfilePopover();
+        pop.setAttribute('aria-hidden', 'false');
+        positionScMiniProfilePopover(anchor);
+      }
+
+      function hideScMiniProfile() {
+        clearTimeout(scMiniProfileState.showTimer);
+        scMiniProfileState.hideTimer = setTimeout(function () {
+          var pop = scMiniProfileState.popover;
+          if (!pop) return;
+          pop.classList.remove('is-visible');
+          pop.setAttribute('aria-hidden', 'true');
+          scMiniProfileState.activeAnchor = null;
+          scMiniProfileState.activeUserId = null;
+        }, 120);
+      }
+
+      function attachScMiniProfileHover(anchor, userId, opts) {
+        if (!anchor || !userId) return;
+        var options = opts || {};
+        anchor.addEventListener('mouseenter', function () {
+          clearTimeout(scMiniProfileState.hideTimer);
+          scMiniProfileState.showTimer = setTimeout(function () {
+            showScMiniProfile(anchor, userId, options);
+          }, 140);
+        });
+        anchor.addEventListener('mouseleave', function () {
+          clearTimeout(scMiniProfileState.showTimer);
+          hideScMiniProfile();
+        });
+        anchor.addEventListener('focus', function () {
+          showScMiniProfile(anchor, userId, options);
+        });
+        anchor.addEventListener('blur', function () {
+          hideScMiniProfile();
+        });
+      }
+
+      window.ScMiniProfile = {
+        attachHover: attachScMiniProfileHover,
+        show: showScMiniProfile,
+        hide: hideScMiniProfile,
+        resolveData: resolveScMiniProfileData,
+      };
+
+      var scProfileModalState = {
+        userId: null,
+        bound: false,
+      };
+
+      function bindScProfileModalEvents() {
+        if (scProfileModalState.bound) return;
+        var modal = document.getElementById('sc-profile-modal');
+        if (!modal) return;
+        scProfileModalState.bound = true;
+        var closers = modal.querySelectorAll('[data-sc-profile-close]');
+        for (var ci = 0; ci < closers.length; ci++) {
+          closers[ci].addEventListener('click', function () {
+            closeScProfileModal();
+          });
+        }
+        document.addEventListener('keydown', function (ev) {
+          if (ev.key !== 'Escape') return;
+          if (!modal.classList.contains('is-open')) return;
+          ev.preventDefault();
+          closeScProfileModal();
+        });
+      }
+
+      function openScProfileModal(userId) {
+        bindScProfileModalEvents();
+        hideScMiniProfile();
+        var modal = document.getElementById('sc-profile-modal');
+        if (!modal) return;
+        scProfileModalState.userId = String(userId || '').trim();
+        var loading = document.getElementById('sc-profile-modal-loading');
+        var mount = document.getElementById('sc-profile-modal-frame-mount');
+        if (loading) {
+          loading.hidden = false;
+          loading.textContent = '프로필을 불러오는 중...';
+        }
+        if (mount) mount.hidden = true;
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('sc-profile-modal-open');
+        requestAnimationFrame(function () {
+          modal.classList.add('is-open');
+          if (typeof window.renderProfileFrameInModal === 'function') {
+            window.renderProfileFrameInModal(scProfileModalState.userId);
+          }
+        });
+      }
+
+      function closeScProfileModal() {
+        var modal = document.getElementById('sc-profile-modal');
+        if (!modal || !modal.classList.contains('is-open')) return;
+        modal.classList.remove('is-open');
+        var finished = false;
+        var done = function (ev) {
+          if (finished) return;
+          if (ev && ev.target !== modal) return;
+          finished = true;
+          modal.removeEventListener('transitionend', done);
+          modal.setAttribute('aria-hidden', 'true');
+          scProfileModalState.userId = null;
+          document.body.classList.remove('sc-profile-modal-open');
+          var loading = document.getElementById('sc-profile-modal-loading');
+          var mount = document.getElementById('sc-profile-modal-frame-mount');
+          if (loading) loading.hidden = false;
+          if (mount) mount.hidden = true;
+          if (typeof window.restoreHudProfileFrameAfterModal === 'function') {
+            window.restoreHudProfileFrameAfterModal();
+          }
+        };
+        modal.addEventListener('transitionend', done);
+        setTimeout(done, 240);
+      }
+
+      window.ScProfileModal = {
+        open: openScProfileModal,
+        close: closeScProfileModal,
+        getUserId: function () {
+          return scProfileModalState.userId;
+        },
+      };
+
+      window.openUserProfile = function (userId) {
+        openScProfileModal(userId);
+      };
+
+      if (!window.__scMiniProfileScrollBound) {
+        window.__scMiniProfileScrollBound = true;
+        document.addEventListener(
+          'scroll',
+          function () {
+            hideScMiniProfile();
+          },
+          true,
+        );
       }
 
       function isCommonSpace(tid) {
@@ -19881,6 +23775,37 @@
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1, post);
             applyReceivedLikeForAuthor(auth, 'post', 1);
+            try {
+              if (typeof window.addNotification === 'function') {
+                window.addNotification(
+                  {
+                    type: 'like',
+                    title: '새 공감',
+                    message: '내 글에 공감을 받았습니다.',
+                    linkTarget: {
+                      view: 'post',
+                      postId: post.id,
+                      territoryId: currentTerritory,
+                      stage: effectiveStage(),
+                    },
+                  },
+                  auth,
+                );
+              }
+              if (typeof window.addActivityFeedItem === 'function') {
+                window.addActivityFeedItem({
+                  type: 'like_received',
+                  message: '누군가의 문장에 반응이 모였습니다.',
+                  territory: currentTerritory,
+                  linkTarget: {
+                    view: 'post',
+                    postId: post.id,
+                    territoryId: currentTerritory,
+                    stage: effectiveStage(),
+                  },
+                });
+              }
+            } catch (_) {}
           }
         } else {
           if (inD) {
@@ -20032,15 +23957,29 @@
         var meta = document.createElement('div');
         meta.className = 'board-post-detail__meta board__author-line';
         meta.appendChild(buildBoardAuthorThumb(post.authorId, blindKanta));
-        var metaTxt = document.createElement('span');
-        metaTxt.className = 'board__author-line__text';
-        metaTxt.appendChild(
-          document.createTextNode((post.authorId || '익명') + ' · ' + formatDate(post.createdAt)),
-        );
-        if (isCommonSpace(currentTerritory) && post.category) {
-          metaTxt.appendChild(document.createTextNode(' · ' + freeCategoryLabel(post.category)));
+        meta.appendChild(buildPostDetailAuthorInfo(post, post.authorId, blindKanta));
+        if (!blindKanta && authorStr) {
+          meta.classList.add('board-post-detail__meta--profile-link');
+          meta.setAttribute('role', 'button');
+          meta.setAttribute('tabindex', '0');
+          meta.setAttribute('aria-label', authorStr + ' 시민 프로필 보기');
+          meta.addEventListener('click', function () {
+            if (typeof window.openUserProfile === 'function') {
+              window.openUserProfile(authorStr);
+            }
+          });
+          meta.addEventListener('keydown', function (ev) {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              if (typeof window.openUserProfile === 'function') {
+                window.openUserProfile(authorStr);
+              }
+            }
+          });
+          if (window.ScMiniProfile && typeof window.ScMiniProfile.attachHover === 'function') {
+            window.ScMiniProfile.attachHover(meta, authorStr, { context: { post: post } });
+          }
         }
-        meta.appendChild(metaTxt);
         root.appendChild(meta);
 
         if (!ownPost && authorStr && getFollowSystem()) {
@@ -20268,6 +24207,37 @@
             L.push(me);
             applyReactionScoresWithMult(me, auth, true, 1, post);
             applyReceivedLikeForAuthor(auth, 'comment', 1);
+            try {
+              if (typeof window.addNotification === 'function') {
+                window.addNotification(
+                  {
+                    type: 'like',
+                    title: '새 공감',
+                    message: '내 댓글에 공감을 받았습니다.',
+                    linkTarget: {
+                      view: 'post',
+                      postId: post.id,
+                      territoryId: currentTerritory,
+                      stage: effectiveStage(),
+                    },
+                  },
+                  auth,
+                );
+              }
+              if (typeof window.addActivityFeedItem === 'function') {
+                window.addActivityFeedItem({
+                  type: 'like_received',
+                  message: '누군가의 문장에 반응이 모였습니다.',
+                  territory: currentTerritory,
+                  linkTarget: {
+                    view: 'post',
+                    postId: post.id,
+                    territoryId: currentTerritory,
+                    stage: effectiveStage(),
+                  },
+                });
+              }
+            } catch (_) {}
           }
         } else {
           if (inD) {
@@ -20320,6 +24290,21 @@
         } else {
           em.push(me);
           if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, 1);
+          try {
+            if (typeof window.addActivityFeedItem === 'function') {
+              window.addActivityFeedItem({
+                type: 'empathy_added',
+                message: '누군가의 문장에 공감이 모였습니다.',
+                territory: tid,
+                linkTarget: {
+                  view: 'post',
+                  postId: postId,
+                  territoryId: tid,
+                  stage: effectiveStage(),
+                },
+              });
+            }
+          } catch (_) {}
         }
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
         refreshListOnly();
@@ -20350,6 +24335,21 @@
         } else {
           em.push(me);
           if (tid && tid !== 'UNASSIGNED') applyEmpathyEcosystem(me, tid, 1);
+          try {
+            if (typeof window.addActivityFeedItem === 'function') {
+              window.addActivityFeedItem({
+                type: 'empathy_added',
+                message: '누군가의 문장에 공감이 모였습니다.',
+                territory: tid,
+                linkTarget: {
+                  view: 'post',
+                  postId: postId,
+                  territoryId: tid,
+                  stage: effectiveStage(),
+                },
+              });
+            }
+          } catch (_) {}
         }
         if (!setPosts(currentTerritory, effectiveStage(), all)) return;
         refreshListOnly();
@@ -20411,6 +24411,46 @@
         if (!setPosts(detailTid, detailStage, all)) return;
         registerToxicEvent(uid(), 0.4, 'comment-activity');
         if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('board_comment');
+        try {
+          var postAuthor = String(post.authorId || '').trim();
+          var commenter = String(uid() || '').trim();
+          if (
+            postAuthor &&
+            commenter &&
+            postAuthor !== commenter &&
+            typeof window.addNotification === 'function'
+          ) {
+            window.addNotification(
+              {
+                type: 'comment',
+                title: '새 댓글',
+                message: '내 글에 댓글이 달렸습니다.',
+                linkTarget: {
+                  view: 'post',
+                  postId: post.id,
+                  territoryId: detailTid,
+                  stage: detailStage,
+                },
+              },
+              postAuthor,
+            );
+          }
+        } catch (_) {}
+        try {
+          if (typeof window.addActivityFeedItem === 'function') {
+            window.addActivityFeedItem({
+              type: 'comment_created',
+              message: '한 시민이 토론에 의견을 남겼습니다.',
+              territory: detailTid,
+              linkTarget: {
+                view: 'post',
+                postId: postId,
+                territoryId: detailTid,
+                stage: detailStage,
+              },
+            });
+          }
+        } catch (_) {}
         refreshListOnly();
       }
 
@@ -22021,6 +26061,22 @@
         if (!setPosts(writeTid, writeStage, all)) return;
         registerToxicEvent(uid(), 0.6, 'post-activity');
         if (typeof window.__scGrantProgressionXp === 'function') window.__scGrantProgressionXp('post_write');
+        if (typeof window.addActivityFeedItem === 'function') {
+          window.addActivityFeedItem({
+            type: 'post_created',
+            message:
+              (window.PlayerProgression && window.PlayerProgression.territoryLabelKo
+                ? window.PlayerProgression.territoryLabelKo(writeTid)
+                : writeTid) + '에 새 토론이 열렸습니다.',
+            territory: writeTid,
+            linkTarget: {
+              view: 'post',
+              postId: post.id,
+              territoryId: writeTid,
+              stage: writeStage,
+            },
+          });
+        }
         if (window.FollowSystem && typeof window.FollowSystem.onAuthorNewPost === 'function') {
           window.FollowSystem.onAuthorNewPost({
             postId: post.id,
@@ -22706,6 +26762,19 @@
       }
     })();
   </script>
+    <div id="sc-profile-modal" class="sc-profile-modal" aria-hidden="true">
+      <div class="sc-profile-modal__backdrop" data-sc-profile-close aria-hidden="true"></div>
+      <div class="sc-profile-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sc-profile-modal-loading">
+        <button type="button" class="sc-profile-modal__close-x" data-sc-profile-close aria-label="닫기">×</button>
+        <div class="sc-profile-modal__body">
+          <p class="sc-profile-modal__loading" id="sc-profile-modal-loading">프로필을 불러오는 중...</p>
+          <div id="sc-profile-modal-frame-mount" class="sc-profile-modal__frame-mount" hidden></div>
+        </div>
+        <div class="sc-profile-modal__footer">
+          <button type="button" class="sc-btn sc-profile-modal__close-btn" data-sc-profile-close>닫기</button>
+        </div>
+      </div>
+    </div>
     <div id="sc-soft-notice" class="sc-soft-notice" hidden role="status" aria-live="polite"></div>
   </body>
 </html>

@@ -1,0 +1,425 @@
+# 센텐스크래프트 — AI 세션 인수인계 문서
+
+> **새 Cursor/AI 세션 시작 시 이 문서를 먼저 읽으세요.**  
+> 마지막 업데이트: 2026-07-10  
+> 상세 맥락: `docs/PROJECT_CONTEXT.md` · 작업 목록: `docs/TODO.md` · 최근 변경: `docs/CHANGELOG.md`
+
+---
+
+## 0. 30초 요약
+
+| 항목 | 내용 |
+|------|------|
+| 프로젝트 | 게임형 정치 커뮤니티 SPA — **글·반응 → 성향 변화 → 영토 소속** |
+| 프론트 | **단일 파일** `public/index.html` (HTML+CSS+JS, 빌드 없음) |
+| 백엔드 | `server.js` (Express) + Supabase Auth/DB (일부) |
+| 현재 단계 | **베타 뼈대** — UI·로컬 데모 로직은 많음, **서버 집계·결제·실데이터 연동은 미완** |
+| 프로필 UI | **ProfileFrame** (PNG 1024×819 + px 오버레이)가 기본. legacy 카드는 `hidden` |
+| 성향 | **3축 누적점수**(보수·중도·진보) + **외계인 %** — 브라우저 localStorage 데모 |
+| ProfileFrame 성향 | **4축 표시**(center/pioneer/guardian/alien 0~100) — **게임 축과 아직 미연동(더미)** |
+
+### 새 세션 필수 규칙 (`.cursor/rules/sentence-craft.mdc`)
+
+1. 작업 전 `PROJECT_CONTEXT.md` · `TODO.md` · `CHANGELOG.md` 읽기  
+2. UI는 `index.html` `<style>` 우선 · `sc-*` UI Kit · `data-territory`로 색상  
+3. **기존 JS 로직(성향·레벨·팔로우·반응) 함부로 수정 금지** — UI 작업은 CSS 위주  
+4. HTML `id` 변경 금지 · 작업 후 `CHANGELOG.md` + `TODO.md` 갱신  
+
+---
+
+## 1. 프로젝트 폴더 구조
+
+```
+sentence-craft/
+├── public/                          # ★ 프론트 전부 (배포 루트)
+│   ├── index.html                   # ★ 단일 SPA (~23k+ lines) — 메인 작업 파일
+│   ├── territory-beliefs.js         # 영토 신념 SSOT (displayName, belief, …)
+│   ├── alignment-scoring.js         # ★ 성향 3축 점수 수학 (브라우저)
+│   ├── player-progression.js        # 레벨·XP·명성·글당 상한 (브라우저)
+│   ├── follow-system.js
+│   ├── permissions-guide.js
+│   ├── rank-leaderboard.js
+│   ├── tendency-trends-ui.js
+│   ├── ui-sounds.js
+│   ├── assets/
+│   │   ├── achievements/            # 업적 아이콘 PNG
+│   │   ├── territory-icons/         # 레거시 PNG (점진 교체 중)
+│   │   └── territories/
+│   │       ├── banners/             # WEBP v1
+│   │       ├── emblems/             # WEBP v1
+│   │       └── profiles/            # ProfileFrame PNG 4종 (1024×819)
+│   ├── auth/callback.html           # OAuth 콜백
+│   └── territories/                 # 맵 PNG, territory-hit-zones.json
+├── config/                          # 서버/설계용 Node 모듈
+│   ├── world-territories.js         # 영토·게시판 단계·인구 시각화 구간
+│   ├── alignment-system.js          # 성향 시스템 뼈대 (SIGNAL_TYPES, 임계값)
+│   ├── alignment-rank-limits.js   # 랭크별 축 상한·글당 캡 (1~10랭크)
+│   ├── player-progression.js        # XP·레벨·명성 등급 (서버용 미러)
+│   ├── kantapbiya.js                # 외계행성 규칙
+│   └── signup-countries.js
+├── docs/                            # ★ 프로젝트 문서
+│   ├── AI_HANDOFF.md                # ← 이 문서
+│   ├── PROJECT_CONTEXT.md
+│   ├── TODO.md / CHANGELOG.md
+│   ├── ALIGNMENT_REACTION_TUNING.md # ★ 성향 반응 수치 일람 (정확값)
+│   ├── DAILY_ISSUE_CONTENT_GRAVITY.md
+│   └── … (데일리 이슈·DB·Supabase 가이드 등)
+├── scripts/ · tools/ · supabase/
+├── server.js                        # Express API
+├── app-config.js
+└── package.json
+```
+
+### 실행
+
+```bash
+npm start   # http://localhost:3000
+```
+
+- ProfileFrame **좌표 에디터**: localhost 전용 (`__scProfileLayoutEditor`)
+- 히트존 에디터: 별도 도구 (territory-hit-zones, viewBox `0 0 1600 900`)
+
+---
+
+## 2. 구현 완료 ✅
+
+### 핵심 플랫폼
+
+- [x] 로그인/회원가입 UI · 게스트 모드 · Supabase Auth API (`/api/auth/*`)
+- [x] 메인 지도 (16:9 tribal-s1) · SVG 히트존 · 4영토 클릭 진입
+- [x] 중앙광장 허브 (데일리 이슈, 인기글, 실시간 현황, 게시글, 페이지네이션)
+- [x] 영토 게시판 (개척/수호/외계) · 글/댓글/반응 UI
+- [x] 팔로우 + 알림 (클라이언트)
+- [x] 채팅 API (인메모리 베타)
+- [x] 권한 안내 · 히스토리 탭 · 게시글 상세
+
+### ProfileFrame (2026-07-09 ~ 07-10) — **현재 기본 프로필 UI**
+
+- [x] PNG 4스킨 (`center`/`pioneer`/`guardian`/`alien`) · 좌하단 HUD · 접기/펼침
+- [x] **펼침 애니메이션** 0.2s ease-out · **접기 애니메이션** 0.18s ease-in (애니 후 hide)
+- [x] `SC_PROFILE_LAYOUT` px 좌표 (1024×819) · 스킨별 `SC_PROFILE_LAYOUT_BY_SKIN`
+- [x] localhost **좌표 에디터** (localStorage `sc_profile_layout_editor_v3`)
+- [x] 데이터 파이프라인: `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()`
+- [x] 오버레이: USER ID · LEVEL · 명성 · 경험치% · expGauge · 활동 5 · 영토 4
+- [x] **성향지도 SVG** (`alignmentMapLayer`) · 4축 polygon/line/dot · **0.28s 이동 애니메이션**
+- [x] 성향지도 **캘리브레이션 에디터** (축 최대치 · 그룹별 centerPioneer / guardianAlien)
+- [x] **대표 업적** 3슬롯 (아이콘·이름·날짜) · `renderProfileAchievements()` · 좌표 에디터
+- [x] legacy `.profile-citizen-card__legacy` — `hidden` 유지 (JS id 호환)
+
+### 게시글 작성자 프로필 UX (2026-07-10, 개발 #3)
+
+**철학:** 글보다 **사람** — 게시글 → 작성자 → 프로필 → 팔로우 → 다른 글 탐색.
+
+| 단계 | 상태 | API / 비고 |
+|------|------|------------|
+| 작성자 카드 HUD | ✅ | 1차 HUD 스타일 · 2차 `Lv.N · 명성` · 3차 영토 Badge |
+| Hover 미니 프로필 | ✅ | `ScMiniProfile` — `attachHover` · `show` · `hide` · `resolveData` |
+| 프로필 모달 | ✅ | `ScProfileModal` — `open` · `close` · `getUserId` · ESC/배경/X/닫기 · scroll lock · fade |
+| 모달 ProfileFrame | ✅ | **새 UI 없음** — `renderProfileFrameInModal` · `buildUserProfileDataForModal` · `data-pf-layer` 스코프 |
+| 회귀 QA | ✅ | Hover/Click/Frame/4스킨/HUD복원/닫기/DOM — `closeScProfileModal` 이중 콜백 FIX |
+
+**절대 금지 (요청 없이):** ProfileFrame HTML/CSS · `SC_PROFILE_LAYOUT` · `SC_PROFILE_LAYOUT_BY_SKIN` · PNG 수정.  
+**스킨 규칙:** `territorySkin` → 해당 PNG → `SC_PROFILE_LAYOUT_BY_SKIN[skin]` 좌표 (center 좌표를 다른 스킨에 쓰지 않음).
+
+**다음 확장 순서 (닉네임 있는 모든 곳):**
+
+1. [ ] 댓글 작성자 — Hover → `openUserProfile`
+2. [ ] 활동 피드 작성자
+3. [ ] 알림 작성자
+4. [ ] 랭킹
+
+작업 단위: **한 곳씩** · Composer 2.5 Fast · 기능 추가만 (ProfileFrame 개선/리팩토링 금지).
+
+### 성향·게임 로직 (브라우저 데모 — localStorage)
+
+- [x] 3축 누적 점수 + 표시 % (`alignment-scoring.js`)
+- [x] 좋아요/싫어요 → 반응자·작성자 양방향 델타 (`applyReactionScoresWithMult`)
+- [x] 일일 표시 % 캡 · 글당 반응 상한 · 외계인 % (`planetPct`) 별도 축
+- [x] 데일리 이슈 관점 선택 → 미세 성향 이동 (콘텐츠 중력)
+- [x] 영토 해금 임계 (40% / 60%) · 외계 경고 30% · 강제 편입 50%
+- [x] 레벨/XP/명성 (`player-progression.js`) — 글+25, 댓글+12, 이슈댓글+10
+
+### UI/디자인
+
+- [x] CSS 변수 디자인 시스템 (`--sc-*`) · UI Kit (`sc-panel`, `sc-card`, …)
+- [x] `data-territory` 기반 영토 색상 자동 전환
+- [x] `territory-beliefs.js` 신념 SSOT · 공식 WEBP 배너/엠블럼 v1
+
+---
+
+## 3. 구성 중 / 부분 구현 ⚠️
+
+| 영역 | 상태 | 비고 |
+|------|------|------|
+| **ProfileFrame ↔ 실제 성향** | ⚠️ 분리됨 | 게임은 `conservative/centrist/progressive`, ProfileFrame은 `center/pioneer/guardian/alien` 더미 |
+| **getCurrentProfileData()** | Mock | `SC_PROFILE_DATA` 하드코딩. API/Firebase 미연결 |
+| **Supabase DB** | 뼈대 | 테이블·Auth 일부. 집계·프로필 실시간 동기화 미완 |
+| **성향 서버 집계** | config만 | `config/alignment-system.js` — 실제 글 분석 파이프라인 없음 |
+| **업적 시스템** | UI+더미 | 슬롯·렌더만. 조건 달성·DB 저장 없음 |
+| **아바타** | placeholder | legacy 슬롯·업로드 UI 있음. ProfileFrame 오버레이 미구현 |
+| **데일리 이슈 AI** | 로컬 풀 | AI 자동 생성 파이프라인 없음 |
+| **결제·영토전·추방 자동화** | 기획만 | 상품 정의됨, 코드 미구현 |
+| **localStorage 좌표** | 주의 | 에디터 저장값이 `SC_PROFILE_LAYOUT` 기본값을 덮어씀 → 「초기화」 필요할 수 있음 |
+
+---
+
+## 4. TODO / 남은 작업 (우선순위)
+
+> 전체 목록: `docs/TODO.md`
+
+### 게시글 작성자 프로필 확장 (개발 #3 다음)
+
+1. [x] ProfileFrame 모달 회귀 QA (2026-07-10)
+2. [ ] **댓글** 작성자 Hover + `openUserProfile` (1차)
+3. [ ] 활동 피드 · 알림 · 랭킹 (순차)
+
+### ProfileFrame 다음 순서
+
+1. [ ] **아바타** ProfileFrame 오버레이
+2. [ ] `getCurrentProfileData()` — 로그인/API 실데이터 연결
+3. [ ] **게임 성향 → ProfileFrame 4축** 매핑 연동
+4. [ ] 경험치 게이지 위치 최종 보정
+5. [ ] `SC_PROFILE_LAYOUT` 4스킨 최종 확정 + QA
+6. [ ] ProfileFrame **모바일** 최종 보정
+
+### 게임/백엔드
+
+- [ ] 성향 **서버 집계** (글/댓글/반응 → DB)
+- [ ] 영토 귀속 **자동화** · 첩자 배지
+- [ ] XP/명성 **실제 적용** (현재 클라이언트 데모)
+- [ ] 추방 (비호감 30) · 지구귀환티켓
+- [ ] 결제 (카카오/토스/소액)
+- [ ] 영토전 · 업적 조건 처리 · AI 데일리 이슈
+
+---
+
+## 5. 현재 막혀 있는 / 주의할 부분 🚧
+
+1. **이중 성향 모델**  
+   - 게임 로직: `conservative` · `centrist` · `progressive` (+ `planetPct`)  
+   - ProfileFrame SVG: `center` · `pioneer` · `guardian` · `alien` (0~100)  
+   - **연결 함수 없음** — 프로필 지도는 더미, 게시판 막대는 별도 저장소
+
+2. **단일 파일 SPA**  
+   - `index.html` 2만 줄+ → 탐색은 `Grep` 필수. 무분별 리팩토링 위험
+
+3. **JS 수정 제한 규칙**  
+   - UI 작업이어도 프로필/성향 **데이터 로직** 건드리면 회귀 위험. 요청 없이 수정 금지
+
+4. **localStorage 의존**  
+   - 성향·데일리 이슈·좌표 에디터·프로필 사진 등 **브라우저 로컬** — 다기기/서버 동기화 없음
+
+5. **PROJECT_CONTEXT.md 일부 구식**  
+   - §7 미구현 목록에 “대표 업적 미구현” 등 **낡은 표현** 있음 → `CHANGELOG.md`·이 문서 우선
+
+6. **문서 인코딩**  
+   - `config/alignment-rank-limits.js` 헤더 주석 일부 깨짐 (내용은 정상)
+
+---
+
+## 6. 리팩토링이 필요한 부분 (장기)
+
+| 항목 | 이유 | 권장 방향 |
+|------|------|-----------|
+| `index.html` 분리 | 유지보수·AI 컨텍스트 한계 | CSS/JS 모듈 분리 (빌드 도입 시) — **현재는 의도적 단일 파일** |
+| legacy 프로필 카드 | hidden이나 JS id 다수 참조 | ProfileFrame 완성 후 단계적 제거 |
+| `territory-icons/` PNG | WEBP v1과 혼재 | `assets/territories/`로 통일 |
+| 성향 모델 통합 | 3축 vs 4축 vs planetPct | 단일 `ProfileAlignment` 어댑터 설계 |
+| localStorage → API | 데모 한계 | `/api/me/profile` 확장 + Supabase |
+| `alignment-rank-limits` | 1~10랭크 vs `player-progression` 1~5랭크 | 기획 정합성 검토 필요 |
+
+---
+
+## 7. ★ 성향(Alignment) 시스템 — 반드시 전달할 사항
+
+> **정치 성향은 제재하지 않는다.** 방향 자체를 막지 않고, **행동(비호감·신고 30회)** 만 moderation.  
+> **외계인 %(`planetPct`)** 는 정치 축과 분리 — 싫어요·외계 표시가 주로 증가.
+
+### 7.1 저장소 (브라우저 데모)
+
+| 키 | 내용 |
+|----|------|
+| `sc_political_scores_v1` | 유저별 `{ conservative, centrist, progressive, planetPct?, forcedTerritory? }` |
+| `sc_align_daily_pct_cap_v1` | 일일 표시 % 변동 캡 (기준선 스냅샷) |
+| `sc_align_content_gravity_v1` | 데일리 이슈 콘텐츠 중력 일일 합산 |
+| `sc_daily_issue_stance_v1` | 데일리 이슈 관점 선택 기록 |
+
+### 7.2 사람 축 3개 — 누적 점수 → 표시 %
+
+**파일:** `public/alignment-scoring.js` (`window.AlignmentScoring`)
+
+| 상수 | 값 | 의미 |
+|------|-----|------|
+| `initialScores()` | 각 축 **12** | 초기 합 36 — 소수 반응에 %가 덜 흔들림 |
+| `MIN_AXIS` | **0.5** | 축 최소 클램프 |
+| `W_REACTOR_LIKE` | **2.0** | 반응자: 남 글 **좋아요** → 작성자 **반대편** 방향으로 밀림 |
+| `W_REACTOR_DISLIKE` | **-0.6** | 반응자: **싫어요** |
+| `W_AUTHOR_LIKE` | **1.0** | 작성자: 내 글에 **좋아요** → 반응자 성향 방향으로 |
+| `W_AUTHOR_DISLIKE` | **-0.6** | 작성자: **싫어요** 받음 |
+
+**표시 %:** `toDisplayPercent()` = 세 축 합으로 나눈 비율 (합≈100).  
+**UI 라벨 격차:** `LEAN_NEUTRAL_MAX=12`, `LEAN_MILD_MAX=25` (질서·개혁 격차만 표시)
+
+#### 한 번의 좋아요/싫어요 알고리즘
+
+```
+반응자 델타 = oppositeFaceUnit(작성자 단위벡터) × W_REACTOR_*
+작성자 델타 = unit3(반응자) × W_AUTHOR_*
+→ applyDelta로 conservative/centrist/progressive 누적
+```
+
+- `oppositeFaceUnit`: 작성자 최대 축의 **반대 면** 중심 방향  
+- 균형(스프레드 < 0.08)이면 중도·양극에 살짝 분산
+
+### 7.3 게시판 추가 스케일 (`index.html`)
+
+| 상수 | 값 |
+|------|-----|
+| `PEER_SOCIAL_PRESSURE_SCALE` | **0.33** | 사람 축 델타 전체 추가 축소 |
+| `DISLIKE_ALIGN_SCALE` | **0.4** | 싫어요 시 사람 축만 추가 40% |
+| `FACTION_UNLOCK_PCT` | **40** | 영토 1단계 해금 표시 % |
+| `FACTION_STAGE2_PCT` | **60** | 2단계 |
+| `ALIGN_DAILY_PCT_PER_AXIS` | **5** | 하루 표시 % 각 축 ±5% 캡 |
+| `ALIEN_WARN_PCT` | **30** |
+| `ALIEN_FORCE_KANTA_PCT` | **50** |
+| `ALIEN_MARK_DELTA` | **10** | 외계 표시 1회 |
+| `LIKE_RECV_PLANET_DELTA` | **2** | 받은 좋아요 → planetPct |
+| `DISLIKE_RECV_PLANET_DELTA` | **3** | 받은 싫어요 → planetPct (더 큼) |
+
+**적용 순서** (`applyReactionScoresWithMult`): mult → 싫어요 스케일 → 글당 상한 → 일일 % 캡 → 저장
+
+### 7.4 무엇이 성향을 움직이고 / 안 움직이나
+
+| 행동 | 사람 3축 | planetPct | 비고 |
+|------|----------|-----------|------|
+| 좋아요 / 싫어요 (지구 게시판) | ✅ | 싫어요·외계표시 시 ✅ | 외계 **게시판**은 사람 축 경로 제외 |
+| **공감** | ❌ | ❌ | 영토 인구 bump만 (`EMPATHY_POP_BUMP=4`) |
+| 데일리 이슈 **관점 선택** | ✅ (약함) | ❌ | mult **0.12** |
+| 데일리 이슈 공감/좋아요 | ✅ | ❌ | mult **0.2** |
+| 데일리 이슈 싫어요 | ✅ (반대 lean) | ❌ | mult **0.2** |
+| 이슈 클릭/체류 | ✅ (매우 약) | ❌ | 0.005 / 0.01 / 0.015 |
+| 데일리 이슈 **댓글 작성** | ❌ | ❌ | 활동·XP만 |
+| 글/댓글 **작성 자체** | ❌ (XP만) | ❌ | XP: 글25, 댓글12, 이슈10 |
+
+**데일리 이슈 역할 → lean 벡터** (`DAILY_ISSUE_ROLE_LEAN`):
+
+| type | progressive | centrist | conservative |
+|------|-------------|----------|--------------|
+| progressive | 0.7 | 0.2 | 0.1 |
+| centrist | 0.25 | 0.5 | 0.25 |
+| conservative | 0.1 | 0.2 | 0.7 |
+| unsure | 0.2 | 0.6 | 0.2 |
+
+- UI에는 **라벨만** 노출. lean은 `leanForDailyIssueRoleType(type)`만 신뢰 (AI가 넣어도 덮어씀)
+- 상세: `docs/DAILY_ISSUE_CONTENT_GRAVITY.md`
+
+### 7.5 상한·캡
+
+| 종류 | 값 | 위치 |
+|------|-----|------|
+| 글당 반응 상한 (랭크 0~4) | `[120, 200, 320, 480, 720]` | `player-progression.js` `PER_POST_REACTION_CAP` |
+| 콘텐츠 중력 일일 합 | **0.65** | `ALIGN_CONTENT_GRAVITY_DAILY_MAX` |
+| 랭크별 축 절대 상한 (설계) | 3천~100만 | `config/alignment-rank-limits.js` (서버 연동 예정) |
+
+### 7.6 ProfileFrame 성향지도 (표시 전용)
+
+**데이터:** `SC_PROFILE_DATA.alignment` — `{ center, pioneer, guardian, alien }` 각 **0~100**
+
+**렌더:** `renderProfileAlignmentMap()` — SVG viewBox `0 0 100 100`
+
+| 축 | 방향 (중심 50,50) |
+|----|-------------------|
+| alien | 위 (y 감소) |
+| guardian | 오른쪽 (x 증가) |
+| center | 아래 (y 증가) |
+| pioneer | 왼쪽 (x 감소) |
+
+**축 스케일:** `SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP` — 게임값 100이 PNG 끝이 아님  
+- 예: `center: 72` → 표시값 72가 축 끝  
+- 그룹: `centerPioneer` (중앙·개척 PNG) / `guardianAlien` (수호·외계 PNG)
+
+**애니메이션:** 값 변경 시 0.28s ease-out 보간 (polygon·polyline·circle)
+
+> ⚠️ **아직 `sc_political_scores_v1`과 자동 동기화되지 않음.** 연동 시 매핑 규칙 설계 필요.
+
+### 7.7 영토 ID 대응표
+
+| CSS `data-territory` | 내부 ID | 표시명 | ProfileFrame skin |
+|---------------------|---------|--------|-------------------|
+| `centrist` | COMMON | 중앙광장 | `center` |
+| `reform` | PROGRESSIVE | 개척영토 | `pioneer` |
+| `order` | CONSERVATIVE | 수호영토 | `guardian` |
+| `alien` | KANTAPBIYA | 외계행성 | `alien` |
+
+### 7.8 튜닝 시 수정 위치 (빠른 참조)
+
+| 조정 목표 | 파일·상수 |
+|-----------|-----------|
+| 반응 1회 세기 | `alignment-scoring.js` `W_*` |
+| 싫어요 정치 축 약화 | `DISLIKE_ALIGN_SCALE` |
+| 외계 % 민감도 | `DISLIKE_RECV_PLANET_DELTA` 등 |
+| 하루 % 변동 | `ALIGN_DAILY_PCT_PER_AXIS` |
+| 한 글 누적 | `PER_POST_REACTION_CAP` |
+| 수치 전체 표 | **`docs/ALIGNMENT_REACTION_TUNING.md`** |
+
+---
+
+## 8. ProfileFrame 데이터 파이프라인
+
+```
+SC_PROFILE_DATA (더미)
+       ↓
+getCurrentProfileData()     ← ★ 실 API 교체 지점
+       ↓
+renderProfileData(data)     ← 텍스트 · skin PNG · expGauge · achievements
+       ↓
+renderProfileAlignmentMap(data.alignment)
+renderProfileAchievements(data.achievements)
+applyProfileFramePixelLayout()
+```
+
+### SC_PROFILE_LAYOUT 좌표 (1024×819 px)
+
+- `SC_PROFILE_LAYOUT_BY_SKIN`: center=pioneer 공유, guardian/alien 개별
+- 에디터: `window.__scProfileLayoutEditor` (localhost)
+- localStorage: `sc_profile_layout_editor_v3`
+- 업적: `achievement` · `achievementSlots[3]` · `achievementTitles[3]` · `achievementDates[3]`
+
+---
+
+## 9. 개발 도구 (localhost)
+
+| 도구 | 접근 |
+|------|------|
+| ProfileFrame 좌표 에디터 | UI 토글 · `__scProfileLayoutEditor` |
+| 성향지도 캘리브레이션 | 에디터 패널 · `sc_profile_alignment_axis_max_v1` |
+| 업적 좌표 복사 | 「현재/전체 영토 업적 슬롯 복사」 |
+| 콘솔 | `refreshCurrentProfile()` · `syncActiveProfileLayout('guardian')` |
+
+---
+
+## 10. 관련 문서 인덱스
+
+| 문서 | 용도 |
+|------|------|
+| `docs/PROJECT_CONTEXT.md` | 세계관·디자인·ProfileFrame 상세 |
+| `docs/TODO.md` | 작업 체크리스트 |
+| `docs/CHANGELOG.md` | 최근 변경 (2026-07-10 ProfileFrame·업적·성향지도) |
+| `docs/ALIGNMENT_REACTION_TUNING.md` | 성향 반응 **정확한 상수표** |
+| `docs/DAILY_ISSUE_CONTENT_GRAVITY.md` | 데일리 이슈 성향 이동 |
+| `docs/PLAYER_LEVEL_PROGRESSION.md` | 레벨·XP·명성 |
+| `.cursor/rules/sentence-craft.mdc` | AI 작업 규칙 |
+
+---
+
+## 11. 새 AI에게 첫 메시지 예시
+
+```
+docs/AI_HANDOFF.md, PROJECT_CONTEXT.md, TODO.md를 읽고 작업해 주세요.
+작업: [구체적 요청]
+제약: ProfileFrame 좌표/SC_PROFILE_LAYOUT 변경 없음, 기존 성향 JS 로직 수정 없음, UI는 index.html <style>만.
+```
+
+---
+
+*이 문서는 인수인계용입니다. 코드 변경 시 관련 섹션과 `CHANGELOG.md`를 함께 갱신하세요.*

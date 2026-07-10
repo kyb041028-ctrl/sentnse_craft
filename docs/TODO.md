@@ -1,29 +1,26 @@
 ﻿# 센텐스크래프트 — 작업 목록 (TODO)
 
-> 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템 일일 정리)
+> 마지막 업데이트: 2026-07-10 (AI 인수인계 문서)
+>
+> **새 AI 세션:** `docs/AI_HANDOFF.md` — 구조·완료·TODO·성향 시스템 요약
 
 ---
 
 ## 🔜 다음 작업 — 프로필 확장 (순서대로)
 
-> **2026-07-09 완료:** ProfileFrame PNG UI · px 좌표 · `SC_PROFILE_DATA` · `renderProfileData()` · `getCurrentProfileData()` · expGauge  
+> **2026-07-10 완료:** 성향지도 SVG · 좌표 에디터 캘리브레이션 (최대치 미리보기 · AI 복사)  
 > **표준 파이프라인:** `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` → ProfileFrame
 
-1. [ ] **아바타** 구현 (`alignmentMapLayer` 인접 또는 전용 레이어)
-2. [ ] **성향 지도** 구현 (`alignmentMapLayer`)
-3. [ ] **대표 업적** 구현 (`achievementLayer`)
-4. [ ] `getCurrentProfileData()` — 실로그인 / Firebase / API 데이터 소스 연결
-5. [ ] 실제 경험치·활동·영토 기록 집계 로직 연동
-6. [ ] 경험치 게이지 위치 **최종 보정** (좌표 에디터)
-7. [ ] `SC_PROFILE_LAYOUT` **최종 확정** (좌표 에디터 · 4스킨별)
-8. [ ] 4개 영토 스킨 **최종 테스트** (PNG + 좌표 + 데이터 갱신)
-9. [ ] ProfileFrame **모바일 최종 보정**
-10. [ ] 공식 에셋 v1 폴더·파일명 확인 (`banners/`, `emblems/`)
-11. [ ] 프로필 신념 영역(legacy 보조 배너) WEBP 연결 정리
-12. [ ] legacy 엠블럼 → `emblems` WEBP 점진 교체
-13. [ ] legacy **가입일** 제거 · **소속 표기** 중복 제거
-14. [ ] **전달한 아우라** 정의 docs/코드 주석 확정
-15. [ ] 성향 지도 아래 **AI 한 줄 설명** UI (연동 추후)
+1. [x] **성향 지도** SVG 오버레이 (`alignmentMapLayer` · `SC_PROFILE_LAYOUT.alignmentMap`) (2026-07-10)
+2. [ ] **아바타** 구현
+3. [x] **대표 업적** 구현 (`achievementLayer` · 슬롯 UI · 아이콘/이름/날짜 좌표 에디터) (2026-07-10)
+4. [x] `getCurrentProfileData()` — `loadCurrentUserProfile()` merge 어댑터 (Auth · API 캐시 · progression · 미로그인 Mock fallback, 2026-07-10)
+5. [~] 실제 경험치·활동·영토·**성향** 집계 로직 연동 — ProfileFrame 성향지도 **표시용** localStorage 어댑터 연결 (2026-07-10)
+6. [x] `alignmentMap` 좌표 확정 — center/pioneer 305,355 · guardian/alien 309,360 (2026-07-10)
+7. [ ] 경험치 게이지 위치 최종 보정 (좌표 에디터)
+8. [ ] `SC_PROFILE_LAYOUT` **최종 확정** (좌표 에디터 · 4스킨별)
+9. [ ] 4개 영토 스킨 **최종 테스트** (PNG + 좌표 + 데이터 갱신)
+10. [ ] ProfileFrame **모바일 최종 보정**
 
 ### 프로필 UI 확정 방향 (구현 시 준수)
 
@@ -32,7 +29,7 @@
 - legacy 영토 시민 카드 — hidden · 향후 아바타·레이더 연동 참고용
 - 성향 **레이더만** · 가로 게이지·퍼센트 노출 **금지** (ProfileFrame exp% 텍스트·expGauge는 예외)
 - 가입일 **금지** · 소속 **중복 금지**
-- 경험치 게이지(expGauge) — **영토 무관** 노란/골드 공통 · 바 100% 배경 · % 텍스트만 실제 값
+- 경험치 게이지(expGauge) — **영토 무관** · 바 100% 배경 · % 텍스트만 실제 값 · **좌 밝은 노랑 → 우 짙은 갈색** 그라데이션
 
 ### ProfileFrame 완료 체크리스트 (2026-07-09) ✅
 
@@ -117,12 +114,16 @@
 - [x] 좌측 하단 HUD · 접기 버튼 Frame 내 우하단 · PNG contain
 - [x] `%` 좌표 폐기 → `SC_PROFILE_LAYOUT` px (1024×819) · scale
 - [x] `SC_PROFILE_LAYOUT_BY_SKIN` (center=pioneer · guardian/alien 개별)
-- [x] localhost 좌표 에디터 (드래그 · 방향키 · localStorage v3 · 복사)
+- [x] 대표 업적 슬롯 좌표 에디터 (`achievement` · `achievementSlots` · AI 복사) (2026-07-10)
+- [x] 성향지도 축 스케일 그룹 분리 (`SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP`) (2026-07-10)
 - [x] `SC_PROFILE_DATA` 단일 더미 객체
 - [x] `renderProfileData(data)` — 텍스트 · PNG · expGauge
 - [x] `getCurrentProfileData()` Mock Adapter · `refreshCurrentProfile()`
 - [x] 경험치 게이지 `expGaugeLayer` · 노란/골드 · 100% Fill · expLayer 텍스트 상위
 - [x] `expGauge` 좌표 `{ x: 392, y: 126, w: 590, h: 10 }`
+- [x] 성향지도 SVG `alignmentMapLayer` · `data.alignment` · `renderProfileAlignmentMap()` (2026-07-10)
+- [x] 대표 업적 `renderProfileAchievements()` · 슬롯 UI (2026-07-10)
+- [x] `alignmentMap` 좌표 `{ x: 304, y: 353, w: 190, h: 190 }` (임시)
 
 ### 프로필 패널 (2026-07-04 Grid 재설계)
 
@@ -165,7 +166,19 @@
 
 - [x] 영토 게시판 기반 구조 (개척/수호/외계행성)
 - [x] 게시글 작성/조회/반응
+- [x] 게시글 상세 작성자 영역 1차 CSS 개선 (HUD 카드형 · 팔로우 배치)
+- [x] 게시글 상세 작성자 카드 2차 (레벨/명성 · `PlayerProgression` 재사용)
+- [x] 게시글 상세 작성자 카드 3차 (영토 Badge · `territoryShortLabel` / `data-territory`)
+- [x] Hover 미니 프로필 1차 — `ScMiniProfile` · 작성자 카드 Hover
+- [x] 프로필 모달 껍데기 1차 — `ScProfileModal` · `openUserProfile()` 연동 (placeholder)
+- [x] ScProfileModal ProfileFrame 렌더 연결 1차 — `renderProfileFrameInModal` · `buildUserProfileDataForModal`
+- [x] ScProfileModal ProfileFrame 회귀 QA — Hover/모달/HUD/4스킨 · 닫기 이중 콜백 FIX
+- [ ] ScProfileModal 2차 — DB/Supabase 실데이터 · 댓글/피드/알림에서 `openUserProfile` 확장
+- [ ] Hover 미니 프로필 2차 — 댓글·알림·활동피드·랭킹 확장
 - [x] 팔로우 시스템 + 알림
+- [x] 알림센터 1차 — `sc_notifications_v1` · 맵 HUD/프로필 벨 · comment/like/follow/level_up (2026-07-10)
+- [x] 최근 세계 활동 피드 1차 — `sc_activity_feed_v1` · 메인 지도 HUD (2026-07-10)
+- [ ] 알림센터 2차 — 서버 동기화 · 실시간 푸시 · 업적 연동
 - [x] 외계행성 단일 허브 UI
 
 ### 기반 / 백엔드
@@ -203,8 +216,8 @@
 ### 프로필 패널 / ProfileFrame
 
 - [ ] 위 **「다음 작업 — 프로필 확장」** 1~15 순서 참조
-- [ ] ProfileFrame 아바타 · 성향지도 · 대표 업적 레이어
-- [ ] `getCurrentProfileData()` 실데이터 연결
+- [~] ProfileFrame 성향지도 ↔ 게임 성향 **표시 연결** (localStorage 어댑터 · 서버 집계는 미완)
+- [x] `getCurrentProfileData()` · `loadCurrentUserProfile()` merge 어댑터 (2026-07-10)
 - [ ] 실제 아바타 이미지 업로드 (Supabase Storage)
 - [ ] 활동 메뉴 링크 실제 기능 연결
 - [ ] 명예 장식 슬롯 실제 아이템 시스템 연동

@@ -1,11 +1,235 @@
 ﻿# 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-09 (ProfileFrame 프로필 시스템)
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-10 (성향지도 캘리브레이션 에디터)
 
 ---
 
 ## [미배포] — 현 작업 이후
+
+### ★ 2026-07-10 — ScProfileModal ProfileFrame 회귀 QA
+
+- Hover · Click · ProfileFrame · 4스킨 · HUD 복원 · 닫기 · DOM/리스너 중복 — 회귀 검사 완료
+- **FIX** `closeScProfileModal()` — `transitionend` + `setTimeout` 이중 호출로 `restoreHudProfileFrameAfterModal` 2회 실행되던 버그 수정 (`finished` 가드)
+
+---
+
+### ★ 2026-07-10 — ScProfileModal ProfileFrame 렌더 연결 1차
+
+- `openUserProfile()` → 모달 내 기존 ProfileFrame 재사용 (`renderProfileData` · `applyProfileFramePixelLayout` · `data-pf-layer` 스코프)
+- `buildUserProfileDataForModal(userId)` — MiniProfile · PlayerProgression · clone `SC_PROFILE_DATA` · `territorySkin`별 PNG/좌표
+
+---
+
+### ★ 2026-07-10 — 프로필 모달 껍데기 1차 (`ScProfileModal`)
+
+- `openUserProfile(userId)` → HUD 프로필 모달 오픈 · `userId` state 저장 · 본문 `프로필을 불러오는 중...` placeholder
+- ESC · 배경 클릭 · X · 닫기 버튼 · fade 0.2s — ProfileFrame 미연결
+
+---
+
+### ★ 2026-07-10 — Hover 미니 프로필 1차 (작성자 카드)
+
+- 공통 `ScMiniProfile` · `#sc-mini-profile-popover` — HUD 미니 카드 (아바타·Lv/명성·영토·대표업적·활동지표)
+- 게시글 상세 작성자 카드 Hover 표시 · 클릭 `openUserProfile()` → `ScProfileModal`
+
+---
+
+### ★ 2026-07-10 — 게시글 상세 작성자 카드 3차 (영토 Badge)
+
+- 레벨/명성 아래 작성시간 행에 `[중앙광장]` 등 작은 영토 Badge 추가 (`data-territory` · `territoryShortLabel` 재사용)
+
+---
+
+### ★ 2026-07-10 — 게시글 상세 작성자 카드 2차 (레벨·명성)
+
+- 닉네임 아래 `Lv.N · 명성등급` 표시 (`PlayerProgression.getDisplay` · 본인 `getCurrentProfileData()` 보강)
+
+---
+
+### ★ 2026-07-10 — 게시글 상세 작성자 영역 1차 CSS 개선
+
+- 상단 작성자 메타를 어두운 HUD 카드형으로 정리 (아바타·닉네임/시간/카테고리 간격 · 팔로우 버튼 겹침 배치 · 약한 hover glow)
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 좌표 에디터 기본 숨김
+
+- localhost에서도 좌표 에디터·스킨 전환 버튼 기본 비표시
+- 필요 시 콘솔 `__scShowProfileLayoutEditor()` / `__scHideProfileLayoutEditor()`
+
+---
+
+### ★ 2026-07-10 — 최근 세계 활동 피드 1차
+
+- `sc_activity_feed_v1` localStorage · `global_demo` 키 · 최대 30건 저장 · 화면 8건 표시
+- 메인 지도 좌하단 **최근 세계 활동** HUD 패널
+- 글/댓글/공감/좋아요/팔로우/레벨업/외계 경고·이동 이벤트 연결 · 영토 변경 피드 제외
+- 디버그: `__scAddActivity()` · `__scActivityFeed()` · `__scClearActivityFeed()`
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 성향지도 첫 펼침 좌표 보정
+
+- 접힌 상태에서 `refreshCurrentProfile()`·boot layout 스킵 → 펼침 후 double-rAF·애니메이션 종료 시 재동기화
+- `renderProfileData()` — 영토 스킨/layout 적용 후 성향지도 렌더 (순서 수정)
+
+---
+
+### ★ 2026-07-10 — 알림센터 1차 (Notification Center)
+
+- `sc_notifications_v1` localStorage · 유저별 알림 저장 (최대 50건)
+- 맵 HUD 우상단 **알림** 버튼 + 프로필 벨 · 드롭다운 패널 · 읽지 않음 배지 · ESC/바깥 클릭 닫기
+- 타입: `comment` · `like` · `follow` · `level_up` · `alien_warn` · `alien_move` · `achievement`(예비)
+- 이벤트 연결: 댓글/공감/팔로우/레벨업 · 영토 변경 알림은 생성하지 않음
+- 디버그: `__scAddNotification()` · `__scNotifications()` · `__scClearNotifications()`
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 로그인 사용자 데이터 어댑터
+
+- `loadCurrentUserProfile()` — Auth 세션 · `/api/auth/me` · `/api/me/profile` 캐시와 `PlayerProgression`을 merge해 ProfileFrame 데이터 생성
+- `getCurrentProfileData()`는 `loadCurrentUserProfile()`만 호출 · `SC_PROFILE_DATA`는 미로그인 fallback (원본 불변)
+- `__scPrefetchUserProfile()` — 로그인 후 프로필 API 선조회 · `__scCurrentProfile()` 디버그 헬퍼
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 성향지도 게임 성향 어댑터
+
+- `mapPoliticalScoresToProfileAlignment()` — `sc_political_scores_v1` → 표시용 4축 alignment 매핑
+- `getCurrentProfileData()`가 localStorage 성향을 읽어 ProfileFrame 성향지도에 반영 · `__scPreviewProfileAlignment()` 디버그
+
+---
+
+### ★ 2026-07-10 — AI 인수인계 문서 (`docs/AI_HANDOFF.md`)
+
+- 프로젝트 구조 · 완료/미완료 · 막힘·리팩토링 · **성향 변화 요소·수치** 정리
+
+---
+
+### ★ 2026-07-10 — 성향지도 이동 애니메이션 보강
+
+- `alignment` 값 변경 시 polygon · polyline · circle 0.28s ease-out 보간 이동
+- polygon fill-opacity 0.18 → 0.22 자연 변화 · glow 강도 유지 · SVG 구조·좌표 무변경
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 접기 애니메이션
+
+- 접기 버튼 클릭 시 0.18s ease-in · opacity + translateY/scale 퇴장 후 기존 hide 실행
+- 펼침 애니메이션 유지 · 레이아웃·좌표 무변경
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 펼침 애니메이션
+
+- 프로필 탭 클릭(펼침) 시에만 0.2s ease-out · opacity + translateY/scale 진입
+- 페이지 최초 진입·접힌 상태에서는 실행하지 않음 · 레이아웃·좌표 무변경
+
+---
+
+### ★ 2026-07-10 — 업적 이름·날짜 좌표 확정 (영토별)
+
+- center/pioneer · guardian · alien `achievementTitles[3]` · `achievementDates[3]` 에디터 최종값 반영
+
+---
+
+### ★ 2026-07-10 — 업적 이름·날짜 좌표 에디터
+
+- `achievementTitles[3]` · `achievementDates[3]` — 아이콘과 분리된 px 좌표 (1024×819)
+- 에디터: 업적 아이콘 / 업적 이름 / 획득 날짜 각각 선택·드래그·크기 조절
+- 영토별 기본값 (center·guardian·alien) · 복사 포맷에 titles/dates 포함
+- 레이아웃 적용: `#achievementLayer` 내 img·title·date 개별 absolute 배치
+
+---
+
+### ★ 2026-07-10 — 대표 업적 이름·획득 날짜 텍스트
+
+- `achievements` 객체 배열 (`id` · `title` · `date`) · 문자열 배열 하위 호환
+- 슬롯 내 `profile-achievement-title` · `profile-achievement-date` · `renderProfileAchievements()` 연동
+
+---
+
+### ★ 2026-07-10 — 대표 업적 슬롯 좌표 확정 (영토별)
+
+- center/pioneer · guardian · alien `achievement` · `achievementSlots[3]` 에디터 최종값 반영
+
+---
+
+### ★ 2026-07-10 — 업적 슬롯 에디터 선택·복사 개선
+
+- 슬롯 div 우선 선택 (역순 탐색) — 크기 조절 Alt+←→/↑↓ 동작
+- 「현재 영토 업적 슬롯 복사」·「전체 영토 업적 슬롯 복사」 (center/guardian/alien)
+
+---
+
+### ★ 2026-07-10 — 좌표 에디터 대표 업적 슬롯
+
+- `SC_PROFILE_LAYOUT.achievement` · `achievementSlots[3]` px 좌표 (1024×819)
+- 에디터: 대표 업적 영역 + 슬롯 0~2 드래그/방향키 · 스킨별 localStorage
+- 「업적 슬롯 복사 (AI 전달용)」· 전체 좌표 복사에 achievement 포함
+- `__scProfileLayoutEditor.copyAchievementSlots()` · `formatAchievementSlots()`
+
+---
+
+### ★ 2026-07-10 — 대표 업적 슬롯 UI (achievementLayer 내부)
+
+- `#achievementLayer` 안 `profile-achievement-slot` × 3 (`data-slot` 0~2) · `profile-achievement-img`
+- 슬롯 전용 CSS 추가 · `#achievementLayer` 좌표·기존 ProfileFrame 무변경
+- `renderProfileAchievements()` 기존 구현 그대로 (`img.src`만 변경)
+
+---
+
+### ★ 2026-07-10 — 대표 업적 src 전용 렌더 (JS만)
+
+- `SC_PROFILE_DATA.achievements` 더미 배열
+- `renderProfileAchievements(data)` — 기존 슬롯 `img.src`만 변경 · DOM/CSS/레이아웃 무변경
+- `renderProfileData()` 마지막 1줄 호출 추가
+
+---
+
+### ★ 2026-07-10 — 성향지도 캘리브레이션 스킨 그룹 분리
+
+- **centerPioneer** (중앙·개척) / **guardianAlien** (수호·외계) 그룹별 `alignmentMap` · 축 최대치 분리
+- `alignmentMap` — center/pioneer `{305,355}` · guardian/alien `{309,360}`
+- `SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP` — 축별 최대치 `{ alien:67, guardian:70, center:72, pioneer:69 }`
+- 실제 성향값 렌더 시 축 스케일 적용 · 에디터는 그룹별 localStorage
+
+---
+
+### ★ 2026-07-10 — 좌표 에디터 성향지도 캘리브레이션
+
+- 에디터 ON 시 축별 **최대치(0~100)** 입력 → polygon 미리보기 (`SC_PROFILE_ALIGNMENT_EDITOR_MAX`)
+- **빨간 점** = SVG 중앙(최소 0) — PNG 축 중심 맞춤용
+- `localStorage` `sc_profile_alignment_editor_max` 저장
+- 「성향지도 복사 (AI 전달용)」→ `alignmentMap` 좌표 + `previewMax` 블록 클립보드
+- `window.__scProfileLayoutEditor` — `getAlignmentEditorMax` · `setAlignmentEditorMax` · `copyAlignmentCalibration`
+
+---
+
+### ★ 2026-07-10 — 성향지도 SVG 완성도 보강 (glow · transition · 왕관)
+
+- polygon stroke 강화 · drop-shadow · 점 크기 증가 · 중심점 circle
+- `transition: 0.28s ease-out` — 값 변경 시 은은한 이동
+- `alignmentMap` 좌표 `{ x: 304, y: 353, w: 190, h: 190 }` 확정 (전 스킨) · 왕관 마커 제거
+
+---
+
+### ★ 2026-07-10 — ProfileFrame 성향지도 SVG 오버레이
+
+- `SC_PROFILE_DATA.alignment` — center/pioneer/guardian/alien (0~100)
+- `SC_PROFILE_LAYOUT.alignmentMap` — px 좌표 · 좌표 에디터 대상
+- `alignmentMapLayer` SVG polygon/polyline/circle · `renderProfileAlignmentMap()`
+- 금색 반투명 fill · `renderProfileData(data)` 연동
+
+---
+
+### ★ 2026-07-10 — expGauge 그라데이션 (밝은 노랑 → 짙은 갈색)
+
+- Fill: 좌 `#fff0a0` → 우 `#6b4512` 단계적 짙어짐
+- Track: `#3d2810` (우측 톤과 통일)
+
+---
 
 ### ★ 2026-07-09 — 프로필 시스템 (ProfileFrame) 일일 정리
 

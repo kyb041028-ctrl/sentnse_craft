@@ -7,9 +7,10 @@ alwaysApply: true
 
 ## 1. 새 채팅 시작 시 — 필수 선행 독서
 
-새 채팅(세션)을 시작하면 작업 전에 반드시 아래 3개 문서를 읽는다.
+새 채팅(세션)을 시작하면 작업 전에 반드시 아래 문서를 읽는다.
 
 ```
+docs/AI_HANDOFF.md        ← 인수인계 요약 (구조·TODO·성향 시스템) ★ 새 세션 권장
 docs/PROJECT_CONTEXT.md   ← 세계관, 영토 구조, 디자인 시스템, 구현 상태
 docs/TODO.md              ← 완료/미완료 작업 목록
 docs/CHANGELOG.md         ← 최근 변경 이력

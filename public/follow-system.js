@@ -223,6 +223,12 @@
     syncProgressionFollowers(t);
 
     var iso = new Date().toISOString();
+    if (nowFollowing && typeof global.addActivityFeedItem === 'function') {
+      global.addActivityFeedItem({
+        type: 'follow_created',
+        message: '새로운 연결이 생겼습니다.',
+      });
+    }
     pushNotification(me, {
       id: genId(),
       type: 'rel_my_follow',
@@ -271,6 +277,21 @@
   function pushNotification(userId, item) {
     var uid = String(userId || '').trim();
     if (!uid) return;
+    var n = normalizeNotifyItem(item);
+    if (typeof global.addNotification === 'function') {
+      if (n.type === 'rel_follower' && n.verb === 'follow') {
+        global.addNotification(
+          {
+            type: 'follow',
+            title: '새 팔로워',
+            message: String(n.actorId || '누군가') + ' 님이 나를 팔로우했습니다.',
+            linkTarget: { view: 'profile', userId: n.actorId || null },
+          },
+          uid,
+        );
+        return;
+      }
+    }
     var map = loadNotifyMap();
     if (!Array.isArray(map[uid])) map[uid] = [];
     map[uid].unshift(item);
@@ -337,6 +358,10 @@
   }
 
   function markAllRead() {
+    if (typeof global.markAllNotificationsRead === 'function') {
+      global.markAllNotificationsRead();
+      return;
+    }
     var map = loadNotifyMap();
     var uid = meId();
     if (!Array.isArray(map[uid])) return;
@@ -414,6 +439,10 @@
   }
 
   function renderNotificationPanel() {
+    if (typeof global.renderNotifications === 'function') {
+      global.renderNotifications();
+      return;
+    }
     var panel = document.getElementById('sc-follow-notify-panel');
     var list = document.getElementById('sc-follow-notify-list');
     var badge = document.getElementById('sc-follow-notify-badge');
@@ -536,6 +565,11 @@
 
   function initNotificationUi() {
     syncAllFollowerCountsToProgression();
+    if (typeof global.initNotificationCenterUi === 'function') {
+      global.initNotificationCenterUi();
+      renderFollowButtons();
+      return;
+    }
     var toggle = document.getElementById('sc-follow-notify-toggle');
     var panel = document.getElementById('sc-follow-notify-panel');
     var btnClear = document.getElementById('sc-follow-notify-clear');
