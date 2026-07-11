@@ -2371,8 +2371,8 @@
     .sc-rank-modal__panel {
       position: relative;
       z-index: 1;
-      width: min(26rem, 100%);
-      max-height: min(85vh, 32rem);
+      width: min(29rem, 100%);
+      max-height: min(85vh, 34rem);
       display: flex;
       flex-direction: column;
       border-radius: 12px;
@@ -2403,13 +2403,15 @@
     }
     .sc-rank-modal__tabs {
       display: flex;
-      gap: 0.35rem;
+      flex-wrap: wrap;
+      gap: 0.28rem;
       padding: 0.45rem 0.55rem 0;
     }
     .sc-rank-modal__tab {
-      flex: 1;
-      padding: 0.35rem 0.4rem;
-      font-size: 0.65rem;
+      flex: 1 1 calc(20% - 0.28rem);
+      min-width: 2.65rem;
+      padding: 0.32rem 0.28rem;
+      font-size: 0.6rem;
       font-weight: 700;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2424,10 +2426,33 @@
     }
     .sc-rank-modal__my {
       margin: 0;
-      padding: 0.45rem 0.65rem;
-      font-size: 0.65rem;
-      color: #cbd5e1;
+      padding: 0.5rem 0.65rem 0.55rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-rank-modal__my-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.32rem 0.42rem;
+    }
+    .sc-rank-modal__my-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.34rem 0.4rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.18);
+    }
+    .sc-rank-modal__my-lbl {
+      font-size: 0.56rem;
+      color: #64748b;
+      line-height: 1.2;
+    }
+    .sc-rank-modal__my-val {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      line-height: 1.25;
     }
     .sc-rank-modal__list {
       list-style: none;
@@ -2449,13 +2474,93 @@
       background: rgba(56, 189, 248, 0.12);
       border: 1px solid rgba(56, 189, 248, 0.25);
     }
+    .sc-rank-modal__item--top {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .sc-rank-modal__item--top1 {
+      border-color: rgba(250, 204, 21, 0.42);
+      background: rgba(250, 204, 21, 0.07);
+    }
+    .sc-rank-modal__item--top1 .sc-rank-modal__pos {
+      color: #fde68a;
+    }
+    .sc-rank-modal__item--top2 {
+      border-color: rgba(203, 213, 225, 0.38);
+      background: rgba(203, 213, 225, 0.06);
+    }
+    .sc-rank-modal__item--top2 .sc-rank-modal__pos {
+      color: #e2e8f0;
+    }
+    .sc-rank-modal__item--top3 {
+      border-color: rgba(217, 119, 6, 0.38);
+      background: rgba(217, 119, 6, 0.07);
+    }
+    .sc-rank-modal__item--top3 .sc-rank-modal__pos {
+      color: #fdba74;
+    }
+    .sc-rank-modal__item--top1,
+    .sc-rank-modal__item--top2,
+    .sc-rank-modal__item--top3 {
+      padding: 0.52rem 0.42rem;
+      gap: 0.14rem 0.52rem;
+    }
+    .sc-rank-modal__item--top4,
+    .sc-rank-modal__item--top5 {
+      border-color: rgba(56, 189, 248, 0.22);
+      background: rgba(56, 189, 248, 0.05);
+    }
     .sc-rank-modal__pos {
       grid-row: 1 / span 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.08rem;
       font-weight: 800;
       color: #38bdf8;
       font-size: 0.75rem;
       align-self: center;
       text-align: center;
+    }
+    .sc-rank-modal__top-icon {
+      font-size: 0.82rem;
+      line-height: 1;
+    }
+    .sc-rank-modal__item--top1 .sc-rank-modal__top-icon {
+      font-size: 1.08rem;
+    }
+    .sc-rank-modal__item--top2 .sc-rank-modal__top-icon {
+      font-size: 1rem;
+    }
+    .sc-rank-modal__item--top3 .sc-rank-modal__top-icon {
+      font-size: 0.96rem;
+    }
+    .sc-rank-modal__pos-num {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: inherit;
+      opacity: 0.92;
+    }
+    .sc-rank-modal__item--top1 .sc-rank-modal__pos-num,
+    .sc-rank-modal__item--top2 .sc-rank-modal__pos-num,
+    .sc-rank-modal__item--top3 .sc-rank-modal__pos-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      opacity: 1;
+    }
+    .sc-rank-modal__badge {
+      display: inline-block;
+      margin-left: 0.22rem;
+      padding: 0.04rem 0.28rem;
+      border-radius: 4px;
+      font-size: 0.52rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      vertical-align: middle;
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      background: rgba(56, 189, 248, 0.12);
+      color: #bae6fd;
     }
     .sc-rank-modal__main {
       color: #f1f5f9;
@@ -2463,8 +2568,43 @@
     }
     .sc-rank-modal__sub {
       grid-column: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.28rem;
       color: #94a3b8;
       font-size: 0.58rem;
+    }
+    .sc-rank-modal__terr {
+      display: inline-block;
+      padding: 0.06rem 0.32rem;
+      border-radius: 4px;
+      font-size: 0.52rem;
+      font-weight: 700;
+      line-height: 1.3;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+    .sc-rank-modal__terr[data-territory='centrist'] {
+      border-color: rgba(61, 255, 179, 0.28);
+      background: rgba(61, 255, 179, 0.06);
+      color: #3dffb3;
+    }
+    .sc-rank-modal__terr[data-territory='reform'] {
+      border-color: rgba(90, 168, 255, 0.3);
+      background: rgba(90, 168, 255, 0.08);
+      color: #5aa8ff;
+    }
+    .sc-rank-modal__terr[data-territory='order'] {
+      border-color: rgba(255, 90, 90, 0.3);
+      background: rgba(255, 90, 90, 0.08);
+      color: #ff5a5a;
+    }
+    .sc-rank-modal__terr[data-territory='alien'] {
+      border-color: rgba(199, 125, 255, 0.3);
+      background: rgba(199, 125, 255, 0.08);
+      color: #c77dff;
     }
     .sc-rank-modal__empty,
     .sc-rank-modal__more {
@@ -2646,6 +2786,14 @@
       background: rgba(56, 189, 248, 0.07);
       border-left: 2px solid rgba(56, 189, 248, 0.55);
     }
+    .sc-notification-item.is-unread .sc-notification-item__card {
+      background: rgba(56, 189, 248, 0.07);
+      border-left: 2px solid rgba(56, 189, 248, 0.55);
+    }
+    .sc-notification-item.is-unread .sc-notification-item__card .sc-notification-item__btn {
+      background: transparent;
+      border-left: none;
+    }
     .sc-notification-item__btn {
       display: flex;
       flex-direction: column;
@@ -2664,6 +2812,55 @@
     }
     .sc-notification-item__btn:hover {
       background: rgba(255, 255, 255, 0.04);
+    }
+    .sc-notification-item__card {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .sc-notification-item__actor {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.14rem;
+      min-width: 2.65rem;
+      max-width: 3.4rem;
+      padding: 0.55rem 0.3rem 0.55rem 0.65rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font: inherit;
+      color: inherit;
+      transition: background var(--sc-ease);
+    }
+    .sc-notification-item__actor:hover,
+    .sc-notification-item__actor:focus-visible {
+      background: rgba(255, 255, 255, 0.05);
+      outline: none;
+    }
+    .sc-notification-item__actor-thumb {
+      width: 1.55rem;
+      height: 1.55rem;
+    }
+    .sc-notification-item__actor-name {
+      display: block;
+      max-width: 100%;
+      font-size: 0.52rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #9db0c8;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sc-notification-item__btn--with-actor {
+      flex: 1 1 auto;
+      min-width: 0;
+      border-bottom: none;
     }
     .sc-notification-item__title {
       font-size: 0.68rem;
@@ -4187,6 +4384,22 @@
       gap: 0.35rem;
       flex-wrap: wrap;
     }
+    .sc-user-profile-link {
+      cursor: pointer;
+    }
+    .sc-user-profile-link:hover {
+      opacity: 0.9;
+    }
+    .sc-user-profile-link:is(span, strong, div):hover {
+      text-decoration: underline;
+      text-decoration-color: rgba(148, 163, 184, 0.45);
+      text-underline-offset: 2px;
+    }
+    .board__author-thumb.sc-user-profile-link:hover {
+      text-decoration: none;
+      outline: 1px solid rgba(56, 189, 248, 0.35);
+      outline-offset: 2px;
+    }
     .board__comment-text {
       white-space: pre-wrap;
       word-break: break-word;
@@ -4552,9 +4765,6 @@
       padding: 0.2rem 0.52rem;
       font-size: 0.64rem;
       z-index: 1;
-    }
-    #post-detail-root.board-post-detail > .board-post-detail__meta--profile-link {
-      cursor: pointer;
     }
     /* ── Hover 미니 프로필 (공통 · ScMiniProfile) ── */
     .sc-mini-profile {
@@ -5036,6 +5246,229 @@
     }
     .sc-react-ico--empathy::before {
       content: '❤️';
+    }
+    .sc-react-ico--bookmark::before {
+      content: '🔖';
+    }
+    .sc-react-btn--bookmark.is-active {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.12);
+    }
+    .sc-react-btn--bookmark.is-active .sc-react-lbl {
+      color: #fde68a;
+    }
+    .sc-react-ico--share::before {
+      content: '🔗';
+    }
+    .sc-share-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--sc-hud-safe-bottom, 0.5rem) + 4.75rem);
+      transform: translateX(-50%) translateY(6px);
+      z-index: 12200;
+      padding: 0.48rem 0.82rem;
+      border-radius: var(--sc-r-md, 10px);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      background: rgba(12, 18, 32, 0.94);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 8px 22px rgba(0, 0, 0, 0.38);
+      color: #e2e8f0;
+      font-size: 0.68rem;
+      font-weight: 600;
+      line-height: 1.3;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.18s ease,
+        visibility 0.18s ease,
+        transform 0.18s ease;
+    }
+    .sc-share-toast.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    .sc-react-ico--report::before {
+      content: '⚑';
+    }
+    .sc-report-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 12150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+    }
+    .sc-report-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .sc-report-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+    }
+    .sc-report-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 22rem);
+      padding: 0.75rem 0.8rem 0.7rem;
+      border-radius: var(--sc-r-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(180deg, rgba(28, 36, 52, 0.98), rgba(12, 16, 28, 0.99));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 16px 40px rgba(0, 0, 0, 0.55);
+      transform: translateY(8px);
+      transition: transform 0.2s ease;
+    }
+    .sc-report-modal.is-open .sc-report-modal__panel {
+      transform: translateY(0);
+    }
+    .sc-report-modal__title {
+      margin: 0 0 0.28rem;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #e2e8f0;
+    }
+    .sc-report-modal__hint {
+      margin: 0 0 0.55rem;
+      font-size: 0.62rem;
+      line-height: 1.35;
+      color: #64748b;
+    }
+    .sc-report-modal__reasons {
+      margin: 0 0 0.65rem;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+    }
+    .sc-report-modal__reason {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.38rem;
+      padding: 0.38rem 0.42rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      cursor: pointer;
+      transition:
+        border-color var(--sc-ease),
+        background var(--sc-ease);
+    }
+    .sc-report-modal__reason:hover {
+      border-color: rgba(56, 189, 248, 0.22);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .sc-report-modal__reason input {
+      margin-top: 0.12rem;
+      flex: 0 0 auto;
+    }
+    .sc-report-modal__reason-text {
+      font-size: 0.68rem;
+      line-height: 1.35;
+      color: #cbd5e1;
+    }
+    .sc-report-modal__detail {
+      margin: 0 0 0.65rem;
+    }
+    .sc-report-modal__detail-label {
+      display: block;
+      margin: 0 0 0.18rem;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .sc-report-modal__detail-hint {
+      margin: 0 0 0.32rem;
+      font-size: 0.6rem;
+      line-height: 1.4;
+      color: #64748b;
+    }
+    .sc-report-modal__detail-wrap {
+      position: relative;
+    }
+    .sc-report-modal__detail-input {
+      display: block;
+      width: 100%;
+      min-height: 4.25rem;
+      max-height: 6.5rem;
+      padding: 0.38rem 0.42rem 1.35rem;
+      box-sizing: border-box;
+      resize: vertical;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+      color: #e2e8f0;
+      font: inherit;
+      font-size: 0.66rem;
+      line-height: 1.4;
+      transition: border-color var(--sc-ease);
+    }
+    .sc-report-modal__detail-input::placeholder {
+      color: #475569;
+    }
+    .sc-report-modal__detail-input:focus {
+      outline: none;
+      border-color: rgba(56, 189, 248, 0.28);
+    }
+    .sc-report-modal__detail-count {
+      position: absolute;
+      right: 0.42rem;
+      bottom: 0.32rem;
+      font-size: 0.56rem;
+      color: #64748b;
+      pointer-events: none;
+    }
+    .sc-report-modal__detail-count.is-limit {
+      color: #f87171;
+    }
+    .sc-report-modal__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.38rem;
+    }
+    .sc-report-modal__cancel,
+    .sc-report-modal__submit {
+      font: inherit;
+      font-size: 0.68rem;
+      padding: 0.32rem 0.62rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .sc-report-modal__cancel {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: transparent;
+      color: #94a3b8;
+    }
+    .sc-report-modal__cancel:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+    }
+    .sc-report-modal__submit {
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      background: rgba(248, 113, 113, 0.12);
+      color: #fecaca;
+      font-weight: 700;
+    }
+    .sc-report-modal__submit:hover {
+      background: rgba(248, 113, 113, 0.18);
+      border-color: rgba(248, 113, 113, 0.45);
+    }
+    body.sc-report-modal-open {
+      overflow: hidden;
     }
     .board-growth {
       margin: 0.85rem 0 0.55rem;
@@ -11219,11 +11652,20 @@
         <button type="button" class="sc-rank-modal__tab is-active" data-mode="global" role="tab" aria-selected="true" aria-label="전체 명성 순위">
           전체
         </button>
-        <button type="button" class="sc-rank-modal__tab" data-mode="territory" role="tab" aria-selected="false" aria-label="소속별 명성 순위">
-          소속
+        <button type="button" class="sc-rank-modal__tab" data-mode="COMMON" role="tab" aria-selected="false" aria-label="중앙광장 명성 순위">
+          중앙
+        </button>
+        <button type="button" class="sc-rank-modal__tab" data-mode="PROGRESSIVE" role="tab" aria-selected="false" aria-label="개척영토 명성 순위">
+          개척
+        </button>
+        <button type="button" class="sc-rank-modal__tab" data-mode="CONSERVATIVE" role="tab" aria-selected="false" aria-label="수호영토 명성 순위">
+          수호
+        </button>
+        <button type="button" class="sc-rank-modal__tab" data-mode="KANTAPBIYA" role="tab" aria-selected="false" aria-label="외계행성 명성 순위">
+          외계
         </button>
       </div>
-      <p id="sc-rank-modal-my" class="sc-rank-modal__my">내 순위: —</p>
+      <div id="sc-rank-modal-my" class="sc-rank-modal__my" aria-label="내 랭킹 정보"></div>
       <ol id="sc-rank-modal-list" class="sc-rank-modal__list"></ol>
     </div>
   </div>
@@ -11417,13 +11859,76 @@
         });
       }
 
+      function resolveNotificationActorId(n) {
+        if (!n) return '';
+        var id = String(n.actorId || n.authorId || n.userId || '').trim();
+        if (id) return id;
+        var lt = n.linkTarget;
+        if (lt && typeof lt === 'object' && lt.userId) {
+          return String(lt.userId).trim();
+        }
+        return '';
+      }
+
+      function buildNotificationActorThumb(authorId) {
+        var span = document.createElement('span');
+        span.className = 'board__author-thumb sc-notification-item__actor-thumb';
+        var url =
+          typeof window.__scGetProfilePhotoDataUrl === 'function'
+            ? window.__scGetProfilePhotoDataUrl(authorId)
+            : '';
+        if (url) {
+          var im = document.createElement('img');
+          im.src = url;
+          im.alt = '';
+          im.className = 'board__author-thumb-img';
+          span.appendChild(im);
+        } else {
+          span.classList.add('board__author-thumb--empty');
+          span.setAttribute('aria-hidden', 'true');
+        }
+        return span;
+      }
+
+      function wireScUserProfileLink(anchor, userId) {
+        var id = String(userId || '').trim();
+        if (!anchor || !id) return;
+        anchor.classList.add('sc-user-profile-link');
+        if (anchor.hasAttribute('aria-hidden')) anchor.removeAttribute('aria-hidden');
+        anchor.setAttribute('role', 'button');
+        anchor.setAttribute('tabindex', '0');
+        anchor.setAttribute('title', '클릭해서 유저 프로필 보기');
+        anchor.setAttribute('aria-label', id + ' — 클릭해서 유저 프로필 보기');
+        function openProfile(ev) {
+          if (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+          }
+          if (typeof window.openUserProfile === 'function') {
+            window.openUserProfile(id);
+          }
+        }
+        anchor.addEventListener('click', openProfile);
+        anchor.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            openProfile(ev);
+          }
+        });
+      }
+      window.wireScUserProfileLink = wireScUserProfileLink;
+
+      function wireNotificationActorProfile(thumbEl, nameEl, actorId) {
+        var id = String(actorId || '').trim();
+        if (!id) return;
+        if (thumbEl) wireScUserProfileLink(thumbEl, id);
+        if (nameEl) wireScUserProfileLink(nameEl, id);
+      }
+
       function buildNotificationItemElement(n, onClick) {
         var li = document.createElement('li');
         li.className = 'sc-notification-item' + (n.read ? '' : ' is-unread');
         li.setAttribute('role', 'listitem');
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'sc-notification-item__btn';
+        var actorId = resolveNotificationActorId(n);
         var title = document.createElement('span');
         title.className = 'sc-notification-item__title';
         title.textContent = String(n.title || NOTI_DEFAULT_TITLES[n.type] || '알림');
@@ -11433,13 +11938,36 @@
         var time = document.createElement('span');
         time.className = 'sc-notification-item__time';
         time.textContent = formatRelativeTime(n.createdAt);
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className =
+          'sc-notification-item__btn' + (actorId ? ' sc-notification-item__btn--with-actor' : '');
         btn.appendChild(title);
         btn.appendChild(msg);
         btn.appendChild(time);
         btn.addEventListener('click', function () {
           if (typeof onClick === 'function') onClick(n);
         });
-        li.appendChild(btn);
+
+        if (actorId) {
+          var card = document.createElement('div');
+          card.className = 'sc-notification-item__card';
+          var actorEl = document.createElement('span');
+          actorEl.className = 'sc-notification-item__actor';
+          var thumbEl = buildNotificationActorThumb(actorId);
+          var nameEl = document.createElement('span');
+          nameEl.className = 'sc-notification-item__actor-name';
+          nameEl.textContent = actorId;
+          actorEl.appendChild(thumbEl);
+          actorEl.appendChild(nameEl);
+          wireNotificationActorProfile(thumbEl, nameEl, actorId);
+          card.appendChild(actorEl);
+          card.appendChild(btn);
+          li.appendChild(card);
+        } else {
+          li.appendChild(btn);
+        }
         return li;
       }
 
@@ -11486,6 +12014,10 @@
             return null;
           }
           var list = loadNotifications(key);
+          var actorId = String(p.actorId || p.authorId || p.userId || '').trim();
+          if (!actorId && p.linkTarget && typeof p.linkTarget === 'object' && p.linkTarget.userId) {
+            actorId = String(p.linkTarget.userId).trim();
+          }
           var item = {
             id: p.id || genNotiId(),
             type: type,
@@ -11495,6 +12027,7 @@
             read: Boolean(p.read),
             linkTarget: p.linkTarget && typeof p.linkTarget === 'object' ? p.linkTarget : null,
           };
+          if (actorId) item.actorId = actorId;
           if (isDuplicateNotification(list, item)) return null;
           if (type === 'level_up' && item.linkTarget && item.linkTarget.level != null) {
             var lv = item.linkTarget.level;
@@ -11876,6 +12409,11 @@
         return false;
       }
 
+      function resolveActivityFeedAuthorId(item) {
+        if (!item) return '';
+        return String(item.authorId || item.userId || '').trim();
+      }
+
       function renderActivityFeed() {
         var listEl = document.getElementById('sc-activity-feed-list');
         if (!listEl) return;
@@ -11927,6 +12465,7 @@
           }
           var territory = p.territory != null ? String(p.territory) : '';
           var message = String(p.message || defaultActivityMessage(type, territory)).trim();
+          var authorId = String(p.authorId || p.userId || '').trim();
           var list = loadActivityFeed();
           var item = {
             id: p.id || genActivityId(),
@@ -11936,6 +12475,7 @@
             territory: territory || null,
             linkTarget: p.linkTarget && typeof p.linkTarget === 'object' ? p.linkTarget : null,
           };
+          if (authorId) item.authorId = authorId;
           if (isDuplicateActivity(list, item)) return null;
           if (type === 'level_up' && item.linkTarget && item.linkTarget.level != null) {
             var lv = item.linkTarget.level;
@@ -12043,6 +12583,597 @@
           return r;
         };
       }
+    })();
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      var LS_KEY = 'sc_bookmarks_v1';
+
+      function getBookmarkUserKey() {
+        if (typeof window.getNotificationUserKey === 'function') {
+          return window.getNotificationUserKey();
+        }
+        var p = window.__scPlayer && window.__scPlayer.userId;
+        var s = String(p || '').trim();
+        if (s && s !== 'guest') return s;
+        return 'guest_demo';
+      }
+
+      function loadBookmarkMap() {
+        try {
+          var raw = localStorage.getItem(LS_KEY);
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveBookmarkMap(map) {
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(map));
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function loadBookmarks(userKeyOpt) {
+        try {
+          var key = String(userKeyOpt || getBookmarkUserKey()).trim() || 'guest_demo';
+          var map = loadBookmarkMap();
+          var list = map[key];
+          return Array.isArray(list) ? list.slice() : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function saveBookmarks(list, userKeyOpt) {
+        try {
+          var key = String(userKeyOpt || getBookmarkUserKey()).trim() || 'guest_demo';
+          var arr = Array.isArray(list) ? list.slice() : [];
+          var map = loadBookmarkMap();
+          map[key] = arr;
+          saveBookmarkMap(map);
+          return arr;
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function isPostBookmarked(postId, userKeyOpt) {
+        var id = String(postId || '').trim();
+        if (!id) return false;
+        var list = loadBookmarks(userKeyOpt);
+        for (var i = 0; i < list.length; i++) {
+          if (list[i] && String(list[i].postId || '').trim() === id) return true;
+        }
+        return false;
+      }
+
+      function togglePostBookmark(postId, userKeyOpt) {
+        var id = String(postId || '').trim();
+        if (!id) return { bookmarked: false, postId: id };
+        var key = String(userKeyOpt || getBookmarkUserKey()).trim() || 'guest_demo';
+        var list = loadBookmarks(key);
+        var ix = -1;
+        for (var i = 0; i < list.length; i++) {
+          if (list[i] && String(list[i].postId || '').trim() === id) {
+            ix = i;
+            break;
+          }
+        }
+        if (ix >= 0) {
+          list.splice(ix, 1);
+          saveBookmarks(list, key);
+          return { bookmarked: false, postId: id };
+        }
+        list.unshift({ postId: id, createdAt: Date.now() });
+        saveBookmarks(list, key);
+        return { bookmarked: true, postId: id };
+      }
+
+      function buildPostBookmarkButton(postId) {
+        var pid = String(postId || '').trim();
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sc-react-btn sc-react-btn--bookmark';
+        var active = isPostBookmarked(pid);
+        if (active) btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        btn.setAttribute('aria-label', active ? '북마크 해제' : '북마크 저장');
+        btn.title = '북마크 — 나중에 다시 보기';
+        var ico = document.createElement('span');
+        ico.className = 'sc-react-ico sc-react-ico--bookmark';
+        ico.setAttribute('aria-hidden', 'true');
+        var lab = document.createElement('span');
+        lab.className = 'sc-react-lbl';
+        lab.textContent = '저장';
+        btn.appendChild(ico);
+        btn.appendChild(lab);
+        btn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          var res = togglePostBookmark(pid);
+          var on = !!(res && res.bookmarked);
+          btn.classList.toggle('is-active', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          btn.setAttribute('aria-label', on ? '북마크 해제' : '북마크 저장');
+        });
+        return btn;
+      }
+
+      window.getBookmarkUserKey = getBookmarkUserKey;
+      window.loadBookmarks = loadBookmarks;
+      window.saveBookmarks = saveBookmarks;
+      window.isPostBookmarked = isPostBookmarked;
+      window.togglePostBookmark = togglePostBookmark;
+      window.buildPostBookmarkButton = buildPostBookmarkButton;
+    })();
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      function buildPostShareLinkTarget(shareTarget) {
+        var t = shareTarget && typeof shareTarget === 'object' ? shareTarget : {};
+        return {
+          view: 'post',
+          postId: String(t.postId || '').trim(),
+          territoryId: String(t.territoryId || 'COMMON').trim() || 'COMMON',
+          stage: Math.max(1, Math.min(4, Math.floor(Number(t.stage) || 1))),
+        };
+      }
+
+      function buildPostShareUrl(shareTarget) {
+        var lt = buildPostShareLinkTarget(shareTarget);
+        if (!lt.postId) return window.location.href;
+        var base = window.location.origin + (window.location.pathname || '/');
+        try {
+          var params = new URLSearchParams();
+          params.set('view', lt.view);
+          params.set('postId', lt.postId);
+          params.set('territoryId', lt.territoryId);
+          params.set('stage', String(lt.stage));
+          return base + '?' + params.toString();
+        } catch (_) {
+          return (
+            base +
+            '?view=' +
+            encodeURIComponent(lt.view) +
+            '&postId=' +
+            encodeURIComponent(lt.postId) +
+            '&territoryId=' +
+            encodeURIComponent(lt.territoryId) +
+            '&stage=' +
+            encodeURIComponent(String(lt.stage))
+          );
+        }
+      }
+
+      function copyTextToClipboard(text, callback) {
+        var done = typeof callback === 'function' ? callback : function () {};
+        var value = String(text || '');
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          navigator.clipboard
+            .writeText(value)
+            .then(function () {
+              done(true);
+            })
+            .catch(function () {
+              done(false);
+            });
+          return;
+        }
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = value;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          done(document.execCommand('copy'));
+          document.body.removeChild(ta);
+        } catch (_) {
+          done(false);
+        }
+      }
+
+      function showScShareToast(message) {
+        var el = document.getElementById('sc-share-toast');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'sc-share-toast';
+          el.className = 'sc-share-toast';
+          el.setAttribute('role', 'status');
+          el.setAttribute('aria-live', 'polite');
+          document.body.appendChild(el);
+        }
+        clearTimeout(el.__scHideTimer);
+        el.textContent = String(message || '링크가 복사되었습니다.');
+        el.classList.add('is-visible');
+        el.__scHideTimer = setTimeout(function () {
+          el.classList.remove('is-visible');
+        }, 1800);
+      }
+
+      function sharePostLink(shareTarget) {
+        var url = buildPostShareUrl(shareTarget);
+        copyTextToClipboard(url, function (ok) {
+          if (ok) {
+            showScShareToast('링크가 복사되었습니다.');
+          } else {
+            alert('링크 복사에 실패했습니다.');
+          }
+        });
+      }
+
+      function buildPostShareButton(shareTarget) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sc-react-btn sc-react-btn--share';
+        btn.setAttribute('aria-label', '게시글 링크 복사');
+        btn.title = '공유 — 게시글 링크 복사';
+        var ico = document.createElement('span');
+        ico.className = 'sc-react-ico sc-react-ico--share';
+        ico.setAttribute('aria-hidden', 'true');
+        var lab = document.createElement('span');
+        lab.className = 'sc-react-lbl';
+        lab.textContent = '공유';
+        btn.appendChild(ico);
+        btn.appendChild(lab);
+        btn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          sharePostLink(shareTarget);
+        });
+        return btn;
+      }
+
+      window.buildPostShareLinkTarget = buildPostShareLinkTarget;
+      window.buildPostShareUrl = buildPostShareUrl;
+      window.sharePostLink = sharePostLink;
+      window.showScShareToast = showScShareToast;
+      window.buildPostShareButton = buildPostShareButton;
+    })();
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      var LS_KEY = 'sc_reports_v1';
+
+      var REPORT_REASONS = [
+        { id: 'abuse', label: '욕설 / 인신공격' },
+        { id: 'spam', label: '도배 / 광고' },
+        { id: 'baiting', label: '분쟁 조장 (어그로)' },
+        { id: 'misinfo', label: '허위 정보 의심' },
+        { id: 'privacy', label: '개인정보 노출' },
+        { id: 'other', label: '기타' },
+      ];
+
+      var REPORT_DETAIL_MAX = 300;
+      var REPORT_OTHER_REASON_ID = 'other';
+
+      var scReportModalState = {
+        bound: false,
+        target: null,
+      };
+
+      function getReportUserKey() {
+        if (typeof window.getBookmarkUserKey === 'function') {
+          return window.getBookmarkUserKey();
+        }
+        if (typeof window.getNotificationUserKey === 'function') {
+          return window.getNotificationUserKey();
+        }
+        var p = window.__scPlayer && window.__scPlayer.userId;
+        var s = String(p || '').trim();
+        if (s && s !== 'guest') return s;
+        return 'guest_demo';
+      }
+
+      function showReportToast(message) {
+        if (typeof window.showScShareToast === 'function') {
+          window.showScShareToast(message);
+          return;
+        }
+        var el = document.getElementById('sc-soft-notice');
+        if (!el) return;
+        el.textContent = String(message || '');
+        el.hidden = false;
+        setTimeout(function () {
+          el.hidden = true;
+        }, 2200);
+      }
+
+      function loadReportMap() {
+        try {
+          var raw = localStorage.getItem(LS_KEY);
+          if (!raw) return {};
+          var o = JSON.parse(raw);
+          return o && typeof o === 'object' ? o : {};
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function saveReportMap(map) {
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(map));
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function loadUserReports(userKeyOpt) {
+        var key = String(userKeyOpt || getReportUserKey()).trim() || 'guest_demo';
+        var map = loadReportMap();
+        var list = map[key];
+        return Array.isArray(list) ? list.slice() : [];
+      }
+
+      function saveUserReports(list, userKeyOpt) {
+        var key = String(userKeyOpt || getReportUserKey()).trim() || 'guest_demo';
+        var arr = Array.isArray(list) ? list.slice() : [];
+        var map = loadReportMap();
+        map[key] = arr;
+        saveReportMap(map);
+        return arr;
+      }
+
+      function hasUserReportedPost(postId, userKeyOpt) {
+        var id = String(postId || '').trim();
+        if (!id) return false;
+        var list = loadUserReports(userKeyOpt);
+        for (var i = 0; i < list.length; i++) {
+          if (list[i] && String(list[i].postId || '').trim() === id) return true;
+        }
+        return false;
+      }
+
+      function submitPostReport(postId, reasonId, detailOpt, userKeyOpt) {
+        var pid = String(postId || '').trim();
+        var reason = String(reasonId || '').trim();
+        var detail = String(detailOpt == null ? '' : detailOpt).trim().slice(0, REPORT_DETAIL_MAX);
+        var reporterId = String(userKeyOpt || getReportUserKey()).trim() || 'guest_demo';
+        if (!pid || !reason) return { ok: false, reason: 'INVALID' };
+        if (reason === REPORT_OTHER_REASON_ID && !detail) {
+          return { ok: false, reason: 'DETAIL_REQUIRED' };
+        }
+        if (hasUserReportedPost(pid, reporterId)) {
+          return { ok: false, reason: 'DUPLICATE' };
+        }
+        var list = loadUserReports(reporterId);
+        var entry = {
+          postId: pid,
+          reason: reason,
+          detail: detail,
+          createdAt: Date.now(),
+          reporterId: reporterId,
+        };
+        list.unshift(entry);
+        saveUserReports(list, reporterId);
+        return { ok: true, postId: pid, reason: reason, detail: detail };
+      }
+
+      function getSelectedReportReasonId() {
+        var listEl = document.getElementById('sc-report-modal-reasons');
+        var picked = listEl ? listEl.querySelector('input[name="sc-report-reason"]:checked') : null;
+        return picked ? String(picked.value || '').trim() : '';
+      }
+
+      function getReportDetailText() {
+        var ta = document.getElementById('sc-report-modal-detail');
+        if (!ta) return '';
+        return String(ta.value || '').trim().slice(0, REPORT_DETAIL_MAX);
+      }
+
+      function updateReportDetailCount() {
+        var ta = document.getElementById('sc-report-modal-detail');
+        var countEl = document.getElementById('sc-report-modal-detail-count');
+        if (!ta || !countEl) return;
+        var len = String(ta.value || '').length;
+        countEl.textContent = len + ' / ' + REPORT_DETAIL_MAX;
+        countEl.classList.toggle('is-limit', len >= REPORT_DETAIL_MAX);
+      }
+
+      function syncReportDetailLabel() {
+        var labelEl = document.getElementById('sc-report-modal-detail-label');
+        if (!labelEl) return;
+        var reasonId = getSelectedReportReasonId();
+        labelEl.textContent =
+          reasonId === REPORT_OTHER_REASON_ID ? '상세 의견' : '상세 의견 (선택)';
+      }
+
+      function resetReportDetailField() {
+        var ta = document.getElementById('sc-report-modal-detail');
+        if (ta) ta.value = '';
+        updateReportDetailCount();
+        syncReportDetailLabel();
+      }
+
+      function ensureScReportModal() {
+        var modal = document.getElementById('sc-report-modal');
+        if (modal) return modal;
+        modal = document.createElement('div');
+        modal.id = 'sc-report-modal';
+        modal.className = 'sc-report-modal';
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML =
+          '<div class="sc-report-modal__backdrop" data-sc-report-close aria-hidden="true"></div>' +
+          '<div class="sc-report-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sc-report-modal-title">' +
+          '  <h4 class="sc-report-modal__title" id="sc-report-modal-title">게시글 신고</h4>' +
+          '  <p class="sc-report-modal__hint">행동 기준으로만 신고합니다. 정치 의견·성향은 신고 사유가 아닙니다.</p>' +
+          '  <ul class="sc-report-modal__reasons" id="sc-report-modal-reasons"></ul>' +
+          '  <div class="sc-report-modal__detail">' +
+          '    <label class="sc-report-modal__detail-label" id="sc-report-modal-detail-label" for="sc-report-modal-detail">상세 의견 (선택)</label>' +
+          '    <p class="sc-report-modal__detail-hint">문제가 된 표현이나 상황을<br>간단히 작성해 주세요.</p>' +
+          '    <div class="sc-report-modal__detail-wrap">' +
+          '      <textarea class="sc-report-modal__detail-input" id="sc-report-modal-detail" maxlength="300" rows="3" aria-describedby="sc-report-modal-detail-count"></textarea>' +
+          '      <span class="sc-report-modal__detail-count" id="sc-report-modal-detail-count">0 / 300</span>' +
+          '    </div>' +
+          '  </div>' +
+          '  <div class="sc-report-modal__actions">' +
+          '    <button type="button" class="sc-report-modal__cancel" data-sc-report-close>취소</button>' +
+          '    <button type="button" class="sc-report-modal__submit" id="sc-report-modal-submit">신고하기</button>' +
+          '  </div>' +
+          '</div>';
+        document.body.appendChild(modal);
+        return modal;
+      }
+
+      function bindScReportModalEvents() {
+        if (scReportModalState.bound) return;
+        var modal = ensureScReportModal();
+        scReportModalState.bound = true;
+        var closers = modal.querySelectorAll('[data-sc-report-close]');
+        for (var ci = 0; ci < closers.length; ci++) {
+          closers[ci].addEventListener('click', function () {
+            closeScReportModal();
+          });
+        }
+        document.addEventListener('keydown', function (ev) {
+          if (ev.key !== 'Escape') return;
+          if (!modal.classList.contains('is-open')) return;
+          ev.preventDefault();
+          closeScReportModal();
+        });
+        var submitBtn = document.getElementById('sc-report-modal-submit');
+        var detailTa = document.getElementById('sc-report-modal-detail');
+        if (detailTa) {
+          detailTa.addEventListener('input', updateReportDetailCount);
+        }
+        if (submitBtn) {
+          submitBtn.addEventListener('click', function () {
+            var target = scReportModalState.target;
+            if (!target || !target.postId) return;
+            var reasonId = getSelectedReportReasonId();
+            if (!reasonId) {
+              showReportToast('신고 사유를 선택해 주세요.');
+              return;
+            }
+            var detailText = getReportDetailText();
+            if (reasonId === REPORT_OTHER_REASON_ID && !detailText) {
+              showReportToast('기타를 선택한 경우 상세 의견을 입력해 주세요.');
+              return;
+            }
+            var res = submitPostReport(target.postId, reasonId, detailText);
+            closeScReportModal();
+            if (!res.ok && res.reason === 'DUPLICATE') {
+              showReportToast('이미 신고한 게시글입니다.');
+              return;
+            }
+            if (res.ok) {
+              showReportToast('신고가 접수되었습니다.');
+            }
+          });
+        }
+      }
+
+      function renderScReportReasons() {
+        var listEl = document.getElementById('sc-report-modal-reasons');
+        if (!listEl) return;
+        listEl.textContent = '';
+        REPORT_REASONS.forEach(function (item, idx) {
+          var li = document.createElement('li');
+          var lab = document.createElement('label');
+          lab.className = 'sc-report-modal__reason';
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'sc-report-reason';
+          input.value = item.id;
+          if (idx === 0) input.checked = true;
+          input.addEventListener('change', syncReportDetailLabel);
+          var text = document.createElement('span');
+          text.className = 'sc-report-modal__reason-text';
+          text.textContent = item.label;
+          lab.appendChild(input);
+          lab.appendChild(text);
+          li.appendChild(lab);
+          listEl.appendChild(li);
+        });
+      }
+
+      function closeScReportModal() {
+        var modal = document.getElementById('sc-report-modal');
+        if (!modal || !modal.classList.contains('is-open')) return;
+        modal.classList.remove('is-open');
+        var finished = false;
+        var done = function (ev) {
+          if (finished) return;
+          if (ev && ev.target !== modal) return;
+          finished = true;
+          modal.removeEventListener('transitionend', done);
+          modal.setAttribute('aria-hidden', 'true');
+          scReportModalState.target = null;
+          document.body.classList.remove('sc-report-modal-open');
+        };
+        modal.addEventListener('transitionend', done);
+        setTimeout(done, 240);
+      }
+
+      function openPostReportModal(reportTarget) {
+        var target = reportTarget && typeof reportTarget === 'object' ? reportTarget : {};
+        var postId = String(target.postId || '').trim();
+        var authorId = String(target.authorId || '').trim();
+        var reporterId = getReportUserKey();
+        if (!postId) return;
+        if (authorId && authorId === reporterId) {
+          showReportToast('본인이 작성한 글은 신고할 수 없습니다.');
+          return;
+        }
+        if (hasUserReportedPost(postId, reporterId)) {
+          showReportToast('이미 신고한 게시글입니다.');
+          return;
+        }
+        bindScReportModalEvents();
+        var modal = ensureScReportModal();
+        scReportModalState.target = { postId: postId, authorId: authorId };
+        renderScReportReasons();
+        resetReportDetailField();
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('sc-report-modal-open');
+        requestAnimationFrame(function () {
+          modal.classList.add('is-open');
+        });
+      }
+
+      function buildPostReportButton(reportTarget) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sc-react-btn sc-react-btn--report';
+        btn.setAttribute('aria-label', '게시글 신고');
+        btn.title = '신고 — 부적절한 행동 신고';
+        var ico = document.createElement('span');
+        ico.className = 'sc-react-ico sc-react-ico--report';
+        ico.setAttribute('aria-hidden', 'true');
+        var lab = document.createElement('span');
+        lab.className = 'sc-react-lbl';
+        lab.textContent = '신고';
+        btn.appendChild(ico);
+        btn.appendChild(lab);
+        btn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          openPostReportModal(reportTarget);
+        });
+        return btn;
+      }
+
+      window.getReportUserKey = getReportUserKey;
+      window.loadUserReports = loadUserReports;
+      window.hasUserReportedPost = hasUserReportedPost;
+      window.submitPostReport = submitPostReport;
+      window.openPostReportModal = openPostReportModal;
+      window.closeScReportModal = closeScReportModal;
+      window.buildPostReportButton = buildPostReportButton;
     })();
   </script>
   <script src="/permissions-guide.js"></script>
@@ -19951,13 +21082,26 @@
         if (depth === 0 && n > 0) tail = ' (대댓글 ' + n + ')';
 
         var meta = document.createElement('div');
-        meta.className = 'board__comment-meta';
+        meta.className = 'board__comment-meta board__author-line';
         var blindC = shouldBlindKantaOnEarthBoard(c.authorId, ctx.boardTerritoryId);
-        meta.appendChild(buildBoardAuthorThumb(c.authorId, blindC));
+        var thumbEl = buildBoardAuthorThumb(c.authorId, blindC);
+        meta.appendChild(thumbEl);
+        var authorStr = String(c.authorId || '').trim();
         var metaTxt = document.createElement('span');
         metaTxt.className = 'board__author-line__text';
-        metaTxt.textContent = (c.authorId || '익명') + ' · ' + formatDate(c.createdAt) + tail;
+        var authorNameEl = document.createElement('span');
+        authorNameEl.className = 'board__comment-author-name';
+        authorNameEl.textContent = authorStr || '익명';
+        var dateEl = document.createElement('span');
+        dateEl.className = 'board__comment-author-date';
+        dateEl.textContent = ' · ' + formatDate(c.createdAt) + tail;
+        metaTxt.appendChild(authorNameEl);
+        metaTxt.appendChild(dateEl);
         meta.appendChild(metaTxt);
+        if (!blindC && authorStr) {
+          wireScUserProfileLink(thumbEl, authorStr);
+          wireScUserProfileLink(authorNameEl, authorStr);
+        }
 
         var te = document.createElement('div');
         te.className = 'board__comment-text';
@@ -23340,6 +24484,18 @@
           );
         }
 
+        if (opts.postId && typeof window.buildPostBookmarkButton === 'function') {
+          row.appendChild(window.buildPostBookmarkButton(opts.postId));
+        }
+
+        if (opts.shareTarget && typeof window.buildPostShareButton === 'function') {
+          row.appendChild(window.buildPostShareButton(opts.shareTarget));
+        }
+
+        if (opts.reportTarget && typeof window.buildPostReportButton === 'function') {
+          row.appendChild(window.buildPostReportButton(opts.reportTarget));
+        }
+
         return row;
       }
 
@@ -23782,6 +24938,7 @@
                     type: 'like',
                     title: '새 공감',
                     message: '내 글에 공감을 받았습니다.',
+                    actorId: String(me || '').trim(),
                     linkTarget: {
                       view: 'post',
                       postId: post.id,
@@ -23956,29 +25113,14 @@
 
         var meta = document.createElement('div');
         meta.className = 'board-post-detail__meta board__author-line';
-        meta.appendChild(buildBoardAuthorThumb(post.authorId, blindKanta));
-        meta.appendChild(buildPostDetailAuthorInfo(post, post.authorId, blindKanta));
+        var thumbEl = buildBoardAuthorThumb(post.authorId, blindKanta);
+        meta.appendChild(thumbEl);
+        var authorInfoEl = buildPostDetailAuthorInfo(post, post.authorId, blindKanta);
+        meta.appendChild(authorInfoEl);
         if (!blindKanta && authorStr) {
-          meta.classList.add('board-post-detail__meta--profile-link');
-          meta.setAttribute('role', 'button');
-          meta.setAttribute('tabindex', '0');
-          meta.setAttribute('aria-label', authorStr + ' 시민 프로필 보기');
-          meta.addEventListener('click', function () {
-            if (typeof window.openUserProfile === 'function') {
-              window.openUserProfile(authorStr);
-            }
-          });
-          meta.addEventListener('keydown', function (ev) {
-            if (ev.key === 'Enter' || ev.key === ' ') {
-              ev.preventDefault();
-              if (typeof window.openUserProfile === 'function') {
-                window.openUserProfile(authorStr);
-              }
-            }
-          });
-          if (window.ScMiniProfile && typeof window.ScMiniProfile.attachHover === 'function') {
-            window.ScMiniProfile.attachHover(meta, authorStr, { context: { post: post } });
-          }
+          wireScUserProfileLink(thumbEl, authorStr);
+          var nameEl = authorInfoEl.querySelector('.board-post-detail__author-name');
+          if (nameEl) wireScUserProfileLink(nameEl, authorStr);
         }
         root.appendChild(meta);
 
@@ -24034,6 +25176,16 @@
           disableLike: gateP.disableLike,
           disableDis: gateP.disableDis,
           disablePlanet: gateP.disablePlanet,
+          postId: post.id,
+          shareTarget: {
+            postId: post.id,
+            territoryId: detailTid,
+            stage: detailStage,
+          },
+          reportTarget: {
+            postId: post.id,
+            authorId: authorStr,
+          },
           nEmpathy: post.reactions.empathy.length,
           activeEmpathy: post.reactions.empathy.indexOf(meR) >= 0,
           disabledEmpathy: !!ownPost || gateP.disableEmpathy,
@@ -24214,6 +25366,7 @@
                     type: 'like',
                     title: '새 공감',
                     message: '내 댓글에 공감을 받았습니다.',
+                    actorId: String(me || '').trim(),
                     linkTarget: {
                       view: 'post',
                       postId: post.id,
@@ -24425,6 +25578,7 @@
                 type: 'comment',
                 title: '새 댓글',
                 message: '내 글에 댓글이 달렸습니다.',
+                actorId: commenter,
                 linkTarget: {
                   view: 'post',
                   postId: post.id,
@@ -24644,6 +25798,16 @@
           disableLike: gateR.disableLike,
           disableDis: gateR.disableDis,
           disablePlanet: gateR.disablePlanet,
+          postId: p.id,
+          shareTarget: {
+            postId: p.id,
+            territoryId: currentTerritory,
+            stage: effectiveStage(),
+          },
+          reportTarget: {
+            postId: p.id,
+            authorId: String(p.authorId || '').trim(),
+          },
           nEmpathy: p.reactions.empathy.length,
           activeEmpathy: p.reactions.empathy.indexOf(meR) >= 0,
           disabledEmpathy: !!ownPost,
@@ -26069,6 +27233,7 @@
                 ? window.PlayerProgression.territoryLabelKo(writeTid)
                 : writeTid) + '에 새 토론이 열렸습니다.',
             territory: writeTid,
+            authorId: String(post.authorId || uid() || '').trim(),
             linkTarget: {
               view: 'post',
               postId: post.id,

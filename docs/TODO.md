@@ -173,8 +173,21 @@
 - [x] 프로필 모달 껍데기 1차 — `ScProfileModal` · `openUserProfile()` 연동 (placeholder)
 - [x] ScProfileModal ProfileFrame 렌더 연결 1차 — `renderProfileFrameInModal` · `buildUserProfileDataForModal`
 - [x] ScProfileModal ProfileFrame 회귀 QA — Hover/모달/HUD/4스킨 · 닫기 이중 콜백 FIX
-- [ ] ScProfileModal 2차 — DB/Supabase 실데이터 · 댓글/피드/알림에서 `openUserProfile` 확장
-- [ ] Hover 미니 프로필 2차 — 댓글·알림·활동피드·랭킹 확장
+- [x] 댓글 작성자 프로필 UX 1차 — `renderThreadedCommentNode` · Hover + `openUserProfile` (게시판·상세·데일리 이슈)
+- [x] 활동 피드 작성자 프로필 UX 1차 — `authorId` 저장 항목만 Hover/클릭 (`post_created`)
+- [x] 알림 작성자 프로필 UX 1차 — `actorId` 저장 항목만 Hover/클릭 (`comment`/`like`/`follow`)
+- [x] 알림 UserCard 안정화 — 작성자 영역 클릭 → 프로필 · 내용 영역 클릭 → `navigateFromNotification`
+- [x] Community System v1 — 게시글 북마크 1차 (`sc_bookmarks_v1` · localStorage 토글)
+- [x] Community System v1 — 게시글 공유 1차 (링크 복사 · HUD Toast)
+- [x] Community System v1 — 게시글 신고 1차 (`sc_reports_v1` · HUD 모달 · 행동 사유만 · 중복/본인 글 차단)
+- [x] Community System v1 — 게시글 신고 상세 의견 (textarea 300자 · 기타 필수 · `detail` 저장)
+- [x] 랭킹 UI 개선 1차 — 5개 영토 탭 · TOP5 강조 (`rank-leaderboard.js`)
+- [x] 랭킹 UI 개선 2차 — TOP3 여백 · 영토 Badge · 내 순위 HUD 그리드
+- [x] 랭킹 작성자 프로필 UX 1차 — `ScMiniProfile` + `openUserProfile` (`rank-leaderboard.js`)
+- [x] UserCard UX 단순화 — 프로필 클릭 범위 축소 (아바타·닉네임·유저 ID) · ScMiniProfile 팝업 연결 해제
+- [ ] Community System v1 — 북마크 목록 화면 2차
+- [ ] ScProfileModal 2차 — DB/Supabase 실데이터 연동
+- [x] Hover 미니 프로필 2차 — 랭킹 확장 (`rank-leaderboard.js` · 전 탭)
 - [x] 팔로우 시스템 + 알림
 - [x] 알림센터 1차 — `sc_notifications_v1` · 맵 HUD/프로필 벨 · comment/like/follow/level_up (2026-07-10)
 - [x] 최근 세계 활동 피드 1차 — `sc_activity_feed_v1` · 메인 지도 HUD (2026-07-10)

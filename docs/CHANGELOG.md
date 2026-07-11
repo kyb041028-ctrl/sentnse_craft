@@ -7,6 +7,103 @@
 
 ## [미배포] — 현 작업 이후
 
+### ★ 2026-07-11 — UserCard UX 단순화
+
+- `ScMiniProfile.attachHover()` 화면 연결 해제 — 큰 팝업 미표시 · 컴포넌트 코드는 보류
+- 프로필 클릭 범위를 **아바타·닉네임·유저 ID**로 축소 (게시글 상세·댓글·알림·랭킹)
+- Hover 안내: `title` / `aria-label` — `클릭해서 유저 프로필 보기`
+- 활동 피드: 작성자 이름 미표시 → 프로필 연결 해제
+- 클릭 흐름 `openUserProfile()` → ScProfileModal → ProfileFrame 유지
+
+---
+
+### ★ 2026-07-11 — 랭킹 작성자 프로필 UX 1차
+
+- 랭킹 모달 항목 닉네임 영역 — Hover `ScMiniProfile` · 클릭 `openUserProfile()` → `ScProfileModal` / ProfileFrame
+- 전체·중앙·개척·수호·외계 탭 공통 · `userId` 없는 항목은 미연결
+
+---
+
+### ★ 2026-07-11 — 랭킹 UI 개선 2차
+
+- TOP1~3 행 여백 확대 · 👑🥈🥉 아이콘·순위 숫자 가독성 정리
+- 영토명 `sc-rank-modal__terr` Badge (`data-territory` 색상) · 내 순위 2×2 HUD 정보 그리드
+- 모달 폭 `29rem` 소폭 확대 — 기능·데이터 변경 없음
+
+---
+
+### ★ 2026-07-11 — 랭킹 UI 개선 1차
+
+- 랭킹 모달 탭 **전체 / 중앙 / 개척 / 수호 / 외계** 5종 (`getLeaderboard` 필터: `null` · `COMMON` · `PROGRESSIVE` · `CONSERVATIVE` · `KANTAPBIYA`)
+- TOP1~5 시각 강조 — 👑🥈🥉 금·은·동 테두리 · 4~5위 ⭐ + TOP4/TOP5 Badge
+- `rank-leaderboard.js` · `index.html` 모달 HTML/CSS — `PlayerProgression` 구조 변경 없음
+
+---
+
+### ★ 2026-07-11 — Community System v1 · 게시글 신고 상세 의견
+
+- 신고 모달 **상세 의견** textarea (최대 300자 · 실시간 `0 / 300` 카운터)
+- 사유별 규칙: 일반 사유는 선택 입력 · **기타** 선택 시 상세 의견 필수
+- `sc_reports_v1` 항목에 `detail` 필드 추가 · `detail` 없는 기존 데이터 호환 유지
+
+---
+
+### ★ 2026-07-11 — Community System v1 · 게시글 신고 1차
+
+- 게시글 목록·상세 반응 바 **신고** 버튼 (`sc-react-btn--report`) · HUD 모달 · 행동 기준 사유 6종 (정치 의견·성향 사유 없음)
+- `sc_reports_v1` localStorage · userKey별 `{ postId, reason, createdAt, reporterId }[]` 저장
+- 중복 신고·본인 글 신고 차단 · Toast 안내만 — 숨김·제재·외계행성 이동·관리자 기능 미포함
+
+---
+
+### ★ 2026-07-11 — Community System v1 · 게시글 공유 1차
+
+- 게시글 목록·상세 반응 바 **공유** 버튼 (`sc-react-btn--share`) · `linkTarget` 동일 쿼리(`view`/`postId`/`territoryId`/`stage`) URL 복사
+- `navigator.clipboard.writeText` + textarea fallback · HUD Toast `링크가 복사되었습니다.`
+- SNS/카카오/QR/통계/DB 미포함
+
+---
+
+### ★ 2026-07-11 — Community System v1 · 게시글 북마크 1차
+
+- `sc_bookmarks_v1` localStorage · userKey별 `{ postId, createdAt }[]` 저장
+- 게시글 목록·상세 반응 바에 **저장** 버튼 (`sc-react-btn--bookmark`) · 토글 · 새로고침 유지
+- 북마크 목록 UI·DB·검색 미포함 (v1 저장만)
+
+---
+
+### ★ 2026-07-11 — 알림 작성자 프로필 클릭과 콘텐츠 이동 영역 분리
+
+- `buildNotificationItemElement` — `actorId` 있을 때 좌측 작성자 영역(아바타·닉네임)과 알림 내용 영역 클릭 분리
+- 작성자 영역: Hover `ScMiniProfile` · 클릭 `openUserProfile()` (`stopPropagation`)
+- 알림 내용 영역: 클릭 `navigateFromNotification()` · 읽음 처리 유지
+- 시스템 알림(`level_up`/`alien_*` 등)은 기존 단일 클릭 동작 유지
+
+---
+
+### ★ 2026-07-11 — 알림 작성자 프로필 UX 1차
+
+- **데이터 점검:** `sc_notifications_v1` 기존 항목은 `actorId` 미저장 · `follow`만 `linkTarget.userId` 보유
+- `addNotification` — `actorId`/`authorId`/`userId` 또는 `linkTarget.userId` 저장 · 렌더 시 식별값 있는 항목만 `ScMiniProfile` + `openUserProfile` 연결
+- `comment`/`like` 생성 시 `actorId` 기록 · `level_up`/`alien_*` 등 시스템 알림은 미연결
+
+---
+
+### ★ 2026-07-11 — 활동 피드 작성자 프로필 UX 1차
+
+- **데이터 점검:** 기존 `sc_activity_feed_v1` 항목은 `authorId`/`userId` 미저장 — 익명 메시지(`한 시민이…`, `누군가…`) 유형은 식별값 추가 없음
+- `addActivityFeedItem` — `authorId`/`userId` 선택 저장 · `renderActivityFeed`에서 식별값 있는 항목만 `ScMiniProfile` + `openUserProfile` 연결
+- `post_created` 이벤트만 `authorId` 기록 (글 작성자)
+
+---
+
+### ★ 2026-07-11 — 댓글 작성자 프로필 UX 1차
+
+- `renderThreadedCommentNode` — 댓글 작성자 meta에 `ScMiniProfile.attachHover` · 클릭 `openUserProfile()` 연결 (게시글·상세·데일리 이슈·대댓글 공통)
+- 기존 `ScMiniProfile` · `ScProfileModal` · ProfileFrame 재사용 — 새 Hover/Modal/UI 없음
+
+---
+
 ### ★ 2026-07-10 — ScProfileModal ProfileFrame 회귀 QA
 
 - Hover · Click · ProfileFrame · 4스킨 · HUD 복원 · 닫기 · DOM/리스너 중복 — 회귀 검사 완료

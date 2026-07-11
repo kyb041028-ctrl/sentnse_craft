@@ -113,22 +113,41 @@ npm start   # http://localhost:3000
 | 단계 | 상태 | API / 비고 |
 |------|------|------------|
 | 작성자 카드 HUD | ✅ | 1차 HUD 스타일 · 2차 `Lv.N · 명성` · 3차 영토 Badge |
-| Hover 미니 프로필 | ✅ | `ScMiniProfile` — `attachHover` · `show` · `hide` · `resolveData` |
+| Hover 미니 프로필 | ⚠️ 보류 | `ScMiniProfile` 코드 유지 · **화면 attachHover 연결 해제** (2026-07-11) · Hover는 `title` 안내만 |
 | 프로필 모달 | ✅ | `ScProfileModal` — `open` · `close` · `getUserId` · ESC/배경/X/닫기 · scroll lock · fade |
 | 모달 ProfileFrame | ✅ | **새 UI 없음** — `renderProfileFrameInModal` · `buildUserProfileDataForModal` · `data-pf-layer` 스코프 |
 | 회귀 QA | ✅ | Hover/Click/Frame/4스킨/HUD복원/닫기/DOM — `closeScProfileModal` 이중 콜백 FIX |
+| 댓글 작성자 프로필 | ✅ | `renderThreadedCommentNode` — Hover + 클릭 → `openUserProfile` (2026-07-11) |
+| 활동 피드 작성자 프로필 | ✅ | `authorId` 있는 항목만 Hover/클릭 · `post_created` 저장 (2026-07-11) |
+| 알림 작성자 프로필 | ✅ | `actorId` 항목 — 작성자 영역 → 프로필 · 내용 영역 → 목적지 이동 (2026-07-11) |
 
 **절대 금지 (요청 없이):** ProfileFrame HTML/CSS · `SC_PROFILE_LAYOUT` · `SC_PROFILE_LAYOUT_BY_SKIN` · PNG 수정.  
 **스킨 규칙:** `territorySkin` → 해당 PNG → `SC_PROFILE_LAYOUT_BY_SKIN[skin]` 좌표 (center 좌표를 다른 스킨에 쓰지 않음).
 
 **다음 확장 순서 (닉네임 있는 모든 곳):**
 
-1. [ ] 댓글 작성자 — Hover → `openUserProfile`
-2. [ ] 활동 피드 작성자
-3. [ ] 알림 작성자
-4. [ ] 랭킹
+1. [x] 댓글 작성자 — Hover → `openUserProfile` (2026-07-11)
+2. [x] 활동 피드 작성자 — `authorId` 저장만 (화면에 이름 미표시 → 프로필 연결 없음, 2026-07-11)
+3. [x] 알림 작성자 — 아바타·닉네임만 `openUserProfile` (2026-07-11)
+4. [x] 랭킹 — 닉네임(유저 ID)만 `openUserProfile` (2026-07-11)
+
+**UserCard UX 규칙 (2026-07-11~):** Hover = `title`/`aria-label` **「클릭해서 유저 프로필 보기」** 만 (ScMiniProfile 팝업 미사용) · Click = **아바타·닉네임·유저 ID**만 → `openUserProfile()` → ScProfileModal → ProfileFrame · 공통 헬퍼 `wireScUserProfileLink()`.
 
 작업 단위: **한 곳씩** · Composer 2.5 Fast · 기능 추가만 (ProfileFrame 개선/리팩토링 금지).
+
+**알림 카드 클릭 규칙 (2026-07-11):** `actorId` 있음 → **아바타·닉네임** 클릭 = `openUserProfile()` (`stopPropagation`) · 제목/메시지 영역 클릭 = `navigateFromNotification()` · 시스템 알림은 단일 클릭 유지.
+
+**Community System v1 — 북마크 (2026-07-11):** `sc_bookmarks_v1` · userKey별 `{ postId, createdAt }` · 게시글 목록/상세 `저장` 버튼 토글 · 목록 UI는 2차.
+
+**Community System v1 — 공유 (2026-07-11):** `buildPostShareUrl` · `linkTarget`과 동일 쿼리(`view=post&postId&territoryId&stage`) · `공유` 버튼 클릭 → 클립보드 · `#sc-share-toast` HUD 안내.
+
+**Community System v1 — 신고 (2026-07-11):** `sc_reports_v1` · userKey별 `{ postId, reason, detail?, createdAt, reporterId }` · 반응 바 **신고** 버튼 → HUD 모달 · 행동 사유 6종 · **상세 의견** textarea (300자 · 기타 필수) · 중복/본인 글 Toast만 — 숨김·제재·외계행성 이동 없음.
+
+**랭킹 UI 1차 (2026-07-11):** `rank-leaderboard.js` · 탭 전체/중앙/개척/수호/외계 · `getLeaderboard(filter)` 재사용 · TOP1~5 👑🥈🥉⭐ Badge · 프로필 Hover/클릭은 미연결.
+
+**랭킹 UI 2차 (2026-07-11):** TOP3 행 여백·아이콘 크기 · 영토 `data-territory` Badge · 내 순위 2×2 HUD 그리드 · 모달 폭 확대.
+
+**랭킹 프로필 UX (2026-07-11):** `rank-leaderboard.js` · 닉네임(`strong`)만 `wireScUserProfileLink` · 전 탭 공통.
 
 ### 성향·게임 로직 (브라우저 데모 — localStorage)
 
@@ -169,9 +188,28 @@ npm start   # http://localhost:3000
 
 ### 게시글 작성자 프로필 확장 (개발 #3 다음)
 
-1. [x] ProfileFrame 모달 회귀 QA (2026-07-10)
-2. [ ] **댓글** 작성자 Hover + `openUserProfile` (1차)
-3. [ ] 활동 피드 · 알림 · 랭킹 (순차)
+1. [x] 댓글 작성자 — Hover → `openUserProfile` (2026-07-11)
+2. [x] 활동 피드 · `authorId` 항목만 (2026-07-11)
+3. [x] 알림 · `actorId` 항목만 (2026-07-11)
+4. [x] 랭킹 — 닉네임만 `openUserProfile` (2026-07-11)
+
+### Community System v1 (2026-07-11~)
+
+1. [x] 게시글 북마크 1차 — `sc_bookmarks_v1` · `togglePostBookmark` · 반응 바 **저장** 버튼
+2. [x] 게시글 공유 1차 — `buildPostShareUrl` · **공유** 버튼 · 링크 복사 Toast
+3. [x] 게시글 신고 1차 — `sc_reports_v1` · **신고** 버튼 · HUD 모달 · 행동 사유만 · 기록만 (제재 없음)
+4. [x] 게시글 신고 상세 의견 — textarea 300자 · 기타 필수 · `detail` 필드 저장
+5. [ ] 북마크 목록 화면 2차
+
+### 다음 세션 우선순위 (2026-07-11 종료 시점)
+
+1. [x] **User Profile UX 단순화** — `wireScUserProfileLink` · ScMiniProfile 팝업 연결 해제 · 클릭 범위 축소 (완료)
+2. [ ] **검색 기능**
+3. [ ] **검색 결과 UserCard**
+4. [ ] **북마크 목록** 2차
+5. [ ] **팔로워 목록**
+
+**보류:** ScMiniProfile 코드 삭제 · 랭킹 UI 추가 개선 · 모바일 · 아바타 · 관리자 · 실시간 DB · 업적 고도화
 
 ### ProfileFrame 다음 순서
 
