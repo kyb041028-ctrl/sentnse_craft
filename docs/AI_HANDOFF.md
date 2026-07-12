@@ -1,7 +1,7 @@
 # 센텐스크래프트 — AI 세션 인수인계 문서
 
 > **새 Cursor/AI 세션 시작 시 이 문서를 먼저 읽으세요.**  
-> 마지막 업데이트: 2026-07-10  
+> 마지막 업데이트: 2026-07-12  
 > 상세 맥락: `docs/PROJECT_CONTEXT.md` · 작업 목록: `docs/TODO.md` · 최근 변경: `docs/CHANGELOG.md`
 
 ---
@@ -13,7 +13,7 @@
 | 프로젝트 | 게임형 정치 커뮤니티 SPA — **글·반응 → 성향 변화 → 영토 소속** |
 | 프론트 | **단일 파일** `public/index.html` (HTML+CSS+JS, 빌드 없음) |
 | 백엔드 | `server.js` (Express) + Supabase Auth/DB (일부) |
-| 현재 단계 | **베타 뼈대** — UI·로컬 데모 로직은 많음, **서버 집계·결제·실데이터 연동은 미완** |
+| 현재 단계 | **베타 뼈대** — Follow v1·ProfileFrame 팔로워·표시 안정화 완료. **다음: Follow v1 2차 QA** |
 | 프로필 UI | **ProfileFrame** (PNG 1024×819 + px 오버레이)가 기본. legacy 카드는 `hidden` |
 | 성향 | **3축 누적점수**(보수·중도·진보) + **외계인 %** — 브라우저 localStorage 데모 |
 | ProfileFrame 성향 | **4축 표시**(center/pioneer/guardian/alien 0~100) — **게임 축과 아직 미연동(더미)** |
@@ -36,6 +36,10 @@ sentence-craft/
 │   ├── territory-beliefs.js         # 영토 신념 SSOT (displayName, belief, …)
 │   ├── alignment-scoring.js         # ★ 성향 3축 점수 수학 (브라우저)
 │   ├── player-progression.js        # 레벨·XP·명성·글당 상한 (브라우저)
+│   ├── display-name.js              # ★ displayName 조회·캐시 (Search v1 사전)
+│   ├── search-system.js             # ★ Search v1 — 통합검색 모달 · 시민 검색
+│   ├── bookmark-list.js             # ★ Community v2 — 북마크 목록 모달
+│   ├── follow-list-modal.js         # ★ Follow v1 — 팔로워·팔로잉 목록 모달 · 언팔로우
 │   ├── follow-system.js
 │   ├── permissions-guide.js
 │   ├── rank-leaderboard.js
@@ -100,6 +104,8 @@ npm start   # http://localhost:3000
 - [x] `SC_PROFILE_LAYOUT` px 좌표 (1024×819) · 스킨별 `SC_PROFILE_LAYOUT_BY_SKIN`
 - [x] localhost **좌표 에디터** (localStorage `sc_profile_layout_editor_v3`)
 - [x] 데이터 파이프라인: `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()`
+- [x] **활동 요약 실데이터 1차 + 표시 안정화** (2026-07-12): `resolveUserProfileActivity` · `normalizeProfileActivityDisplay` · 0→`--` · 모달 HUD 동기화
+- [x] **영토 기록 실데이터 1차 + 표시 fallback** (2026-07-12): `resolveUserTerritoryRecord` · `normalizeTerritoryRecordDisplay` · 빈값 규칙
 - [x] 오버레이: USER ID · LEVEL · 명성 · 경험치% · expGauge · 활동 5 · 영토 4
 - [x] **성향지도 SVG** (`alignmentMapLayer`) · 4축 polygon/line/dot · **0.28s 이동 애니메이션**
 - [x] 성향지도 **캘리브레이션 에디터** (축 최대치 · 그룹별 centerPioneer / guardianAlien)
@@ -130,6 +136,9 @@ npm start   # http://localhost:3000
 2. [x] 활동 피드 작성자 — `authorId` 저장만 (화면에 이름 미표시 → 프로필 연결 없음, 2026-07-11)
 3. [x] 알림 작성자 — 아바타·닉네임만 `openUserProfile` (2026-07-11)
 4. [x] 랭킹 — 닉네임(유저 ID)만 `openUserProfile` (2026-07-11)
+5. [x] **displayName 통일** — `resolveDisplayName(userId)` 전역 표시 (2026-07-12)
+
+**Search System v1 (2026-07-12) ✅:** `search-system.js` · `sc-map-tab-search` · `sc-search-modal` · 시민: `collectDisplayNameIndex` · 토론: `sc_board_bundle_v1` 제목/본문/작성자 displayName · `__scBoardNavigateToPost` · `__scSearchCitizens` · `__scSearchDiscussions`
 
 **UserCard UX 규칙 (2026-07-11~):** Hover = `title`/`aria-label` **「클릭해서 유저 프로필 보기」** 만 (ScMiniProfile 팝업 미사용) · Click = **아바타·닉네임·유저 ID**만 → `openUserProfile()` → ScProfileModal → ProfileFrame · 공통 헬퍼 `wireScUserProfileLink()`.
 
@@ -137,7 +146,15 @@ npm start   # http://localhost:3000
 
 **알림 카드 클릭 규칙 (2026-07-11):** `actorId` 있음 → **아바타·닉네임** 클릭 = `openUserProfile()` (`stopPropagation`) · 제목/메시지 영역 클릭 = `navigateFromNotification()` · 시스템 알림은 단일 클릭 유지.
 
-**Community System v1 — 북마크 (2026-07-11):** `sc_bookmarks_v1` · userKey별 `{ postId, createdAt }` · 게시글 목록/상세 `저장` 버튼 토글 · 목록 UI는 2차.
+**Community System v1 — 북마크 (2026-07-11):** `sc_bookmarks_v1` · userKey별 `{ postId, createdAt }` · 게시글 목록/상세 `저장` 버튼 토글.
+
+**Community System v2 — 북마크 목록 1차 (2026-07-12):** `bookmark-list.js` · HUD `sc-map-tab-bookmarks` · `findPostByIdAnywhere` · `__scBoardNavigateToPost` · 삭제 시 Toast.
+
+**Follow System v1 2차 (2026-07-12):** 팔로잉 탭 `언팔로우` 버튼 · `FollowSystem.toggleFollow` · `renderList()` 재조회 · Toast · HUD·`board__follow-btn` 자동 갱신 (`follow-system.js` 기존 hook).
+
+**Follow System v1 1차 (2026-07-12):** `follow-list-modal.js` · `FollowListModal.open(tab)` · HUD `#avatar-dock-follow-followers` / `#avatar-dock-follow-following` · `FollowSystem` + `resolveDisplayName` · 프로필 `openUserProfile` · `__scFollowLists(userId)` 디버그 · **localStorage 전용** (`sc_follow_v1`).
+
+**ProfileFrame 상단 팔로워 (2026-07-12):** `profileData.followers` · `resolveProfileFollowerCount` → `FollowSystem.getFollowerCount` · `followersLabelLayer` + `followersLayer` · 명성(`fame`) 위 좌표 · 4스킨 통일 `{785,25,92,33}` / `{882,25,96,33}` · 0명 `0` · 금색 라벨 · 명성 톤 숫자 박스 · 에디터 X/Y/W/H · **아이콘/Emoji 없음**
 
 **Community System v1 — 공유 (2026-07-11):** `buildPostShareUrl` · `linkTarget`과 동일 쿼리(`view=post&postId&territoryId&stage`) · `공유` 버튼 클릭 → 클립보드 · `#sc-share-toast` HUD 안내.
 
@@ -171,7 +188,7 @@ npm start   # http://localhost:3000
 | 영역 | 상태 | 비고 |
 |------|------|------|
 | **ProfileFrame ↔ 실제 성향** | ⚠️ 분리됨 | 게임은 `conservative/centrist/progressive`, ProfileFrame은 `center/pioneer/guardian/alien` 더미 |
-| **getCurrentProfileData()** | Mock | `SC_PROFILE_DATA` 하드코딩. API/Firebase 미연결 |
+| **getCurrentProfileData()** | 부분 실데이터 | Auth·progression merge + 활동 요약 4항목 + **영토 기록 4항목** (현재소속·이동·영향력·등급) |
 | **Supabase DB** | 뼈대 | 테이블·Auth 일부. 집계·프로필 실시간 동기화 미완 |
 | **성향 서버 집계** | config만 | `config/alignment-system.js` — 실제 글 분석 파이프라인 없음 |
 | **업적 시스템** | UI+더미 | 슬롯·렌더만. 조건 달성·DB 저장 없음 |
@@ -199,17 +216,31 @@ npm start   # http://localhost:3000
 2. [x] 게시글 공유 1차 — `buildPostShareUrl` · **공유** 버튼 · 링크 복사 Toast
 3. [x] 게시글 신고 1차 — `sc_reports_v1` · **신고** 버튼 · HUD 모달 · 행동 사유만 · 기록만 (제재 없음)
 4. [x] 게시글 신고 상세 의견 — textarea 300자 · 기타 필수 · `detail` 필드 저장
-5. [ ] 북마크 목록 화면 2차
+5. [x] 북마크 목록 화면 2차 → **v2 북마크 목록 1차 완료** (2026-07-12)
 
-### 다음 세션 우선순위 (2026-07-11 종료 시점)
+### Follow System v1 (2026-07-12) — 구현 완료 · QA 대기
 
-1. [x] **User Profile UX 단순화** — `wireScUserProfileLink` · ScMiniProfile 팝업 연결 해제 · 클릭 범위 축소 (완료)
-2. [ ] **검색 기능**
-3. [ ] **검색 결과 UserCard**
-4. [ ] **북마크 목록** 2차
-5. [ ] **팔로워 목록**
+1. [x] 팔로워·팔로잉 2탭 목록 모달 — `follow-list-modal.js` · HUD 숫자 클릭 진입
+2. [x] 시민 행 · 프로필 연결 · Empty · 정렬(displayName)
+3. [x] ProfileFrame 상단 팔로워 수 — `followers` 레이어 · 4스킨 좌표
+4. [x] **팔로잉 탭 언팔로우** — `toggleFollow` · Toast (2026-07-12)
+5. [ ] **2차 QA** — 언팔로우·`sc_follow_v1`·HUD·목록·Empty·Toast·게시글 버튼·랭킹·ProfileFrame 회귀 확인
 
-**보류:** ScMiniProfile 코드 삭제 · 랭킹 UI 추가 개선 · 모바일 · 아바타 · 관리자 · 실시간 DB · 업적 고도화
+### 다음 세션 최우선 (2026-07-12)
+
+1. [ ] **Follow System v1 2차 QA** — 위 체크리스트 통과 후 완료 처리
+2. [ ] **Settings System v1** (이후)
+3. [ ] **Admin System v1** (이후)
+
+### ⏸️ 보류 — 기능
+
+업적 시스템(설계 후) · 타인 프로필 팔로워 목록 · 추천 사용자 · 친구 시스템 · 차단 · 팔로워/팔로잉 검색 · 서버 동기화 · 실시간 DB · Follow 검색/페이지네이션
+
+### ⏸️ 보류 — UI
+
+ProfileFrame 전체 폴리싱 · 팔로워 최종 디자인 · 버튼/배지 통일 · 아이콘 통일 · 모달 UI 통일 · 반응형 최종 점검
+
+**기타 보류:** ScMiniProfile 코드 삭제 · 랭킹 UI 추가 개선 · 아바타 · 관리자 · 업적 고도화
 
 ### ProfileFrame 다음 순서
 
@@ -405,16 +436,50 @@ npm start   # http://localhost:3000
 ## 8. ProfileFrame 데이터 파이프라인
 
 ```
-SC_PROFILE_DATA (더미)
+SC_PROFILE_DATA (더미 · 원본 미변경)
        ↓
-getCurrentProfileData()     ← ★ 실 API 교체 지점
+getCurrentProfileData() / loadCurrentUserProfile()
+       ↓ mergeResolvedProfileActivity(player.userId)
+       ↓ mergeResolvedProfileTerritory(player.userId)
+       ↓ finalizeProfileDisplayFields()
+buildUserProfileDataForModal(userId)   ← 타인 프로필 모달
+       ↓ mergeResolvedProfileActivity(userId)
+       ↓ mergeResolvedProfileTerritory(userId)
+       ↓ finalizeProfileDisplayFields()
+renderProfileFrameInModal(userId)
+       ↓ applyProfileFramePixelLayout(frame) → ensureProfileFrameListLayerBounds
+       ↓ renderProfileData(data, { frameRoot: frame })
        ↓
-renderProfileData(data)     ← 텍스트 · skin PNG · expGauge · achievements
-       ↓
-renderProfileAlignmentMap(data.alignment)
-renderProfileAchievements(data.achievements)
-applyProfileFramePixelLayout()
+renderProfileAlignmentMap(data.alignment, { frameRoot })
+renderProfileAchievements(data, { frameRoot })
 ```
+
+**활동 요약 집계 (`resolveUserProfileActivity`)**
+
+| 필드 | 소스 |
+|------|------|
+| `posts` | `sc_board_bundle_v1` authorId · postId dedupe |
+| `comments` | 댓글·대댓글 authorId · commentId dedupe |
+| `receivedLikes` | 본인 글·댓글 `reactions.empathy.length` 합 |
+| `discussions` | 참여한 distinct `postId` 수 |
+| `aura` | **미연결** — 표시 `--` (미로그인 데모만 Mock 허용) |
+
+디버그: `__scProfileActivity('guest_demo')` · `__scTerritoryRecord('guest_demo')` · `__scResolvedProfileData(userId)` · `__scInspectProfileFrame(userId)`
+
+**모달 Overlay:** HUD는 `#activitySummaryLayer` CSS로 목록 레이어 100%×100%. 모달은 `data-pf-layer`만 있어 `ensureProfileFrameListLayerBounds()`로 동일 bounds 적용 (0×0 클리핑 방지).
+
+**표시 기준:** 활동·영토 **숫자형** — 1 이상 숫자 · **0도 `--`** · 확인 불가 `--` · **팔로워(`followers`)는 0도 `0`** · 소속 없음 `기록 없음` · 등급 없음 `참여자` · LEVEL·명성·경험치 % 변경 없음 · `value||'--'` 금지 · 원본 숫자 0 유지.
+
+**영토 기록 집계 (`resolveUserTerritoryRecord`)**
+
+| 필드 | 표시명 | 소스 · fallback |
+|------|--------|----------------|
+| `current` | 현재 소속 | `__scPlayer` / `getState().territoryId` / `forcedTerritory` · 없으면 **기록 없음** |
+| `moved` | 이동 횟수 | 시즌 아카이브 · exileHistory · 기록 없으면 **--** · **0도 --** |
+| `influence` | 시민 영향력 | `getMyStandings` / `rankReputationScore` · 불가 **--** · **0도 --** |
+| `rank` | 시민 등급 | `getDisplay().rankShort` · **참여자** |
+
+> **「최초 소속」 사용 안 함.** 표시 fallback: `normalizeTerritoryRecordDisplay()`.
 
 ### SC_PROFILE_LAYOUT 좌표 (1024×819 px)
 
@@ -422,6 +487,7 @@ applyProfileFramePixelLayout()
 - 에디터: `window.__scProfileLayoutEditor` (localhost)
 - localStorage: `sc_profile_layout_editor_v3`
 - 업적: `achievement` · `achievementSlots[3]` · `achievementTitles[3]` · `achievementDates[3]`
+- 팔로워 (2026-07-12): `followersLabel` `{785,25,92,33}` · `followers` `{882,25,96,33}` — 4스킨 동일
 
 ---
 
@@ -432,7 +498,7 @@ applyProfileFramePixelLayout()
 | ProfileFrame 좌표 에디터 | UI 토글 · `__scProfileLayoutEditor` |
 | 성향지도 캘리브레이션 | 에디터 패널 · `sc_profile_alignment_axis_max_v1` |
 | 업적 좌표 복사 | 「현재/전체 영토 업적 슬롯 복사」 |
-| 콘솔 | `refreshCurrentProfile()` · `syncActiveProfileLayout('guardian')` |
+| 콘솔 | `refreshCurrentProfile()` · `__scProfileActivity(userId)` · `__scTerritoryRecord(userId)` · `__scFollowLists(userId)` · `FollowListModal.open('following')` |
 
 ---
 
@@ -442,7 +508,7 @@ applyProfileFramePixelLayout()
 |------|------|
 | `docs/PROJECT_CONTEXT.md` | 세계관·디자인·ProfileFrame 상세 |
 | `docs/TODO.md` | 작업 체크리스트 |
-| `docs/CHANGELOG.md` | 최근 변경 (2026-07-10 ProfileFrame·업적·성향지도) |
+| `docs/CHANGELOG.md` | 최근 변경 (2026-07-12 Follow v1 · ProfileFrame 세션) |
 | `docs/ALIGNMENT_REACTION_TUNING.md` | 성향 반응 **정확한 상수표** |
 | `docs/DAILY_ISSUE_CONTENT_GRAVITY.md` | 데일리 이슈 성향 이동 |
 | `docs/PLAYER_LEVEL_PROGRESSION.md` | 레벨·XP·명성 |

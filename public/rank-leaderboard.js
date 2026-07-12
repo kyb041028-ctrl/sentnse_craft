@@ -218,7 +218,7 @@
         '</span>' +
         '<span class="sc-rank-modal__main">' +
         '<strong>' +
-        escapeHtml(shortUserId(row.userId)) +
+        escapeHtml(displayNameForRow(row.userId)) +
         '</strong>' +
         buildBadgeHtml(rankNum) +
         ' · ' +
@@ -262,6 +262,13 @@
     var s = String(id || '');
     if (s.length <= 18) return s;
     return s.slice(0, 8) + '…' + s.slice(-6);
+  }
+
+  function displayNameForRow(userId) {
+    if (typeof global.resolveDisplayName === 'function') {
+      return global.resolveDisplayName(userId) || shortUserId(userId);
+    }
+    return shortUserId(userId);
   }
 
   function initUi() {

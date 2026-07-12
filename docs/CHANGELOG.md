@@ -1,11 +1,196 @@
-﻿# 센텐스크래프트 — 변경 기록 (CHANGELOG)
+# 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-10 (성향지도 캘리브레이션 에디터)
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 세션)
 
 ---
 
 ## [미배포] — 현 작업 이후
+
+### ★ 2026-07-12 — 세션 요약 (Follow System v1 · ProfileFrame)
+
+**Follow System v1**
+- 1차: `follow-list-modal.js` · HUD 팔로워/팔로우 수 클릭 · 2탭 목록 모달 · 프로필 연결 · Empty · `sc_follow_v1`
+- 2차: 팔로잉 탭 `언팔로우` · `toggleFollow` · Toast · 목록·HUD·게시글 버튼 즉시 갱신
+- **다음:** 2차 QA 체크리스트 통과 후 완료 처리
+
+**ProfileFrame**
+- 상단 팔로워: `followersLabel`/`followers` · `getFollowerCount` · 4스킨 좌표 통일 · 금색 라벨 · 명성 톤 숫자 박스 · 에디터 X/Y/W/H · **아이콘 없음(텍스트만)**
+- 표시 안정화: `normalizeProfileActivityDisplay` · `normalizeTerritoryRecordDisplay` · `finalizeProfileDisplayFields`
+- 0 표시: 활동·영토 숫자 **0→`--`** · 팔로워는 **0→`0`**
+- 모달 Overlay: `ensureProfileFrameListLayerBounds` · HUD/모달 동기화 · `__scInspectProfileFrame`
+
+---
+
+### ★ 2026-07-12 — Follow System v1 2차 (팔로잉 탭 언팔로우)
+
+- **팔로잉 탭만** 행 우측 `언팔로우` 버튼 (`board__follow-btn` 스타일)
+- `FollowSystem.toggleFollow(userId)` 재사용 · 클릭 시 `preventDefault`/`stopPropagation`
+- 언팔로우 후 `getFollowing` 재조회 렌더 · HUD 숫자·게시글 팔로우 버튼·랭킹(refresh) 자동 갱신
+- Toast: 「언팔로우했습니다.」 · 팔로워 탭 버튼 없음 · localStorage 전용 유지
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 팔로워 UI 최종 (텍스트 전용)
+
+- **아이콘/Emoji 제거** — 팔로워 라벨 텍스트만 「팔로워」
+- **라벨** — 금색 `#d4a86a` · LEVEL·명성과 동일 폰트 · `padding-right: 14px`
+- **숫자 박스** — layout `followers` rect 크기 적용 · 붉은 금속 테두리 · 어두운 내부 · 명성 톤
+- **좌표 에디터** — 팔로워 숫자 박스 X/Y/Width/Height 실시간 입력
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 팔로워 좌표 (4스킨 통일)
+
+- **팔로워 라벨** `{ x:785, y:25, w:92, h:33 }`
+- **팔로워 숫자 박스** `{ x:882, y:25, w:96, h:33 }`
+- `center` · `pioneer` · `guardian` · `alien` 전 스킨 동일
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 팔로워 영역 UI 폴리싱
+
+- **라벨** — LEVEL·명성과 동일 금색(`#d4a86a`) · text-shadow 통일
+- **숫자 박스** — 명성 PNG 박스와 동일 톤(테두리·배경·radius·inset 광택) · `#followersLayer` 전용 CSS
+- **간격** — 좌표 유지 · 라벨-숫자 밀착 배치
+- 명성·LEVEL·경험치·PNG·기존 좌표 변경 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 상단 팔로워 표시 추가
+
+- **명성 위 빈 공간** — `followersLabel` · `followers` 오버레이 레이어 추가 (PNG·기존 좌표 변경 없음)
+- **데이터:** `FollowSystem.getFollowerCount(userId)` · `profileData.followers` · `finalizeProfileDisplayFields()`에서 확정
+- **표시:** 0명도 `0` (천 단위 구분은 명성과 동일 `formatScProfileDisplayNumber`)
+- **4스킨 좌표:** `SC_PROFILE_LAYOUT_BY_SKIN` — center/pioneer/guardian/alien `followersLabel`·`followers` 추가
+- **좌표 에디터:** 팔로워 라벨·값 타깃 등록 · HUD·모달 ProfileFrame 동일 렌더
+
+---
+
+### ★ 2026-07-12 — Follow System v1 1차 (팔로워·팔로잉 목록)
+
+- **`public/follow-list-modal.js`** — `window.FollowListModal` (`open` · `close` · `render` · `setTab`)
+- 좌측 HUD `#avatar-dock-follow-summary` — **팔로워 N명** / **팔로우 N명** 각각 클릭 → 해당 탭 모달
+- 2탭 모달 (`sc-follow-modal`) — 팔로워 · 팔로잉 · ESC/배경/X 닫기
+- 데이터: `FollowSystem.getFollowers` / `getFollowing` · `sc_follow_v1` localStorage (구조·계산 변경 없음)
+- 시민 행: 통합검색 `sc-search-modal__item` 패턴 · `resolveDisplayName` · 아바타·이름만 프로필 연결
+- Empty: 「아직 팔로워가 없습니다.」 / 「아직 팔로우한 시민이 없습니다.」
+- 정렬: `resolveDisplayName` 가나다 오름차순
+- 디버그: `window.__scFollowLists(userId)` — `{ followers, following }` 조회 전용
+- **2차 예정:** 언팔로우 버튼 · 타인 프로필 팔로워 목록 · 서버 동기화 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 숫자 0 표시 → -- 통일
+
+- **활동 요약·영토 기록 숫자형** (작성 글·댓글·받은 공감·토론 참여·전달한 아우라·이동 횟수·시민 영향력): 화면에서 **0도 `--`**
+- **1 이상**만 실제 숫자 표시 · `formatProfileFrameCountDisplay()` 단일 처리
+- **원본** `activity` / `territory` 숫자 0 유지 · `activityDisplay` / `territoryDisplay`만 변환
+- LEVEL·명성·경험치 % · 현재 소속·시민 등급 표시 규칙 변경 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 모달 Overlay 값 바인딩 버그 수정
+
+- **원인:** 모달 ProfileFrame의 `activitySummaryLayer`·`territoryRecordLayer`가 `id` 없이 `data-pf-layer`만 존재 → HUD용 `#activitySummaryLayer` CSS(100%×100%) 미적용 → 레이어 0×0 + `overflow:hidden`으로 textContent는 설정됐으나 화면에서 클리핑
+- **수정:** `ensureProfileFrameListLayerBounds()` — `applyProfileFramePixelLayout(frameRoot)`에서 목록 레이어 전체 오버레이 크기 확보
+- **렌더 순서:** `renderProfileFrameInModal` — layout 적용 후 `renderProfileData` (`paintModalProfileFrame` · rAF 재실행)
+- **디버그:** `window.__scInspectProfileFrame(userId)` — 최종 data + 모달 DOM textContent·layerBounds 조회
+- frameRoot scoped 조회 유지 (`queryProfileFrameLayer`) · PNG·좌표·SC_PROFILE_LAYOUT 변경 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 활동·영토 빈칸 표시 수정
+
+- **원인:** `formatScProfileDisplayNumber(undefined)` → 빈 문자열 · `aura` 미집계 시 undefined · merge 후 표시값 미확정
+- **표시 정규화 단일화:** `normalizeProfileActivityDisplay()` · `normalizeTerritoryRecordDisplay()` · `finalizeProfileDisplayFields()`
+- **표시 기준:** 실제 값 표시 · **활동·영토 숫자형은 0도 `--`** · 1 이상만 숫자 · 데이터 확인 불가 `--` · 현재 소속 없음 `기록 없음` · 등급 없음 `참여자` · 전달한 아우라 계산 없음 `--` (Mock 숫자 금지)
+- **`value || '--'` 금지** — `null`/`undefined`/`''` 만 `--` 처리
+- 디버그: `window.__scResolvedProfileData(userId)` — 렌더 직전 최종 profileData clone
+- ProfileFrame PNG · 좌표 · HTML/CSS · PlayerProgression 수식 변경 없음
+
+---
+
+### ★ 2026-07-12 — Community System v2 북마크 목록 1차
+
+- HUD `sc-map-tab-bookmarks` (🔖) — 북마크 목록 모달 진입
+- `public/bookmark-list.js` — `sc_bookmarks_v1` 목록 · `findPostByIdAnywhere` · `__scBoardNavigateToPost`
+- 항목 표시: 제목 · 작성자(displayName) · 영토 Badge · 작성시간 · 저장시간
+- 제목 클릭 → 게시글 상세 · 모달 닫힘 · 삭제 → `togglePostBookmark` + Toast
+- Empty: 「저장한 게시글이 없습니다.」 · 정렬: `createdAt` DESC
+- `window.findPostByIdAnywhere` 노출 (읽기 전용)
+- 새 저장소 없음 · 게시글 bundle 구조 변경 없음
+
+---
+
+### ★ 2026-07-12 — Search System v1 완료 (통합검색 · 시민 + 토론)
+
+- **토론 검색** — `sc_board_bundle_v1` 클라이언트 스캔 · 제목 · 본문 · 작성자 `displayName` · 최대 20건 · postId 중복 제거
+- 정렬: 제목 완전/시작/부분 → 본문 → 작성자 displayName
+- 결과 UI: `board__item` 스타일 · 제목 · 본문 말줄임(~50자) · 작성자 · 영토 Badge · 작성시간
+- 제목 클릭 → `__scBoardNavigateToPost()` → 검색 모달 닫힘
+- 디버그: `window.__scSearchDiscussions(query)`
+- **Search System v1 완료** — 통합검색(시민 + 토론) · displayName 기준 · userId 내부 식별자
+
+---
+
+### ★ 2026-07-12 — Search System v1 1차 (통합검색 모달 · 시민 검색)
+
+- 지도 HUD `sc-map-tab-search` (🔍) — 통합검색 진입
+- `sc-search-modal` — 검색창 · **시민** 결과 · **토론** 준비 중 안내
+- `public/search-system.js` — `searchCitizensByDisplayName` · `openSearchModal` / `closeSearchModal` · `renderCitizenSearchResults`
+- 시민 검색: `collectDisplayNameIndex()` + `resolveDisplayName` · displayName 부분 일치 · 완전/시작/부분 일치 정렬 · 최대 15명
+- 결과 클릭(이름·아바타만) → `openUserProfile` → 검색 모달 닫힘
+- 디버그: `window.__scSearchCitizens(query)`
+- **토론 검색 미구현** — 2차 예정
+- ProfileFrame · 지도 · bundle 구조 · PlayerProgression 변경 없음
+
+---
+
+### ★ 2026-07-12 — displayName 통일 기반 (Search System v1 사전 작업)
+
+- `public/display-name.js` — `resolveDisplayName(userId)` · `rememberDisplayName` · `syncCurrentUserDisplayName` · `collectDisplayNameIndex`
+- 우선순위: 로그인 프로필 `nickname` / Auth `display_name` → `sc_display_names_v1` 캐시 → **fallback `userId`**
+- `userId`는 내부 식별자 유지 · 화면 표시·향후 검색은 **displayName 기준**
+- 적용: 게시글 목록·상세·댓글 · 알림 · 랭킹 · 아바타 HUD · Hover `aria-label` · 채팅 · 미니프로필 · 타 유저 ProfileFrame 모달
+- **검색 UI/알고리즘 미구현** — Search System v1은 **검색창 하나 · displayName 기반 통합검색** · 결과 **「시민」+「토론」** 그룹 분리 예정
+- 디버그: `window.__scResolveDisplayName` · `window.__scCollectDisplayNameIndex`
+- 게시글/댓글 bundle 데이터 구조 · ProfileFrame PNG/좌표 · PlayerProgression 수식 변경 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 영토 기록 표시 기준 정정
+
+- **현재 소속**만 사용 — `territory.current`에 `resolveCurrentTerritoryIdForUser()` 기반 현재 영토 표시
+- **「최초 소속」 폐기** — 코드·주석·문서에서 제거 (복원·계산 안 함)
+- 표시 fallback 단일 처리: `normalizeTerritoryRecordDisplay()` — 현재 소속 `기록 없음` · 이동 `0` · 영향력 `0` · 등급 `참여자`
+- `SC_PROFILE_DATA.territory` Mock — 중앙광장 / 0 / 0 / 참여자 (데모 유저)
+- ProfileFrame PNG · 좌표 · HTML/CSS 변경 없음
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 영토 기록 실데이터 연결 1차
+
+- `resolveUserTerritoryRecord(userId)` — 기존 PlayerProgression·유저 버킷·시즌 아카이브·성장 기여 데이터 조회
+- 연결 항목 4개: **현재 소속**(`territory.current`) · **이동 횟수**(`territory.moved`) · **시민 영향력**(`territory.influence`) · **시민 등급**(`territory.rank`)
+- (후속 정정) 최초 소속 로직 제거 → 현재 소속 기준으로 변경
+- 이동 횟수: 시즌 아카이브 주 영토 변경 횟수 · 없으면 exileHistory · 없으면 0
+- 시민 영향력: `getMyStandings` / `rankReputationScore` 재사용 · 없으면 Mock fallback
+- `loadCurrentUserProfile()` · `buildUserProfileDataForModal()` — `mergeResolvedProfileTerritory()` merge
+- 디버그: `window.__scTerritoryRecord(userId)`
+- ProfileFrame PNG · 좌표 · HTML/CSS 변경 없음 · 새 영향력/이동 기록 시스템 미도입
+
+---
+
+### ★ 2026-07-12 — ProfileFrame 활동 요약 실데이터 연결 1차
+
+- `resolveUserProfileActivity(userId)` — 게시판 bundle(`sc_board_bundle_v1`) 기반 활동 집계 헬퍼 추가
+- 연결 항목 5개: **작성 글**(`posts`) · **댓글**(`comments`) · **받은 공감**(`receivedLikes`, empathy만) · **토론 참여**(`discussions`, 서로 다른 postId 수) · **전달한 아우라**(`aura` — 기존 계산값 없어 Mock fallback 유지)
+- `loadCurrentUserProfile()` · `buildUserProfileDataForModal()` — clone 후 `mergeResolvedProfileActivity()` merge (SC_PROFILE_DATA 원본 미변경)
+- 디버그: `window.__scProfileActivity(userId)` · `window.resolveUserProfileActivity(userId)`
+- ProfileFrame PNG · 좌표 · `SC_PROFILE_LAYOUT` · HTML/CSS 변경 없음
+
+---
 
 ### ★ 2026-07-11 — UserCard UX 단순화
 

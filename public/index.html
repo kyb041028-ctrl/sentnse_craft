@@ -2989,6 +2989,400 @@
     .sc-map-tab--ranking {
       min-width: 3.45rem;
     }
+    .sc-map-tab--search {
+      min-width: 3.45rem;
+    }
+    .sc-map-tab--bookmarks {
+      min-width: 3.45rem;
+    }
+    .sc-search-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2015;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .sc-search-modal[hidden] {
+      display: none;
+    }
+    .sc-search-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .sc-search-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(29rem, 100%);
+      max-height: min(85vh, 36rem);
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+    .sc-search-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sc-search-modal__head h2 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sc-search-modal__head button {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+    .sc-search-modal__search {
+      padding: 0.55rem 0.65rem 0.35rem;
+    }
+    .sc-search-modal__input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .sc-search-modal__sections {
+      padding: 0 0.65rem 0.55rem;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .sc-search-modal__section + .sc-search-modal__section {
+      margin-top: 0.65rem;
+      padding-top: 0.55rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sc-search-modal__section-title {
+      margin: 0 0 0.4rem;
+      font-size: 0.72rem;
+    }
+    .sc-search-modal__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .sc-search-modal__item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.3rem;
+      border-radius: 8px;
+      font-size: 0.68rem;
+    }
+    .sc-search-modal__item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .sc-search-modal__thumb {
+      flex-shrink: 0;
+      width: 1.65rem;
+      height: 1.65rem;
+      cursor: pointer;
+    }
+    .sc-search-modal__item-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      min-width: 0;
+    }
+    .sc-search-modal__name {
+      color: #f1f5f9;
+      font-weight: 700;
+      line-height: 1.3;
+      cursor: pointer;
+      width: fit-content;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sc-search-modal__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.58rem;
+      line-height: 1.3;
+    }
+    .sc-search-modal__terr {
+      display: inline-block;
+      padding: 0.04rem 0.28rem;
+      font-size: 0.52rem;
+      font-weight: 700;
+    }
+    .sc-search-modal__empty,
+    .sc-search-modal__placeholder {
+      margin: 0;
+      font-size: 0.62rem;
+      line-height: 1.45;
+    }
+    .sc-search-modal__discussions-list {
+      gap: 0.35rem;
+    }
+    .sc-search-modal__discussions-list .board__item {
+      margin: 0;
+      padding: 0.4rem 0.35rem;
+      border-radius: 8px;
+      list-style: none;
+      cursor: default;
+    }
+    .sc-search-modal__discussions-list .board__item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .sc-search-modal__discussions-list .board__item-hdr {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .sc-search-modal__discussions-list .board__item-title {
+      margin: 0;
+      font-size: 0.68rem;
+      line-height: 1.35;
+    }
+    .sc-search-modal__discussion-snippet {
+      margin: 0;
+      font-size: 0.58rem;
+      line-height: 1.4;
+      color: #94a3b8;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sc-search-modal__discussions-list .board__item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.28rem;
+      font-size: 0.58rem;
+    }
+    .sc-search-modal__discussions-list .board__author-line__text {
+      font-size: 0.58rem;
+    }
+    .sc-bookmark-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2016;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .sc-bookmark-modal[hidden] {
+      display: none;
+    }
+    .sc-bookmark-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .sc-bookmark-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(29rem, 100%);
+      max-height: min(85vh, 36rem);
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+    .sc-bookmark-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sc-bookmark-modal__head h2 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sc-bookmark-modal__head button {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+    .sc-bookmark-modal__body {
+      padding: 0.55rem 0.65rem 0.65rem;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .sc-bookmark-modal__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .sc-bookmark-modal__item {
+      margin: 0;
+      padding: 0.4rem 0.35rem;
+      border-radius: 8px;
+      cursor: default;
+    }
+    .sc-bookmark-modal__item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .sc-bookmark-modal__item .board__item-hdr {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .sc-bookmark-modal__item .board__item-title {
+      margin: 0;
+      font-size: 0.68rem;
+      line-height: 1.35;
+    }
+    .sc-bookmark-modal__title--missing {
+      color: #94a3b8;
+      cursor: default;
+    }
+    .sc-bookmark-modal__item .board__item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.28rem;
+      font-size: 0.58rem;
+    }
+    .sc-bookmark-modal__terr {
+      display: inline-block;
+      padding: 0.04rem 0.28rem;
+      font-size: 0.52rem;
+      font-weight: 700;
+    }
+    .sc-bookmark-modal__remove {
+      margin-left: auto;
+      font-size: 0.58rem;
+      padding: 0.12rem 0.4rem;
+      min-height: 0;
+    }
+    .sc-bookmark-modal__empty {
+      margin: 0;
+      font-size: 0.62rem;
+      line-height: 1.45;
+    }
+    .sc-follow-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2017;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .sc-follow-modal[hidden] {
+      display: none;
+    }
+    .sc-follow-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+    .sc-follow-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(29rem, 100%);
+      max-height: min(85vh, 36rem);
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    }
+    .sc-follow-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sc-follow-modal__head h2 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .sc-follow-modal__head button {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+    .sc-follow-modal__tabs {
+      display: flex;
+      gap: 0.35rem;
+      padding: 0.45rem 0.55rem 0;
+    }
+    .sc-follow-modal__tab {
+      flex: 1 1 0;
+      padding: 0.34rem 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .sc-follow-modal__tab.is-active {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+    }
+    .sc-follow-modal__body {
+      padding: 0.55rem 0.65rem 0.65rem;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .sc-follow-modal__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+    }
+    .sc-follow-modal__list .sc-search-modal__item-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .sc-follow-modal__unfollow {
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .sc-follow-modal__empty {
+      margin: 0;
+      font-size: 0.62rem;
+      line-height: 1.45;
+    }
+    .sc-follow-modal__empty[hidden] {
+      display: none;
+    }
     .sc-tendency-modal {
       position: fixed;
       inset: 0;
@@ -9360,6 +9754,54 @@
       text-align: right;
       padding-right: calc(6px * var(--profile-frame-scale, 1));
     }
+    /* 팔로워 — 라벨 금색(LEVEL·명성 라벨 톤) · 숫자 박스는 명성 PNG 박스 톤 복제 */
+    #followersLabelLayer .profile-frame__data,
+    [data-pf-layer="followersLabelLayer"] .profile-frame__data {
+      justify-content: flex-end;
+      text-align: right;
+      padding-left: 0;
+      padding-right: calc(14px * var(--profile-frame-scale, 1));
+      color: #d4a86a;
+      font-weight: 700;
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        0 0 4px rgba(212, 168, 106, 0.35);
+    }
+    #followersLayer .profile-frame__data,
+    [data-pf-layer="followersLayer"] .profile-frame__data {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      justify-content: stretch;
+      align-items: stretch;
+    }
+    #followersLayer .profile-frame__data-text,
+    [data-pf-layer="followersLayer"] .profile-frame__data-text {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      max-width: none;
+      flex-shrink: 0;
+      padding: 0 calc(6px * var(--profile-frame-scale, 1));
+      border: 1px solid rgba(128, 48, 32, 0.82);
+      border-radius: calc(2px * var(--profile-frame-scale, 1));
+      background: rgba(0, 0, 0, 0.96);
+      color: #f8f1d8;
+      text-align: right;
+      box-shadow:
+        inset 0 1px 0 rgba(128, 55, 35, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.72);
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        0 0 3px rgba(255, 230, 160, 0.28);
+    }
     /* 경험치 게이지 — 영토 무관 공통 (좌 밝은 노랑 → 우 짙은 갈색) */
     #expGaugeLayer {
       z-index: 1;
@@ -9518,6 +9960,30 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.25rem;
+    }
+    .profile-layout-editor__followers-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.28rem 0.45rem;
+      margin: 0.4rem 0 0.5rem;
+      font-size: 0.62rem;
+      color: rgba(248, 241, 216, 0.88);
+    }
+    .profile-layout-editor__followers-box label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+    }
+    .profile-layout-editor__followers-box input {
+      width: 3.4rem;
+      padding: 0.12rem 0.2rem;
+      border-radius: 0.2rem;
+      border: 1px solid rgba(255, 200, 80, 0.35);
+      background: rgba(0, 0, 0, 0.35);
+      color: #f8f1d8;
+      font-size: 0.62rem;
+      text-align: right;
     }
     .profile-layout-editor__alignment-maxes input {
       width: 3.1rem;
@@ -9699,6 +10165,8 @@
     }
     .profile-frame.profile-frame--layout-edit #userIdLayer,
     .profile-frame.profile-frame--layout-edit #levelLayer,
+    .profile-frame.profile-frame--layout-edit #followersLabelLayer,
+    .profile-frame.profile-frame--layout-edit #followersLayer,
     .profile-frame.profile-frame--layout-edit #fameLayer,
     .profile-frame.profile-frame--layout-edit #expLayer,
     .profile-frame.profile-frame--layout-edit #expGaugeLayer,
@@ -9710,6 +10178,8 @@
     }
     .profile-frame.profile-frame--layout-edit #userIdLayer,
     .profile-frame.profile-frame--layout-edit #levelLayer,
+    .profile-frame.profile-frame--layout-edit #followersLabelLayer,
+    .profile-frame.profile-frame--layout-edit #followersLayer,
     .profile-frame.profile-frame--layout-edit #fameLayer,
     .profile-frame.profile-frame--layout-edit #expLayer,
     .profile-frame.profile-frame--layout-edit #expGaugeLayer,
@@ -10294,6 +10764,32 @@
       font-size: 0.56rem;
       color: #64748b;
       line-height: 1.2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.08rem 0.1rem;
+    }
+    .avatar-dock__follow-entry {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      font: inherit;
+      color: inherit;
+      line-height: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .avatar-dock__follow-entry:hover,
+    .avatar-dock__follow-entry:focus-visible {
+      color: #94a3b8;
+      outline: none;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .avatar-dock__follow-sep {
+      pointer-events: none;
+      user-select: none;
     }
 
     /* 경험치 */
@@ -10550,6 +11046,24 @@
           <div class="territory-centrist-hero__frame territory-centrist-hero__frame--island-map">
             <div class="territory-centrist-hero__bg" id="territory-centrist-hero-bg" role="presentation"></div>
             <div class="sc-map-top-tabs" role="toolbar" aria-label="영토 맵 상단 메뉴">
+              <button
+                type="button"
+                id="sc-map-tab-search"
+                class="sc-map-tab sc-map-tab--search"
+                aria-label="통합검색"
+                title="통합검색"
+              >
+                🔍
+              </button>
+              <button
+                type="button"
+                id="sc-map-tab-bookmarks"
+                class="sc-map-tab sc-map-tab--bookmarks"
+                aria-label="북마크"
+                title="저장한 게시글"
+              >
+                🔖
+              </button>
               <button
                 type="button"
                 id="sc-map-tab-ranking"
@@ -11167,6 +11681,14 @@
               <div class="profile-frame__layer" id="levelLayer" data-pf-layer="levelLayer">
                 <span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span>
               </div>
+              <div class="profile-frame__layer" id="followersLabelLayer" data-pf-layer="followersLabelLayer">
+                <span class="profile-frame__data profile-frame__data--align-right">
+                  <span class="profile-frame__data-text">팔로워</span>
+                </span>
+              </div>
+              <div class="profile-frame__layer" id="followersLayer" data-pf-layer="followersLayer">
+                <span class="profile-frame__data"><span class="profile-frame__data-text"></span></span>
+              </div>
               <div class="profile-frame__layer" id="fameLayer" data-pf-layer="fameLayer">
                 <span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span>
               </div>
@@ -11283,8 +11805,13 @@
                   <span class="avatar-territory-badge__suffix">주민</span>
                 </div>
                 <p class="profile-header__follow" id="avatar-dock-follow-summary">
-                  팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명
-                  · 팔로우 <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
+                  <button type="button" class="avatar-dock__follow-entry" id="avatar-dock-follow-followers" data-follow-tab="followers">
+                    팔로워 <span class="avatar-dock__n" id="avatar-meta-followers">0</span>명
+                  </button>
+                  <span class="avatar-dock__follow-sep" aria-hidden="true">·</span>
+                  <button type="button" class="avatar-dock__follow-entry" id="avatar-dock-follow-following" data-follow-tab="following">
+                    팔로우 <span class="avatar-dock__n" id="avatar-meta-following">0</span>명
+                  </button>
                 </p>
                 <span id="avatar-meta-summary" class="avatar-dock__sr-only" aria-hidden="true">Lv. 1 · 중앙광장 주민</span>
                 <span id="avatar-meta-tendency" class="avatar-dock__sr-only" aria-hidden="true">—</span>
@@ -11506,6 +12033,16 @@
       <button type="button" id="profile-layout-editor-reset" class="profile-layout-editor__btn">초기화</button>
     </div>
     <div class="profile-layout-editor__alignment-panel">
+      <p class="profile-layout-editor__subtitle">팔로워 숫자 박스</p>
+      <p class="profile-layout-editor__hint">X · Y · Width · Height — 실시간 반영 · localStorage 저장</p>
+      <div class="profile-layout-editor__followers-box">
+        <label>X <input type="number" id="profile-layout-editor-followers-x" step="1" /></label>
+        <label>Y <input type="number" id="profile-layout-editor-followers-y" step="1" /></label>
+        <label>Width <input type="number" id="profile-layout-editor-followers-w" min="8" step="1" /></label>
+        <label>Height <input type="number" id="profile-layout-editor-followers-h" min="8" step="1" /></label>
+      </div>
+    </div>
+    <div class="profile-layout-editor__alignment-panel">
       <p class="profile-layout-editor__subtitle">성향 지도 캘리브레이션</p>
       <p class="profile-layout-editor__hint">
         <strong id="profile-layout-editor-align-group-label">중앙·개척</strong> 그룹 · 축별 최대치(0~100) 미리보기 · 빨간 점 = 중앙(0)<br />
@@ -11670,6 +12207,111 @@
     </div>
   </div>
 
+  <div
+    id="sc-search-modal"
+    class="sc-search-modal"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sc-search-modal-title"
+  >
+    <div id="sc-search-modal-backdrop" class="sc-search-modal__backdrop"></div>
+    <div class="sc-search-modal__panel">
+      <div class="sc-search-modal__head">
+        <h2 id="sc-search-modal-title">통합검색</h2>
+        <button type="button" id="sc-search-modal-close">닫기</button>
+      </div>
+      <div class="sc-search-modal__search">
+        <input
+          type="search"
+          id="sc-search-modal-input"
+          class="sc-input sc-search-modal__input"
+          placeholder="검색어를 입력하세요"
+          autocomplete="off"
+          enterkeyhint="search"
+          aria-label="검색어"
+        />
+      </div>
+      <div class="sc-search-modal__sections">
+        <section class="sc-search-modal__section" aria-labelledby="sc-search-citizens-title">
+          <h3 id="sc-search-citizens-title" class="sc-section-title sc-search-modal__section-title">시민</h3>
+          <ul id="sc-search-citizens-list" class="sc-search-modal__list" role="list"></ul>
+          <p id="sc-search-citizens-empty" class="sc-search-modal__empty muted">검색어를 입력해 주세요.</p>
+        </section>
+        <section class="sc-search-modal__section" aria-labelledby="sc-search-discussions-title">
+          <h3 id="sc-search-discussions-title" class="sc-section-title sc-search-modal__section-title">토론</h3>
+          <ul id="sc-search-discussions-list" class="sc-search-modal__list sc-search-modal__discussions-list" role="list"></ul>
+          <p id="sc-search-discussions-empty" class="sc-search-modal__empty muted">검색어를 입력해 주세요.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="sc-follow-modal"
+    class="sc-follow-modal"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sc-follow-modal-title"
+  >
+    <div id="sc-follow-modal-backdrop" class="sc-follow-modal__backdrop"></div>
+    <div class="sc-follow-modal__panel">
+      <div class="sc-follow-modal__head">
+        <h2 id="sc-follow-modal-title">팔로우 관계</h2>
+        <button type="button" id="sc-follow-modal-close">닫기</button>
+      </div>
+      <div class="sc-follow-modal__tabs" role="tablist" aria-label="팔로우 관계">
+        <button
+          type="button"
+          class="sc-follow-modal__tab is-active"
+          data-tab="followers"
+          role="tab"
+          aria-selected="true"
+        >
+          팔로워
+        </button>
+        <button
+          type="button"
+          class="sc-follow-modal__tab"
+          data-tab="following"
+          role="tab"
+          aria-selected="false"
+        >
+          팔로잉
+        </button>
+      </div>
+      <div class="sc-follow-modal__body">
+        <ul id="sc-follow-modal-list" class="sc-follow-modal__list" role="list"></ul>
+        <p id="sc-follow-modal-empty" class="sc-follow-modal__empty muted" hidden></p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="sc-bookmark-modal"
+    class="sc-bookmark-modal"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sc-bookmark-modal-title"
+  >
+    <div id="sc-bookmark-modal-backdrop" class="sc-bookmark-modal__backdrop"></div>
+    <div class="sc-bookmark-modal__panel">
+      <div class="sc-bookmark-modal__head">
+        <h2 id="sc-bookmark-modal-title">북마크</h2>
+        <button type="button" id="sc-bookmark-modal-close">닫기</button>
+      </div>
+      <div class="sc-bookmark-modal__body">
+        <ul id="sc-bookmark-modal-list" class="sc-bookmark-modal__list" role="list"></ul>
+        <p id="sc-bookmark-modal-empty" class="sc-bookmark-modal__empty muted">저장한 게시글이 없습니다.</p>
+      </div>
+    </div>
+  </div>
+
   <div id="sc-tendency-modal" class="sc-tendency-modal" hidden aria-hidden="true">
     <div id="sc-tendency-modal-backdrop" class="sc-tendency-modal__backdrop"></div>
     <div class="sc-tendency-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sc-tendency-modal-title">
@@ -11706,6 +12348,7 @@
   <script src="/alignment-scoring.js"></script>
   <script src="/follow-system.js"></script>
   <script src="/player-progression.js"></script>
+  <script src="/display-name.js"></script>
   <script>
     (function () {
       'use strict';
@@ -11898,7 +12541,9 @@
         anchor.setAttribute('role', 'button');
         anchor.setAttribute('tabindex', '0');
         anchor.setAttribute('title', '클릭해서 유저 프로필 보기');
-        anchor.setAttribute('aria-label', id + ' — 클릭해서 유저 프로필 보기');
+        var label =
+          typeof window.resolveDisplayName === 'function' ? window.resolveDisplayName(id) : id;
+        anchor.setAttribute('aria-label', label + ' — 클릭해서 유저 프로필 보기');
         function openProfile(ev) {
           if (ev) {
             ev.preventDefault();
@@ -11958,7 +12603,10 @@
           var thumbEl = buildNotificationActorThumb(actorId);
           var nameEl = document.createElement('span');
           nameEl.className = 'sc-notification-item__actor-name';
-          nameEl.textContent = actorId;
+          nameEl.textContent =
+            typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(actorId)
+              : actorId;
           actorEl.appendChild(thumbEl);
           actorEl.appendChild(nameEl);
           wireNotificationActorProfile(thumbEl, nameEl, actorId);
@@ -13178,6 +13826,9 @@
   </script>
   <script src="/permissions-guide.js"></script>
   <script src="/rank-leaderboard.js"></script>
+  <script src="/search-system.js"></script>
+  <script src="/bookmark-list.js"></script>
+  <script src="/follow-list-modal.js"></script>
   <script src="/tendency-trends-ui.js"></script>
   <script src="/ui-sounds.js"></script>
   <script>
@@ -14037,6 +14688,7 @@
         userId: 'Guest_001',
         level: 12,
         fame: 3450,
+        followers: 24,
         expPercent: 68,
         territorySkin: 'center',
         activity: {
@@ -14048,8 +14700,8 @@
         },
         territory: {
           current: '중앙광장',
-          moved: 2,
-          influence: 1280,
+          moved: 0,
+          influence: 0,
           rank: '참여자',
         },
         alignment: {
@@ -14082,6 +14734,54 @@
         var n = Number(value);
         if (n !== n) return String(value);
         return n.toLocaleString('en-US');
+      }
+
+      function isMissingProfileDisplayValue(value) {
+        return value === null || value === undefined || value === '';
+      }
+
+      /** ProfileFrame 활동·영토 숫자 표시: 1+ 숫자 · 0/--/null/undefined/NaN → -- (원본 데이터는 변경 안 함) */
+      function formatProfileFrameCountDisplay(value, sourceAvailable) {
+        if (!sourceAvailable) return '--';
+        if (isMissingProfileDisplayValue(value)) return '--';
+        var n = Number(value);
+        if (!isFinite(n)) return '--';
+        var v = Math.max(0, Math.floor(n));
+        if (v === 0) return '--';
+        return v.toLocaleString('en-US');
+      }
+
+      function isProfileBoardBundleAvailable() {
+        try {
+          var raw = localStorage.getItem(SC_PROFILE_BOARD_BUNDLE_KEY);
+          if (!raw) return false;
+          var bundle = JSON.parse(raw);
+          return !!(bundle && typeof bundle === 'object' && bundle.posts && typeof bundle.posts === 'object');
+        } catch (_) {
+          return false;
+        }
+      }
+
+      /** ProfileFrame 활동 요약 표시값 정규화 (fallback 단일 처리) */
+      function normalizeProfileActivityDisplay(activity, options) {
+        var opts = options || {};
+        var act = activity || {};
+        var boardOk = opts.boardSourceAvailable === true;
+        var auraOk = opts.auraComputed === true;
+        var allowMockAura = opts.allowMockAura === true;
+        var auraDisplay = '--';
+        if (auraOk && !isMissingProfileDisplayValue(act.aura)) {
+          auraDisplay = formatProfileFrameCountDisplay(act.aura, true);
+        } else if (allowMockAura && !isMissingProfileDisplayValue(act.aura)) {
+          auraDisplay = formatProfileFrameCountDisplay(act.aura, true);
+        }
+        return {
+          posts: formatProfileFrameCountDisplay(act.posts, boardOk),
+          comments: formatProfileFrameCountDisplay(act.comments, boardOk),
+          receivedLikes: formatProfileFrameCountDisplay(act.receivedLikes, boardOk),
+          discussions: formatProfileFrameCountDisplay(act.discussions, boardOk),
+          aura: auraDisplay,
+        };
       }
 
       function clampProfileAlignmentValue(value) {
@@ -14565,41 +15265,42 @@
           var el = layer && layer.querySelector('.profile-frame__data-text');
           if (el) el.textContent = text;
         }
-        /* USER ID · LEVEL · 명성 · 경험치 */
+        /* USER ID · LEVEL · 팔로워 · 명성 · 경험치 */
         setLayerText('userIdLayer', String(data.userId != null ? data.userId : ''));
         setLayerText('levelLayer', String(data.level != null ? data.level : ''));
+        setLayerText('followersLabelLayer', '팔로워');
+        setLayerText(
+          'followersLayer',
+          formatScProfileDisplayNumber(data.followers != null ? data.followers : 0),
+        );
         setLayerText('fameLayer', formatScProfileDisplayNumber(data.fame));
         var expPercent = Math.max(0, Math.min(100, Number(data.expPercent) || 0));
         setLayerText('expLayer', String(Math.round(expPercent)) + '%');
         var gaugeLayer = queryProfileFrameLayer(frameRoot, 'expGaugeLayer');
         var gaugeFill = gaugeLayer && gaugeLayer.querySelector('.profile-frame__exp-gauge-fill');
         if (gaugeFill) gaugeFill.style.width = '100%';
-        /* 활동 요약 */
-        var act = data.activity || {};
-        var actValues = [
-          act.posts,
-          act.comments,
-          act.receivedLikes,
-          act.discussions,
-          act.aura,
-        ];
+        /* 활동 요약 · 영토 기록 — finalizeProfileDisplayFields() 확정 표시값 사용 */
+        var act =
+          data.activityDisplay ||
+          normalizeProfileActivityDisplay(data.activity, {
+            boardSourceAvailable: isProfileBoardBundleAvailable(),
+            auraComputed: false,
+            allowMockAura: false,
+          });
+        var actValues = [act.posts, act.comments, act.receivedLikes, act.discussions, act.aura];
         var actLayer = queryProfileFrameLayer(frameRoot, 'activitySummaryLayer');
         var actEls = actLayer ? actLayer.querySelectorAll('.profile-frame__data-text') : [];
         for (var ai = 0; ai < actEls.length && ai < actValues.length; ai++) {
-          actEls[ai].textContent = formatScProfileDisplayNumber(actValues[ai]);
+          actEls[ai].textContent = String(actValues[ai] != null ? actValues[ai] : '--');
         }
-        /* 영토 기록 */
-        var terr = data.territory || {};
-        var terrValues = [
-          terr.current,
-          formatScProfileDisplayNumber(terr.moved),
-          formatScProfileDisplayNumber(terr.influence),
-          terr.rank,
-        ];
+        var terr =
+          data.territoryDisplay ||
+          normalizeTerritoryRecordDisplay(data.territory || {}, { allowMockCurrent: false });
+        var terrValues = [terr.current, terr.moved, terr.influence, terr.rank];
         var terrLayer = queryProfileFrameLayer(frameRoot, 'territoryRecordLayer');
         var terrEls = terrLayer ? terrLayer.querySelectorAll('.profile-frame__data-text') : [];
         for (var ti = 0; ti < terrEls.length && ti < terrValues.length; ti++) {
-          terrEls[ti].textContent = terrValues[ti] != null ? String(terrValues[ti]) : '';
+          terrEls[ti].textContent = String(terrValues[ti] != null ? terrValues[ti] : '--');
         }
         /* ProfileFrame 영토 PNG 스킨 — layout·axis 보정 후 성향지도 (순서 중요) */
         if (data.territorySkin) {
@@ -14651,6 +15352,117 @@
       window.syncProfileFrameLayoutAfterOpen = syncProfileFrameLayoutAfterOpen;
 
       var SC_PROFILE_AUTH_KEY = 'sc_sb_auth_session';
+      var SC_PROFILE_BOARD_BUNDLE_KEY = 'sc_board_bundle_v1';
+
+      function readProfileBoardBundlePosts() {
+        try {
+          var raw = localStorage.getItem(SC_PROFILE_BOARD_BUNDLE_KEY);
+          if (!raw) return [];
+          var bundle = JSON.parse(raw);
+          var pmap = bundle && bundle.posts;
+          if (!pmap || typeof pmap !== 'object') return [];
+          var seenPostIds = {};
+          var posts = [];
+          Object.keys(pmap).forEach(function (key) {
+            var arr = pmap[key];
+            if (!Array.isArray(arr)) return;
+            arr.forEach(function (p) {
+              if (!p || typeof p !== 'object') return;
+              var pid = String(p.id || '').trim();
+              if (pid) {
+                if (seenPostIds[pid]) return;
+                seenPostIds[pid] = true;
+              }
+              posts.push(p);
+            });
+          });
+          return posts;
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function countProfileEmpathyReactions(reactions) {
+        if (!reactions || typeof reactions !== 'object') return 0;
+        var em = reactions.empathy;
+        return Array.isArray(em) ? em.length : 0;
+      }
+
+      /** 게시판·댓글·공감 집계 → ProfileFrame activity 필드 (posts/comments/receivedLikes/discussions) */
+      function resolveUserProfileActivity(userId) {
+        var id = String(userId || '').trim();
+        var fallback = (window.SC_PROFILE_DATA && window.SC_PROFILE_DATA.activity) || {};
+        var out = {
+          posts: 0,
+          comments: 0,
+          receivedLikes: 0,
+          discussions: 0,
+        };
+        if (!id) {
+          return {
+            posts: Number(fallback.posts) || 0,
+            comments: Number(fallback.comments) || 0,
+            receivedLikes: Number(fallback.receivedLikes) || 0,
+            discussions: Number(fallback.discussions) || 0,
+          };
+        }
+
+        var seenPostIds = {};
+        var seenCommentIds = {};
+        var discussionPostIds = {};
+
+        var posts = readProfileBoardBundlePosts();
+        posts.forEach(function (p) {
+          var pid = String(p.id || '').trim();
+          var authorId = String(p.authorId || '').trim();
+
+          if (authorId && authorId === id) {
+            if (pid) {
+              if (!seenPostIds[pid]) {
+                seenPostIds[pid] = true;
+                out.posts += 1;
+              }
+              discussionPostIds[pid] = true;
+            } else {
+              out.posts += 1;
+            }
+            out.receivedLikes += countProfileEmpathyReactions(p.reactions);
+          }
+
+          var comments = Array.isArray(p.comments) ? p.comments : [];
+          comments.forEach(function (c) {
+            if (!c || typeof c !== 'object') return;
+            var commentAuthor = String(c.authorId || '').trim();
+            if (!commentAuthor || commentAuthor !== id) return;
+            var cid = String(c.id || '').trim();
+            if (cid) {
+              if (seenCommentIds[cid]) return;
+              seenCommentIds[cid] = true;
+            }
+            out.comments += 1;
+            if (pid) discussionPostIds[pid] = true;
+            out.receivedLikes += countProfileEmpathyReactions(c.reactions);
+          });
+        });
+
+        /* 토론 참여: 글·댓글 작성이 있었던 서로 다른 postId 수 (작성 글+댓글 단순 합 아님) */
+        out.discussions = Object.keys(discussionPostIds).length;
+
+        /* 전달한 영향력(aura): 기존 집계 필드 없음 — 반환 생략, merge 시 SC_PROFILE_DATA Mock 유지 */
+        return out;
+      }
+      window.resolveUserProfileActivity = resolveUserProfileActivity;
+      window.__scProfileActivity = resolveUserProfileActivity;
+
+      function mergeResolvedProfileActivity(profile, userId) {
+        if (!profile) return profile;
+        var id = String(userId || '').trim();
+        if (!id) return profile;
+        var resolved = resolveUserProfileActivity(id);
+        if (!resolved || typeof resolved !== 'object') return profile;
+        profile.activity = Object.assign({}, profile.activity || {}, resolved);
+        return profile;
+      }
 
       function cloneScProfileDataBase() {
         try {
@@ -14661,6 +15473,7 @@
             userId: source.userId,
             level: source.level,
             fame: source.fame,
+            followers: source.followers,
             expPercent: source.expPercent,
             territorySkin: source.territorySkin,
             activity: Object.assign({}, source.activity || {}),
@@ -14752,7 +15565,7 @@
             readPoliticalScoresForProfileUser(scoresUserId),
           );
           profile.achievements = normalizeProfileAchievementsList(profile.achievements);
-          return profile;
+          return finalizeProfileDisplayFields(profile, '', { allowMock: true });
         }
 
         var authUser = resolveAuthUserForProfile();
@@ -14831,27 +15644,18 @@
         var tid = String(player.territoryId || 'COMMON').trim() || 'COMMON';
         profile.territorySkin = resolveProfileTerritorySkinKey(resolveProfileTerritoryCssId(tid));
 
-        profile.territory = profile.territory || {};
-        var aff = String(player.affiliationDisplay || '').trim();
-        if (aff) profile.territory.current = aff;
-        else if (P && typeof P.territoryLabelKo === 'function') {
-          var terrLabel = P.territoryLabelKo(tid);
-          if (terrLabel) profile.territory.current = terrLabel;
-        }
-
-        if (P && typeof P.getState === 'function') {
-          var progState = P.getState(scoresUserId);
-          if (progState && progState.receivedPostLikes != null) {
-            profile.activity = profile.activity || {};
-            profile.activity.receivedLikes = progState.receivedPostLikes;
-          }
-        }
+        var activityUserId = String(player.userId || storageUid || '').trim();
+        if (activityUserId) mergeResolvedProfileActivity(profile, activityUserId);
+        if (activityUserId) mergeResolvedProfileTerritory(profile, activityUserId);
 
         profile.alignment = mapPoliticalScoresToProfileAlignment(
           readPoliticalScoresForProfileUser(scoresUserId),
         );
         profile.achievements = normalizeProfileAchievementsList(profile.achievements);
-        return profile;
+        if (typeof window.syncCurrentUserDisplayName === 'function') {
+          window.syncCurrentUserDisplayName();
+        }
+        return finalizeProfileDisplayFields(profile, activityUserId, { forceRealData: true });
       }
 
       window.loadCurrentUserProfile = loadCurrentUserProfile;
@@ -14904,6 +15708,303 @@
         return labels.COMMON;
       }
 
+      var SC_PROFILE_SEASON_ARCHIVE_KEY = 'sc_season_archive_v1';
+
+      function readProfileSeasonArchiveSeasons() {
+        try {
+          var raw = localStorage.getItem(SC_PROFILE_SEASON_ARCHIVE_KEY);
+          if (!raw) return [];
+          var o = JSON.parse(raw);
+          return o && Array.isArray(o.seasons) ? o.seasons : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function primaryTerritoryFromContribMap(map) {
+        if (!map || typeof map !== 'object') return null;
+        var bestTid = null;
+        var bestVal = -1;
+        Object.keys(map).forEach(function (tid) {
+          var n = Number(map[tid]) || 0;
+          if (!isFinite(n) || n <= 0) return;
+          if (n > bestVal) {
+            bestVal = n;
+            bestTid = tid;
+          }
+        });
+        return bestTid ? String(bestTid).trim() : null;
+      }
+
+      /* 시즌 아카이브 territoryHistory 스냅샷 간 주 영토 변경 횟수 (연속 동일 영토는 1회로 취급) */
+      function countSeasonArchiveTerritoryTransitions(userId) {
+        var seasons = readProfileSeasonArchiveSeasons();
+        if (!seasons.length) return 0;
+        var prev = null;
+        var moves = 0;
+        var i;
+        for (i = seasons.length - 1; i >= 0; i--) {
+          var hist = (seasons[i] && seasons[i].territoryHistory) || {};
+          var userHist = hist[userId];
+          var primary = primaryTerritoryFromContribMap(userHist);
+          if (!primary) continue;
+          var norm = normalizeProfileTerritoryIdForSkin(primary);
+          if (prev && norm !== prev) moves += 1;
+          prev = norm;
+        }
+        return moves;
+      }
+
+      function readProfileUserModerationState(userId) {
+        var bucket = readPoliticalScoresBucket(userId);
+        if (!bucket || typeof bucket !== 'object') return null;
+        var s = bucket.userModerationState;
+        return s && typeof s === 'object' ? s : null;
+      }
+
+      function resolveTerritoryMoveCount(userId) {
+        var moves = countSeasonArchiveTerritoryTransitions(userId);
+        if (moves > 0) return moves;
+        var ms = readProfileUserModerationState(userId);
+        if (ms && Array.isArray(ms.exileHistory) && ms.exileHistory.length) {
+          return ms.exileHistory.length;
+        }
+        return 0;
+      }
+
+      function resolveTerritoryInfluenceScore(userId) {
+        var P = window.PlayerProgression;
+        if (!P || !userId) return null;
+        if (typeof P.getMyStandings === 'function') {
+          var standings = P.getMyStandings(userId);
+          if (standings && typeof standings.score === 'number' && isFinite(standings.score)) {
+            return Math.max(0, Math.floor(standings.score));
+          }
+        }
+        if (typeof P.rankReputationScore === 'function' && typeof P.getState === 'function') {
+          var rep = P.rankReputationScore(P.getState(userId));
+          if (typeof rep === 'number' && isFinite(rep)) return Math.max(0, Math.floor(rep));
+        }
+        return null;
+      }
+
+      /** 현재 소속 영토 ID — PlayerProgression · __scPlayer · 유저 버킷 forcedTerritory */
+      function resolveCurrentTerritoryIdForUser(userId) {
+        var id = String(userId || '').trim();
+        if (!id) return null;
+        var meR = String((window.__scPlayer && window.__scPlayer.userId) || '').trim();
+        if (id === meR && window.__scPlayer && window.__scPlayer.territoryId) {
+          return normalizeProfileTerritoryIdForSkin(window.__scPlayer.territoryId);
+        }
+        var P = window.PlayerProgression;
+        if (P && typeof P.getState === 'function') {
+          var st = P.getState(id);
+          if (st && st.territoryId) return normalizeProfileTerritoryIdForSkin(st.territoryId);
+        }
+        var bucket = readPoliticalScoresBucket(id);
+        if (bucket && bucket.forcedTerritory) {
+          return normalizeProfileTerritoryIdForSkin(bucket.forcedTerritory);
+        }
+        return null;
+      }
+
+      function resolveTerritoryMoveCountInfo(userId) {
+        var hasArchive = false;
+        try {
+          hasArchive = !!localStorage.getItem(SC_PROFILE_SEASON_ARCHIVE_KEY);
+        } catch (_) {}
+        var ms = readProfileUserModerationState(userId);
+        var hasModState = !!(ms && typeof ms === 'object');
+        if (!hasArchive && !hasModState) {
+          return { available: false, value: null };
+        }
+        return { available: true, value: resolveTerritoryMoveCount(userId) };
+      }
+
+      /** ProfileFrame 영토 기록 표시값 정규화 (fallback 단일 처리) */
+      function normalizeTerritoryRecordDisplay(record, options) {
+        var opts = options || {};
+        var mock = (window.SC_PROFILE_DATA && window.SC_PROFILE_DATA.territory) || {};
+        var raw = record || {};
+        var out = {};
+        var currentStr = String(raw.current != null ? raw.current : '').trim();
+        if (currentStr) {
+          out.current = currentStr;
+        } else if (opts.allowMockCurrent && String(mock.current || '').trim()) {
+          out.current = String(mock.current).trim();
+        } else {
+          out.current = '기록 없음';
+        }
+        if (raw._moveSourceAvailable === true && !isMissingProfileDisplayValue(raw.moved)) {
+          out.moved = formatProfileFrameCountDisplay(raw.moved, true);
+        } else {
+          out.moved = '--';
+        }
+        if (raw._influenceAvailable === true && !isMissingProfileDisplayValue(raw.influence)) {
+          out.influence = formatProfileFrameCountDisplay(raw.influence, true);
+        } else {
+          out.influence = '--';
+        }
+        var rankStr = String(raw.rank != null ? raw.rank : '').trim();
+        out.rank = rankStr || '참여자';
+        return out;
+      }
+
+      /** PlayerProgression·유저 메타 → ProfileFrame territory 원시 필드 */
+      function resolveUserTerritoryRecordRaw(userId) {
+        var id = String(userId || '').trim();
+        if (!id) return {};
+
+        var raw = {};
+        var currentTid = resolveCurrentTerritoryIdForUser(id);
+        if (currentTid) raw.current = profileTerritoryDisplayLabel(currentTid);
+
+        var moveInfo = resolveTerritoryMoveCountInfo(id);
+        raw._moveSourceAvailable = moveInfo.available;
+        if (moveInfo.available) raw.moved = moveInfo.value;
+
+        var influence = resolveTerritoryInfluenceScore(id);
+        raw._influenceAvailable = influence != null;
+        if (influence != null) raw.influence = influence;
+
+        var P = window.PlayerProgression;
+        if (P && typeof P.getDisplay === 'function') {
+          var display = P.getDisplay(id);
+          if (display && display.rankShort) raw.rank = display.rankShort;
+        }
+
+        return raw;
+      }
+
+      /** PlayerProgression·유저 메타 → ProfileFrame territory 표시 필드 */
+      function resolveUserTerritoryRecord(userId) {
+        var id = String(userId || '').trim();
+        if (!id) {
+          return normalizeTerritoryRecordDisplay({}, { allowMockCurrent: true });
+        }
+        return normalizeTerritoryRecordDisplay(resolveUserTerritoryRecordRaw(id), {
+          allowMockCurrent: false,
+        });
+      }
+      window.resolveUserTerritoryRecord = resolveUserTerritoryRecord;
+      window.__scTerritoryRecord = resolveUserTerritoryRecord;
+
+      function resolveProfileFollowerCount(userId) {
+        var id = String(userId || '').trim();
+        if (!id) {
+          id =
+            String((window.__scPlayer && window.__scPlayer.userId) || 'guest').trim() || 'guest';
+        }
+        var FS = window.FollowSystem;
+        if (FS && typeof FS.getFollowerCount === 'function') {
+          var n = Number(FS.getFollowerCount(id));
+          if (isFinite(n)) return Math.max(0, Math.floor(n));
+        }
+        return 0;
+      }
+
+      /** merge·모달 빌드 직후 — renderProfileData 전 표시값 확정 */
+      function finalizeProfileDisplayFields(profile, userId, options) {
+        if (!profile) return profile;
+        var opts = options || {};
+        var id = String(userId || profile.authUserId || '').trim();
+        if (!id) {
+          id =
+            String((window.__scPlayer && window.__scPlayer.userId) || 'guest').trim() || 'guest';
+        }
+        profile.followers = resolveProfileFollowerCount(id);
+        var allowMock =
+          opts.allowMock === true ||
+          (!hasAuthenticatedProfileSession() && !opts.forceRealData);
+        profile.activityDisplay = normalizeProfileActivityDisplay(profile.activity, {
+          boardSourceAvailable: isProfileBoardBundleAvailable(),
+          auraComputed: false,
+          allowMockAura: allowMock,
+        });
+        var terrRaw = id ? resolveUserTerritoryRecordRaw(id) : {};
+        profile.territoryDisplay = normalizeTerritoryRecordDisplay(terrRaw, {
+          allowMockCurrent: allowMock && !id,
+        });
+        return profile;
+      }
+      window.finalizeProfileDisplayFields = finalizeProfileDisplayFields;
+
+      window.__scResolvedProfileData = function (userId) {
+        var id = String(userId || '').trim();
+        var meR = String((window.__scPlayer && window.__scPlayer.userId) || '').trim();
+        var profile;
+        if (id && id !== meR && typeof window.buildUserProfileDataForModal === 'function') {
+          profile = window.buildUserProfileDataForModal(id);
+        } else if (typeof window.getCurrentProfileData === 'function') {
+          profile = window.getCurrentProfileData();
+        } else {
+          profile = loadCurrentUserProfile();
+        }
+        try {
+          return JSON.parse(JSON.stringify(profile));
+        } catch (_) {
+          return profile;
+        }
+      };
+
+      window.__scInspectProfileFrame = function (userId) {
+        var id = String(userId || '').trim();
+        var data =
+          typeof window.__scResolvedProfileData === 'function'
+            ? window.__scResolvedProfileData(id)
+            : null;
+        var mount = document.getElementById('sc-profile-modal-frame-mount');
+        var frame = mount && mount.querySelector('.profile-frame');
+        function inspectText(layerId, index) {
+          var layer =
+            frame && typeof window.queryProfileFrameLayer === 'function'
+              ? window.queryProfileFrameLayer(frame, layerId)
+              : null;
+          var texts = layer ? layer.querySelectorAll('.profile-frame__data-text') : [];
+          var el = texts[index] || null;
+          var layerRect = layer ? layer.getBoundingClientRect() : null;
+          return {
+            found: !!el,
+            text: el ? el.textContent : null,
+            layerBounds:
+              layerRect && layerRect.width > 0 && layerRect.height > 0 ? 'ok' : 'zero',
+          };
+        }
+        var actD = (data && data.activityDisplay) || {};
+        var terrD = (data && data.territoryDisplay) || {};
+        return {
+          data: data,
+          frameFound: !!frame,
+          modalFields: {
+            posts: inspectText('activitySummaryLayer', 0),
+            comments: inspectText('activitySummaryLayer', 1),
+            receivedLikes: inspectText('activitySummaryLayer', 2),
+            discussions: inspectText('activitySummaryLayer', 3),
+            aura: inspectText('activitySummaryLayer', 4),
+            current: inspectText('territoryRecordLayer', 0),
+            moved: inspectText('territoryRecordLayer', 1),
+            influence: inspectText('territoryRecordLayer', 2),
+            rank: inspectText('territoryRecordLayer', 3),
+          },
+          expected: { activity: actD, territory: terrD },
+        };
+      };
+
+      function mergeResolvedProfileTerritory(profile, userId) {
+        if (!profile) return profile;
+        var id = String(userId || '').trim();
+        if (!id) return profile;
+        var resolved = resolveUserTerritoryRecordRaw(id);
+        if (!resolved || typeof resolved !== 'object') return profile;
+        var mergePatch = {};
+        if (resolved.current) mergePatch.current = resolved.current;
+        if (resolved.rank) mergePatch.rank = resolved.rank;
+        if (resolved._moveSourceAvailable) mergePatch.moved = resolved.moved;
+        if (resolved._influenceAvailable) mergePatch.influence = resolved.influence;
+        profile.territory = Object.assign({}, profile.territory || {}, mergePatch);
+        return profile;
+      }
+
       window.buildUserProfileDataForModal = function (userId) {
         var id = String(userId || '').trim();
         var profile = cloneScProfileDataBase();
@@ -14918,6 +16019,8 @@
             Object.keys(current).forEach(function (k) {
               if (k === 'activity' || k === 'territory' || k === 'alignment') {
                 profile[k] = Object.assign({}, current[k] || {});
+              } else if (k === 'activityDisplay' || k === 'territoryDisplay') {
+                profile[k] = Object.assign({}, current[k] || {});
               } else if (k === 'achievements' && Array.isArray(current.achievements)) {
                 profile.achievements = current.achievements.slice();
               } else {
@@ -14926,7 +16029,7 @@
             });
             profile.userId = current.userId || id;
             profile.achievements = normalizeProfileAchievementsList(profile.achievements);
-            return profile;
+            return finalizeProfileDisplayFields(profile, id, { forceRealData: true });
           }
         }
 
@@ -14964,13 +16067,7 @@
           }
           if (typeof P.getState === 'function') {
             var st = P.getState(id);
-            if (st) {
-              if (st.territoryId) territoryId = st.territoryId;
-              profile.activity = profile.activity || {};
-              if (st.receivedPostLikes != null) {
-                profile.activity.receivedLikes = st.receivedPostLikes;
-              }
-            }
+            if (st && st.territoryId) territoryId = st.territoryId;
           }
           if (typeof P.getMyStandings === 'function') {
             var standings = P.getMyStandings(id);
@@ -14986,15 +16083,23 @@
         }
 
         profile.territorySkin = territoryIdToProfileSkin(territoryId);
-        profile.territory = profile.territory || {};
-        if (!profile.territory.current) {
-          profile.territory.current = profileTerritoryDisplayLabel(territoryId);
-        }
         profile.alignment = mapPoliticalScoresToProfileAlignment(
           readPoliticalScoresForProfileUser(id),
         );
         profile.achievements = normalizeProfileAchievementsList(profile.achievements);
-        return profile;
+        mergeResolvedProfileActivity(profile, id);
+        mergeResolvedProfileTerritory(profile, id);
+        if (id && id !== meR) {
+          var resolvedName =
+            typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(id)
+              : id;
+          if (resolvedName && resolvedName !== id) {
+            profile.nickname = resolvedName;
+            profile.userId = resolvedName;
+          }
+        }
+        return finalizeProfileDisplayFields(profile, id, { forceRealData: true });
       };
 
       function buildScProfileModalFrameMarkup() {
@@ -15005,6 +16110,8 @@
           '<div class="profile-frame__overlay">' +
           '<div class="profile-frame__layer" data-pf-layer="userIdLayer"><span class="profile-frame__data profile-frame__data--align-left"><span class="profile-frame__data-text"></span></span></div>' +
           '<div class="profile-frame__layer" data-pf-layer="levelLayer"><span class="profile-frame__data profile-frame__data--align-center"><span class="profile-frame__data-text"></span></span></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="followersLabelLayer"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text">팔로워</span></span></div>' +
+          '<div class="profile-frame__layer" data-pf-layer="followersLayer"><span class="profile-frame__data"><span class="profile-frame__data-text"></span></span></div>' +
           '<div class="profile-frame__layer" data-pf-layer="fameLayer"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></div>' +
           '<div class="profile-frame__layer" data-pf-layer="expGaugeLayer" aria-hidden="true"><div class="profile-frame__exp-gauge-fill"></div></div>' +
           '<div class="profile-frame__layer" data-pf-layer="expLayer"><span class="profile-frame__data profile-frame__data--align-right"><span class="profile-frame__data-text"></span></span></div>' +
@@ -15064,11 +16171,15 @@
         var data = window.buildUserProfileDataForModal(userId);
         if (loading) loading.hidden = true;
         mount.hidden = false;
-        window.renderProfileData(data, { frameRoot: frame });
-        requestAnimationFrame(function () {
+        function paintModalProfileFrame() {
           if (typeof window.applyProfileFramePixelLayout === 'function') {
             window.applyProfileFramePixelLayout(frame);
           }
+          window.renderProfileData(data, { frameRoot: frame });
+        }
+        paintModalProfileFrame();
+        requestAnimationFrame(function () {
+          paintModalProfileFrame();
         });
         if (typeof ResizeObserver !== 'undefined' && !frame.__scModalLayoutRo) {
           frame.__scModalLayoutRo = new ResizeObserver(function () {
@@ -15156,6 +16267,8 @@
       var SC_PROFILE_LAYOUT_CENTER = {
         userId: { x: 403, y: 31, w: 246, h: 20 },
         level: { x: 404, y: 77, w: 53, h: 20 },
+        followersLabel: { x: 785, y: 25, w: 92, h: 33 },
+        followers: { x: 882, y: 25, w: 96, h: 33 },
         fame: { x: 731, y: 78, w: 241, h: 20 },
         exp: { x: 393, y: 121, w: 579, h: 20 },
         expGauge: { x: 392, y: 126, w: 590, h: 10 },
@@ -15196,6 +16309,8 @@
         guardian: {
           userId: { x: 403, y: 31, w: 246, h: 20 },
           level: { x: 404, y: 77, w: 53, h: 20 },
+          followersLabel: { x: 785, y: 25, w: 92, h: 33 },
+          followers: { x: 882, y: 25, w: 96, h: 33 },
           fame: { x: 731, y: 78, w: 241, h: 20 },
           exp: { x: 393, y: 121, w: 579, h: 20 },
           expGauge: { x: 392, y: 126, w: 590, h: 10 },
@@ -15233,6 +16348,8 @@
         alien: {
           userId: { x: 403, y: 31, w: 246, h: 20 },
           level: { x: 404, y: 77, w: 53, h: 20 },
+          followersLabel: { x: 785, y: 25, w: 92, h: 33 },
+          followers: { x: 882, y: 25, w: 96, h: 33 },
           fame: { x: 731, y: 78, w: 241, h: 20 },
           exp: { x: 393, y: 121, w: 579, h: 20 },
           expGauge: { x: 392, y: 126, w: 590, h: 10 },
@@ -15326,7 +16443,7 @@
 
       function mergeProfileLayoutOverride(base, parsed) {
         if (!parsed || typeof parsed !== 'object') return base;
-        ['userId', 'level', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
+        ['userId', 'level', 'followersLabel', 'followers', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
           if (parsed[key] && typeof parsed[key] === 'object') {
             Object.assign(base[key], parsed[key]);
           }
@@ -15454,6 +16571,16 @@
         dataEl.appendChild(inner);
       }
 
+      /** HUD #activitySummaryLayer CSS와 동일 — 모달(data-pf-layer만) 레이어 0×0 클리핑 방지 */
+      function ensureProfileFrameListLayerBounds(layer) {
+        if (!layer) return;
+        layer.style.left = '0';
+        layer.style.top = '0';
+        layer.style.width = '100%';
+        layer.style.height = '100%';
+        layer.style.pointerEvents = 'none';
+      }
+
       function queryProfileFrameLayer(frameRoot, layerId) {
         if (frameRoot && frameRoot.querySelector) {
           return frameRoot.querySelector('[data-pf-layer="' + layerId + '"]');
@@ -15471,7 +16598,7 @@
         var scale = width / SC_PROFILE_LAYOUT_REF.w;
         frame.style.setProperty('--profile-frame-scale', String(scale));
         var L = SC_PROFILE_LAYOUT;
-        ['userIdLayer', 'levelLayer', 'fameLayer', 'expLayer'].forEach(function (layerId) {
+        ['userIdLayer', 'levelLayer', 'followersLabelLayer', 'followersLayer', 'fameLayer', 'expLayer'].forEach(function (layerId) {
           var layerEl = queryProfileFrameLayer(frame, layerId);
           if (!layerEl) return;
           var dataEl = layerEl.querySelector('.profile-frame__data');
@@ -15479,6 +16606,16 @@
         });
         applyProfileFrameRect(queryProfileFrameLayer(frame, 'userIdLayer'), L.userId, scale);
         applyProfileFrameRect(queryProfileFrameLayer(frame, 'levelLayer'), L.level, scale);
+        if (L.followersLabel) {
+          applyProfileFrameRect(
+            queryProfileFrameLayer(frame, 'followersLabelLayer'),
+            L.followersLabel,
+            scale,
+          );
+        }
+        if (L.followers) {
+          applyProfileFrameRect(queryProfileFrameLayer(frame, 'followersLayer'), L.followers, scale);
+        }
         applyProfileFrameRect(queryProfileFrameLayer(frame, 'fameLayer'), L.fame, scale);
         applyProfileFrameRect(queryProfileFrameLayer(frame, 'expLayer'), L.exp, scale);
         if (L.expGauge) {
@@ -15512,6 +16649,7 @@
         }
         var actLayer = queryProfileFrameLayer(frame, 'activitySummaryLayer');
         if (actLayer) {
+          ensureProfileFrameListLayerBounds(actLayer);
           var actRows = actLayer.querySelectorAll('.profile-frame__data-row');
           for (var ai = 0; ai < L.activity.length && ai < actRows.length; ai++) {
             ensureProfileFrameDataTextWrap(actRows[ai].querySelector('.profile-frame__data'));
@@ -15520,6 +16658,7 @@
         }
         var terrLayer = queryProfileFrameLayer(frame, 'territoryRecordLayer');
         if (terrLayer) {
+          ensureProfileFrameListLayerBounds(terrLayer);
           var terrRows = terrLayer.querySelectorAll('.profile-frame__data-row');
           for (var ti = 0; ti < L.territory.length && ti < terrRows.length; ti++) {
             applyProfileFrameRect(terrRows[ti], L.territory[ti], scale);
@@ -15623,6 +16762,38 @@
         var alignCopyBtn = document.getElementById('profile-layout-editor-align-copy');
         var achievementCopyBtn = document.getElementById('profile-layout-editor-achievement-copy');
         var achievementCopyAllBtn = document.getElementById('profile-layout-editor-achievement-copy-all');
+        var followersBoxInputs = {
+          x: document.getElementById('profile-layout-editor-followers-x'),
+          y: document.getElementById('profile-layout-editor-followers-y'),
+          w: document.getElementById('profile-layout-editor-followers-w'),
+          h: document.getElementById('profile-layout-editor-followers-h'),
+        };
+
+        function getFollowersBoxRect() {
+          if (!SC_PROFILE_LAYOUT.followers) {
+            SC_PROFILE_LAYOUT.followers = { x: 882, y: 25, w: 96, h: 33 };
+          }
+          return SC_PROFILE_LAYOUT.followers;
+        }
+
+        function syncFollowersBoxInputsFromLayout() {
+          var rect = getFollowersBoxRect();
+          if (followersBoxInputs.x) followersBoxInputs.x.value = String(roundPx(rect.x));
+          if (followersBoxInputs.y) followersBoxInputs.y.value = String(roundPx(rect.y));
+          if (followersBoxInputs.w) followersBoxInputs.w.value = String(roundPx(rect.w));
+          if (followersBoxInputs.h) followersBoxInputs.h.value = String(roundPx(rect.h));
+        }
+
+        function applyFollowersBoxFromInputs() {
+          var rect = getFollowersBoxRect();
+          if (followersBoxInputs.x) rect.x = roundPx(followersBoxInputs.x.value);
+          if (followersBoxInputs.y) rect.y = roundPx(followersBoxInputs.y.value);
+          if (followersBoxInputs.w) rect.w = Math.max(8, roundPx(followersBoxInputs.w.value));
+          if (followersBoxInputs.h) rect.h = Math.max(8, roundPx(followersBoxInputs.h.value));
+          saveProfileLayoutToStorage();
+          applyProfileFramePixelLayout(frame);
+          updateSelectionPanel();
+        }
 
         function clampAlignmentEditorMax(value) {
           return Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
@@ -15910,6 +17081,8 @@
           var singles = [
             ['userId', 'userIdLayer', 'USER ID'],
             ['level', 'levelLayer', 'LEVEL'],
+            ['followersLabel', 'followersLabelLayer', '팔로워 라벨'],
+            ['followers', 'followersLayer', '팔로워 숫자 박스'],
             ['fame', 'fameLayer', '명성'],
             ['exp', 'expLayer', '경험치'],
             ['expGauge', 'expGaugeLayer', '경험치 게이지'],
@@ -15999,7 +17172,7 @@
         function snapshotProfileLayoutForCopy() {
           var snap = cloneProfileLayout(SC_PROFILE_LAYOUT);
           ensureAchievementLayoutDefaults(snap);
-          ['userId', 'level', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
+          ['userId', 'level', 'followersLabel', 'followers', 'fame', 'exp', 'expGauge', 'alignmentMap', 'achievement'].forEach(function (key) {
             roundLayoutRect(snap[key]);
           });
           snap.activity.forEach(roundLayoutRect);
@@ -16028,6 +17201,8 @@
             '        ' + layoutKey + ': {',
             '          userId: ' + formatRectForCopy(L.userId) + ',',
             '          level: ' + formatRectForCopy(L.level) + ',',
+            '          followersLabel: ' + formatRectForCopy(L.followersLabel) + ',',
+            '          followers: ' + formatRectForCopy(L.followers) + ',',
             '          fame: ' + formatRectForCopy(L.fame) + ',',
             '          exp: ' + formatRectForCopy(L.exp) + ',',
             '          expGauge: ' + formatRectForCopy(L.expGauge) + ',',
@@ -16115,6 +17290,7 @@
           saveProfileLayoutToStorage();
           applyProfileFramePixelLayout(frame);
           updateSelectionPanel();
+          syncFollowersBoxInputsFromLayout();
         }
 
         function getFrameScale() {
@@ -16218,6 +17394,7 @@
             refreshTargetSelectionClasses();
             applyProfileFramePixelLayout(frame);
             syncActiveAlignmentEditorMax();
+            syncFollowersBoxInputsFromLayout();
           }
           if (typeof window.refreshProfileAlignmentMapDisplay === 'function') {
             window.refreshProfileAlignmentMapDisplay();
@@ -16285,6 +17462,12 @@
           if (!input) return;
           input.addEventListener('change', applyAlignmentEditorMaxFromInputs);
           input.addEventListener('input', applyAlignmentEditorMaxFromInputs);
+        });
+        ['x', 'y', 'w', 'h'].forEach(function (key) {
+          var input = followersBoxInputs[key];
+          if (!input) return;
+          input.addEventListener('change', applyFollowersBoxFromInputs);
+          input.addEventListener('input', applyFollowersBoxFromInputs);
         });
         window.addEventListener('keydown', onEditorKeyDown);
 
@@ -16694,7 +17877,12 @@
       /* ────────────────────────────────────────────────────────────────── */
 
       function setMeta(userId, tendency, territory, rank, tendencyPct) {
-        if (elUser) elUser.textContent = userId;
+        if (elUser) {
+          elUser.textContent =
+            typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(userId) || userId
+              : userId;
+        }
         if (elTen) elTen.textContent = tendency;
         if (elTerr) elTerr.textContent = territory;
         if (elRank) elRank.textContent = formatHeroRank(rank);
@@ -17009,7 +18197,11 @@
           added++;
           var p = document.createElement('p');
           p.className = 'chat-rail__line';
-          p.textContent = m.userId + '(' + m.affiliation + ') : ' + m.text;
+          var chatUser =
+            typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(m.userId) || m.userId
+              : m.userId;
+          p.textContent = chatUser + '(' + m.affiliation + ') : ' + m.text;
           box.appendChild(p);
         });
         if (added > 0 && collapsed && chatPollReady) {
@@ -18476,10 +19668,18 @@
         var col = document.createElement('div');
         col.className = 'board__author-line__text board-post-detail__author-info';
         var authorStr = String(authorId || '').trim();
+        var displayAuthor =
+          blindKanta || !authorStr
+            ? blindKanta
+              ? '????'
+              : '익명'
+            : typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(authorStr) || authorStr
+              : authorStr;
 
         var nameEl = document.createElement('div');
         nameEl.className = 'board-post-detail__author-name';
-        nameEl.textContent = blindKanta ? '????' : authorStr || '익명';
+        nameEl.textContent = displayAuthor;
         col.appendChild(nameEl);
 
         if (!blindKanta) {
@@ -18651,7 +19851,10 @@
         var activity = resolveScMiniProfileActivityCounts(id);
         return {
           userId: id,
-          nickname: id || '익명',
+          nickname:
+            (typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(id)
+              : id) || '익명',
           photoUrl:
             typeof window.__scGetProfilePhotoDataUrl === 'function'
               ? window.__scGetProfilePhotoDataUrl(id)
@@ -21091,7 +22294,11 @@
         metaTxt.className = 'board__author-line__text';
         var authorNameEl = document.createElement('span');
         authorNameEl.className = 'board__comment-author-name';
-        authorNameEl.textContent = authorStr || '익명';
+        authorNameEl.textContent = blindC
+          ? '????'
+          : (typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(authorStr) || authorStr
+              : authorStr) || '익명';
         var dateEl = document.createElement('span');
         dateEl.className = 'board__comment-author-date';
         dateEl.textContent = ' · ' + formatDate(c.createdAt) + tail;
@@ -24567,6 +25774,7 @@
         }
         return null;
       }
+      window.findPostByIdAnywhere = findPostByIdAnywhere;
 
       function sanitizeTitle(s) {
         var raw = String(s || '')
@@ -25751,7 +26959,14 @@
         meta.appendChild(buildBoardAuthorThumb(p.authorId, blindKanta));
         var metaTxt = document.createElement('span');
         metaTxt.className = 'board__author-line__text';
-        metaTxt.appendChild(document.createTextNode((p.authorId || '익명') + ' · ' + formatDate(p.createdAt)));
+        var authorDisplay = blindKanta
+          ? '????'
+          : (typeof window.resolveDisplayName === 'function'
+              ? window.resolveDisplayName(authorStr) || authorStr
+              : authorStr) || '익명';
+        metaTxt.appendChild(
+          document.createTextNode(authorDisplay + ' · ' + formatDate(p.createdAt)),
+        );
         if (isCommonSpace(currentTerritory) && p.category) {
           var catTag = document.createElement('span');
           catTag.className = 'board__item-cat';

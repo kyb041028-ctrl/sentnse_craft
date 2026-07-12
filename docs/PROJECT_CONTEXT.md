@@ -1,7 +1,7 @@
 # 센텐스크래프트 — 프로젝트 컨텍스트
 
 > 다른 Cursor 세션에서 이 문서를 먼저 읽어 프로젝트 전체 맥락을 파악하세요.
-> 마지막 업데이트: 2026-07-10 (ProfileFrame · 성향지도 · 업적)
+> 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 팔로워·표시 안정화)
 >
 > **AI 인수인계 요약:** `docs/AI_HANDOFF.md` ← 새 세션 시 이 문서도 함께 읽기
 
@@ -203,9 +203,15 @@ public/assets/territories/emblems/
 ```
 SC_PROFILE_DATA
       ↓
-getCurrentProfileData()    ← Mock Adapter (추후 Firebase/로그인 교체 지점)
+getCurrentProfileData()    ← loadCurrentUserProfile() merge (Auth · progression · 활동 요약)
       ↓
-renderProfileData(data)    ← 텍스트 · territorySkin PNG · expGauge
+buildUserProfileDataForModal(userId)  ← 타인 프로필 모달 (활동 요약 merge)
+      ↓
+finalizeProfileDisplayFields()  ← activityDisplay · territoryDisplay 확정
+      ↓
+applyProfileFramePixelLayout(frameRoot)  ← 목록 레이어 bounds (모달 클리핑 방지)
+      ↓
+renderProfileData(data, { frameRoot })    ← activityDisplay/territoryDisplay · territorySkin PNG · expGauge
       ↓
 ProfileFrame
 ```
@@ -227,6 +233,13 @@ ProfileFrame
 |------|------|
 | `window.SC_PROFILE_DATA` | 더미 단일 소스 (개발·테스트) |
 | `window.getCurrentProfileData()` | 프로필 객체 반환 (안전 복사) |
+| `window.resolveUserProfileActivity(userId)` | 활동 요약 5칸 집계 (게시판 bundle · postId/commentId 중복 제거) |
+| `window.resolveUserTerritoryRecord(userId)` | 영토 기록 4칸 집계 (PlayerProgression · 시즌 아카이브 · 유저 버킷) |
+| `window.finalizeProfileDisplayFields(profile, userId)` | 렌더 직전 `activityDisplay` · `territoryDisplay` 확정 |
+| `window.__scResolvedProfileData(userId)` | 렌더 직전 최종 profileData clone (디버그) |
+| `window.__scInspectProfileFrame(userId)` | 최종 data + 모달 DOM textContent·layerBounds 조회 |
+| `window.__scProfileActivity(userId)` | 활동 요약 디버그 별칭 |
+| `window.__scTerritoryRecord(userId)` | 영토 기록 디버그 별칭 |
 | `window.renderProfileData(data)` | ProfileFrame 렌더 |
 | `window.refreshCurrentProfile()` | get → render 개발용 갱신 |
 | `window.setProfileTerritorySkin(key)` | PNG + 좌표 스킨 전환 |
@@ -275,15 +288,19 @@ ProfileFrame
 | 금지 항목 | 프로필 **가입일** 표시 안 함 |
 | 소속 | **중복 표기 금지** — 한 곳(아바타 하단 등)에만 |
 
-#### 활동 요약 (표시명·우선순위)
+#### 활동 요약 (표시명·우선순위) — **실데이터 연결 1차 (2026-07-12)**
 
-| 항목 | 비고 |
-|------|------|
-| 작성 글 | |
-| 댓글 | |
-| 받은 공감 | |
-| **토론 참여** | 팔로워보다 **우선** 지표 |
-| **전달한 아우라** | 아래 정의 참조 |
+| 항목 | 필드 | 데이터 소스 |
+|------|------|-------------|
+| 작성 글 | `activity.posts` | `sc_board_bundle_v1` — authorId 일치 · postId 중복 제거 |
+| 댓글 | `activity.comments` | 동일 bundle — 댓글·대댓글 · authorId 식별 가능만 · commentId 중복 제거 |
+| 받은 공감 | `activity.receivedLikes` | 본인 글·댓글의 `reactions.empathy` 합 (likes/dislikes 제외) |
+| **토론 참여** | `activity.discussions` | 글·댓글 작성이 있었던 **서로 다른 postId** 수 |
+| **전달한 아우라** | `activity.aura` | 기존 집계 없음 → 표시 `--` (Mock은 미로그인 데모만) |
+
+> 집계 헬퍼: `resolveUserProfileActivity(userId)` · 표시 확정: `finalizeProfileDisplayFields()` → `activityDisplay`.
+
+**표시 기준 (2026-07-12):** 활동·영토 **숫자형** — 1 이상 숫자 · **0도 `--`** · bundle/기록 확인 불가 `--` · `value \|\| '--'` 금지 · 원본 `activity`/`territory` 숫자는 유지.
 
 > **팔로워**는 프로필 핵심 활동 요약에서 우선순위를 낮춤. (팔로우 수는 헤더 등 보조 영역 가능)
 
@@ -292,15 +309,18 @@ ProfileFrame
 > 내 활동이 다른 시민에게 전달한 영향력.  
 > 글 / 댓글 / 토론 참여 유도 / 공감 / 상호작용 등을 통해 다른 시민에게 남긴 영향력의 **누적 지표**.
 
-#### 영토 기록 (표시명)
+#### 영토 기록 (표시명) — **실데이터 연결 1차 (2026-07-12)**
 
-| 항목 | 비고 |
-|------|------|
-| 최초 소속 | |
-| 현재 소속 | |
-| 이동 횟수 | |
-| **시민 영향력** | ~~명명된 점수~~ 표현 사용 안 함 |
-| 시민 등급 | |
+ProfileFrame `territoryRecordLayer` 4칸 (`renderProfileData` 순서):
+
+| 표시명 | 필드 | 데이터 소스 |
+|------|------|-------------|
+| **현재 소속** | `territory.current` | `__scPlayer.territoryId` · `PlayerProgression.getState().territoryId` · `forcedTerritory` · 없으면 `기록 없음` |
+| 이동 횟수 | `territory.moved` | 시즌 아카이브 · `exileHistory` · 기록 없으면 `--` · **집계 0도 `--`** |
+| 시민 영향력 | `territory.influence` | `getMyStandings` / `rankReputationScore` · 계산 불가 `--` · **0도 `--`** |
+| 시민 등급 | `territory.rank` | `PlayerProgression.getDisplay().rankShort` · 없으면 **참여자** |
+
+> **「최초 소속」은 사용하지 않음** (폐기된 표현). 집계: `resolveUserTerritoryRecordRaw` · 표시: `normalizeTerritoryRecordDisplay` · `finalizeProfileDisplayFields`.
 
 #### 성향 지도 — AI 한 줄 설명 (향후)
 
@@ -362,9 +382,11 @@ alien     : rgba(199, 125, 255, 0.08)
 
 ## 7. 현재 구현 상태
 
-> **프로필 UI — ProfileFrame 기본 적용 (2026-07-09)**  
-> PNG 4종 · px 좌표 · `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` 파이프라인 · 경험치 게이지 완료.  
-> **다음:** 아바타 · 성향지도 · 대표 업적 · 실유저 데이터 · 좌표 최종 확정 · 모바일 보정.
+> **2026-07-12 세션 요약**  
+> **Follow System v1** — 팔로워/팔로잉 목록 모달 · HUD 진입 · 팔로잉 탭 언팔로우 · ProfileFrame 상단 팔로워 수 · **localStorage 전용** (`sc_follow_v1`)  
+> **ProfileFrame** — 활동/영토 표시 안정화 · 빈값/`--` 규칙 · 활동 숫자 0→`--` · HUD/모달 Overlay 동기화  
+> **다음 최우선:** Follow System v1 **2차 QA** (언팔로우·저장·HUD·Toast 등 체크리스트)  
+> **이후 예정:** Settings System v1 · Admin System v1
 
 ### ✅ 구현 완료
 
@@ -374,12 +396,21 @@ alien     : rgba(199, 125, 255, 0.08)
 - 중앙광장 허브 (데일리 이슈, 오늘의 인기글, 실시간 영토 현황, 게시글, 페이지네이션)
 - 영토 게시판 (개척/수호/외계행성)
 - 게시글 작성/조회/반응 (공감/추천/비추천)
+- **Community System v1 (2026-07-11)** — 북마크(`sc_bookmarks_v1`) · 공유(링크 복사) · 신고(`sc_reports_v1` · 상세 의견)
+- **Community System v2 북마크 목록 1차 (2026-07-12)** — `bookmark-list.js` · HUD 북마크 모달 · 저장 글 목록·이동·해제
+- **Follow System v1 (2026-07-12)** — `follow-list-modal.js` · `FollowListModal` · HUD 팔로워/팔로우 수 클릭 진입 · 2탭 모달(팔로워/팔로잉) · 시민 목록·프로필 연결 · **팔로잉 탭 언팔로우** (`toggleFollow`) · `__scFollowLists` · **localStorage** (`sc_follow_v1`)
+- **ProfileFrame 상단 팔로워 (2026-07-12)** — `followers` · `FollowSystem.getFollowerCount` · 4스킨 좌표 통일 · 금색 라벨 · 명성 박스 톤 숫자 박스 · 좌표 에디터 X/Y/W/H · **아이콘/Emoji 없음(텍스트만)**
+- **ProfileFrame 표시 안정화 (2026-07-12)** — 활동 요약/영토 기록 `normalize*Display` · 빈값 `--` · 활동·영토 숫자 0→`--` · 모달 Overlay 레이어 바인딩 수정 · `__scInspectProfileFrame`
+- **UserCard / 프로필 진입 UX (2026-07-11)** — `wireScUserProfileLink()` · 아바타·닉네임·유저 ID만 클릭 · Hover는 `title` 안내만 (`ScMiniProfile` 팝업 연결 해제, 코드 보류)
+- **displayName 통일 기반 (2026-07-12)** — `public/display-name.js` · `resolveDisplayName(userId)` · `sc_display_names_v1` 캐시 · 표시 fallback `userId`
+- **Search System v1 (2026-07-12) ✅** — `search-system.js` · 통합검색 모달 · **시민** displayName 검색 · **토론** 제목/본문/작성자 검색 · `__scBoardNavigateToPost`
+- **랭킹 UI (2026-07-11)** — 전체/중앙/개척/수호/외계 5탭 · TOP5 강조 · `rank-leaderboard.js`
 - 팔로우 시스템 + 알림
 - **플레이어 프로필 — ProfileFrame (2026-07-09)**
   - PNG 기반 기본 UI · 4종 `territorySkin` · 좌측 하단 HUD · 접기 버튼 내장
   - `SC_PROFILE_LAYOUT` px 좌표 (1024×819) · localhost 좌표 에디터
   - `SC_PROFILE_DATA` · `getCurrentProfileData()` · `renderProfileData()` · `refreshCurrentProfile()`
-  - 출력: USER ID · LEVEL · 명성 · 경험치% · 활동 요약 5 · 영토 기록 4 · expGauge
+  - 출력: USER ID · LEVEL · 팔로워 · 명성 · 경험치% · 활동 요약 5 · 영토 기록 4 · expGauge
   - legacy `.profile-citizen-card__legacy` — hidden 유지
 - 레벨/XP/명성 표시 (legacy 영역 + ProfileFrame 더미)
 - 권한 안내 탭
@@ -398,8 +429,10 @@ alien     : rgba(199, 125, 255, 0.08)
 - 성향 계산 로직 (config 정의됨, 실제 집계 미구현)
 - 레벨/XP 계산 (config 정의됨, ProfileFrame은 더미 `expPercent`만)
 - 영토 귀속 자동화 (룰 정의됨, 자동 처리 미구현)
-- 프로필 활동/영토 기록 — **ProfileFrame 더미 데이터** (`SC_PROFILE_DATA`, 실데이터 미연결)
+- 프로필 활동 요약 — **ProfileFrame 실데이터 1차** + **표시 안정화** (2026-07-12): `normalizeProfileActivityDisplay` · 0→`--` · 모달 HUD 동기화
+- 프로필 영토 기록 — **ProfileFrame 실데이터 1차** + **표시 fallback** (2026-07-12): `normalizeTerritoryRecordDisplay` · 빈값 규칙
 - ProfileFrame `alignmentMapLayer` — SVG 더미 연동 완료 · `achievementLayer` placeholder
+- **`ScMiniProfile` Hover 팝업** — 컴포넌트 코드 유지 · 화면 `attachHover` 연결 해제 (2026-07-11)
 - 성향 AI 한 줄 설명 — UI 골격만 (legacy), AI 연동 없음
 - 레거시 `territory-icons` PNG — 신규 emblems WEBP와 **혼재**
 
@@ -408,7 +441,7 @@ alien     : rgba(199, 125, 255, 0.08)
 - **ProfileFrame 아바타** (전신 이미지 오버레이)
 - **ProfileFrame 대표 업적** (`achievementLayer`)
 - **실로그인/Firebase → `getCurrentProfileData()` 연결**
-- 실제 경험치·활동 데이터 집계
+- **실제 경험치·활동 데이터 집계** — 활동 요약 4항목 + 영토 기록 4항목 연결 완료 · `aura` Mock 유지
 - ProfileFrame **모바일 최종 보정**
 - 결제 시스템 (상품 정의됨)
 - 영토전 (배틀 시스템)
@@ -416,6 +449,22 @@ alien     : rgba(199, 125, 255, 0.08)
 - 활동 메뉴 링크 (버튼 disabled 상태)
 - AI 데일리 이슈 자동 생성
 - 관리자/운영 도구
+
+### 🔜 다음 작업 (2026-07-12 기준)
+
+| 우선순위 | 항목 |
+|----------|------|
+| **최우선** | **Follow System v1 2차 QA** — 언팔로우·`toggleFollow`·`sc_follow_v1`·HUD·목록·Empty·Toast·게시글 버튼·랭킹·ProfileFrame 회귀 |
+| 이후 | **Settings System v1** |
+| 이후 | **Admin System v1** |
+
+### ⏸️ 보류 (기능)
+
+업적 시스템(설계 후 개발) · 타인 프로필 팔로워 목록 · 추천 사용자 · 친구 시스템 · 차단 · 팔로워/팔로잉 검색 · 서버 동기화 · 실시간 DB 연동
+
+### ⏸️ 보류 (UI)
+
+ProfileFrame 전체 UI 폴리싱 · 팔로워 영역 최종 디자인 · 버튼/배지 디자인 통일 · 아이콘 스타일 통일 · 전체 모달 UI 통일 · 최종 반응형 점검
 
 ---
 
@@ -429,6 +478,33 @@ alien     : rgba(199, 125, 255, 0.08)
 6. **모바일 터치 영역 유지** — 데스크톱 압축 시 `@media`로 모바일 보호
 7. **추측하지 않는다** — 불확실하면 코드를 먼저 읽는다
 8. **신념 문장은 `territory-beliefs.js`에서만 수정** — index.html 하드코딩 금지
+9. **UserCard 프로필 진입** — Hover 팝업 없음 · `openUserProfile(userId)` → ScProfileModal → ProfileFrame · 클릭 범위는 아바타·닉네임·유저 ID만 (`wireScUserProfileLink`)
+10. **표시 이름** — 화면·향후 검색은 `resolveDisplayName(userId)` · `userId`는 내부 식별자만 · 닉네임 없으면 `userId` fallback
+
+---
+
+## 8.1 displayName · Search 준비
+
+| 항목 | 내용 |
+|------|------|
+| 헬퍼 | `resolveDisplayName(userId)` — `display-name.js` |
+| 캐시 | `sc_display_names_v1` (localStorage, 게시글 bundle 구조 변경 없음) |
+| 동기화 | `syncCurrentUserDisplayName()` — `loadCurrentUserProfile()` 종료 시 현재 유저 닉네임 등록 |
+| Search v1 | **완료** — 검색창 하나 · displayName 통합검색 · **시민** + **토론** · `__scSearchCitizens` · `__scSearchDiscussions` |
+| 인덱스 | `collectDisplayNameIndex()` · `__scSearchCitizens(query)` |
+| 디버그 | `__scResolveDisplayName` · `__scCollectDisplayNameIndex` · `__scSearchCitizens` |
+
+### UserCard 프로필 UX (2026-07-11~)
+
+| 화면 | 클릭 가능 | 비클릭 (프로필 미열림) |
+|------|-----------|------------------------|
+| 게시글 상세 | 아바타 · 닉네임 | Lv/명성 · 영토 Badge · 시간 · 카드 여백 |
+| 댓글 | 아바타 · 작성자 이름 | 작성 시간 · 댓글 본문 · 반응 버튼 |
+| 알림 | 아바타 · 닉네임 | 제목/메시지(→ `navigateFromNotification`) |
+| 랭킹 | 닉네임(유저 ID) | 순위 아이콘 · Lv/명성 · 영토 · 팔로워 |
+| 활동 피드 | — (작성자 이름 미표시) | 문장 전체 |
+
+Hover: `title` / `aria-label` — 「클릭해서 유저 프로필 보기」만. 큰 `ScMiniProfile` 팝업 미사용.
 
 ---
 
@@ -439,7 +515,9 @@ sentence-craft/
 ├── public/
 │   ├── index.html               # 단일 SPA 파일 (HTML + CSS + JS 전부)
 │   ├── territory-beliefs.js     # ★ 영토 신념 데이터 (Single Source of Truth)
-│   ├── alignment-scoring.js     # 성향 점수 계산
+│   ├── display-name.js          # displayName 조회·캐시
+│   ├── search-system.js         # 통합검색 모달
+│   ├── bookmark-list.js         # 북마크 목록 모달
 │   ├── follow-system.js
 │   ├── player-progression.js
 │   ├── permissions-guide.js

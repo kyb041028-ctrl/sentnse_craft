@@ -165,11 +165,18 @@
     return '';
   }
 
+  function resolveActorLabel(id) {
+    var s = String(id || '').trim();
+    if (!s) return '유저';
+    if (typeof global.resolveDisplayName === 'function') return global.resolveDisplayName(s) || s;
+    return s;
+  }
+
   function buildNotifyLines(n) {
     var x = normalizeNotifyItem(n);
     var time = formatNotifyTime(x.createdAt);
-    var actor = String(x.actorId || '').trim() || '유저';
-    var author = String(x.authorId || '').trim() || '유저';
+    var actor = resolveActorLabel(x.actorId);
+    var author = resolveActorLabel(x.authorId);
 
     if (x.type === 'rel_my_follow') {
       if (x.verb === 'follow') {
@@ -284,7 +291,7 @@
           {
             type: 'follow',
             title: '새 팔로워',
-            message: String(n.actorId || '누군가') + ' 님이 나를 팔로우했습니다.',
+            message: resolveActorLabel(n.actorId) + ' 님이 나를 팔로우했습니다.',
             linkTarget: { view: 'profile', userId: n.actorId || null },
           },
           uid,

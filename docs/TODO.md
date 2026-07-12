@@ -1,13 +1,116 @@
-﻿# 센텐스크래프트 — 작업 목록 (TODO)
+# 센텐스크래프트 — 작업 목록 (TODO)
 
-> 마지막 업데이트: 2026-07-10 (AI 인수인계 문서)
+> 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 세션 반영)
 >
 > **새 AI 세션:** `docs/AI_HANDOFF.md` — 구조·완료·TODO·성향 시스템 요약
+>
+> **상태 구분:** ✅ 완료 · 🔜 진행중/다음 · ⏸️ 보류
 
 ---
 
-## 🔜 다음 작업 — 프로필 확장 (순서대로)
+## 🔜 최우선 (진행중) — Follow System v1 2차 QA
 
+> **구현은 완료.** 아래 항목을 모두 확인한 뒤 버그 수정 → QA 통과 시 완료 처리.
+
+- [ ] 언팔로우 버튼 정상 동작 (팔로잉 탭만)
+- [ ] `toggleFollow()` 정상 호출
+- [ ] `sc_follow_v1` localStorage 저장 정상
+- [ ] HUD 팔로워/팔로잉 숫자 즉시 갱신
+- [ ] 팔로잉 목록 즉시 갱신 (언팔로우 후 행 제거)
+- [ ] Empty 상태 (팔로워·팔로잉 각각)
+- [ ] Toast (언팔로우 완료 안내)
+- [ ] 게시글 팔로우 버튼 동기화 (`board__follow-btn`)
+- [ ] 랭킹 영향 여부 (회귀 없음 확인)
+- [ ] ProfileFrame 영향 여부 (팔로워 수·표시 회귀 없음 확인)
+
+---
+
+## 🔜 이후 작업 예정
+
+1. [ ] **Settings System v1**
+2. [ ] **Admin System v1**
+
+---
+
+## ⏸️ 보류 — 기능
+
+- [ ] 업적 시스템 (설계 완료 후 개발)
+- [ ] 타인 프로필 팔로워 목록
+- [ ] 추천 사용자
+- [ ] 친구 시스템
+- [ ] 차단 기능
+- [ ] 팔로워/팔로잉 검색
+- [ ] 서버 동기화
+- [ ] 실시간 DB 연동
+- [ ] Follow 후속: 검색/페이지네이션
+
+---
+
+## ⏸️ 보류 — UI
+
+- [ ] ProfileFrame 전체 UI 폴리싱
+- [ ] 팔로워 영역 최종 디자인
+- [ ] 버튼/배지 디자인 통일
+- [ ] 아이콘 스타일 통일
+- [ ] 전체 모달 UI 통일
+- [ ] 최종 반응형 점검
+
+---
+
+## ✅ Search System v1 — 완료 (2026-07-12)
+
+> 통합검색: 검색창 하나 · displayName 기반 · 결과 **「시민」+「토론」** · userId 검색 UI 없음
+
+1. [x] **displayName 통일 기반** — `resolveDisplayName(userId)` · `sc_display_names_v1` (2026-07-12)
+2. [x] **통합검색 HUD** — `sc-map-tab-search` · `sc-search-modal` (2026-07-12)
+3. [x] **시민 검색** — `collectDisplayNameIndex()` · 프로필 연결 (2026-07-12)
+4. [x] **토론 검색** — bundle 제목/본문/작성자 displayName · `__scBoardNavigateToPost` (2026-07-12)
+
+---
+
+## ✅ Community System v2 — 북마크 목록 1차 (2026-07-12)
+
+1. [x] HUD 북마크 버튼 · 목록 모달 (`bookmark-list.js`)
+2. [x] `sc_bookmarks_v1` 최신순 목록 · 게시글 이동 · 삭제(해제) · Toast
+3. [ ] 북마크 폴더/태그/메모 등 고도화 (v2 후속)
+
+---
+
+## ✅ Follow System v1 — 구현 완료 (2026-07-12) · QA 대기
+
+### 1차 — 팔로워·팔로잉 목록
+
+1. [x] 좌측 HUD 팔로워/팔로우 수 클릭 진입 (`follow-list-modal.js`)
+2. [x] 2탭 모달 · 시민 목록 · 프로필 연결 · Empty · ESC/배경/X
+3. [x] `FollowSystem.getFollowers` / `getFollowing` · `sc_follow_v1` · `__scFollowLists`
+
+### 2차 — 팔로잉 탭 언팔로우
+
+1. [x] 팔로잉 탭 행 우측 언팔로우 · `toggleFollow` · Toast · 목록·HUD 즉시 갱신
+2. [ ] **2차 QA** — 위 「최우선」 체크리스트 통과 후 완료 처리
+
+---
+
+## ✅ ProfileFrame — 표시 안정화 (2026-07-12)
+
+1. [x] 활동 요약 / 영토 기록 표시 안정화 — `normalizeProfileActivityDisplay` · `normalizeTerritoryRecordDisplay`
+2. [x] 값 없는 데이터 표시 규칙 정리 — `finalizeProfileDisplayFields` · `value||'--'` 금지
+3. [x] 0 표시 정책 — 활동·영토 숫자 **0→`--`** · 팔로워 **0→`0`**
+4. [x] HUD/모달 Overlay 동기화 — `ensureProfileFrameListLayerBounds` · `__scInspectProfileFrame`
+
+---
+
+## ✅ ProfileFrame 상단 팔로워 표시 (2026-07-12)
+
+1. [x] 명성 위 `followersLabel` · `followers` 레이어 · 4스킨 좌표 통일
+2. [x] `FollowSystem.getFollowerCount` · 0명 `0` 표시 · 본인/타인 동일
+3. [x] 팔로워 UI — 금색 라벨 · 명성 톤 숫자 박스 · 에디터 X/Y/W/H · **아이콘 없음**
+
+---
+
+## 🔜 다음 작업 (ProfileFrame·기타)
+
+> **2026-07-12 완료:** ProfileFrame 활동/영토 표시 안정화 · 팔로워 상단 표시 · Follow v1 1·2차 구현  
 > **2026-07-10 완료:** 성향지도 SVG · 좌표 에디터 캘리브레이션 (최대치 미리보기 · AI 복사)  
 > **표준 파이프라인:** `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` → ProfileFrame
 
@@ -15,7 +118,7 @@
 2. [ ] **아바타** 구현
 3. [x] **대표 업적** 구현 (`achievementLayer` · 슬롯 UI · 아이콘/이름/날짜 좌표 에디터) (2026-07-10)
 4. [x] `getCurrentProfileData()` — `loadCurrentUserProfile()` merge 어댑터 (Auth · API 캐시 · progression · 미로그인 Mock fallback, 2026-07-10)
-5. [~] 실제 경험치·활동·영토·**성향** 집계 로직 연동 — ProfileFrame 성향지도 **표시용** localStorage 어댑터 연결 (2026-07-10)
+5. [x] 실제 경험치·활동·영토 집계 1차 + **표시 안정화** — 활동 5칸 · 영토 4칸 · 0→`--` · 모달 Overlay (2026-07-12)
 6. [x] `alignmentMap` 좌표 확정 — center/pioneer 305,355 · guardian/alien 309,360 (2026-07-10)
 7. [ ] 경험치 게이지 위치 최종 보정 (좌표 에디터)
 8. [ ] `SC_PROFILE_LAYOUT` **최종 확정** (좌표 에디터 · 4스킨별)
@@ -43,7 +146,7 @@
 ---
 ## 완료된 작업 ✅
 
-### UI / 디자인 시스템
+- [x] **Search System v1 (2026-07-12)** — `search-system.js` · 통합검색(시민+토론) · displayName · bundle 스캔 · 프로필/게시글 이동
 
 - [x] CSS 변수 기반 디자인 시스템 구축 (`--sc-sp-*`, `--sc-r-*`, `--sc-bc-*` 등)
 - [x] UI Kit 클래스 정의 (`sc-panel`, `sc-card`, `sc-badge`, `sc-btn`, `sc-section-title`, `sc-tag`, `sc-input`)
@@ -124,6 +227,10 @@
 - [x] 성향지도 SVG `alignmentMapLayer` · `data.alignment` · `renderProfileAlignmentMap()` (2026-07-10)
 - [x] 대표 업적 `renderProfileAchievements()` · 슬롯 UI (2026-07-10)
 - [x] `alignmentMap` 좌표 `{ x: 304, y: 353, w: 190, h: 190 }` (임시)
+- [x] **활동 요약 실데이터 1차** — `resolveUserProfileActivity` · posts/comments/receivedLikes/discussions · `aura` Mock 유지 (2026-07-12)
+- [x] **영토 기록 실데이터 1차** — `resolveUserTerritoryRecord` · 현재소속/이동/영향력/등급 · `__scTerritoryRecord` (2026-07-12)
+- [x] **영토 기록 표시 기준 정정** — 최초 소속 폐기 · 현재 소속 + 표시 fallback 단일화 (2026-07-12)
+- [x] `__scProfileActivity(userId)` 디버그 API
 
 ### 프로필 패널 (2026-07-04 Grid 재설계)
 
@@ -185,7 +292,7 @@
 - [x] 랭킹 UI 개선 2차 — TOP3 여백 · 영토 Badge · 내 순위 HUD 그리드
 - [x] 랭킹 작성자 프로필 UX 1차 — `ScMiniProfile` + `openUserProfile` (`rank-leaderboard.js`)
 - [x] UserCard UX 단순화 — 프로필 클릭 범위 축소 (아바타·닉네임·유저 ID) · ScMiniProfile 팝업 연결 해제
-- [ ] Community System v1 — 북마크 목록 화면 2차
+- [x] Community System v1 — 북마크 목록 화면 2차 → **v2 북마크 목록 1차 완료** (2026-07-12, `bookmark-list.js`)
 - [ ] ScProfileModal 2차 — DB/Supabase 실데이터 연동
 - [x] Hover 미니 프로필 2차 — 랭킹 확장 (`rank-leaderboard.js` · 전 탭)
 - [x] 팔로우 시스템 + 알림
