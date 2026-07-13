@@ -1,18 +1,37 @@
 # 센텐스크래프트 — 변경 기록 (CHANGELOG)
 
 > 최근 주요 변경 사항을 날짜 역순으로 정리합니다.
-> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 세션)
+> 날짜는 git 커밋 기준. 마지막 업데이트: 2026-07-13 (Follow System v1 통합 QA 완료)
 
 ---
 
 ## [미배포] — 현 작업 이후
+
+### ★ 2026-07-13 — Follow System v1 통합 QA 완료
+
+**브라우저 QA (`localhost:3000`, 게스트 `guest_demo`)**
+- 팔로워/팔로잉 HUD 클릭 → 각 탭 모달 진입 · ESC/배경/X 닫기 정상
+- 팔로잉 탭만 `언팔로우` 버튼 · `preventDefault`/`stopPropagation` · 프로필 미오픈
+- `toggleFollow` → `sc_follow_v1` 양방향 제거 · 목록 즉시 재렌더 · Toast 「언팔로우했습니다.」
+- HUD `#avatar-meta-following` 즉시 감소 · `board__follow-btn` 「팔로우」 동기화
+- Empty: 「아직 팔로우한 시민이 없습니다.」/「아직 팔로워가 없습니다.」
+- 새로고침 후 `sc_follow_v1` 유지 · 랭킹/알림 콘솔 오류 없음
+- ProfileFrame: 모달 **재오픈** 시 `getFollowerCount` 반영 정상
+
+**Known Issue (보류)**
+- ProfileFrame 모달이 이미 열린 채 팔로잉 목록에서 언팔로우하면 상단 팔로워 숫자가 즉시 안 바뀜 — 닫았다 다시 열면 정상
+
+**한계 (의도)**
+- `sc_follow_v1` localStorage 전용 · 서버 동기화 없음
+
+---
 
 ### ★ 2026-07-12 — 세션 요약 (Follow System v1 · ProfileFrame)
 
 **Follow System v1**
 - 1차: `follow-list-modal.js` · HUD 팔로워/팔로우 수 클릭 · 2탭 목록 모달 · 프로필 연결 · Empty · `sc_follow_v1`
 - 2차: 팔로잉 탭 `언팔로우` · `toggleFollow` · Toast · 목록·HUD·게시글 버튼 즉시 갱신
-- **다음:** 2차 QA 체크리스트 통과 후 완료 처리
+- **QA 완료 (2026-07-13)** — 통합 QA 통과 · 코드 수정 없음
 
 **ProfileFrame**
 - 상단 팔로워: `followersLabel`/`followers` · `getFollowerCount` · 4스킨 좌표 통일 · 금색 라벨 · 명성 톤 숫자 박스 · 에디터 X/Y/W/H · **아이콘 없음(텍스트만)**

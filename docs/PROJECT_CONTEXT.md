@@ -1,7 +1,7 @@
 # 센텐스크래프트 — 프로젝트 컨텍스트
 
 > 다른 Cursor 세션에서 이 문서를 먼저 읽어 프로젝트 전체 맥락을 파악하세요.
-> 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 팔로워·표시 안정화)
+> 마지막 업데이트: 2026-07-13 (Follow System v1 통합 QA 완료)
 >
 > **AI 인수인계 요약:** `docs/AI_HANDOFF.md` ← 새 세션 시 이 문서도 함께 읽기
 
@@ -454,8 +454,7 @@ alien     : rgba(199, 125, 255, 0.08)
 
 | 우선순위 | 항목 |
 |----------|------|
-| **최우선** | **Follow System v1 2차 QA** — 언팔로우·`toggleFollow`·`sc_follow_v1`·HUD·목록·Empty·Toast·게시글 버튼·랭킹·ProfileFrame 회귀 |
-| 이후 | **Settings System v1** |
+| **최우선** | **Settings System v1** |
 | 이후 | **Admin System v1** |
 
 ### ⏸️ 보류 (기능)

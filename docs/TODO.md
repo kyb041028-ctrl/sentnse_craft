@@ -1,6 +1,6 @@
 # 센텐스크래프트 — 작업 목록 (TODO)
 
-> 마지막 업데이트: 2026-07-12 (Follow System v1 · ProfileFrame 세션 반영)
+> 마지막 업데이트: 2026-07-13 (Follow System v1 통합 QA 완료)
 >
 > **새 AI 세션:** `docs/AI_HANDOFF.md` — 구조·완료·TODO·성향 시스템 요약
 >
@@ -8,24 +8,7 @@
 
 ---
 
-## 🔜 최우선 (진행중) — Follow System v1 2차 QA
-
-> **구현은 완료.** 아래 항목을 모두 확인한 뒤 버그 수정 → QA 통과 시 완료 처리.
-
-- [ ] 언팔로우 버튼 정상 동작 (팔로잉 탭만)
-- [ ] `toggleFollow()` 정상 호출
-- [ ] `sc_follow_v1` localStorage 저장 정상
-- [ ] HUD 팔로워/팔로잉 숫자 즉시 갱신
-- [ ] 팔로잉 목록 즉시 갱신 (언팔로우 후 행 제거)
-- [ ] Empty 상태 (팔로워·팔로잉 각각)
-- [ ] Toast (언팔로우 완료 안내)
-- [ ] 게시글 팔로우 버튼 동기화 (`board__follow-btn`)
-- [ ] 랭킹 영향 여부 (회귀 없음 확인)
-- [ ] ProfileFrame 영향 여부 (팔로워 수·표시 회귀 없음 확인)
-
----
-
-## 🔜 이후 작업 예정
+## 🔜 최우선 (다음 작업)
 
 1. [ ] **Settings System v1**
 2. [ ] **Admin System v1**
@@ -76,7 +59,7 @@
 
 ---
 
-## ✅ Follow System v1 — 구현 완료 (2026-07-12) · QA 대기
+## ✅ Follow System v1 — 완료 (2026-07-12 구현 · 2026-07-13 QA)
 
 ### 1차 — 팔로워·팔로잉 목록
 
@@ -84,10 +67,11 @@
 2. [x] 2탭 모달 · 시민 목록 · 프로필 연결 · Empty · ESC/배경/X
 3. [x] `FollowSystem.getFollowers` / `getFollowing` · `sc_follow_v1` · `__scFollowLists`
 
-### 2차 — 팔로잉 탭 언팔로우
+### 2차 — 팔로잉 탭 언팔로우 · 통합 QA (2026-07-13)
 
 1. [x] 팔로잉 탭 행 우측 언팔로우 · `toggleFollow` · Toast · 목록·HUD 즉시 갱신
-2. [ ] **2차 QA** — 위 「최우선」 체크리스트 통과 후 완료 처리
+2. [x] **2차 QA** — 언팔로우·`sc_follow_v1`·HUD·Empty·게시글 버튼·랭킹·ProfileFrame·새로고침 유지 확인
+3. [x] Known: ProfileFrame 모달이 **이미 열린 상태**에서 언팔로우 시 숫자는 닫았다 다시 열어야 갱신 (낮은 심각도)
 
 ---
 
