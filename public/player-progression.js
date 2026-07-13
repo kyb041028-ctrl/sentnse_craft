@@ -581,7 +581,11 @@
     if (elXpLegend) elXpLegend.textContent = d.xpLegend;
     if (elRank) elRank.textContent = '명성 : ' + (d.rankShort || '참여자');
     if (elFollowers) {
-      elFollowers.textContent = standings.followers.toLocaleString('ko-KR');
+      var flc = standings.followers;
+      if (global.FollowSystem && typeof global.FollowSystem.getFollowerCount === 'function') {
+        flc = global.FollowSystem.getFollowerCount(uid);
+      }
+      elFollowers.textContent = Number(flc || 0).toLocaleString('ko-KR');
     }
     if (elFollowing) {
       var fc = 0;

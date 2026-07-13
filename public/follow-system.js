@@ -257,6 +257,36 @@
     if (typeof global.__scRefreshProgressionUI === 'function') {
       global.__scRefreshProgressionUI();
     }
+    /* 열린 ProfileFrame(모달·HUD) 팔로워 수 즉시 갱신 */
+    try {
+      var openProfileId =
+        global.ScProfileModal && typeof global.ScProfileModal.getUserId === 'function'
+          ? global.ScProfileModal.getUserId()
+          : null;
+      if (
+        openProfileId &&
+        String(openProfileId) === String(t) &&
+        typeof global.renderProfileFrameInModal === 'function'
+      ) {
+        global.renderProfileFrameInModal(openProfileId);
+      }
+      if (
+        String(t) === String(me) &&
+        typeof global.getCurrentProfileData === 'function' &&
+        typeof global.renderProfileData === 'function'
+      ) {
+        global.renderProfileData(global.getCurrentProfileData());
+      } else if (
+        typeof global.getCurrentProfileData === 'function' &&
+        typeof global.renderProfileData === 'function'
+      ) {
+        var hudData = global.getCurrentProfileData();
+        var hudUid = String((hudData && (hudData.authUserId || hudData.userId)) || me);
+        if (hudUid === String(me)) {
+          global.renderProfileData(hudData);
+        }
+      }
+    } catch (_) {}
     if (global.RankLeaderboard && typeof global.RankLeaderboard.refresh === 'function') {
       var modal = document.getElementById('sc-rank-modal');
       if (modal && !modal.hidden) global.RankLeaderboard.refresh();

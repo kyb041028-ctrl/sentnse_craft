@@ -1,388 +1,134 @@
 # 센텐스크래프트 — 작업 목록 (TODO)
 
-> 마지막 업데이트: 2026-07-13 (Follow System v1 통합 QA 완료)
->
-> **새 AI 세션:** `docs/AI_HANDOFF.md` — 구조·완료·TODO·성향 시스템 요약
->
-> **상태 구분:** ✅ 완료 · 🔜 진행중/다음 · ⏸️ 보류
+> 마지막 업데이트: **2026-07-13 (작업 종료 · Follow System v1 완료 · main 단일 브랜치)**  
+> **새 AI 세션:** `docs/AI_HANDOFF.md` 먼저 읽기 → `PROJECT_CONTEXT` · `CHANGELOG` · 이 문서  
+> **상태:** ✅ 완료 · 🔜 다음(설계 확정 후) · ⏸️ 보류
 
 ---
 
-## 🔜 최우선 (다음 작업)
+## 현재 상태 (한 줄)
 
-1. [ ] **Settings System v1**
-2. [ ] **Admin System v1**
-
----
-
-## ⏸️ 보류 — 기능
-
-- [ ] 업적 시스템 (설계 완료 후 개발)
-- [ ] 타인 프로필 팔로워 목록
-- [ ] 추천 사용자
-- [ ] 친구 시스템
-- [ ] 차단 기능
-- [ ] 팔로워/팔로잉 검색
-- [ ] 서버 동기화
-- [ ] 실시간 DB 연동
-- [ ] Follow 후속: 검색/페이지네이션
+- **진행 중 Cursor 구현 작업: 없음**
+- **방금 완료:** Follow System v1 통합 QA + HUD/ProfileFrame 즉시 갱신 FIX
+- **Git:** `main`만 사용 · 집·가게 동일하게 `pull`/`push origin main`
+- **다음:** 사용자가 ChatGPT와 설계를 확정한 뒤 명령한 작업만 시작
 
 ---
 
-## ⏸️ 보류 — UI
+## 🔜 다음 (설계 확정 후 · 아직 구현 시작 금지)
 
-- [ ] ProfileFrame 전체 UI 폴리싱
-- [ ] 팔로워 영역 최종 디자인
-- [ ] 버튼/배지 디자인 통일
-- [ ] 아이콘 스타일 통일
-- [ ] 전체 모달 UI 통일
-- [ ] 최종 반응형 점검
+> 우선순위는 사용자 명령으로 확정. 아래는 **후보**일 뿐.
 
----
-
-## ✅ Search System v1 — 완료 (2026-07-12)
-
-> 통합검색: 검색창 하나 · displayName 기반 · 결과 **「시민」+「토론」** · userId 검색 UI 없음
-
-1. [x] **displayName 통일 기반** — `resolveDisplayName(userId)` · `sc_display_names_v1` (2026-07-12)
-2. [x] **통합검색 HUD** — `sc-map-tab-search` · `sc-search-modal` (2026-07-12)
-3. [x] **시민 검색** — `collectDisplayNameIndex()` · 프로필 연결 (2026-07-12)
-4. [x] **토론 검색** — bundle 제목/본문/작성자 displayName · `__scBoardNavigateToPost` (2026-07-12)
-
----
-
-## ✅ Community System v2 — 북마크 목록 1차 (2026-07-12)
-
-1. [x] HUD 북마크 버튼 · 목록 모달 (`bookmark-list.js`)
-2. [x] `sc_bookmarks_v1` 최신순 목록 · 게시글 이동 · 삭제(해제) · Toast
-3. [ ] 북마크 폴더/태그/메모 등 고도화 (v2 후속)
+1. [ ] **Settings System v1** — 설계 확정 후
+2. [ ] **Admin System v1** — 설계 확정 후
+3. [ ] **업적 시스템** — **설계 검토 중** · 확정 전 구현·TODO 승격 금지
+4. [ ] **베타 운영 준비** — 설계·범위 확정 후
 
 ---
 
 ## ✅ Follow System v1 — 완료 (2026-07-12 구현 · 2026-07-13 QA)
 
-### 1차 — 팔로워·팔로잉 목록
+1. [x] 팔로워·팔로잉 2탭 목록 모달 (`follow-list-modal.js`) · HUD 클릭 진입
+2. [x] 아바타·닉네임 → ProfileFrame · Empty · ESC/배경/X
+3. [x] 팔로잉 탭 언팔로우 · `toggleFollow` · `sc_follow_v1` 양방향
+4. [x] HUD 팔로워·팔로잉 즉시 갱신 · 게시글 팔로우 버튼 동기화
+5. [x] 열린 ProfileFrame 팔로워 즉시 갱신
+6. [x] 통합 QA PASS · Known Issue 없음
+7. [x] **FIX** — HUD 팔로워 SSOT=`FollowSystem.getFollowerCount` (`player-progression.js`)
+8. [x] **FIX** — `toggleFollow` 후 ProfileFrame 모달/HUD 즉시 재렌더 (`follow-system.js`)
 
-1. [x] 좌측 HUD 팔로워/팔로우 수 클릭 진입 (`follow-list-modal.js`)
-2. [x] 2탭 모달 · 시민 목록 · 프로필 연결 · Empty · ESC/배경/X
-3. [x] `FollowSystem.getFollowers` / `getFollowing` · `sc_follow_v1` · `__scFollowLists`
-
-### 2차 — 팔로잉 탭 언팔로우 · 통합 QA (2026-07-13)
-
-1. [x] 팔로잉 탭 행 우측 언팔로우 · `toggleFollow` · Toast · 목록·HUD 즉시 갱신
-2. [x] **2차 QA** — 언팔로우·`sc_follow_v1`·HUD·Empty·게시글 버튼·랭킹·ProfileFrame·새로고침 유지 확인
-3. [x] Known: ProfileFrame 모달이 **이미 열린 상태**에서 언팔로우 시 숫자는 닫았다 다시 열어야 갱신 (낮은 심각도)
-
----
-
-## ✅ ProfileFrame — 표시 안정화 (2026-07-12)
-
-1. [x] 활동 요약 / 영토 기록 표시 안정화 — `normalizeProfileActivityDisplay` · `normalizeTerritoryRecordDisplay`
-2. [x] 값 없는 데이터 표시 규칙 정리 — `finalizeProfileDisplayFields` · `value||'--'` 금지
-3. [x] 0 표시 정책 — 활동·영토 숫자 **0→`--`** · 팔로워 **0→`0`**
-4. [x] HUD/모달 Overlay 동기화 — `ensureProfileFrameListLayerBounds` · `__scInspectProfileFrame`
+**한계 (의도):** `sc_follow_v1` localStorage 전용 · 서버 동기화 없음
 
 ---
 
-## ✅ ProfileFrame 상단 팔로워 표시 (2026-07-12)
+## ✅ 최근 완료 (요약)
 
-1. [x] 명성 위 `followersLabel` · `followers` 레이어 · 4스킨 좌표 통일
-2. [x] `FollowSystem.getFollowerCount` · 0명 `0` 표시 · 본인/타인 동일
-3. [x] 팔로워 UI — 금색 라벨 · 명성 톤 숫자 박스 · 에디터 X/Y/W/H · **아이콘 없음**
-
----
-
-## 🔜 다음 작업 (ProfileFrame·기타)
-
-> **2026-07-12 완료:** ProfileFrame 활동/영토 표시 안정화 · 팔로워 상단 표시 · Follow v1 1·2차 구현  
-> **2026-07-10 완료:** 성향지도 SVG · 좌표 에디터 캘리브레이션 (최대치 미리보기 · AI 복사)  
-> **표준 파이프라인:** `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()` → ProfileFrame
-
-1. [x] **성향 지도** SVG 오버레이 (`alignmentMapLayer` · `SC_PROFILE_LAYOUT.alignmentMap`) (2026-07-10)
-2. [ ] **아바타** 구현
-3. [x] **대표 업적** 구현 (`achievementLayer` · 슬롯 UI · 아이콘/이름/날짜 좌표 에디터) (2026-07-10)
-4. [x] `getCurrentProfileData()` — `loadCurrentUserProfile()` merge 어댑터 (Auth · API 캐시 · progression · 미로그인 Mock fallback, 2026-07-10)
-5. [x] 실제 경험치·활동·영토 집계 1차 + **표시 안정화** — 활동 5칸 · 영토 4칸 · 0→`--` · 모달 Overlay (2026-07-12)
-6. [x] `alignmentMap` 좌표 확정 — center/pioneer 305,355 · guardian/alien 309,360 (2026-07-10)
-7. [ ] 경험치 게이지 위치 최종 보정 (좌표 에디터)
-8. [ ] `SC_PROFILE_LAYOUT` **최종 확정** (좌표 에디터 · 4스킨별)
-9. [ ] 4개 영토 스킨 **최종 테스트** (PNG + 좌표 + 데이터 갱신)
-10. [ ] ProfileFrame **모바일 최종 보정**
-
-### 프로필 UI 확정 방향 (구현 시 준수)
-
-- 유저가 주인공, 영토는 배경 정체성
-- ProfileFrame = PNG + 오버레이 HUD (현재 기본 UI)
-- legacy 영토 시민 카드 — hidden · 향후 아바타·레이더 연동 참고용
-- 성향 **레이더만** · 가로 게이지·퍼센트 노출 **금지** (ProfileFrame exp% 텍스트·expGauge는 예외)
-- 가입일 **금지** · 소속 **중복 금지**
-- 경험치 게이지(expGauge) — **영토 무관** · 바 100% 배경 · % 텍스트만 실제 값 · **좌 밝은 노랑 → 우 짙은 갈색** 그라데이션
-
-### ProfileFrame 완료 체크리스트 (2026-07-09) ✅
-
-- [x] PNG 기본 UI · 4종 `territorySkin` · legacy hidden
-- [x] 좌측 하단 HUD · 접기 버튼 · PNG contain · 크기·위치 고정
-- [x] `SC_PROFILE_LAYOUT` px (1024×819) · scale · 좌표 에디터
-- [x] `SC_PROFILE_DATA` · `renderProfileData()` · `getCurrentProfileData()` · `refreshCurrentProfile()`
-- [x] 텍스트 13슬롯 + territorySkin PNG + expGauge
-- [x] expGauge 노란/골드 · `{ x: 392, y: 126, w: 590, h: 10 }`
-
----
-## 완료된 작업 ✅
-
-- [x] **Search System v1 (2026-07-12)** — `search-system.js` · 통합검색(시민+토론) · displayName · bundle 스캔 · 프로필/게시글 이동
-
-- [x] CSS 변수 기반 디자인 시스템 구축 (`--sc-sp-*`, `--sc-r-*`, `--sc-bc-*` 등)
-- [x] UI Kit 클래스 정의 (`sc-panel`, `sc-card`, `sc-badge`, `sc-btn`, `sc-section-title`, `sc-tag`, `sc-input`)
-- [x] 게임 HUD 전체 디자인 언어 확립
-- [x] 버튼 Primary / Secondary 스타일 통일
-- [x] 카드 공통 스타일 (border, radius, padding, shadow, gap)
-- [x] 섹션 헤더 스타일 통일
-- [x] 인풋 필드 스타일 통일
-- [x] 배지(Badge), 태그(Tag) 스타일 정의
-- [x] 패널 공통 border / radius / background
-- [x] 여백(Spacing) 규칙 정리
-- [x] 폰트 계층(Font Rule) 정리
-- [x] Transition 속도 통일 (`--sc-ease`)
-- [x] 영토별 색상 체계 정리 (centrist/reform/order/alien)
-- [x] `data-territory` 기반 CSS 자동 테마 전환 구조
-
-### 영토 명칭 통일 (2026-07-02)
-
-- [x] 개혁영토 → 개척영토 (내부 ID 유지)
-- [x] 질서영토 → 수호영토 (내부 ID 유지)
-- [x] 깐따삐아 → 외계행성 (내부 ID KANTAPBIYA 유지)
-- [x] index.html 전체 사용자 표시 문자열 교체
-- [x] permissions-guide.js 영토명 교체
-- [x] config/world-territories.js labelKo 교체
-- [x] config/alignment-rank-limits.js notesKo 교체
-- [x] docs 문서 영토명 교체
-
-### 영토 신념 시스템 (2026-07-02)
-
-- [x] `public/territory-beliefs.js` 생성 — Single Source of Truth
-- [x] `window.TERRITORY_BELIEFS` 전역 노출 (IIFE 패턴)
-- [x] `displayName`, `subtitle`, `belief`, `philosophy` 필드 구조 확립
-- [x] `index.html` 인라인 신념 상수 제거 → 외부 파일 참조로 전환
-- [x] `renderTerritoryCreed()` — `belief.belief` 필드 참조
-- [x] `philosophy` 필드 저장만 유지 (프로필 미노출)
-- [x] HUD 서브텍스트 `displayName` 기반 동적 생성
-- [x] `.avatar-territory-creed__motto` CSS `white-space: pre-line` 추가
-- [x] 신념 문장 4종 최종 확정
-
-### 중앙광장 (Central Plaza)
-
-- [x] 중앙광장 레이아웃 개편 (데일리 이슈 → 2열 카드 → 게시글 → 사이드바)
-- [x] 데일리 이슈 섹션 Primary 강화 (굵은 accent line, shadow)
-- [x] 인기글/실시간 현황 / 영토 현황 2열 카드 구성
-- [x] 게시글 섹션 카드 스타일 통일
-- [x] 하단 헤더 blur 고정 요소 제거
-- [x] 게시글 카드 압축 (padding, gap, 버튼 compact)
-- [x] 게시글 카드 붙여넣기 버튼 제거 (프로필 화면으로 이동)
-- [x] 게시글 카드 레이아웃 선정 기준 확립
-- [x] 반응 버튼 사용자 참여 기반 compact 구성
-- [x] 광장 정보 섹션 전체 재 + 구분선
-
-### 메인 지도 / 히트존 (2026-07-04)
-
-- [x] 신규 16:9 원시시대(tribal-s1) 메인 영토맵 교체
-- [x] tribal-s1 지도용 히트존 좌표 에디터 수정본 적용 (`territory-hit-zones.json`)
-- [x] viewBox `0 0 1600 900` 기준 progressive / conservative / plaza / kantapbiya 4영역 재조정
-- [x] 메인맵 레이아웃 확대 및 화면 최적화
-- [x] 영토 엠블럼 PNG 교체 (`assets/territory-icons/`)
-- [x] 영토 배너·엠블럼 WEBP 에셋 정리 (`assets/territories/banners/`, `emblems/`)
-- [x] 영토 배너·엠블럼 WEBP 프로필 신념 박스 1차 연결 (CSS 변수 + 배경)
-
-### ProfileFrame 프로필 시스템 (2026-07-09)
-
-- [x] PNG 기반 ProfileFrame 기본 UI · legacy `hidden`
-- [x] 4종 영토 프로필 PNG (`profiles/center|pioneer|guardian|alien.png`)
-- [x] `territorySkin` → `setProfileTerritorySkin()` PNG 자동 변경
-- [x] 좌측 하단 HUD · 접기 버튼 Frame 내 우하단 · PNG contain
-- [x] `%` 좌표 폐기 → `SC_PROFILE_LAYOUT` px (1024×819) · scale
-- [x] `SC_PROFILE_LAYOUT_BY_SKIN` (center=pioneer · guardian/alien 개별)
-- [x] 대표 업적 슬롯 좌표 에디터 (`achievement` · `achievementSlots` · AI 복사) (2026-07-10)
-- [x] 성향지도 축 스케일 그룹 분리 (`SC_PROFILE_ALIGNMENT_AXIS_MAX_BY_GROUP`) (2026-07-10)
-- [x] `SC_PROFILE_DATA` 단일 더미 객체
-- [x] `renderProfileData(data)` — 텍스트 · PNG · expGauge
-- [x] `getCurrentProfileData()` Mock Adapter · `refreshCurrentProfile()`
-- [x] 경험치 게이지 `expGaugeLayer` · 노란/골드 · 100% Fill · expLayer 텍스트 상위
-- [x] `expGauge` 좌표 `{ x: 392, y: 126, w: 590, h: 10 }`
-- [x] 성향지도 SVG `alignmentMapLayer` · `data.alignment` · `renderProfileAlignmentMap()` (2026-07-10)
-- [x] 대표 업적 `renderProfileAchievements()` · 슬롯 UI (2026-07-10)
-- [x] `alignmentMap` 좌표 `{ x: 304, y: 353, w: 190, h: 190 }` (임시)
-- [x] **활동 요약 실데이터 1차** — `resolveUserProfileActivity` · posts/comments/receivedLikes/discussions · `aura` Mock 유지 (2026-07-12)
-- [x] **영토 기록 실데이터 1차** — `resolveUserTerritoryRecord` · 현재소속/이동/영향력/등급 · `__scTerritoryRecord` (2026-07-12)
-- [x] **영토 기록 표시 기준 정정** — 최초 소속 폐기 · 현재 소속 + 표시 fallback 단일화 (2026-07-12)
-- [x] `__scProfileActivity(userId)` 디버그 API
-
-### 프로필 패널 (2026-07-04 Grid 재설계)
-
-- [x] 프로필 UI Grid 기반 구조 재설계 시작 (profile-main + profile-summaries)
-- [x] 오른쪽 성향 가로 게이지 제거, 4축 성향 레이더로 대체
-- [x] `territory-beliefs.js` 기반 신념 HUD (엠블럼 + belief + ○○의 신념)
-- [x] profile-summary-* 요약 섹션 class 분리
-- [x] 프로필 HUD 정보 바 통합 · 신념/아바타/레이더/하단카드 compact 다듬기
-- [x] 영토 시민 카드 레이아웃 골격 재정렬 (좌 아바타 / 우 정보+보조배너+레이더, 하단 3카드)
-- [x] 프로필 패널 레이아웃 안정화 (패널 스크롤, 클리핑 복구, 배너 72px·레이더 min 150px)
-- [x] 프로필 방향·항목명·에셋 v1 정의 문서화 (PROJECT_CONTEXT / TODO / CHANGELOG)
-- [x] 프로필 내부 스크롤 제거
-- [x] 프로필 세로 여백 압축
-- [x] 신념 카드 높이 최적화
-- [x] 성향 레이더 크기 조정
-- [x] 하단 3개 요약 카드 첫 화면 노출 레이아웃 최적화
-
-### 프로필 패널 (이전)
-
-- [x] 프로필 패널 게임 HUD 플레이어 카드 리디자인
-- [x] 플레이어 카드 (4:5 비율, 영토별 하단 바 아이콘 구조)
-- [x] 아바타 슬롯 HUD형태 (SVG 플레이스홀더, HUD 형태)
-- [x] 영토 소속 배너 하단 오른쪽 배치
-- [x] 플레이어 카드 HUD 코너 장식 강화
-- [x] 명예 장식 슬롯 (프레임/칭호/휘장/오라) → 패널 하단 영역 HUD 패널
-- [x] 소속 배너 HUD Banner화 (min-height 44px, 영토 색상)
-- [x] 영토 신념 HUD 섹션 (신념 문장 + 워터마크 + 텍스트색)
-- [x] 성향 게이지 영토 색상 적용 (`data-territory` 자동 전환)
-- [x] 성향 아이콘 확대 (2.2rem)
-- [x] 경험치 바
-- [x] 대표 업적 (pill 형태 더미 데이터)
-- [x] 활동 카드 (2x2 그리드, 더미 레이아웃)
-- [x] 뒤로 가기 (활동 카드 위에 배치)
-- [x] 접기 버튼 (패널 하단 구성)
-- [x] 패널 탭 전환 (프로필 화면의 탭 전환, transition)
-- [x] 패널 전체 폭 (48rem)
-- [x] 반응형 (모바일 1열 자동 전환)
-
-### 영토 게시판
-
-- [x] 영토 게시판 기반 구조 (개척/수호/외계행성)
-- [x] 게시글 작성/조회/반응
-- [x] 게시글 상세 작성자 영역 1차 CSS 개선 (HUD 카드형 · 팔로우 배치)
-- [x] 게시글 상세 작성자 카드 2차 (레벨/명성 · `PlayerProgression` 재사용)
-- [x] 게시글 상세 작성자 카드 3차 (영토 Badge · `territoryShortLabel` / `data-territory`)
-- [x] Hover 미니 프로필 1차 — `ScMiniProfile` · 작성자 카드 Hover
-- [x] 프로필 모달 껍데기 1차 — `ScProfileModal` · `openUserProfile()` 연동 (placeholder)
-- [x] ScProfileModal ProfileFrame 렌더 연결 1차 — `renderProfileFrameInModal` · `buildUserProfileDataForModal`
-- [x] ScProfileModal ProfileFrame 회귀 QA — Hover/모달/HUD/4스킨 · 닫기 이중 콜백 FIX
-- [x] 댓글 작성자 프로필 UX 1차 — `renderThreadedCommentNode` · Hover + `openUserProfile` (게시판·상세·데일리 이슈)
-- [x] 활동 피드 작성자 프로필 UX 1차 — `authorId` 저장 항목만 Hover/클릭 (`post_created`)
-- [x] 알림 작성자 프로필 UX 1차 — `actorId` 저장 항목만 Hover/클릭 (`comment`/`like`/`follow`)
-- [x] 알림 UserCard 안정화 — 작성자 영역 클릭 → 프로필 · 내용 영역 클릭 → `navigateFromNotification`
-- [x] Community System v1 — 게시글 북마크 1차 (`sc_bookmarks_v1` · localStorage 토글)
-- [x] Community System v1 — 게시글 공유 1차 (링크 복사 · HUD Toast)
-- [x] Community System v1 — 게시글 신고 1차 (`sc_reports_v1` · HUD 모달 · 행동 사유만 · 중복/본인 글 차단)
-- [x] Community System v1 — 게시글 신고 상세 의견 (textarea 300자 · 기타 필수 · `detail` 저장)
-- [x] 랭킹 UI 개선 1차 — 5개 영토 탭 · TOP5 강조 (`rank-leaderboard.js`)
-- [x] 랭킹 UI 개선 2차 — TOP3 여백 · 영토 Badge · 내 순위 HUD 그리드
-- [x] 랭킹 작성자 프로필 UX 1차 — `ScMiniProfile` + `openUserProfile` (`rank-leaderboard.js`)
-- [x] UserCard UX 단순화 — 프로필 클릭 범위 축소 (아바타·닉네임·유저 ID) · ScMiniProfile 팝업 연결 해제
-- [x] Community System v1 — 북마크 목록 화면 2차 → **v2 북마크 목록 1차 완료** (2026-07-12, `bookmark-list.js`)
-- [ ] ScProfileModal 2차 — DB/Supabase 실데이터 연동
-- [x] Hover 미니 프로필 2차 — 랭킹 확장 (`rank-leaderboard.js` · 전 탭)
-- [x] 팔로우 시스템 + 알림
-- [x] 알림센터 1차 — `sc_notifications_v1` · 맵 HUD/프로필 벨 · comment/like/follow/level_up (2026-07-10)
-- [x] 최근 세계 활동 피드 1차 — `sc_activity_feed_v1` · 메인 지도 HUD (2026-07-10)
-- [ ] 알림센터 2차 — 서버 동기화 · 실시간 푸시 · 업적 연동
-- [x] 외계행성 단일 허브 UI
-
-### 기반 / 백엔드
-
-- [x] Express 서버 기반 구축
-- [x] Supabase Auth API (`/api/auth/*`)
-- [x] 플레이어 프로필 API (`/api/me/profile`)
-- [x] 채팅 API (인메모리 베타)
-- [x] 영토/게시판/성향/레벨 설정 파일 (`config/`)
-- [x] 게스트 모드
+| 항목 | 날짜 |
+|------|------|
+| Git `main`←`master` 통합 · `master` 삭제 · 백업 태그 유지 | 2026-07-13 |
+| Search System v1 | 2026-07-12 |
+| Community v2 북마크 목록 1차 | 2026-07-12 |
+| ProfileFrame 팔로워·표시 안정화 | 2026-07-12 |
+| Community v1 (북마크·공유·신고) | 2026-07-11 |
+| ProfileFrame PNG·성향지도·업적 슬롯 UI | 2026-07-09~10 |
 
 ---
 
-## 다음 우선순위 (2026-07-04)
+## ⏸️ 보류 — Profile / Community
 
-### 우선순위 1 — 프로필 뷰포트 최적화 ✅
-
-- [x] 프로필 내부 스크롤 제거
-- [x] 프로필 세로 여백 압축
-- [x] 신념 카드 높이 최적화
-- [x] 성향 레이더 크기 조정
-- [x] 하단 3개 요약 카드가 첫 화면에 모두 보이도록 레이아웃 최적화
-
-### 우선순위 2 — 프로필 마무리
-
-- [x] 프로필 최종 HUD 디자인 다듬기
-- [ ] 아바타 시스템 추가
-- [ ] 업적/활동/영토기록 탭 시스템 추가
-- [ ] 프로필 최종 QA
+- [ ] 업적 시스템 설계 및 실제 조건
+- [ ] 대표 업적 설정 기능
+- [ ] 전달한 아우라 계산
+- [ ] 시민 영향력 공식 고도화
+- [ ] ProfileFrame 전체 UI 폴리싱
+- [ ] 팔로워 상단 UI 최종 디자인 보완
+- [ ] 타인 프로필 팔로워 목록
+- [ ] 팔로워·팔로잉 검색
+- [ ] 추천 사용자
+- [ ] 사용자 차단
+- [ ] 친구 요청
+- [ ] 최근 본 시민
+- [ ] 북마크 목록 고도화 (폴더/태그/메모 등)
 
 ---
 
-## 미완료 작업 🔲
+## ⏸️ 보류 — UI
 
-### 프로필 패널 / ProfileFrame
+- [ ] HUD 버튼 재배치
+- [ ] 랭킹 UI 재보완
+- [ ] 모달 디자인 통일
+- [ ] 아이콘 스타일 통일
+- [ ] 모바일 UI
+- [ ] 반응형 최종 QA
+- [ ] 아바타 시스템
+- [ ] ProfileFrame 경험치 게이지 위치 최종 보정
+- [ ] `SC_PROFILE_LAYOUT` 4스킨 최종 확정
+- [ ] ProfileFrame 모바일 최종 보정
 
-- [ ] 위 **「다음 작업 — 프로필 확장」** 1~15 순서 참조
-- [~] ProfileFrame 성향지도 ↔ 게임 성향 **표시 연결** (localStorage 어댑터 · 서버 집계는 미완)
-- [x] `getCurrentProfileData()` · `loadCurrentUserProfile()` merge 어댑터 (2026-07-10)
-- [ ] 실제 아바타 이미지 업로드 (Supabase Storage)
-- [ ] 활동 메뉴 링크 실제 기능 연결
-- [ ] 명예 장식 슬롯 실제 아이템 시스템 연동
-- [ ] 프로필 탭 (권한/히스토리/설정/뒤로) 실제 구현
-- [x] 프로필 PNG 4종 적용 (ProfileFrame — 2026-07-09)
+---
 
-### 중앙광장 / 영토
+## ⏸️ 보류 — 운영 / 데이터
 
-- [ ] 성향 AI 한 줄 설명 실제 연동 (UI 골격 → AI API)
-- [ ] 성향 설명 카드 실제 수치 연동 · 시안 장식 polish
-- [ ] 데일리 이슈 AI 자동 생성 (AI 기반 이슈 콘텐츠 연동)
-- [ ] 인기글/실시간 현황 실제 데이터 연동
-- [ ] 실시간 영토 현황 실제 데이터 연동
-- [ ] 영토 인구 시각화 (인구 단계별 이미지 변화)
-- [ ] 영토 게시판 단계 해금 (성향 수치 기준)
-- [ ] 성향 계산 실제 집계 (글/댓글/반응 → 성향 수치 변화)
-- [ ] 영토 귀속 자동화 (성향 → 영토 이동)
-- [ ] 첩자 배지 자동 부여 (타 영토 게시판 작성 시)
+- [ ] Settings System v1
+- [ ] Admin System v1
+- [ ] 신고 목록·상세·처리
+- [ ] 실제 DB·Supabase 연결
+- [ ] 팔로우·검색·북마크·신고 서버 동기화
+- [ ] 개발·테스트·운영 환경 분리
+- [ ] 백업·복구
+- [ ] 오류 로그
+- [ ] 권한·보안
+- [ ] 이용약관
+- [ ] 개인정보처리방침
 
-### 레벨 / 명성
+---
 
-- [ ] XP 실제 적용 (글 작성 +25, 댓글 +12, 데일리 이슈 +10)
-- [ ] 레벨 업 처리 (1~5단계, XP 40/50/60/70/80)
-- [ ] 명성 점수 계산 (좋아요·비추·공감·팔로우)
-- [ ] 영토 기여 인구 비율 기반 점수 적용
+## ⏸️ 보류 — 장기
 
-### 영토전 (배틀 시스템)
+- [ ] 시즌 시스템
+- [ ] 영토 성장
+- [ ] 지도자 시스템
+- [ ] 외계행성 고도화
+- [ ] 영토전
+- [ ] 결제 시스템
 
-- [ ] 영토전 기반 구조 설계 및 구현
-- [ ] 영토전 참여/결과 조건 정의
-- [ ] 시즌 MVP 보상
-- [ ] 영토전 결과 텍스트 칭호 부여 기능
+---
 
-### 추방 / 외계행성
+## ✅ 기반 완료 (참고)
 
-- [ ] 추방 자동화 (비호감 30개 → 외계행성 이동)
-- [ ] 지구귀환티켓 결제 연동
-- [ ] 외계행성 체류 기간 관리 (0, 3, 7, 14, 30, 90일)
-- [ ] 외계행성 전용 성향 시스템 (정치 성향 없음)
+- CSS UI Kit · `data-territory` · tribal-s1 지도·히트존
+- 영토 명칭·신념 SSOT (`territory-beliefs.js`)
+- 중앙광장·영토 게시판·반응·상세
+- displayName · Search v1 · 랭킹 UI · 팔로우 알림
+- ProfileFrame 파이프라인 · 활동/영토 표시 안정화
+- Supabase Auth API 뼈대 · 채팅 인메모리 베타
 
-### 아바타 / 보상 시스템
+---
 
-- [ ] 아바타 슬롯 실제 이미지 업로드
-- [ ] 영토별 기본 아바타 이미지 제작
-- [ ] 시즌 보상 프레임 지급 구현
-- [ ] 영토전 결과 칭호 보상 부여
-- [ ] 업적 시스템 (조건 정의 + 실력 처리)
-- [ ] 오라 지급 구현
+## 프로필 UI 확정 방향 (구현 시 준수)
 
-### 결제
-
-- [ ] 카카오페이 연동
-- [ ] 토스페이 연동
-- [ ] 휴대폰 소액결제 연동
-- [ ] 월 구독권 처리 (4,900원, 매일 5시 리셋)
-- [ ] 직언패스500 처리 (500원, 영구 보존)
-- [ ] 지구귀환티켓 처리 (3,000원)
-
-### 관리 / 운영
-
-- [ ] 관리자 패널 (신고 처리, 추방 관리, 이슈 등록)
-- [ ] 데일리 이슈 운영 도구
-- [ ] 사용자 신고 → 조치 프로세스
-- [ ] AI 이슈 자동화 파이프라인 (매일 갱신)
+- ProfileFrame = PNG + 오버레이 HUD (기본 UI)
+- legacy 시민 카드 — `hidden` 유지
+- 성향은 ProfileFrame에서 **레이더만** (가로 게이지·% 노출 금지 · exp% 예외)
+- 가입일 금지 · 소속 중복 금지
+- 파이프라인: `SC_PROFILE_DATA` → `getCurrentProfileData()` → `renderProfileData()`

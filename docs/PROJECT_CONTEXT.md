@@ -1,9 +1,9 @@
 # 센텐스크래프트 — 프로젝트 컨텍스트
 
 > 다른 Cursor 세션에서 이 문서를 먼저 읽어 프로젝트 전체 맥락을 파악하세요.
-> 마지막 업데이트: 2026-07-13 (Follow System v1 통합 QA 완료)
+> 마지막 업데이트: **2026-07-13 (Follow System v1 완료 · main 단일 브랜치 · 작업 종료)**
 >
-> **AI 인수인계 요약:** `docs/AI_HANDOFF.md` ← 새 세션 시 이 문서도 함께 읽기
+> **AI 인수인계:** `docs/AI_HANDOFF.md` ← 새 세션 시 **반드시** 함께 읽기 (가게 PC 시작 절차 포함)
 
 ---
 
@@ -14,7 +14,17 @@
 - 일반 SNS/커뮤니티가 아닌, **전략 게임의 세계관을 가진 커뮤니티**
 - 사용자가 글을 쓰고 반응하면서 자신의 **성향(정치 스펙트럼)** 이 결정되고 **영토에 소속**됨
 - 영토별로 게시판 접근 권한이 다르며, 충분한 비호감을 받으면 **외계행성으로 추방**됨
-- 현재: **베타 뼈대** 상태 (기능 구조는 잡혀 있으나 일부 미구현)
+- 현재: **베타 뼈대** — Follow System v1·Search·Community·ProfileFrame까지 클라이언트 데모 완료
+
+### Git 원칙 (2026-07-13~)
+
+| 항목 | 내용 |
+|------|------|
+| 사용 브랜치 | **`main`만** (집·가게 동일) |
+| 원격 | `origin/main` · `origin/HEAD` → `origin/main` |
+| 삭제됨 | `master` (로컬·원격) — 재생성하지 않음 |
+| 백업 태그 | `backup/pre-merge-main-91ad00b` 유지 |
+| 작업 흐름 | `git pull origin main` → 작업 → `git push origin main` |
 
 ### 기술 스택
 
@@ -22,7 +32,7 @@
 |------|------|
 | 백엔드 | Node.js + Express (`server.js`) |
 | DB / Auth | Supabase (PostgreSQL + Supabase Auth) |
-| 프론트엔드 | 단일 파일 SPA (`public/index.html`) — 빌드 없음 |
+| 프론트엔드 | 단일 파일 SPA (`public/index.html`) + 모듈 JS — 빌드 없음 |
 | 배포 | `npm start` → `http://localhost:3000` |
 | 결제 | 카카오페이 / 토스페이 / 휴대폰 소액결제 (기획 정의됨, 미구현) |
 
@@ -382,46 +392,22 @@ alien     : rgba(199, 125, 255, 0.08)
 
 ## 7. 현재 구현 상태
 
-> **2026-07-12 세션 요약**  
-> **Follow System v1** — 팔로워/팔로잉 목록 모달 · HUD 진입 · 팔로잉 탭 언팔로우 · ProfileFrame 상단 팔로워 수 · **localStorage 전용** (`sc_follow_v1`)  
-> **ProfileFrame** — 활동/영토 표시 안정화 · 빈값/`--` 규칙 · 활동 숫자 0→`--` · HUD/모달 Overlay 동기화  
-> **다음 최우선:** Follow System v1 **2차 QA** (언팔로우·저장·HUD·Toast 등 체크리스트)  
-> **이후 예정:** Settings System v1 · Admin System v1
+> **2026-07-13 작업 종료 요약**  
+> **Git:** `main` 단일 브랜치 · `master` 삭제 · 백업 태그 유지  
+> **Follow System v1 ✅ 완료** — 목록·언팔로우·HUD/게시글/ProfileFrame 즉시 갱신 · QA PASS · Known Issue 없음  
+> **데이터:** `sc_follow_v1` localStorage 전용 (서버 동기화 없음)  
+> **다음:** Cursor 구현 중단 · 설계 확정 후 Settings / 업적(설계) / Admin / 베타 운영 중 사용자 지시분
 
-### ✅ 구현 완료
+### ✅ 구현 완료 (현재 기준)
 
-- 로그인/회원가입 UI (소셜 로그인 버튼 포함)
-- 게스트 모드
-- 메인 지도 화면 — 신규 16:9 원시시대(tribal-s1) 지도, 히트존, 호버 효과
-- 중앙광장 허브 (데일리 이슈, 오늘의 인기글, 실시간 영토 현황, 게시글, 페이지네이션)
-- 영토 게시판 (개척/수호/외계행성)
-- 게시글 작성/조회/반응 (공감/추천/비추천)
-- **Community System v1 (2026-07-11)** — 북마크(`sc_bookmarks_v1`) · 공유(링크 복사) · 신고(`sc_reports_v1` · 상세 의견)
-- **Community System v2 북마크 목록 1차 (2026-07-12)** — `bookmark-list.js` · HUD 북마크 모달 · 저장 글 목록·이동·해제
-- **Follow System v1 (2026-07-12)** — `follow-list-modal.js` · `FollowListModal` · HUD 팔로워/팔로우 수 클릭 진입 · 2탭 모달(팔로워/팔로잉) · 시민 목록·프로필 연결 · **팔로잉 탭 언팔로우** (`toggleFollow`) · `__scFollowLists` · **localStorage** (`sc_follow_v1`)
-- **ProfileFrame 상단 팔로워 (2026-07-12)** — `followers` · `FollowSystem.getFollowerCount` · 4스킨 좌표 통일 · 금색 라벨 · 명성 박스 톤 숫자 박스 · 좌표 에디터 X/Y/W/H · **아이콘/Emoji 없음(텍스트만)**
-- **ProfileFrame 표시 안정화 (2026-07-12)** — 활동 요약/영토 기록 `normalize*Display` · 빈값 `--` · 활동·영토 숫자 0→`--` · 모달 Overlay 레이어 바인딩 수정 · `__scInspectProfileFrame`
-- **UserCard / 프로필 진입 UX (2026-07-11)** — `wireScUserProfileLink()` · 아바타·닉네임·유저 ID만 클릭 · Hover는 `title` 안내만 (`ScMiniProfile` 팝업 연결 해제, 코드 보류)
-- **displayName 통일 기반 (2026-07-12)** — `public/display-name.js` · `resolveDisplayName(userId)` · `sc_display_names_v1` 캐시 · 표시 fallback `userId`
-- **Search System v1 (2026-07-12) ✅** — `search-system.js` · 통합검색 모달 · **시민** displayName 검색 · **토론** 제목/본문/작성자 검색 · `__scBoardNavigateToPost`
-- **랭킹 UI (2026-07-11)** — 전체/중앙/개척/수호/외계 5탭 · TOP5 강조 · `rank-leaderboard.js`
-- 팔로우 시스템 + 알림
-- **플레이어 프로필 — ProfileFrame (2026-07-09)**
-  - PNG 기반 기본 UI · 4종 `territorySkin` · 좌측 하단 HUD · 접기 버튼 내장
-  - `SC_PROFILE_LAYOUT` px 좌표 (1024×819) · localhost 좌표 에디터
-  - `SC_PROFILE_DATA` · `getCurrentProfileData()` · `renderProfileData()` · `refreshCurrentProfile()`
-  - 출력: USER ID · LEVEL · 팔로워 · 명성 · 경험치% · 활동 요약 5 · 영토 기록 4 · expGauge
-  - legacy `.profile-citizen-card__legacy` — hidden 유지
-- 레벨/XP/명성 표시 (legacy 영역 + ProfileFrame 더미)
-- 권한 안내 탭
-- 히스토리 탭
-- 게시글 상세 화면
-- Supabase Auth API (`/api/auth/*`)
-- 플레이어 프로필 API (`/api/me/profile`)
-- 채팅 API (인메모리 베타)
-- **영토 신념 데이터** (`public/territory-beliefs.js`) — Single Source of Truth
-- **공식 에셋 v1** WEBP 8종 (`assets/territories/banners/`, `emblems/`)
-- **프로필 PNG 4종** (`assets/territories/profiles/` — center, pioneer, guardian, alien)
+- 로그인/회원가입 UI · 게스트 모드 · Supabase Auth API (`/api/auth/*`) · `/api/me/profile`
+- tribal-s1 16:9 메인 지도 · 히트존 · 중앙광장·영토 게시판 · 글/댓글/반응 · 게시글 상세
+- **Follow System v1 ✅** — `follow-list-modal.js` · `follow-system.js` · HUD 진입 · 2탭 · 언팔로우 · HUD 팔로워/팔로잉=`FollowSystem.getFollowerCount`/`getFollowingCount` · ProfileFrame 즉시 갱신 · `sc_follow_v1`
+- **Search System v1** — `search-system.js` · 시민+토론 · `display-name.js`
+- **Community v1/v2** — 북마크·공유·신고 · `bookmark-list.js` 목록 모달
+- **ProfileFrame** — PNG 4스킨 · 팔로워 레이어 · 활동/영토 표시 안정화 · 성향지도 SVG · 업적 슬롯 UI(조건 미연동)
+- **UserCard** — 아바타·닉네임 → `openUserProfile` · 랭킹 UI · 팔로우 알림
+- 권한 안내 · 히스토리 · 채팅 API(인메모리) · `territory-beliefs.js` SSOT · 영토 에셋 WEBP/PNG
 
 ### ⚠️ 부분 구현 / 뼈대만 있음
 
@@ -436,34 +422,29 @@ alien     : rgba(199, 125, 255, 0.08)
 - 성향 AI 한 줄 설명 — UI 골격만 (legacy), AI 연동 없음
 - 레거시 `territory-icons` PNG — 신규 emblems WEBP와 **혼재**
 
-### ❌ 미구현
+### ❌ 미구현 / 보류 (상세는 TODO.md)
 
-- **ProfileFrame 아바타** (전신 이미지 오버레이)
-- **ProfileFrame 대표 업적** (`achievementLayer`)
-- **실로그인/Firebase → `getCurrentProfileData()` 연결**
-- **실제 경험치·활동 데이터 집계** — 활동 요약 4항목 + 영토 기록 4항목 연결 완료 · `aura` Mock 유지
-- ProfileFrame **모바일 최종 보정**
-- 결제 시스템 (상품 정의됨)
-- 영토전 (배틀 시스템)
-- 업적 시스템 (더미 데이터)
-- 활동 메뉴 링크 (버튼 disabled 상태)
-- AI 데일리 이슈 자동 생성
-- 관리자/운영 도구
+**Profile / Community:** 업적 실제 조건·대표 업적 설정 · 아우라·영향력 고도화 · ProfileFrame 폴리싱·팔로워 UI 최종 · 타인 팔로워 목록 · 팔로워/팔로잉 검색 · 추천·차단·친구·최근 본 시민 · 북마크 고도화  
 
-### 🔜 다음 작업 (2026-07-12 기준)
+**UI:** HUD 재배치 · 랭킹 재보완 · 모달/아이콘 통일 · 모바일·반응형 · 아바타  
 
-| 우선순위 | 항목 |
-|----------|------|
-| **최우선** | **Settings System v1** |
-| 이후 | **Admin System v1** |
+**운영/데이터:** Settings · Admin · 신고 처리 · DB/Supabase · 서버 동기화 · 환경 분리 · 백업·로그 · 권한·보안 · 약관·개인정보  
 
-### ⏸️ 보류 (기능)
+**장기:** 시즌 · 영토 성장 · 지도자 · 외계행성 고도화 · 영토전 · 결제  
 
-업적 시스템(설계 후 개발) · 타인 프로필 팔로워 목록 · 추천 사용자 · 친구 시스템 · 차단 · 팔로워/팔로잉 검색 · 서버 동기화 · 실시간 DB 연동
+### 🔜 다음 작업
 
-### ⏸️ 보류 (UI)
+| 상태 | 항목 |
+|------|------|
+| **중단** | Cursor 임의 구현 — 설계 확정·사용자 명령 전 금지 |
+| 후보 | Settings System v1 · 업적 **설계** · Admin System v1 · 베타 운영 준비 |
 
-ProfileFrame 전체 UI 폴리싱 · 팔로워 영역 최종 디자인 · 버튼/배지 디자인 통일 · 아이콘 스타일 통일 · 전체 모달 UI 통일 · 최종 반응형 점검
+### 변경 금지 핵심
+
+1. 기능/JS/데이터 로직 — UI 시 id·class·함수명 유지  
+2. CSS는 `index.html` `<style>` · `sc-*` · `data-territory`  
+3. 신념은 `territory-beliefs.js`만 · Follow/Progression 구조 임의 변경 금지  
+4. 빌드 없음 · `main`만 push/pull  
 
 ---
 
@@ -478,7 +459,9 @@ ProfileFrame 전체 UI 폴리싱 · 팔로워 영역 최종 디자인 · 버튼/
 7. **추측하지 않는다** — 불확실하면 코드를 먼저 읽는다
 8. **신념 문장은 `territory-beliefs.js`에서만 수정** — index.html 하드코딩 금지
 9. **UserCard 프로필 진입** — Hover 팝업 없음 · `openUserProfile(userId)` → ScProfileModal → ProfileFrame · 클릭 범위는 아바타·닉네임·유저 ID만 (`wireScUserProfileLink`)
-10. **표시 이름** — 화면·향후 검색은 `resolveDisplayName(userId)` · `userId`는 내부 식별자만 · 닉네임 없으면 `userId` fallback
+10. **표시 이름** — 화면·검색은 `resolveDisplayName(userId)` · `userId`는 내부 식별자
+11. **팔로우 수 표시** — HUD·ProfileFrame 팔로워/팔로잉은 `FollowSystem` SSOT (`getFollowerCount` / `getFollowingCount`)
+12. **Git** — `main`만 사용 · force push / master 재도입 금지 (사용자 지시 없는 한)
 
 ---
 
